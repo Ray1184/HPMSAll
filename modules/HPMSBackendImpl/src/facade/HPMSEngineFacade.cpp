@@ -2,12 +2,11 @@
  * File HPMSEngineFacade.cpp
  */
 
-#include <core/HPMSEngineFacade.h>
+#include <facade/HPMSEngineFacade.h>
 #include <core/HPMSRenderToTexture.h>
 
 hpms::OgreContext* gContext = nullptr;
 hpms::RenderToTexture* gRtt = nullptr;
-
 
 void hpms::InitContext(hpms::WindowSettings& windowSettings, unsigned int pixelRatio)
 {
@@ -71,4 +70,14 @@ hpms::SimulatorAdapter* hpms::CreateSimulator(hpms::CustomLogic* logic)
 void hpms::DestroySimulator(hpms::SimulatorAdapter* simulator)
 {
     hpms::SafeDelete(simulator);
+}
+
+hpms::ScriptAdapter* hpms::GetScript(const std::string& name)
+{
+    return hpms::SafeNew<ScriptAdaptee>(name);
+}
+
+void hpms::DestroyScript(hpms::ScriptAdapter* script)
+{
+    hpms::SafeDelete(script);
 }

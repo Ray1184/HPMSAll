@@ -7,6 +7,7 @@
 #include <core/HPMSSupplierAdaptee.h>
 #include <core/HPMSOgreContext.h>
 #include <core/HPMSSimulatorAdaptee.h>
+#include <core/HPMSScriptAdaptee.h>
 
 namespace hpms {
 
@@ -21,4 +22,10 @@ namespace hpms {
     SimulatorAdapter* CreateSimulator(hpms::CustomLogic* logic);
 
     void DestroySimulator(hpms::SimulatorAdapter* simulator);
+
+    ScriptAdapter* GetScript(const std::string& name);
+
+    void DestroyScript(ScriptAdapter* script);
+
+
 }

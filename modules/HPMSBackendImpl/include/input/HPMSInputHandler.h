@@ -9,7 +9,7 @@
 #include <map>
 #include <common/HPMSObject.h>
 #include <common/HPMSUtils.h>
-#include <thirdparty/InputHelper.h>
+#include <thirdparty/TPInputHelper.h>
 #include <api/HPMSInputUtils.h>
 
 

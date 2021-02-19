@@ -1,6 +1,6 @@
 # Engine impl (OGRE) project
 cmake_minimum_required(VERSION 3.17)
-project(HPMSEngineImpl)
+project(HPMSBackendImpl)
 set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX)
@@ -133,8 +133,8 @@ include_directories(${OGRE_H_7})
 set(SOURCES
         src/input/HPMSInputHandler.cpp
         src/core/HPMSOgreContext.cpp
-        src/thirdparty/Vector2D.cpp
-        src/thirdparty/InputHelper.cpp
+        src/thirdparty/TPVector2D.cpp
+        src/thirdparty/TPInputHelper.cpp
         src/resource/HPMSLuaScript.cpp
         src/resource/HPMSLuaScriptManager.cpp
         src/resource/HPMSWalkmap.cpp
@@ -148,18 +148,23 @@ set(SOURCES
         src/core/HPMSOverlayImageAdaptee.cpp
         src/core/HPMSLightAdaptee.cpp
         src/core/HPMSSupplierAdaptee.cpp
-        src/core/HPMSSimulatorAdaptee.cpp src/core/HPMSEngineFacade.cpp)
+        src/core/HPMSSimulatorAdaptee.cpp
+        src/core/HPMSWalkmapAdaptee.cpp
+        src/utils/HPMSCalcUtils.cpp
+        src/utils/HPMSSectorUtils.cpp
+        src/core/HPMSScriptAdaptee.cpp
+        src/facade/HPMSEngineFacade.cpp)
 
 add_definitions(-DBACKEND_IMPL_NAME="Ogre 3D ${OGRE_VERSION}")
 
-add_library(HPMSEngineImpl SHARED ${SOURCES})
+add_library(HPMSBackendImpl SHARED ${SOURCES})
 
-#add_executable(HPMSEngineImpl src/Main.cpp ${SOURCES})
-target_link_libraries(HPMSEngineImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGRE_SDL2})
+#add_executable(HPMSBackendImpl src/Main.cpp ${SOURCES})
+target_link_libraries(HPMSBackendImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGRE_SDL2})
 
 # Installation.
 string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
-add_custom_command(TARGET HPMSEngineImpl
+add_custom_command(TARGET HPMSBackendImpl
         POST_BUILD
         # Copy dist to build.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/dist/ ${CMAKE_BINARY_DIR}/bin/

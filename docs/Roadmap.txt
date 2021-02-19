@@ -1,0 +1,13 @@
+- Testare tutti i suppliers/funzioni del backend sul runtime.
+- Mappare tutti i suppliers/funzioni nella VM lua.
+- Adattare states e logiche runtime.
+- Demo tecnica minimale.
+- Implementare funzioni di gestione camera e switch tra stati.
+- Demo tecnica.
+- Implementare prime logiche di gioco e GUI.
+- Demo minimale.
+- Implementare cinematica.
+- Implementare sistema messaggi.
+- Implementare meccaniche di gioco.
+- Demo.
+- Sviluppo gameplay.

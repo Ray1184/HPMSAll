@@ -1,12 +1,12 @@
 /*!
- * File Vector2D.h
+ * File TPVector2D.h
  */
 
 
 #pragma once
 
 //
-//  Vector2D.h
+//  TPVector2D.h
 //
 //  Copyright (c) 2015 Khaled Garbaya
 //  Permission is hereby granted, free of charge, to any person obtaining a copy

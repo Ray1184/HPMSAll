@@ -20,11 +20,6 @@ namespace hpms
         std::vector<EntityAdapter*> entities;
         SceneNodeAdapter* rootNode;
         CameraAdapter* camera;
-        std::vector<BackgroundImageAdapter*> backgrounds;
-        std::vector<OverlayImageAdapter*> overlays;
-        std::vector<LightAdapter*> lights;
-
-        void FreeItems();
 
     public:
         explicit SupplierAdaptee(hpms::OgreContext* ctx);
@@ -47,6 +42,8 @@ namespace hpms
                            unsigned int y, int zOrder) override;
 
         virtual void SetAmbientLight(const glm::vec3& rgb) override;
+
+        virtual WalkmapAdapter* CreateWalkmap(const std::string& name) override;
 
         virtual std::string GetImplName() override;
 

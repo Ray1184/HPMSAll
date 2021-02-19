@@ -3,6 +3,9 @@
  */
 
 #include <core/HPMSSupplierAdaptee.h>
+#include <core/HPMSWalkmapAdaptee.h>
+#include <core/HPMSOverlayImageAdaptee.h>
+#include <core/HPMSBackgroundImageAdaptee.h>
 
 
 hpms::EntityAdapter* hpms::SupplierAdaptee::CreateEntity(const std::string& path)
@@ -34,26 +37,20 @@ hpms::LightAdapter* hpms::SupplierAdaptee::CreateLight(float r, float g, float b
 hpms::BackgroundImageAdapter*
 hpms::SupplierAdaptee::CreateBackgroundImage(const std::string& path, unsigned int width, unsigned int height)
 {
-    return nullptr;
+    return hpms::SafeNew<hpms::BackgroundImageAdaptee>(path, width, height);
 }
 
 hpms::OverlayImageAdapter*
 hpms::SupplierAdaptee::CreateOverlayImage(const std::string& path, unsigned int width, unsigned int height,
                                           unsigned int x, unsigned int y, int zOrder)
 {
-    return nullptr;
+    return hpms::SafeNew<hpms::OverlayImageAdaptee>(path, width, height, x, y, zOrder);
 }
 
 void hpms::SupplierAdaptee::SetAmbientLight(const glm::vec3& rgb)
 {
     Check();
     ((OgreContext*) ctx)->GetSceneManager()->setAmbientLight(Ogre::ColourValue(rgb.x, rgb.y, rgb.z));
-    ((OgreContext*) ctx)->GetSceneManager()->setShadowTechnique(Ogre::SHADOWTYPE_NONE);
-}
-
-void hpms::SupplierAdaptee::FreeItems()
-{
-
 }
 
 hpms::SupplierAdaptee::SupplierAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(ctx)
@@ -67,9 +64,13 @@ hpms::SupplierAdaptee::SupplierAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(c
 
 hpms::SupplierAdaptee::~SupplierAdaptee()
 {
-    FreeItems();
     hpms::SafeDelete(camera);
     hpms::SafeDelete(rootNode);
+}
+
+hpms::WalkmapAdapter* hpms::SupplierAdaptee::CreateWalkmap(const std::string& name)
+{
+    return hpms::SafeNew<hpms::WalkmapAdaptee>(name);
 }
 
 std::string hpms::SupplierAdaptee::GetImplName()
@@ -80,3 +81,5 @@ std::string hpms::SupplierAdaptee::GetImplName()
     return "Ogre 3D";
 #endif
 }
+
+

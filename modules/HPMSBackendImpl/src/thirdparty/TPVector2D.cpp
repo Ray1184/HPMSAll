@@ -1,9 +1,9 @@
 /*!
- * File Vector2D.cpp
+ * File TPVector2D.cpp
  */
 
 //
-//  Vector2D.cpp
+//  TPVector2D.cpp
 //
 //  Copyright (c) 2015 Khaled Garbaya
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -24,7 +24,7 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 //  SOFTWARE.
 
-#include <thirdparty/Vector2D.h>
+#include <thirdparty/TPVector2D.h>
 
 #include <cmath>
 

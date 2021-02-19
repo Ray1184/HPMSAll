@@ -11,6 +11,7 @@
 #include <api/HPMSOverlayImageAdapter.h>
 #include <api/HPMSCameraAdapter.h>
 #include <api/HPMSLightAdapter.h>
+#include <api/HPMSWalkmapAdapter.h>
 #include <string>
 
 namespace hpms {
@@ -53,6 +54,8 @@ namespace hpms {
                                                               unsigned int y, int zOrder) = 0;
 
         virtual void SetAmbientLight(const glm::vec3& rgb) = 0;
+
+        virtual hpms::WalkmapAdapter* CreateWalkmap(const std::string& name) = 0;
 
     };
 }

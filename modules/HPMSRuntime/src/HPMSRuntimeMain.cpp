@@ -125,7 +125,7 @@ int DynamicCpTest()
     s.name = "Demo";
     s.width = 640;
     s.height = 400;
-    hpms::InitContext(s, 3);
+    hpms::InitContext(s, 5);
     auto* supplier = hpms::CreateSupplier();
     std::cout << "Backend implementation: " << supplier->GetImplName() << std::endl;
     auto* customLogic = hpms::SafeNew<TestLogic>(supplier);

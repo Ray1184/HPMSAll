@@ -1,10 +1,10 @@
 /*!
- * File InputHelper.cpp
+ * File TPInputHelper.cpp
  */
 
 
 //
-//  InputHelper.cpp
+//  TPInputHelper.cpp
 //
 //  Copyright (c) 2015 Khaled Garbaya
 //  Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -26,7 +26,7 @@
 //  SOFTWARE.
 
 
-#include <thirdparty/InputHelper.h>
+#include <thirdparty/TPInputHelper.h>
 
 using namespace tp;
 

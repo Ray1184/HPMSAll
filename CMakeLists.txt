@@ -11,5 +11,5 @@ set(OGRE_ROOT ${PROJECT_SOURCE_DIR}/../Ogre3D)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 
 add_subdirectory(modules/HPMSApi)
-add_subdirectory(modules/HPMSEngineImpl)
+add_subdirectory(modules/HPMSBackendImpl)
 add_subdirectory(modules/HPMSRuntime)

@@ -56,7 +56,7 @@ message(STATUS "OGRE_H_6: ${OGRE_H_6}")
 message(STATUS "OGRE_H_7: ${OGRE_H_7}")
 
 include_directories(../HPMSApi/include)
-include_directories(../HPMSEngineImpl/include)
+include_directories(../HPMSBackendImpl/include)
 include_directories(include)
 include_directories(${OGRE_H_0})
 include_directories(${OGRE_H_1})
@@ -75,7 +75,7 @@ set(SOURCES
         src/logic/controllers/Animator.cpp)
 
 add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp)
-target_link_libraries(HPMSRuntime liblua LuaBridge HPMSEngineImpl)
+target_link_libraries(HPMSRuntime liblua LuaBridge HPMSBackendImpl)
 
 # Installation.
 add_custom_command(TARGET HPMSRuntime
