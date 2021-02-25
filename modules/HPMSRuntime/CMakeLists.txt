@@ -67,21 +67,34 @@ include_directories(${OGRE_H_5})
 include_directories(${OGRE_H_6})
 include_directories(${OGRE_H_7})
 
+# Copy dist to build.
+file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/)
+
+# Resource paths compose for Ogre.
+list_paths(${PROJECT_SOURCE_DIR}/dist/data/packs Zip=data/packs/ false PACK_LIST)
+file(RENAME ${CMAKE_BINARY_DIR}/bin/data/Core.ini ${CMAKE_BINARY_DIR}/bin/data/Resources.ini)
+file(APPEND ${CMAKE_BINARY_DIR}/bin/data/Resources.ini "\n\n")
+file(APPEND ${CMAKE_BINARY_DIR}/bin/data/Resources.ini "# HPMS Resources\n")
+file(APPEND ${CMAKE_BINARY_DIR}/bin/data/Resources.ini "[General]\n")
+foreach (RES ${PACK_LIST})
+    file(APPEND ${CMAKE_BINARY_DIR}/bin/data/Resources.ini "${RES}\n")
+endforeach ()
+
+
 set(SOURCES
         src/logic/CalcUtils.cpp
         src/logic/SectorUtils.cpp
         src/logic/LogicItemsCache.cpp
         src/logic/controllers/Collisor.cpp
-        src/logic/controllers/Animator.cpp)
+        src/logic/controllers/Animator.cpp
+        src/states/HPMSLuaLogic.cpp src/states/HPMSGameState.cpp src/vm/HPMSLuaVM.cpp)
 
-add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp)
+add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp ${SOURCES})
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSBackendImpl)
 
 # Installation.
 add_custom_command(TARGET HPMSRuntime
         POST_BUILD
-        # Copy dist to build.
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/dist/ ${CMAKE_BINARY_DIR}/bin/
         # Copy scripts to build.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/../HPMSScripts/ ${CMAKE_BINARY_DIR}/bin/data/scripts/
         )

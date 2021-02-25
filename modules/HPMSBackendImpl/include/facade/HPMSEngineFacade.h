@@ -11,15 +11,15 @@
 
 namespace hpms {
 
-    void InitContext(hpms::WindowSettings& windowSettings, unsigned int pixelRatio = 1.0);
+    void InitContext(hpms::WindowSettings& windowSettings);
 
     void DestroyContext();
 
-    SupplierAdapter* CreateSupplier();
+    SupplierAdapter* GetSupplier();
 
     void DestroySupplier(hpms::SupplierAdapter*& supplier);
 
-    SimulatorAdapter* CreateSimulator(hpms::CustomLogic* logic);
+    SimulatorAdapter* GetSimulator(hpms::CustomLogic* logic);
 
     void DestroySimulator(hpms::SimulatorAdapter* simulator);
 

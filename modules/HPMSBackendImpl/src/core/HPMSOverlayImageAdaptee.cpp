@@ -12,6 +12,7 @@ std::string hpms::OverlayImageAdaptee::GetName()
 
 void hpms::OverlayImageAdaptee::SetPosition(const glm::vec3& position)
 {
+    Check();
     Check(ogrePanel);
     int z = (int) ogrePanel->getZOrder();
     ogrePanel->setPosition(position.x, position.y);
@@ -19,9 +20,9 @@ void hpms::OverlayImageAdaptee::SetPosition(const glm::vec3& position)
     {
         std::string newOverlayName = "Overlay_" + std::to_string((int) position.z);
         std::string oldOverlayName = "Overlay_" + std::to_string(z);
-        Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
-        Ogre::Overlay* newOverlay = overlayManager.create(newOverlayName);
-        Ogre::Overlay* oldOverlay = overlayManager.create(oldOverlayName);
+        Ogre::OverlayManager* overlayManager = ctx->GetOverlayManager();
+        Ogre::Overlay* newOverlay = overlayManager->create(newOverlayName);
+        Ogre::Overlay* oldOverlay = overlayManager->create(oldOverlayName);
         oldOverlay->remove2D(ogrePanel);
         newOverlay->setZOrder((int) position.z);
         newOverlay->add2D(ogrePanel);
@@ -79,32 +80,57 @@ void hpms::OverlayImageAdaptee::SetBlending(BlendingType mode)
             hpms::MaterialHelper::SetMaterialTextureAddMode(ogrePanel->getMaterial());
             break;
         default:
-            hpms::MaterialHelper::SetMaterialTextureAddMode(ogrePanel->getMaterial());
+            hpms::MaterialHelper::SetMaterialTextureStandardMode(ogrePanel->getMaterial());
     }
 }
 
-hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, unsigned int width, unsigned int height,
-                                               unsigned int x, unsigned int y, int zOrder) : name(imagePath),
-                                                                                             AdapteeCommon(nullptr)
+void hpms::OverlayImageAdaptee::Show()
 {
-    Ogre::OverlayManager& overlayManager = Ogre::OverlayManager::getSingleton();
-    ogrePanel = dynamic_cast<Ogre::OverlayContainer*>(overlayManager.createOverlayElement("Panel",
-                                                                                          imagePath));
-    panelImage.load(imagePath, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-    auto material = hpms::MaterialHelper::CreateTexturedMaterial(panelImage, width, height);
+    Check();
+    if (!enabled)
+    {
+        enabled = true;
+        ogrePanel->show();
+    }
+}
+
+void hpms::OverlayImageAdaptee::Hide()
+{
+    Check();
+    if (enabled)
+    {
+        enabled = false;
+        ogrePanel->hide();
+    }
+}
+hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, unsigned int x, unsigned int y, int zOrder, OgreContext* ctx) : name(imagePath),
+                                                                                                                                             AdapteeCommon(ctx)
+{
+    Check();
+    Ogre::OverlayManager* overlayManager = ctx->GetOverlayManager();
+    ogrePanel = dynamic_cast<Ogre::OverlayContainer*>(overlayManager->createOverlayElement("Panel", "Overlay_" + imagePath));
+    unsigned int width, height;
+    auto material = hpms::MaterialHelper::CreateTexturedMaterial(imagePath, &width, &height);
     ogrePanel->setMaterial(material);
     ogrePanel->setPosition(x, y);
-    ogrePanel->setDimensions(width, height);
+    unsigned int pixelation = ctx->GetSettings().pixelRatio;
+
+    // NOTE: Overlay doesn't work well with RTT, so are excluded and pixelated manually (see HPMSRenderToTexture.cpp).
+    ogrePanel->setDimensions(width * pixelation, height * pixelation);
     ogrePanel->setMetricsMode(Ogre::GMM_PIXELS);
     std::string overlayName = "Overlay_" + std::to_string(zOrder);
-    Ogre::Overlay* overlay = overlayManager.create(overlayName);
+    Ogre::Overlay* overlay = overlayManager->create(overlayName);
     overlay->setZOrder(zOrder);
     overlay->add2D(ogrePanel);
+    SetBlending(BlendingType::NORMAL);
     overlay->show();
+    Hide();
 
 }
 
 hpms::OverlayImageAdaptee::~OverlayImageAdaptee()
 {
-    panelImage.freeMemory();
 }
+
+
+

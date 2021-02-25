@@ -1,8 +1,10 @@
 #include <iostream>
 #include <windows.h>
 #include <api/HPMSSimulatorAdapter.h>
-#include <core/HPMSEngineFacade.h>
-#include <core/HPMSRenderToTexture.h>
+#include <facade/HPMSEngineFacade.h>
+
+#define WIDTH 640
+#define HEIGHT 400
 
 void Dump()
 {
@@ -42,6 +44,9 @@ private:
     hpms::LightAdapter* light;
     hpms::SceneNodeAdapter* node;
     hpms::SceneNodeAdapter* depthNode;
+    hpms::WalkmapAdapter* walkmap;
+    hpms::BackgroundImageAdapter* background;
+    hpms::OverlayImageAdapter* overlay;
     unsigned int fps;
 public:
 
@@ -70,7 +75,14 @@ public:
         depthNode->AttachObject(depthEntity);
         light = supplier->CreateLight(0.5, 0.5, 0.5);
         light->SetPosition(glm::vec3(5, 5, 5));
+        walkmap = supplier->CreateWalkmap("Basement.hrdat");
+        background = supplier->CreateBackgroundImage("Derceto.png");
+        background->Show();
+        overlay = supplier->CreateOverlayImage("HPMS.png", 0, 0, 100);
+        overlay->Show();
+        std::cout << "Map name: " << walkmap->GetId() << std::endl;
         std::cout << "Scene user setup done." << std::endl;
+
 
     }
 
@@ -105,6 +117,9 @@ public:
 
     virtual void OnDestroy() override
     {
+        hpms::SafeDelete(overlay);
+        hpms::SafeDelete(background);
+        hpms::SafeDelete(walkmap);
         hpms::SafeDelete(light);
         hpms::SafeDelete(node);
         hpms::SafeDelete(entity);
@@ -123,13 +138,14 @@ int DynamicCpTest()
 {
     hpms::WindowSettings s;
     s.name = "Demo";
-    s.width = 640;
-    s.height = 400;
-    hpms::InitContext(s, 5);
-    auto* supplier = hpms::CreateSupplier();
+    s.width = WIDTH;
+    s.height = HEIGHT;
+    s.pixelRatio = WIDTH / 320;
+    hpms::InitContext(s);
+    auto* supplier = hpms::GetSupplier();
     std::cout << "Backend implementation: " << supplier->GetImplName() << std::endl;
     auto* customLogic = hpms::SafeNew<TestLogic>(supplier);
-    auto* simulator = hpms::CreateSimulator(customLogic);
+    auto* simulator = hpms::GetSimulator(customLogic);
     simulator->Run();
     hpms::SafeDelete(customLogic);
     hpms::DestroySimulator(simulator);

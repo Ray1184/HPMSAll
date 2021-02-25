@@ -65,14 +65,21 @@ void hpms::LightAdaptee::SetColor(const glm::vec3& rgb)
     ogreLight->setDiffuseColour(Ogre::ColourValue(rgb.x, rgb.y, rgb.z));
 }
 
+Ogre::MovableObject* hpms::LightAdaptee::GetNative()
+{
+    return ogreLight;
+}
+
 hpms::LightAdaptee::LightAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(ctx)
 {
     Check();
-    ogreLight = ((OgreContext*) ctx)->GetSceneManager()->createLight();
+    ogreLight = (ctx)->GetSceneManager()->createLight();
 }
 
 hpms::LightAdaptee::~LightAdaptee()
 {
     Check();
-    ((OgreContext*) ctx)->GetSceneManager()->destroyLight(ogreLight);
+    (ctx)->GetSceneManager()->destroyLight(ogreLight);
 }
+
+

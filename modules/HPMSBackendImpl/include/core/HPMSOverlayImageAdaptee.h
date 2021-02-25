@@ -12,6 +12,7 @@
 #include <core/HPMSMaterialHelper.h>
 #include <map>
 #include <core/HPMSAdapteeCommon.h>
+#include <core/HPMSAttachableItem.h>
 
 namespace hpms
 {
@@ -19,11 +20,10 @@ namespace hpms
     {
     private:
         Ogre::OverlayContainer* ogrePanel;
-        Ogre::Image panelImage;
         std::string name;
+        bool enabled;
     public:
-        OverlayImageAdaptee(const std::string& imagePath, unsigned int width, unsigned int height, unsigned int x,
-                            unsigned int y, int zOrder);
+        OverlayImageAdaptee(const std::string& imagePath, unsigned int x, unsigned int y, int zOrder, OgreContext* ctx);
 
         virtual ~OverlayImageAdaptee();
 
@@ -46,6 +46,10 @@ namespace hpms
         virtual bool IsVisible() override;
 
         virtual void SetBlending(BlendingType mode) override;
+
+        virtual void Show() override;
+
+        virtual void Hide() override;
     };
 }
 

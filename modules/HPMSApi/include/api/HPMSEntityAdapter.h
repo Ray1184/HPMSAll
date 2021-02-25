@@ -38,10 +38,12 @@ namespace hpms
         virtual void AttachObjectToBone(const std::string& boneName, hpms::ActorAdapter* object,
                                         const glm::vec3& offsetPosition, const glm::quat& offsetOrientation) = 0;
 
+        virtual void
+        DetachObjectFromBone(const std::string& boneName, hpms::ActorAdapter* object) = 0;
+
         virtual std::vector<hpms::AnimationAdapter*>& GetAllAnimations() = 0;
 
         virtual hpms::AnimationAdapter* GetAnimationByName(const std::string& animName) = 0;
-
 
     };
 }

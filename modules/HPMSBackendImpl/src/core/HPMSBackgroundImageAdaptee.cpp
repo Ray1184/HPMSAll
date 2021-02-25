@@ -54,20 +54,42 @@ bool hpms::BackgroundImageAdaptee::IsVisible()
     return ogreBackground->getVisible();
 }
 
-hpms::BackgroundImageAdaptee::BackgroundImageAdaptee(const std::string& imagePath, unsigned int width,
-                                                     unsigned int height) : name(imagePath), AdapteeCommon(nullptr)
+void hpms::BackgroundImageAdaptee::Show()
 {
-    backgroundImage.load(imagePath, Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-    auto backgroundMaterial = hpms::MaterialHelper::CreateTexturedMaterial(backgroundImage, width, height);
+    Check();
+    if (!enabled)
+    {
+        enabled = true;
+        ctx->GetSceneManager()->getRootSceneNode()->attachObject(ogreBackground);
+    }
+}
+
+void hpms::BackgroundImageAdaptee::Hide()
+{
+    Check();
+    if (enabled)
+    {
+        enabled = false;
+        ctx->GetSceneManager()->getRootSceneNode()->detachObject(ogreBackground);
+    }
+}
+
+hpms::BackgroundImageAdaptee::BackgroundImageAdaptee(const std::string& imagePath, OgreContext* ctx) : name(imagePath), AdapteeCommon(ctx), enabled(false)
+{
+    auto backgroundMaterial = hpms::MaterialHelper::CreateTexturedMaterial(imagePath);
     ogreBackground = hpms::SafeNewRaw<Ogre::Rectangle2D>(true);
-    ogreBackground->setCorners(1.0, -1.0, -1.0, 1.0);
+    ogreBackground->setCorners(-1.0, 1.0, 1.0, -1.0);
     ogreBackground->setMaterial(backgroundMaterial);
     ogreBackground->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
+    Hide();
 }
 
 
 hpms::BackgroundImageAdaptee::~BackgroundImageAdaptee()
 {
-    backgroundImage.freeMemory();
     hpms::SafeDeleteRaw(ogreBackground);
 }
+
+
+
+

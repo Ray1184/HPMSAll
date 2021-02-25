@@ -5,6 +5,7 @@
 #include <core/HPMSEntityAdaptee.h>
 #include <core/HPMSEntityHelper.h>
 #include <core/HPMSAnimationAdaptee.h>
+#include <core/HPMSAttachableItem.h>
 
 std::string hpms::EntityAdaptee::GetName()
 {
@@ -123,10 +124,24 @@ void hpms::EntityAdaptee::AttachObjectToBone(const std::string& boneName, hpms::
     Check(ogreEntity);
     Ogre::Vector3 posOff(offsetPosition.x, offsetPosition.y, offsetPosition.z);
     Ogre::Quaternion rotOff(offsetOrientation.w, offsetOrientation.x, offsetOrientation.y, offsetOrientation.z);
-    if (auto* e = dynamic_cast<EntityAdaptee*>(object))
+    if (auto* a = dynamic_cast<AttachableItem*>(object))
     {
-        ogreEntity->attachObjectToBone(boneName, e->GetOgreEntity(), rotOff, posOff);
+        ogreEntity->attachObjectToBone(boneName, a->GetNative(), rotOff, posOff);
     }
+}
+
+void hpms::EntityAdaptee::DetachObjectFromBone(const std::string& boneName, hpms::ActorAdapter* object)
+{
+    Check(ogreEntity);
+    if (auto* a = dynamic_cast<AttachableItem*>(object))
+    {
+        ogreEntity->detachObjectFromBone(a->GetNative());
+    }
+}
+
+Ogre::MovableObject* hpms::EntityAdaptee::GetNative()
+{
+    return ogreEntity;
 }
 
 hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx),
@@ -152,5 +167,10 @@ hpms::EntityAdaptee::~EntityAdaptee()
     {
         hpms::SafeDelete(animAdaptee);
     }
-    ((OgreContext*) ctx)->GetSceneManager()->destroyEntity(ogreEntity);
+    (ctx)->GetSceneManager()->destroyEntity(ogreEntity);
 }
+
+
+
+
+

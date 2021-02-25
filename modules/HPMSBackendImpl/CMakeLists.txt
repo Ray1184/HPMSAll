@@ -130,6 +130,9 @@ include_directories(${OGRE_H_5})
 include_directories(${OGRE_H_6})
 include_directories(${OGRE_H_7})
 
+# Copy dist to build.
+file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/)
+
 set(SOURCES
         src/input/HPMSInputHandler.cpp
         src/core/HPMSOgreContext.cpp
@@ -166,8 +169,6 @@ target_link_libraries(HPMSBackendImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGR
 string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
 add_custom_command(TARGET HPMSBackendImpl
         POST_BUILD
-        # Copy dist to build.
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/dist/ ${CMAKE_BINARY_DIR}/bin/
         # Copy Ogre dll files do build.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/

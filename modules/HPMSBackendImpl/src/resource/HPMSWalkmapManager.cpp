@@ -11,7 +11,7 @@ hpms::WalkmapManager& hpms::WalkmapManager::GetSingleton()
 
 hpms::WalkmapManager* hpms::WalkmapManager::GetSingletonPtr()
 {
-    static auto* instance = hpms::SafeNew<WalkmapManager>();
+    static auto* instance = hpms::SafeNewRaw<WalkmapManager>();
     return instance;
 }
 

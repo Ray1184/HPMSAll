@@ -4,22 +4,25 @@
 
 #include <core/HPMSOgreContext.h>
 #include <SDL2/SDL_syswm.h>
+#include <resource/HPMSLuaScriptManager.h>
 
 hpms::OgreContext::OgreContext(const OgreWindowSettings& settings) : root(nullptr),
                                    camera(nullptr),
                                    sceneMgr(nullptr),
-                                   resourcesCfg(HPMS_ENGINE_FILES_FOLDER "Resources.ini"),
-                                   pluginsCfg(HPMS_ENGINE_FILES_FOLDER "Plugins.ini"),
+                                   resourcesCfg(HPMS_DATA_FOLDER "Resources.ini"),
+                                   pluginsCfg(HPMS_DATA_FOLDER "Plugins.ini"),
                                    settings(settings)
 {
     logManager = hpms::SafeNewRaw<Ogre::LogManager>();
-    logManager->createLog(HPMS_ENGINE_FILES_FOLDER "Ogre.log", true, false, false);
+    logManager->createLog(HPMS_DATA_FOLDER "Ogre.log", true, false, false);
     fsLayer = hpms::SafeNewRaw<Ogre::FileSystemLayer>("FSData");
     root = hpms::SafeNewRaw<Ogre::Root>(pluginsCfg,
                                         fsLayer->getWritablePath(
-                                                HPMS_ENGINE_FILES_FOLDER "Ogre.ini"),
+                                                HPMS_DATA_FOLDER "Ogre.ini"),
                                         fsLayer->getWritablePath(
-                                                HPMS_ENGINE_FILES_FOLDER "Ogre.log"));
+                                                HPMS_DATA_FOLDER "Ogre.log"));
+    overlaySystem = hpms::SafeNewRaw<Ogre::OverlaySystem>();
+    overlayManager = Ogre::OverlayManager::getSingletonPtr();
 
     Setup();
 
@@ -28,6 +31,8 @@ hpms::OgreContext::OgreContext(const OgreWindowSettings& settings) : root(nullpt
 hpms::OgreContext::~OgreContext()
 {
     root->destroySceneManager(GetSceneManager());
+    hpms::LuaScriptManager::GetSingleton().unloadAll();
+    hpms::SafeDeleteRaw(overlaySystem);
     hpms::SafeDeleteRaw(root);
     hpms::SafeDeleteRaw(fsLayer);
     hpms::SafeDeleteRaw(logManager);
@@ -89,6 +94,7 @@ bool hpms::OgreContext::CreateWindowPair(const OgreWindowSettings& settings)
 void hpms::OgreContext::CreateViewports()
 {
     sceneMgr = root->createSceneManager();
+    sceneMgr->addRenderQueueListener(overlaySystem);
     camera = sceneMgr->createCamera(DEFAULT_CAMERA_NAME);
     Ogre::Viewport* vp = windowPair.render->addViewport(camera);
     vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));

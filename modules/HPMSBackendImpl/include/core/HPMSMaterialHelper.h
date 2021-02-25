@@ -6,6 +6,7 @@
 
 #include <Ogre.h>
 #include <OgreRectangle2D.h>
+#include <OgreTextureManager.h>
 
 namespace hpms
 {
@@ -14,24 +15,28 @@ namespace hpms
     {
     public:
         inline static Ogre::MaterialPtr
-        CreateTexturedMaterial(Ogre::Image& image, unsigned int width, unsigned int height)
+        CreateTexturedMaterial(const std::string& textureName, unsigned int* width = nullptr, unsigned int* height = nullptr)
         {
-            Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().createManual(
-                    "GeneratedTexture",
-                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
-                    Ogre::TEX_TYPE_2D,
-                    width, height, 0, Ogre::PF_BYTE_BGR,
-                    Ogre::TU_DYNAMIC_WRITE_ONLY_DISCARDABLE);
+            Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().load(textureName, "General");
+            if (width)
+            {
+                *width = texture->getWidth();
+            }
 
-            texture->loadImage(image);
+            if (height)
+            {
+                *height = texture->getHeight();
+            }
 
-            auto material = Ogre::MaterialManager::getSingleton().create("GeneratedMaterial",
+            auto material = Ogre::MaterialManager::getSingleton().create("Material_" + textureName,
                                                                               Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-            material->getTechnique(0)->getPass(0)->createTextureUnitState("GeneratedTexture");
+            auto* textState = material->getTechnique(0)->getPass(0)->createTextureUnitState(texture->getName());
+            textState->setTextureFiltering(Ogre::TFO_NONE);
             material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
             material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
             material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+
             SetMaterialTextureAddMode(material);
             return material;
         }

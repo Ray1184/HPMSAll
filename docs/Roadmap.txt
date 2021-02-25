@@ -1,13 +1,15 @@
-- Testare tutti i suppliers/funzioni del backend sul runtime.
-- Mappare tutti i suppliers/funzioni nella VM lua.
-- Adattare states e logiche runtime.
-- Demo tecnica minimale.
-- Implementare funzioni di gestione camera e switch tra stati.
-- Demo tecnica.
-- Implementare prime logiche di gioco e GUI.
-- Demo minimale.
-- Implementare cinematica.
-- Implementare sistema messaggi.
-- Implementare meccaniche di gioco.
-- Demo.
-- Sviluppo gameplay.
+ TASK                                                           | STATUS
+------------------------------------------------------------------------------------------------------
+ Testare tutti i suppliers/funzioni del backend sul runtime.    | DONE
+ Adattare states e logiche runtime.                             | DONE
+ Mappare tutti i suppliers/funzioni nella VM lua.               | PROGRESS
+ Demo tecnica minimale.                                         | TODO
+ Implementare funzioni di gestione camera e switch tra stati.   | TODO
+ Demo tecnica.                                                  | TODO
+ Implementare prime logiche di gioco e GUI.                     | TODO
+ Demo minimale.                                                 | TODO
+ Implementare cinematica.                                       | TODO
+ Implementare sistema messaggi.                                 | TODO
+ Implementare meccaniche di gioco.                              | TODO
+ Demo.                                                          | TODO
+ Sviluppo gameplay.                                             | TODO

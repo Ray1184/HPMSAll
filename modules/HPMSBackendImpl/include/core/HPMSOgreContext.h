@@ -10,6 +10,8 @@
 #include <common/HPMSNamedWrapper.h>
 #include <SDL2/SDL.h>
 #include <input/HPMSInputHandler.h>
+#include <OgreOverlayManager.h>
+#include <OgreOverlaySystem.h>
 
 namespace hpms
 {
@@ -24,6 +26,7 @@ namespace hpms
     {
         unsigned int width{320};
         unsigned int height{200};
+        unsigned int pixelRatio;
         std::string name{"Ogre Template"};
         bool fullScreen{false};
     };
@@ -66,6 +69,11 @@ namespace hpms
             return root;
         }
 
+        inline Ogre::OverlayManager* GetOverlayManager() const
+        {
+            return overlayManager;
+        }
+
         inline Ogre::LogManager* GetLogManager() const
         {
             return logManager;
@@ -86,9 +94,15 @@ namespace hpms
             return windowPair.render;
         }
 
+        inline const OgreWindowSettings& GetSettings() const
+        {
+            return settings;
+        }
 
     private:
         Ogre::FileSystemLayer* fsLayer;
+        Ogre::OverlayManager* overlayManager;
+        Ogre::OverlaySystem* overlaySystem;
         Ogre::LogManager* logManager;
         Ogre::Root* root;
         Ogre::String resourcesCfg;

@@ -26,9 +26,11 @@ void hpms::RenderToTexture::Initialize()
 
     renderTexture->addViewport(ctx->GetCamera());
     renderTexture->getViewport(0)->setClearEveryFrame(true);
-    renderTexture->getViewport(0)->setOverlaysEnabled(true);
 
-    renderTexture->update();
+    // NOTE: Overlay doesn't work well with RTT, so are excluded and pixelated manually (see HPMSOverlayImageAdaptee.cpp).
+    renderTexture->getViewport(0)->setOverlaysEnabled(false);
+    renderTexture->getViewport(0)->setAutoUpdated(true);
+    renderTexture->getViewport(0)->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
     renderScreen = hpms::SafeNewRaw<Ogre::Rectangle2D>(true);
     renderScreen->setCorners(-1, 1.0, 1.0, -1);

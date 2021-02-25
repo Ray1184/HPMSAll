@@ -4,6 +4,7 @@
 
 #include <core/HPMSSceneNodeAdaptee.h>
 #include <core/HPMSEntityAdaptee.h>
+#include <core/HPMSBackgroundImageAdaptee.h>
 
 std::string hpms::SceneNodeAdaptee::GetName()
 {
@@ -72,10 +73,21 @@ hpms::SceneNodeAdapter* hpms::SceneNodeAdaptee::CreateChild(const std::string& n
 void hpms::SceneNodeAdaptee::AttachObject(hpms::ActorAdapter* actor)
 {
     Check(ogreNode);
-    if (auto* e = dynamic_cast<EntityAdaptee*>(actor))
+    if (auto* a = dynamic_cast<AttachableItem*>(actor))
     {
-        ogreNode->attachObject(e->GetOgreEntity());
+        ogreNode->attachObject(a->GetNative());
     }
+
+}
+
+void hpms::SceneNodeAdaptee::DetachObject(hpms::ActorAdapter* actor)
+{
+    Check(ogreNode);
+    if (auto* a = dynamic_cast<AttachableItem*>(actor))
+    {
+        ogreNode->detachObject(a->GetNative());
+    }
+
 }
 
 
@@ -111,6 +123,7 @@ hpms::SceneNodeAdaptee::~SceneNodeAdaptee()
 {
     Check();
     if (!root) {
-        ((OgreContext*) ctx)->GetSceneManager()->destroySceneNode(ogreNode);
+        (ctx)->GetSceneManager()->destroySceneNode(ogreNode);
     }
 }
+

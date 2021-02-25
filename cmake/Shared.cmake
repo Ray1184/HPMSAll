@@ -39,3 +39,38 @@ function(INSTALL_FROM_REPO REPO NAME BRANCH BUILD INCLUDE_SUFFIXES)
     endforeach ()
 
 endfunction()
+
+
+#! CAT
+# Copy lines from a file and past into another file.
+#
+# \arg:IN_FILE Input file.
+# \arg:OUT_FILE Output file.
+#
+function(CAT IN_FILE OUT_FILE)
+    file(READ ${IN_FILE} CONTENTS)
+    file(APPEND ${OUT_FILE} "${CONTENTS}")
+endfunction()
+
+#! LIST_PATHS
+# Lists all resources in folder and add prefix foreach.
+#
+# \arg:FOLDER Folder to check.
+# \arg:OUT_FILE Prefix to add foreach file path.
+# \arg:ABSOLUTE_PATH Absolute path flag (use true if you want to add complete path, false for filename only).
+# \arg:OUTPUT Output variable where result is stored.
+#
+function(LIST_PATHS FOLDER PREFIX ABSOLUTE_PATH OUTPUT)
+    file(GLOB FILE_LIST ${FOLDER}/*.*)
+    set(TMP_OUT "")
+    foreach (FILE_DEF ${FILE_LIST})
+        set(FILE_DEF_1 ${FILE_DEF})
+        if (NOT ABSOLUTE_PATH)
+            get_filename_component(FILE_DEF_1 ${FILE_DEF} NAME)
+        endif ()
+        set(FILE_DEF_2 ${PREFIX}${FILE_DEF_1})
+        list(APPEND TMP_OUT ${FILE_DEF_2})
+    endforeach ()
+    set(${OUTPUT} ${TMP_OUT} PARENT_SCOPE)
+
+endfunction()

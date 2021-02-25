@@ -1,5 +1,5 @@
 /*!
- * File HPMSImageAdapter.h
+ * File HPMSOverlayImageAdapter.h
  */
 
 
@@ -7,7 +7,7 @@
 
 #include <common/HPMSObject.h>
 #include <api/HPMSActorAdapter.h>
-
+#include <api/HPMSImageAdapter.h>
 namespace hpms
 {
 
@@ -19,12 +19,12 @@ namespace hpms
         OVERLAY = 1
     };
 
-    class OverlayImageAdapter : public ActorAdapter
+    class OverlayImageAdapter : public ActorAdapter, public ImageAdapter
     {
     public:
         inline const std::string Name() const override
         {
-            return "ImageAdapter";
+            return "OverlayImageAdapter";
         }
 
         inline virtual ~OverlayImageAdapter()

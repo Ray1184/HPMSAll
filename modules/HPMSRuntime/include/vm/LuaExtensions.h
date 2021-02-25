@@ -5,19 +5,12 @@
 #pragma once
 
 #include <glm/glm.hpp>
-#include <math.h>
+#include <cmath>
 #include <algorithm>
-
-#include <core/items/Entity.h>
-#include <core/ResourceItemsCache.h>
-#include <core/Camera.h>
-#include <core/Scene.h>
-#include <input/KeyEvent.h>
-#include <logic/CalcUtils.h>
-#include <logic/controllers/Controller.h>
+#include <api/HPMSInputUtils.h>
+#include <common/HPMSMathUtils.h>
+#include <facade/HPMSApiFacade.h>
 #include <logic/controllers/Collisor.h>
-#include <logic/controllers/Animator.h>
-#include <logic/LogicItemsCache.h>
 
 namespace hpms
 {
@@ -195,7 +188,19 @@ namespace hpms
     {
         for (const auto& event : events)
         {
-            if (name == event.key && action == event.inputType)
+            if (name == event.name && action == event.state)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    bool KHMouseAction(const std::vector<hpms::MouseEvent>& events, const std::string& name, int action)
+    {
+        for (const auto& event : events)
+        {
+            if (name == event.name && action == event.state)
             {
                 return true;
             }
@@ -204,115 +209,79 @@ namespace hpms
     }
 
     // LUA Asset Manager.
-    hpms::Entity* AMCreateEntity(const std::string& name)
+    hpms::EntityAdapter* AMCreateEntity(const std::string& name)
     {
-        AdvModelItem* testModel = ResourceItemsCache::Instance().GetModel(name);
-        auto* e = hpms::SafeNew<hpms::Entity>(testModel);
-        return e;
+        return hpms::GetSupplier()->CreateEntity(name);
     }
 
-    void AMDeleteEntity(Entity* entity)
+    void AMDeleteEntity(EntityAdapter* entity)
     {
         hpms::SafeDelete(entity);
     }
 
-    hpms::SceneNode* AMCreateNode(const std::string& name)
+    hpms::SceneNodeAdapter* AMCreateNode(const std::string& name)
     {
-        auto* n = hpms::SafeNew<hpms::SceneNode>(name);
-        return n;
+        return hpms::GetSupplier()->GetRootSceneNode()->CreateChild(name);
     }
 
-    void AMDeleteNode(SceneNode* node)
+    hpms::SceneNodeAdapter* AMCreateNode(const std::string& name, SceneNodeAdapter* parent)
+    {
+        return parent->CreateChild(name);
+    }
+
+    void AMDeleteNode(SceneNodeAdapter* node)
     {
         hpms::SafeDelete(node);
     }
 
-
-    void AMDeleteNodeAndActors(SceneNode* node)
+    hpms::BackgroundImageAdapter* AMCreateBackground(const std::string& path)
     {
-        node->DeleteAllActors();
-        AMDeleteNode(node);
+        return hpms::GetSupplier()->CreateBackgroundImage(path);
     }
 
-
-    hpms::Picture* AMCreateBackground(const std::string& path)
-    {
-        auto* p = hpms::SafeNew<hpms::Picture>(path, PictureMode::BACKGROUND);
-        return p;
-    }
-
-    void AMDeleteBackground(Picture* pic)
+    void AMDeleteBackground(BackgroundImageAdapter* pic)
     {
         hpms::SafeDelete(pic);
     }
 
-    hpms::Picture* AMCreateForeground(const std::string& path)
+    hpms::OverlayImageAdapter* AMCreateForeground(const std::string& path, unsigned int x = 0, unsigned int y = 0, int zOrder = 0)
     {
-        auto* p = hpms::SafeNew<hpms::Picture>(path, PictureMode::FOREGROUND);
-        return p;
+        return hpms::GetSupplier()->CreateOverlayImage(path, x, y, zOrder);
     }
 
-    void AMDeleteForeground(Picture* pic)
-    {
-        hpms::SafeDelete(pic);
-    }
-
-    hpms::Picture* AMCreateDepthMask(const std::string& path)
-    {
-        auto* p = hpms::SafeNew<hpms::Picture>(path, PictureMode::DEPTH_MASK);
-        return p;
-    }
-
-    void AMDeleteDepthMask(Picture* pic)
+    void AMDeleteForeground(OverlayImageAdapter* pic)
     {
         hpms::SafeDelete(pic);
     }
 
-    void AMAddEntityToScene(Entity* obj, Scene* scene)
+    void AMSetNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
     {
-        scene->AddRenderObject(obj);
+        node->AttachObject(obj);
     }
 
-    void AMSetNodeEntity(SceneNode* node, Entity* obj)
+    void AMRemoveNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
     {
-        node->SetActor(obj);
+        node->DetachObject(obj);
     }
-
-    void AMAddNodeToScene(SceneNode* obj, Scene* scene)
-    {
-        scene->AddRenderObject(obj);
-    }
-
-    void AMAddPictureToScene(Picture* obj, Scene* scene)
-    {
-        scene->AddRenderObject(obj);
-    }
-
-    void AMUpdateCamera(Camera* cam)
-    {
-        cam->UpdateViewMatrix();
-    }
-
 
     // LUA Logic.
-    hpms::WalkMap* LCreateWalkMap(const std::string& path)
+    hpms::WalkmapAdapter* LCreateWalkMap(const std::string& name)
     {
-        auto* w = hpms::SafeNew<hpms::WalkMap>(path, LogicItemsCache::Instance().GetRoomMap(path));
-        return w;
+        return hpms::GetSupplier()->CreateWalkmap(name);
     }
 
-    void LDeleteWalkMap(WalkMap* walkMap)
+    void LDeleteWalkMap(WalkmapAdapter* walkMap)
     {
         hpms::SafeDelete(walkMap);
     }
 
-    hpms::Collisor* LCreateEntityCollisor(Entity* entity, WalkMap* walkMap, float tolerance)
+    hpms::Collisor* LCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, float tolerance)
     {
         auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, tolerance);
         return c;
     }
 
-    hpms::Collisor* LCreateNodeCollisor(SceneNode* node, WalkMap* walkMap, float tolerance)
+    hpms::Collisor* LCreateNodeCollisor(SceneNodeAdapter* node, WalkMap* walkMap, float tolerance)
     {
         auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, tolerance);
         return c;
@@ -325,15 +294,14 @@ namespace hpms
         hpms::SafeDelete(collisor);
     }
 
-    hpms::Animator* LCreateAnimator(Entity* entity, const std::string& id)
+    hpms::AnimationAdapter* LCreateAnimator(EntityAdapter* entity, const std::string& id)
     {
-        auto* a = hpms::SafeNew<hpms::Animator>(entity, id);
-        return a;
+        return entity->GetAnimationByName(id);
     }
 
-    void LDeleteAnimator(Animator* anim)
+    void LDeleteAnimator(AnimationAdapter* anim)
     {
-        hpms::SafeDelete(anim);
+        // Managed by adaptee.
     }
 
     void LEnableController(hpms::Controller* controller)
@@ -346,10 +314,6 @@ namespace hpms
         controller->SetActive(false);
     }
 
-    void LUpdateAnimator(hpms::Animator* anim)
-    {
-        anim->Update();
-    }
 
     void LUpdateCollisor(hpms::Collisor* coll)
     {
@@ -361,24 +325,15 @@ namespace hpms
         collisor->Move(position, direction);
     }
 
-    void LRegisterAnimation(hpms::Animator* animator, const std::string& animName, int startFrame, int endFrame)
+    void LSetAnimation(hpms::EntityAdapter* entity, const std::string& animName)
     {
-        animator->RegisterAnimation(animName, startFrame, endFrame);
+        for (auto* anim : entity->GetAllAnimations())
+        {
+            anim->SetPlaying(false);
+        }
+        entity->GetAnimationByName(animName)->SetPlaying(true);
     }
 
-    void LSetAnimation(hpms::Animator* animator, const std::string& animName)
-    {
-        animator->CheckAndSetCurrentAnimation(animName);
-    }
 
-    bool LIsAnimationSequenceFinished(hpms::Animator* animator)
-    {
-        animator->IsSequenceFinished();
-    }
-
-    void LRewind(hpms::Animator* animator)
-    {
-        animator->Rewind();
-    }
 
 }

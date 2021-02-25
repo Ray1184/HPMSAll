@@ -7,10 +7,11 @@
 #include <api/HPMSLightAdapter.h>
 #include <core/HPMSAdapteeCommon.h>
 #include <core/HPMSCameraAdaptee.h>
+#include <core/HPMSAttachableItem.h>
 
 namespace hpms
 {
-    class LightAdaptee : public LightAdapter, public AdapteeCommon
+    class LightAdaptee : public LightAdapter, public AdapteeCommon, public AttachableItem
     {
     private:
         Ogre::Light* ogreLight;
@@ -38,5 +39,7 @@ namespace hpms
         virtual bool IsVisible() override;
 
         virtual void SetColor(const glm::vec3& rgb) override;
+
+        virtual Ogre::MovableObject* GetNative() override;
     };
 }

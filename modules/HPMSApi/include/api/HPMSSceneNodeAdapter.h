@@ -28,6 +28,8 @@ namespace hpms
 
         virtual void AttachObject(ActorAdapter* actor) = 0;
 
+        virtual void DetachObject(ActorAdapter* actor) = 0;
+
         virtual SceneNodeAdapter* RemoveChild(const std::string& name) = 0;
 
         virtual SceneNodeAdapter* GetParent() = 0;

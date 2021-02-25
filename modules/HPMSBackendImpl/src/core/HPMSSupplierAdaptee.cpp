@@ -11,7 +11,7 @@
 hpms::EntityAdapter* hpms::SupplierAdaptee::CreateEntity(const std::string& path)
 {
     Check();
-    auto* entity = hpms::SafeNew<hpms::EntityAdaptee>((OgreContext*) ctx, path);
+    auto* entity = hpms::SafeNew<hpms::EntityAdaptee>(ctx, path);
     entities.push_back(entity);
     return entity;
 }
@@ -31,41 +31,41 @@ hpms::CameraAdapter* hpms::SupplierAdaptee::GetCamera()
 hpms::LightAdapter* hpms::SupplierAdaptee::CreateLight(float r, float g, float b)
 {
     Check();
-    return hpms::SafeNew<hpms::LightAdaptee>((OgreContext*) ctx);
+    return hpms::SafeNew<hpms::LightAdaptee>(ctx);
 }
 
 hpms::BackgroundImageAdapter*
-hpms::SupplierAdaptee::CreateBackgroundImage(const std::string& path, unsigned int width, unsigned int height)
+hpms::SupplierAdaptee::CreateBackgroundImage(const std::string& path)
 {
-    return hpms::SafeNew<hpms::BackgroundImageAdaptee>(path, width, height);
+    return hpms::SafeNew<hpms::BackgroundImageAdaptee>(path, ctx);
 }
 
 hpms::OverlayImageAdapter*
-hpms::SupplierAdaptee::CreateOverlayImage(const std::string& path, unsigned int width, unsigned int height,
-                                          unsigned int x, unsigned int y, int zOrder)
+hpms::SupplierAdaptee::CreateOverlayImage(const std::string& path, unsigned int x, unsigned int y, int zOrder)
 {
-    return hpms::SafeNew<hpms::OverlayImageAdaptee>(path, width, height, x, y, zOrder);
+    return hpms::SafeNew<hpms::OverlayImageAdaptee>(path, x, y, zOrder, ctx);
 }
 
 void hpms::SupplierAdaptee::SetAmbientLight(const glm::vec3& rgb)
 {
     Check();
-    ((OgreContext*) ctx)->GetSceneManager()->setAmbientLight(Ogre::ColourValue(rgb.x, rgb.y, rgb.z));
+    (ctx)->GetSceneManager()->setAmbientLight(Ogre::ColourValue(rgb.x, rgb.y, rgb.z));
 }
 
 hpms::SupplierAdaptee::SupplierAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(ctx)
 {
     Check();
-    auto* ogreRootNode = ((OgreContext*) ctx)->GetSceneManager()->getRootSceneNode();
+    auto* ogreRootNode = (ctx)->GetSceneManager()->getRootSceneNode();
     rootNode = hpms::SafeNew<hpms::SceneNodeAdaptee>(ctx, ogreRootNode, ogreRootNode->getName(), nullptr, true);
-    auto* ogreCamera = ((OgreContext*) ctx)->GetCamera();
-    camera = hpms::SafeNew<hpms::CameraAdaptee>((OgreContext*) ctx, ogreCamera->getName());
+    auto* ogreCamera = (ctx)->GetCamera();
+    camera = hpms::SafeNew<hpms::CameraAdaptee>(ctx, ogreCamera->getName());
 }
 
 hpms::SupplierAdaptee::~SupplierAdaptee()
 {
     hpms::SafeDelete(camera);
     hpms::SafeDelete(rootNode);
+    hpms::WalkmapManager::GetSingleton().unloadAll();
 }
 
 hpms::WalkmapAdapter* hpms::SupplierAdaptee::CreateWalkmap(const std::string& name)

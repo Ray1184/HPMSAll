@@ -4,6 +4,13 @@
 
 #include <core/HPMSCameraAdaptee.h>
 
+
+std::string hpms::CameraAdaptee::GetName()
+{
+    Check(ogreCamera);
+    return ogreCamera->getName();
+}
+
 void hpms::CameraAdaptee::SetPosition(const glm::vec3& position)
 {
     Check(ogreCamera);
@@ -88,6 +95,31 @@ void hpms::CameraAdaptee::LookAt(glm::vec3 position)
     }
 }
 
+void hpms::CameraAdaptee::SetScale(const glm::vec3& scale)
+{
+    // Not implemented.
+}
+
+glm::vec3 hpms::CameraAdaptee::GetScale()
+{
+    return glm::vec3();
+}
+
+void hpms::CameraAdaptee::SetVisible(bool visible)
+{
+    // Not implemented.
+}
+
+bool hpms::CameraAdaptee::IsVisible()
+{
+    return true;
+}
+
+Ogre::MovableObject* hpms::CameraAdaptee::GetNative()
+{
+    return ogreCamera;
+}
+
 hpms::CameraAdaptee::CameraAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx)
 {
     Check();
@@ -97,7 +129,7 @@ hpms::CameraAdaptee::CameraAdaptee(hpms::OgreContext* ctx, const std::string& na
 hpms::CameraAdaptee::~CameraAdaptee()
 {
     Check();
-    ((OgreContext*) ctx)->GetSceneManager()->destroyCamera(ogreCamera);
+    (ctx)->GetSceneManager()->destroyCamera(ogreCamera);
 }
 
 

@@ -21,6 +21,8 @@ namespace hpms {
     {
         unsigned int width{320};
         unsigned int height{200};
+        bool fullScreen{false};
+        unsigned int pixelRatio{1};
         std::string name{"HPMS Template"};
     };
 
@@ -48,9 +50,9 @@ namespace hpms {
 
         virtual hpms::LightAdapter* CreateLight(float r, float g, float b) = 0;
 
-        virtual hpms::BackgroundImageAdapter* CreateBackgroundImage(const std::string& path, unsigned int width, unsigned int height) = 0;
+        virtual hpms::BackgroundImageAdapter* CreateBackgroundImage(const std::string& path) = 0;
 
-        virtual hpms::OverlayImageAdapter* CreateOverlayImage(const std::string& path, unsigned int width, unsigned int height, unsigned int x,
+        virtual hpms::OverlayImageAdapter* CreateOverlayImage(const std::string& path, unsigned int x,
                                                               unsigned int y, int zOrder) = 0;
 
         virtual void SetAmbientLight(const glm::vec3& rgb) = 0;

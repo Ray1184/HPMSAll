@@ -53,13 +53,10 @@ namespace hpms
 
         virtual void AttachObject(ActorAdapter* actor) override;
 
+        virtual void DetachObject(ActorAdapter* actor) override;
+
         virtual SceneNodeAdapter* RemoveChild(const std::string& name) override;
 
         virtual SceneNodeAdapter* GetParent() override;
-
-        inline Ogre::SceneNode* GetOgreNode() const
-        {
-            return ogreNode;
-        }
     };
 }

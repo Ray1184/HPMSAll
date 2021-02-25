@@ -7,11 +7,12 @@
 #include <api/HPMSCameraAdapter.h>
 #include <core/HPMSAdapteeCommon.h>
 #include <core/HPMSOgreContext.h>
+#include <core/HPMSAttachableItem.h>
 #include <glm/gtc/quaternion.hpp>
 
 namespace hpms
 {
-    class CameraAdaptee : public hpms::CameraAdapter, public AdapteeCommon
+    class CameraAdaptee : public hpms::CameraAdapter, public AdapteeCommon, public AttachableItem
     {
     private:
         Ogre::Camera* ogreCamera;
@@ -28,6 +29,16 @@ namespace hpms
 
         virtual  glm::quat GetRotation()  override;
 
+        virtual std::string GetName() override;
+
+        virtual void SetScale(const glm::vec3& scale) override;
+
+        virtual glm::vec3 GetScale() override;
+
+        virtual void SetVisible(bool visible) override;
+
+        virtual bool IsVisible() override;
+
         virtual void SetNear(float near) override;
 
         virtual void SetFar(float far) override;
@@ -35,6 +46,8 @@ namespace hpms
         virtual void SetFovY(float fovY) override;
 
         virtual void LookAt(glm::vec3 pos) override;
+
+        virtual Ogre::MovableObject* GetNative() override;
 
     };
 }

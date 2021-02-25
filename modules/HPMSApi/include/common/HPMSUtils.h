@@ -78,10 +78,6 @@ namespace hpms
         }
         AllocCounter::Instance().allocMap[name]++;
 
-        std::stringstream ss;
-        ss << "Malloc " << name << " to " << AllocCounter::Instance().allocMap[name];
-        LOG_DEBUG(ss.str().c_str());
-
 
 #endif
         return obj;
@@ -112,10 +108,6 @@ namespace hpms
 
         std::string name = ptr->Name();
         AllocCounter::Instance().allocMap[name]--;
-
-        std::stringstream ss;
-        ss << "Dealloc " << name << " to " << AllocCounter::Instance().allocMap[name];
-        LOG_DEBUG(ss.str().c_str());
 
 #endif
         if (ptr)

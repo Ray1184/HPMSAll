@@ -10,6 +10,7 @@
 #include <OgreRectangle2D.h>
 #include <core/HPMSMaterialHelper.h>
 #include <core/HPMSAdapteeCommon.h>
+#include <core/HPMSAttachableItem.h>
 
 namespace hpms
 {
@@ -17,11 +18,11 @@ namespace hpms
     {
     private:
         Ogre::Rectangle2D* ogreBackground;
-        Ogre::Image backgroundImage;
         std::string name;
+        bool enabled;
 
     public:
-        BackgroundImageAdaptee(const std::string& imagePath, unsigned int width, unsigned int height);
+        BackgroundImageAdaptee(const std::string& imagePath, OgreContext* ctx);
 
         virtual ~BackgroundImageAdaptee();
 
@@ -42,5 +43,9 @@ namespace hpms
         virtual void SetVisible(bool visible) override;
 
         virtual bool IsVisible() override;
+
+        virtual void Show() override;
+
+        virtual void Hide() override;
     };
 }

@@ -14,10 +14,11 @@
 #include <core/HPMSOgreContext.h>
 #include <vector>
 #include <map>
+#include <core/HPMSAttachableItem.h>
 
 namespace hpms
 {
-    class EntityAdaptee : public EntityAdapter, public AdapteeCommon
+    class EntityAdaptee : public EntityAdapter, public AdapteeCommon, public AttachableItem
     {
     private:
         Ogre::Entity* ogreEntity;
@@ -58,10 +59,10 @@ namespace hpms
         AttachObjectToBone(const std::string& boneName, hpms::ActorAdapter* object, const glm::vec3& offsetPosition,
                            const glm::quat& offsetOrientation) override;
 
-        inline Ogre::Entity* GetOgreEntity() const
-        {
-            return ogreEntity;
-        }
+        virtual void
+        DetachObjectFromBone(const std::string& boneName, hpms::ActorAdapter* object) override;
 
+
+        virtual Ogre::MovableObject* GetNative() override;
     };
 }

@@ -35,10 +35,10 @@ namespace hpms
         virtual hpms::LightAdapter* CreateLight(float r, float g, float b) override;
 
         virtual BackgroundImageAdapter*
-        CreateBackgroundImage(const std::string& path, unsigned int width, unsigned int height) override;
+        CreateBackgroundImage(const std::string& path) override;
 
         virtual OverlayImageAdapter*
-        CreateOverlayImage(const std::string& path, unsigned int width, unsigned int height, unsigned int x,
+        CreateOverlayImage(const std::string& path, unsigned int x,
                            unsigned int y, int zOrder) override;
 
         virtual void SetAmbientLight(const glm::vec3& rgb) override;

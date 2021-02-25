@@ -11,7 +11,7 @@ hpms::LuaScriptManager& hpms::LuaScriptManager::GetSingleton()
 
 hpms::LuaScriptManager* hpms::LuaScriptManager::GetSingletonPtr()
 {
-    static auto* instance = hpms::SafeNew<hpms::LuaScriptManager>();
+    static auto* instance = hpms::SafeNewRaw<hpms::LuaScriptManager>();
     return instance;
 }
 
