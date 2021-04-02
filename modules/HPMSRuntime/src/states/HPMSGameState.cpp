@@ -48,9 +48,9 @@ void hpms::GameState::Input(const std::vector<hpms::KeyEvent>& keyEvents, const 
 
 bool hpms::GameState::Quit()
 {
-    LuaRef scene = vm->GetGlobal("scene");
-    bool quit = scene["quit"];
-    return quit;
+
+        LuaRef scene = vm->GetGlobal("scene");
+        return scene["quit"];
 }
 
 const std::string hpms::GameState::Name() const

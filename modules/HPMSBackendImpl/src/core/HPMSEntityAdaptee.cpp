@@ -22,7 +22,7 @@ void hpms::EntityAdaptee::SetPosition(const glm::vec3& position)
     }
 }
 
-glm::vec3 hpms::EntityAdaptee::GetPosition()
+glm::vec3 hpms::EntityAdaptee::GetPosition() const
 {
     Check(ogreEntity);
     if (ogreEntity->getParentSceneNode() != nullptr)
@@ -42,7 +42,7 @@ void hpms::EntityAdaptee::SetRotation(const glm::quat& rot)
     }
 }
 
-glm::quat hpms::EntityAdaptee::GetRotation()
+glm::quat hpms::EntityAdaptee::GetRotation() const
 {
     Check(ogreEntity);
     if (ogreEntity->getParentSceneNode() != nullptr)
@@ -62,7 +62,7 @@ void hpms::EntityAdaptee::SetScale(const glm::vec3& scale)
     }
 }
 
-glm::vec3 hpms::EntityAdaptee::GetScale()
+glm::vec3 hpms::EntityAdaptee::GetScale() const
 {
     Check(ogreEntity);
     if (ogreEntity->getParentSceneNode() != nullptr)
@@ -79,7 +79,7 @@ void hpms::EntityAdaptee::SetVisible(bool visible)
     ogreEntity->setVisible(visible);
 }
 
-bool hpms::EntityAdaptee::IsVisible()
+bool hpms::EntityAdaptee::IsVisible() const
 {
     Check(ogreEntity);
     return ogreEntity->isVisible();

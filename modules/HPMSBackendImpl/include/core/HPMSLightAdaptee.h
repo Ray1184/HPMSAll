@@ -24,19 +24,19 @@ namespace hpms
 
         virtual void SetPosition(const glm::vec3& position) override;
 
-        virtual glm::vec3 GetPosition() override;
+        virtual glm::vec3 GetPosition() const override;
 
         virtual void SetRotation(const glm::quat& rotation) override;
 
-        virtual glm::quat GetRotation() override;
+        virtual glm::quat GetRotation() const override;
 
         virtual void SetScale(const glm::vec3& scale) override;
 
-        virtual glm::vec3 GetScale() override;
+        virtual glm::vec3 GetScale() const override;
 
         virtual void SetVisible(bool visible) override;
 
-        virtual bool IsVisible() override;
+        virtual bool IsVisible() const override;
 
         virtual void SetColor(const glm::vec3& rgb) override;
 

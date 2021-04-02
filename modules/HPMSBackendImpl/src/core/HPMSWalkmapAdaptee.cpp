@@ -19,6 +19,12 @@ hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos
     return triangles[sampled];
 }
 
+std::pair<glm::vec2, glm::vec2> hpms::WalkmapAdaptee::GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side)
+{
+    Check(walkmap.get());
+    return hpms::GetSideCoordsFromTriangle(&((TriangleAdaptee*) tri)->GetTriData(), &((SideAdaptee*) side)->GetSideData());
+}
+
 hpms::WalkmapAdaptee::WalkmapAdaptee(const std::string& mapName) : AdapteeCommon(nullptr)
 {
     walkmap = hpms::WalkmapManager::GetSingleton().Create(mapName);
@@ -91,10 +97,11 @@ bool hpms::TriangleAdaptee::IsPerimetral()
     return triData.IsPerimetral();
 }
 
-std::string hpms::TriangleAdaptee::GetSectorId()
+std::string hpms::TriangleAdaptee::GetSectorId() const
 {
     return triData.GetSectorId();
 }
+
 
 const std::vector<hpms::SideAdapter*>& hpms::TriangleAdaptee::GetPerimetralSides() const
 {
@@ -119,6 +126,11 @@ hpms::TriangleAdaptee::~TriangleAdaptee()
     }
 }
 
+const hpms::Triangle& hpms::TriangleAdaptee::GetTriData() const
+{
+    return triData;
+}
+
 unsigned int hpms::SideAdaptee::IdX1()
 {
     return sideData.idx1;
@@ -137,4 +149,9 @@ hpms::SideAdaptee::SideAdaptee(const hpms::Side& sideData) : sideData(sideData)
 hpms::SideAdaptee::~SideAdaptee()
 {
 
+}
+
+const hpms::Side& hpms::SideAdaptee::GetSideData() const
+{
+    return sideData;
 }

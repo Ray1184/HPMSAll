@@ -11,6 +11,15 @@
 
 namespace hpms
 {
+    struct SideHash
+    {
+        std::size_t operator()(const Side& k) const
+        {
+            return std::hash<unsigned int>()(k.idx1)
+                   ^ std::hash<unsigned int>()(k.idx2);
+        }
+    };
+
     class SideAdaptee : public SideAdapter
     {
     private:
@@ -23,6 +32,8 @@ namespace hpms
         virtual unsigned int IdX1() override;
 
         virtual unsigned int IdX2() override;
+
+        const Side& GetSideData() const;
     };
 
     struct TriangleHash
@@ -73,9 +84,11 @@ namespace hpms
 
         virtual bool IsPerimetral() override;
 
-        virtual std::string GetSectorId() override;
+        virtual std::string GetSectorId() const override;
 
         virtual const std::vector<SideAdapter*>& GetPerimetralSides() const override;
+
+        const Triangle& GetTriData() const;
 
     };
 
@@ -92,5 +105,7 @@ namespace hpms
         virtual std::string GetId() override;
 
         virtual TriangleAdapter* SampleTriangle(const glm::vec3& pos, float tolerance) override;
+
+        virtual std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side) override;
     };
 }

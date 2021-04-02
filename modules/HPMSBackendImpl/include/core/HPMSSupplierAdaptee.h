@@ -38,8 +38,10 @@ namespace hpms
         CreateBackgroundImage(const std::string& path) override;
 
         virtual OverlayImageAdapter*
-        CreateOverlayImage(const std::string& path, unsigned int x,
-                           unsigned int y, int zOrder) override;
+        CreateOverlayImage(const std::string& path, int x,
+                           int y, int zOrder) override;
+
+        virtual OverlayTextAreaAdapter* CreateTextArea(const std::string& message, const std::string& fontName, float fontSize, int x, int y, int width, int height, int zOrder) override;
 
         virtual void SetAmbientLight(const glm::vec3& rgb) override;
 

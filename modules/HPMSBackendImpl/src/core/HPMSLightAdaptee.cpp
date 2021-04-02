@@ -22,7 +22,7 @@ void hpms::LightAdaptee::SetPosition(const glm::vec3& position)
     }
 }
 
-glm::vec3 hpms::LightAdaptee::GetPosition()
+glm::vec3 hpms::LightAdaptee::GetPosition() const
 {
     return glm::vec3();
 }
@@ -32,7 +32,7 @@ void hpms::LightAdaptee::SetRotation(const glm::quat& rotation)
     // Not implemented.
 }
 
-glm::quat hpms::LightAdaptee::GetRotation()
+glm::quat hpms::LightAdaptee::GetRotation() const
 {
     return glm::quat();
 }
@@ -42,7 +42,7 @@ void hpms::LightAdaptee::SetScale(const glm::vec3& scale)
     // Not implemented.
 }
 
-glm::vec3 hpms::LightAdaptee::GetScale()
+glm::vec3 hpms::LightAdaptee::GetScale() const
 {
     return glm::vec3();
 }
@@ -53,7 +53,7 @@ void hpms::LightAdaptee::SetVisible(bool visible)
     ogreLight->setVisible(visible);
 }
 
-bool hpms::LightAdaptee::IsVisible()
+bool hpms::LightAdaptee::IsVisible() const
 {
     Check();
     return ogreLight->isVisible();

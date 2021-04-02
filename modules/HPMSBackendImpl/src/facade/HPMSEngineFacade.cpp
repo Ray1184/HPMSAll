@@ -10,7 +10,7 @@ hpms::RenderToTexture* gRtt = nullptr;
 hpms::SupplierAdapter* gSupplier = nullptr;
 hpms::SimulatorAdapter* gSimulator = nullptr;
 
-void hpms::InitContext(hpms::WindowSettings& windowSettings)
+void hpms::InitContext(const hpms::WindowSettings& windowSettings, hpms::CustomLogic* logic)
 {
     try
     {
@@ -26,6 +26,8 @@ void hpms::InitContext(hpms::WindowSettings& windowSettings)
             float fbWidth = ogreSettings.width / ogreSettings.pixelRatio;
             float fbHeight = ogreSettings.height / ogreSettings.pixelRatio;
             gRtt = hpms::SafeNew<hpms::RenderToTexture>(gContext, fbWidth, fbHeight);
+            gSupplier = hpms::SafeNew<hpms::SupplierAdaptee>(gContext);
+            gSimulator = hpms::SafeNew<hpms::SimulatorAdaptee>(gContext, logic);
         }
 
     } catch (std::exception& e)
@@ -37,6 +39,8 @@ void hpms::InitContext(hpms::WindowSettings& windowSettings)
 
 void hpms::DestroyContext()
 {
+    hpms::SafeDelete(gSimulator);
+    hpms::SafeDelete(gSupplier);
     hpms::SafeDelete(gRtt);
     hpms::SafeDelete(gContext);
 }
@@ -44,49 +48,18 @@ void hpms::DestroyContext()
 
 hpms::SupplierAdapter* hpms::GetSupplier()
 {
-    try
-    {
-        if (!gSupplier)
-        {
-            HPMS_ASSERT(gContext, "Context cannot be null.");
-            gSupplier = hpms::SafeNew<hpms::SupplierAdaptee>(gContext);
-        }
-        return gSupplier;
-    } catch (std::exception& e)
-    {
-        LOG_ERROR(e.what());
-    }
-    return nullptr;
+    HPMS_ASSERT(gContext, "Context must be initialized.");
+    return gSupplier;
 }
 
-void hpms::DestroySupplier(hpms::SupplierAdapter*& supplier)
+
+hpms::SimulatorAdapter* hpms::GetSimulator()
 {
-    hpms::SafeDelete(supplier);
+    HPMS_ASSERT(gContext, "Context must be initialized.");
+    return gSimulator;
 }
 
-hpms::SimulatorAdapter* hpms::GetSimulator(hpms::CustomLogic* logic)
-{
-    try
-    {
-        if (!gSimulator)
-        {
-            HPMS_ASSERT(gContext, "Context cannot be null.");
-            gSimulator = hpms::SafeNew<hpms::SimulatorAdaptee>(gContext, logic);
-        }
-        return gSimulator;
-    } catch (std::exception& e)
-    {
-        LOG_ERROR(e.what());
-    }
-    return nullptr;
-}
-
-void hpms::DestroySimulator(hpms::SimulatorAdapter* simulator)
-{
-    hpms::SafeDelete(simulator);
-}
-
-hpms::ScriptAdapter* hpms::GetScript(const std::string& name)
+hpms::ScriptAdapter* hpms::LoadScript(const std::string& name)
 {
     return hpms::SafeNew<ScriptAdaptee>(name);
 }
@@ -94,4 +67,9 @@ hpms::ScriptAdapter* hpms::GetScript(const std::string& name)
 void hpms::DestroyScript(hpms::ScriptAdapter* script)
 {
     hpms::SafeDelete(script);
+}
+
+hpms::OgreContext* hpms::GetContext()
+{
+    return gContext;
 }

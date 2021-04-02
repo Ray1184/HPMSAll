@@ -18,7 +18,7 @@ void hpms::SceneNodeAdaptee::SetPosition(const glm::vec3& position)
     ogreNode->setPosition(position.x, position.y, position.z);
 }
 
-glm::vec3 hpms::SceneNodeAdaptee::GetPosition()
+glm::vec3 hpms::SceneNodeAdaptee::GetPosition() const
 {
     Check(ogreNode);
     auto oVec = ogreNode->getPosition();
@@ -31,7 +31,7 @@ void hpms::SceneNodeAdaptee::SetRotation(const glm::quat& rot)
     ogreNode->setOrientation(rot.w, rot.x, rot.y, rot.z);
 }
 
-glm::quat hpms::SceneNodeAdaptee::GetRotation()
+glm::quat hpms::SceneNodeAdaptee::GetRotation() const
 {
     Check(ogreNode);
     auto oQuatc = ogreNode->getOrientation();
@@ -44,7 +44,7 @@ void hpms::SceneNodeAdaptee::SetScale(const glm::vec3& scale)
     ogreNode->setScale(scale.x, scale.y, scale.z);
 }
 
-glm::vec3 hpms::SceneNodeAdaptee::GetScale()
+glm::vec3 hpms::SceneNodeAdaptee::GetScale() const
 {
     Check(ogreNode);
     auto oVec = ogreNode->getScale();
@@ -56,7 +56,7 @@ void hpms::SceneNodeAdaptee::SetVisible(bool visible)
     // Nothing to do.
 }
 
-bool hpms::SceneNodeAdaptee::IsVisible()
+bool hpms::SceneNodeAdaptee::IsVisible() const
 {
     return true;
 }

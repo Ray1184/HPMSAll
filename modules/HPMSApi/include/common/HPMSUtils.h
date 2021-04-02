@@ -14,11 +14,13 @@
 #include <functional>
 #include <common/HPMSNames.h>
 #include <cassert>
+#include <stringapiset.h>
 
 #define HPMS_ASSERT(check, msg) assert(check)
 #define LOG_ERROR(msg) hpms::ErrorHandler(__FILE__, __LINE__, msg)
 #define LOG_WARN(msg) hpms::MsgHandler("WARN ", msg)
 #define LOG_INFO(msg) hpms::MsgHandler("INFO ", msg)
+#define LOG_RAW(msg) hpms::MsgHandler(msg)
 
 #if !defined(_DEBUG) && !defined(NDEBUG)
 #define LOG_DEBUG(msg) hpms::MsgHandler("DEBUG", msg)
@@ -62,6 +64,11 @@ namespace hpms
     inline void MsgHandler(const char* desc, const char* message)
     {
         printf("[%s] - %s\n", desc, message);
+    }
+
+    inline void MsgHandler(const char* message)
+    {
+        printf("%s\n", message);
     }
 
 
@@ -140,6 +147,13 @@ namespace hpms
         return ptr;
     }
 
+    template<typename T, typename... ARGS>
+    inline T* SafeNewArrayRaw(size_t size)
+    {
+        T* obj = new T[size];
+        return obj;
+    }
+
     template<typename T>
     inline void SafeDeleteRaw(T*& ptr)
     {
@@ -148,6 +162,13 @@ namespace hpms
             delete ptr;
             ptr = nullptr;
         }
+    }
+
+    template<typename T>
+    inline void SafeDeleteArrayRaw(T*& ptr)
+    {
+        delete[] ptr;
+        ptr = nullptr;
     }
 
     inline std::string Trim(const std::string& s)
@@ -244,6 +265,33 @@ namespace hpms
         return charPost == s.size();
     }
 
+    inline std::string ReplaceAll(const std::string& source, const std::string& from, const std::string& to)
+    {
+        std::string newString;
+        newString.reserve(source.length());
+
+        std::string::size_type lastPos = 0;
+        std::string::size_type findPos;
+
+        while (std::string::npos != (findPos = source.find(from, lastPos)))
+        {
+            newString.append(source, lastPos, findPos - lastPos);
+            newString += to;
+            lastPos = findPos + from.length();
+        }
+
+        newString += source.substr(lastPos);
+
+        return newString;
+    }
+
+    inline const wchar_t* ConvertToUTF16(const char* pStr)
+    {
+        static wchar_t wszBuf[1024];
+        MultiByteToWideChar(CP_OEMCP, 0, pStr, -1, wszBuf, sizeof(wszBuf));
+        return wszBuf;
+    }
+
     void ProcessFileLines(const std::string& fileName, std::function<void(const std::string&)> callback);
 
     std::string ReadFile(const std::string& fileName);
@@ -253,7 +301,6 @@ namespace hpms
     std::vector<std::string> Split(const std::string& stringToSplit, const std::string& reg);
 
     std::string GetFileName(const std::string& s);
-
 
 
 }

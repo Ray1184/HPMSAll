@@ -19,28 +19,29 @@ void hpms::SampleTriangle(const glm::vec3& pos, const hpms::WalkmapPtr& walkMap,
 
 }
 
-glm::vec2 hpms::GetSideCoordFromSideIndex(const hpms::Triangle& tri, unsigned int idx)
+glm::vec2 hpms::GetSideCoordFromSideIndex(const hpms::Triangle* tri, unsigned int idx)
 {
     switch (idx)
     {
         case 1:
-            return glm::vec2(tri.x1, tri.z1);
+            return glm::vec2(tri->x1, tri->z1);
         case 2:
-            return glm::vec2(tri.x2, tri.z2);
+            return glm::vec2(tri->x2, tri->z2);
         case 3:
-            return glm::vec2(tri.x3, tri.z3);
+            return glm::vec2(tri->x3, tri->z3);
         default:
             std::stringstream ss;
             ss << "Index id " << idx << " not allowed for external side" << std::endl;
             LOG_ERROR(ss.str().c_str());
+            return glm::vec2();
     }
 }
 
-std::pair<glm::vec2, glm::vec2> hpms::GetSideCoordsFromTriangle(const hpms::Triangle& tri, const hpms::Side& side)
+std::pair<glm::vec2, glm::vec2> hpms::GetSideCoordsFromTriangle(const hpms::Triangle* tri, const hpms::Side* side)
 {
-    for (const auto& s : tri.GetPerimetralSides())
+    for (const auto& s : tri->GetPerimetralSides())
     {
-        if (s == side)
+        if (s == *side)
         {
             return std::make_pair(GetSideCoordFromSideIndex(tri, s.idx1), GetSideCoordFromSideIndex(tri, s.idx2));
         }

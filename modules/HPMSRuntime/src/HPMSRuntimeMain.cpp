@@ -1,10 +1,11 @@
-#include <iostream>
+#include <sstream>
 #include <windows.h>
 #include <api/HPMSSimulatorAdapter.h>
 #include <facade/HPMSEngineFacade.h>
+#include <states/HPMSLuaLogic.h>
 
-#define WIDTH 640
-#define HEIGHT 400
+#define WIDTH 960
+#define HEIGHT 600
 
 void Dump()
 {
@@ -29,127 +30,9 @@ void Dump()
         ss << "WARNING, unnecessary memory dealloc detected! " << -leaks << " useless de-allocations." << std::endl;
     }
     ss << "------------------------------";
-    LOG_DEBUG(ss.str().c_str());
-    LOG_DEBUG("End memory dump report.");
+    LOG_RAW(ss.str().c_str());
+    LOG_RAW("End memory dump report.");
 #endif
-}
-
-class TestLogic : public hpms::CustomLogic
-{
-private:
-    hpms::SupplierAdapter* supplier;
-    bool exit;
-    hpms::EntityAdapter* entity;
-    hpms::EntityAdapter* depthEntity;
-    hpms::LightAdapter* light;
-    hpms::SceneNodeAdapter* node;
-    hpms::SceneNodeAdapter* depthNode;
-    hpms::WalkmapAdapter* walkmap;
-    hpms::BackgroundImageAdapter* background;
-    hpms::OverlayImageAdapter* overlay;
-    unsigned int fps;
-public:
-
-    TestLogic(hpms::SupplierAdapter* supplier) : supplier(supplier), exit(false)
-    {}
-
-    virtual ~TestLogic()
-    {
-        hpms::SafeDelete(supplier);
-    }
-
-    virtual void OnCreate() override
-    {
-        std::cout << "Scene user setup starting..." << std::endl;
-        supplier->SetAmbientLight(glm::vec3(0.1, 0.1, 0.1));
-        supplier->GetCamera()->SetNear(0.5);
-        supplier->GetCamera()->SetFar(50);
-        supplier->GetCamera()->SetPosition(glm::vec3(5, 5, 5));
-        supplier->GetCamera()->LookAt(glm::vec3(0, 0, 0));
-        entity = supplier->CreateEntity("Cube.mesh");
-        node = supplier->GetRootSceneNode()->CreateChild("CubeNode");
-        node->AttachObject(entity);
-        depthEntity = supplier->CreateEntity("DepthCube.mesh");
-        depthEntity->SetMode(hpms::EntityMode::DEPTH_ONLY);
-        depthNode = supplier->GetRootSceneNode()->CreateChild("DepthCubeNode");
-        depthNode->AttachObject(depthEntity);
-        light = supplier->CreateLight(0.5, 0.5, 0.5);
-        light->SetPosition(glm::vec3(5, 5, 5));
-        walkmap = supplier->CreateWalkmap("Basement.hrdat");
-        background = supplier->CreateBackgroundImage("Derceto.png");
-        background->Show();
-        overlay = supplier->CreateOverlayImage("HPMS.png", 0, 0, 100);
-        overlay->Show();
-        std::cout << "Map name: " << walkmap->GetId() << std::endl;
-        std::cout << "Scene user setup done." << std::endl;
-
-
-    }
-
-    virtual void OnUpdate(float tpf) override
-    {
-        auto q = node->GetRotation();
-        q = q * glm::quat(glm::vec3(0, tpf, 0));
-        node->SetRotation(q);
-
-        fps = (int) (1.0 / tpf);
-    }
-
-    virtual void
-    OnInput(const std::vector<hpms::KeyEvent>& keyEvents, const std::vector<hpms::MouseEvent>& mouseButtonEvents,
-            unsigned int x, unsigned int y) override
-    {
-        for (const auto& key : keyEvents)
-        {
-            if (key.state == hpms::KeyEvent::PRESSED_FIRST_TIME)
-            {
-                if (key.name == "F")
-                {
-                    std::cout << "FPS: " << fps << std::endl;
-                }
-                if (key.name == "ESC")
-                {
-                    exit = true;
-                }
-            }
-        }
-    }
-
-    virtual void OnDestroy() override
-    {
-        hpms::SafeDelete(overlay);
-        hpms::SafeDelete(background);
-        hpms::SafeDelete(walkmap);
-        hpms::SafeDelete(light);
-        hpms::SafeDelete(node);
-        hpms::SafeDelete(entity);
-        hpms::SafeDelete(depthNode);
-        hpms::SafeDelete(depthEntity);
-    }
-
-    virtual bool TriggerStop() override
-    {
-        return exit;
-    }
-};
-
-
-int DynamicCpTest()
-{
-    hpms::WindowSettings s;
-    s.name = "Demo";
-    s.width = WIDTH;
-    s.height = HEIGHT;
-    s.pixelRatio = WIDTH / 320;
-    hpms::InitContext(s);
-    auto* supplier = hpms::GetSupplier();
-    std::cout << "Backend implementation: " << supplier->GetImplName() << std::endl;
-    auto* customLogic = hpms::SafeNew<TestLogic>(supplier);
-    auto* simulator = hpms::GetSimulator(customLogic);
-    simulator->Run();
-    hpms::SafeDelete(customLogic);
-    hpms::DestroySimulator(simulator);
-    hpms::DestroyContext();
 }
 
 #if defined(_WIN32) || defined(WIN32)
@@ -162,12 +45,23 @@ int main(int argc, char *argv[])
     try
     {
 
-        DynamicCpTest();
+        hpms::WindowSettings s;
+        s.name = "HPMSDemo";
+        s.width = WIDTH;
+        s.height = HEIGHT;
+        s.pixelRatio = WIDTH / 320;
+        auto* customLogic = hpms::SafeNew<hpms::LuaLogic>();
+        hpms::InitContext(s, customLogic);
+        hpms::GetSimulator()->Run();
+        hpms::SafeDelete(customLogic);
+        hpms::DestroyContext();
         Dump();
 
         return 0;
     } catch (std::exception& e)
     {
-        std::cerr << e.what() << std::endl;
+        std::stringstream ss;
+        ss << "Runtime stopped with error: " << e.what();
+        LOG_ERROR(ss.str().c_str());
     }
 }

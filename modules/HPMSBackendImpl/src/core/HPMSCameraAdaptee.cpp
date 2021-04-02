@@ -3,7 +3,8 @@
  */
 
 #include <core/HPMSCameraAdaptee.h>
-
+#include <iostream>
+#include <string>
 
 std::string hpms::CameraAdaptee::GetName()
 {
@@ -24,7 +25,7 @@ void hpms::CameraAdaptee::SetPosition(const glm::vec3& position)
 
 }
 
-glm::vec3 hpms::CameraAdaptee::GetPosition()
+glm::vec3 hpms::CameraAdaptee::GetPosition() const
 {
     Check(ogreCamera);
     if (ogreCamera->getParentSceneNode())
@@ -50,7 +51,7 @@ void hpms::CameraAdaptee::SetRotation(const glm::quat& rotation)
     }
 }
 
-glm::quat hpms::CameraAdaptee::GetRotation()
+glm::quat hpms::CameraAdaptee::GetRotation() const
 {
     Check(ogreCamera);
     if (ogreCamera->getParentSceneNode() != nullptr)
@@ -67,7 +68,7 @@ glm::quat hpms::CameraAdaptee::GetRotation()
 void hpms::CameraAdaptee::SetNear(float near)
 {
     Check(ogreCamera);
-    ogreCamera->setNearClipDistance(Ogre::Real(near));
+    ogreCamera->setNearClipDistance(Ogre::Real(0.5f));
 }
 
 void hpms::CameraAdaptee::SetFar(float far)
@@ -100,7 +101,7 @@ void hpms::CameraAdaptee::SetScale(const glm::vec3& scale)
     // Not implemented.
 }
 
-glm::vec3 hpms::CameraAdaptee::GetScale()
+glm::vec3 hpms::CameraAdaptee::GetScale() const
 {
     return glm::vec3();
 }
@@ -110,7 +111,7 @@ void hpms::CameraAdaptee::SetVisible(bool visible)
     // Not implemented.
 }
 
-bool hpms::CameraAdaptee::IsVisible()
+bool hpms::CameraAdaptee::IsVisible() const
 {
     return true;
 }

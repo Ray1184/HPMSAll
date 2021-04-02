@@ -3,6 +3,7 @@
  */
 
 #include <core/HPMSRenderToTexture.h>
+#include <OgreOverlay.h>
 
 hpms::RenderToTexture::RenderToTexture(hpms::OgreContext* ctx, unsigned int fbWidth, unsigned int fbHeight) : ctx(ctx),
                                                                                                               fbWidth(fbWidth),
@@ -22,13 +23,14 @@ void hpms::RenderToTexture::Initialize()
                                                                      0,
                                                                      Ogre::PF_R8G8B8,
                                                                      (int) Ogre::TU_RENDERTARGET);
+
     auto* renderTexture = texture->getBuffer()->getRenderTarget();
 
     renderTexture->addViewport(ctx->GetCamera());
     renderTexture->getViewport(0)->setClearEveryFrame(true);
 
     // NOTE: Overlay doesn't work well with RTT, so are excluded and pixelated manually (see HPMSOverlayImageAdaptee.cpp).
-    renderTexture->getViewport(0)->setOverlaysEnabled(false);
+    renderTexture->getViewport(0)->setOverlaysEnabled(true);
     renderTexture->getViewport(0)->setAutoUpdated(true);
     renderTexture->getViewport(0)->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 
@@ -65,11 +67,23 @@ hpms::RenderToTexture::~RenderToTexture()
 void hpms::RenderToTexture::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
     renderScreen->setVisible(false);
+
+    // NOTE: Overlays are rendered twice (original and RTT), so we need to hide the original after render and show again before.
+    auto it = Ogre::OverlayManager::getSingletonPtr()->getOverlayIterator();
+    for (auto over : it) {
+        over.second->show();
+    }
 }
 
 void hpms::RenderToTexture::postRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {
     renderScreen->setVisible(true);
+
+    // NOTE: Overlays are rendered twice (original and RTT), so we need to hide the original after render and show again before.
+    auto it = Ogre::OverlayManager::getSingletonPtr()->getOverlayIterator();
+    for (auto over : it) {
+        over.second->hide();
+    }
 }
 
 

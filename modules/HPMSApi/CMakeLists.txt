@@ -18,6 +18,7 @@ install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 include_directories(include)
 
 set(SOURCES
-        src/common/HPMSUtils.cpp include/common/HPMSMathUtils.h src/common/HPMSMathUtils.cpp)
+        src/common/HPMSUtils.cpp
+        src/common/HPMSMathUtils.cpp)
 
 add_library(HPMSApi STATIC ${SOURCES})

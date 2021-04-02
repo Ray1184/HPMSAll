@@ -15,8 +15,14 @@ namespace hpms
     {
     public:
         inline static Ogre::MaterialPtr
-        CreateTexturedMaterial(const std::string& textureName, unsigned int* width = nullptr, unsigned int* height = nullptr)
+        CreateTexturedMaterial(const std::string& textureName, unsigned int* width = nullptr, unsigned int* height = nullptr, std::string materialName = "_undef_")
         {
+            auto material = Ogre::MaterialManager::getSingleton().getByName("Material_" + materialName);
+            if (material.get())
+            {
+                return material;
+            }
+
             Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().load(textureName, "General");
             if (width)
             {
@@ -28,8 +34,12 @@ namespace hpms
                 *height = texture->getHeight();
             }
 
-            auto material = Ogre::MaterialManager::getSingleton().create("Material_" + textureName,
-                                                                              Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            if (materialName == "_undef_")
+            {
+                materialName = textureName;
+            }
+            material = Ogre::MaterialManager::getSingleton().create("Material_" + materialName,
+                                                                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
             auto* textState = material->getTechnique(0)->getPass(0)->createTextureUnitState(texture->getName());
             textState->setTextureFiltering(Ogre::TFO_NONE);
@@ -49,6 +59,22 @@ namespace hpms
         inline static void SetMaterialTextureStandardMode(const Ogre::MaterialPtr& material)
         {
             material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SceneBlendType::SBT_TRANSPARENT_ALPHA);
+        }
+
+        inline static Ogre::MaterialPtr CreateGuiMaterial()
+        {
+            auto renderMaterial = Ogre::MaterialManager::getSingleton().getByName("GuiMaterial");
+            if (renderMaterial.get())
+            {
+                return renderMaterial;
+            }
+            renderMaterial = Ogre::MaterialManager::getSingleton().create("GuiMaterial", Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+            Ogre::Technique* matTechnique = renderMaterial->createTechnique();
+            matTechnique->createPass();
+            renderMaterial->getTechnique(0)->getPass(0)->setLightingEnabled(false);
+            renderMaterial->getTechnique(0)->getPass(0)->setColourWriteEnabled(false);
+            return renderMaterial;
+
         }
     };
 }

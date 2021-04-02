@@ -30,8 +30,10 @@ hpms::SimulatorAdaptee::~SimulatorAdaptee()
 
 bool hpms::SimulatorAdaptee::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
+    bool stopped = logic->TriggerStop();
+    bool closed = ctx->GetRenderWindow()->isClosed();
 
-    if (ctx->GetRenderWindow()->isClosed() || logic->TriggerStop())
+    if (stopped || closed)
     {
         return false;
     }
@@ -40,7 +42,8 @@ bool hpms::SimulatorAdaptee::frameRenderingQueued(const Ogre::FrameEvent& evt)
     inputHandler.Update();
     inputHandler.HandleKeyboardEvent(keyStates);
     inputHandler.HandleMouseEvent(mouseButtonStates, &x, &y);
-    logic->OnInput(keyStates, mouseButtonStates, x, y);
+    unsigned int pixelation = ctx->GetSettings().pixelRatio;
+    logic->OnInput(keyStates, mouseButtonStates, x / pixelation, y / pixelation);
     logic->OnUpdate(evt.timeSinceLastFrame);
 
     return true;

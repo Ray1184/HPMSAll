@@ -15,7 +15,7 @@ void hpms::BackgroundImageAdaptee::SetPosition(const glm::vec3& position)
     // Not implementend.
 }
 
-glm::vec3 hpms::BackgroundImageAdaptee::GetPosition()
+glm::vec3 hpms::BackgroundImageAdaptee::GetPosition() const
 {
     return glm::vec3(0, 0, 0);
 }
@@ -25,7 +25,7 @@ void hpms::BackgroundImageAdaptee::SetRotation(const glm::quat& rotation)
     // Not implementend.
 }
 
-glm::quat hpms::BackgroundImageAdaptee::GetRotation()
+glm::quat hpms::BackgroundImageAdaptee::GetRotation() const
 {
     // Not implementend.
     return glm::quat();
@@ -36,7 +36,7 @@ void hpms::BackgroundImageAdaptee::SetScale(const glm::vec3& scale)
     // Not implementend.
 }
 
-glm::vec3 hpms::BackgroundImageAdaptee::GetScale()
+glm::vec3 hpms::BackgroundImageAdaptee::GetScale() const
 {
     // Not implementend.
     return glm::vec3();
@@ -48,7 +48,7 @@ void hpms::BackgroundImageAdaptee::SetVisible(bool visible)
     ogreBackground->setVisible(visible);
 }
 
-bool hpms::BackgroundImageAdaptee::IsVisible()
+bool hpms::BackgroundImageAdaptee::IsVisible() const
 {
     Check(ogreBackground);
     return ogreBackground->getVisible();
@@ -81,7 +81,7 @@ hpms::BackgroundImageAdaptee::BackgroundImageAdaptee(const std::string& imagePat
     ogreBackground->setCorners(-1.0, 1.0, 1.0, -1.0);
     ogreBackground->setMaterial(backgroundMaterial);
     ogreBackground->setRenderQueueGroup(Ogre::RENDER_QUEUE_BACKGROUND);
-    Hide();
+    Show();
 }
 
 

@@ -35,19 +35,19 @@ namespace hpms
 
         void SetPosition(const glm::vec3& position) override;
 
-        glm::vec3 GetPosition() override;
+        glm::vec3 GetPosition() const override;
 
         void SetRotation(const glm::quat& rotation) override;
 
-        glm::quat GetRotation() override;
+        glm::quat GetRotation() const override;
 
         void SetScale(const glm::vec3& scale) override;
 
-        glm::vec3 GetScale() override;
+        glm::vec3 GetScale() const override;
 
         void SetVisible(bool visible) override;
 
-        bool IsVisible() override;
+        bool IsVisible() const override;
 
         virtual SceneNodeAdapter* CreateChild(const std::string& name) override;
 

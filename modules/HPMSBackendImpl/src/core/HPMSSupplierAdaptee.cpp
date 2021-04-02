@@ -6,6 +6,8 @@
 #include <core/HPMSWalkmapAdaptee.h>
 #include <core/HPMSOverlayImageAdaptee.h>
 #include <core/HPMSBackgroundImageAdaptee.h>
+#include <core/HPMSOverlayTextAreaAdaptee.h>
+#include <sstream>
 
 
 hpms::EntityAdapter* hpms::SupplierAdaptee::CreateEntity(const std::string& path)
@@ -40,10 +42,17 @@ hpms::SupplierAdaptee::CreateBackgroundImage(const std::string& path)
     return hpms::SafeNew<hpms::BackgroundImageAdaptee>(path, ctx);
 }
 
+
 hpms::OverlayImageAdapter*
-hpms::SupplierAdaptee::CreateOverlayImage(const std::string& path, unsigned int x, unsigned int y, int zOrder)
+hpms::SupplierAdaptee::CreateOverlayImage(const std::string& path, int x, int y, int zOrder)
 {
     return hpms::SafeNew<hpms::OverlayImageAdaptee>(path, x, y, zOrder, ctx);
+}
+
+hpms::OverlayTextAreaAdapter*
+hpms::SupplierAdaptee::CreateTextArea(const std::string& message, const std::string& fontName, float fontSize, int x, int y, int width, int height, int zOrder)
+{
+    return hpms::SafeNew<hpms::OverlayTextAreaAdaptee>(message, fontName, fontSize, x, y, width, height, zOrder, ctx);
 }
 
 void hpms::SupplierAdaptee::SetAmbientLight(const glm::vec3& rgb)
@@ -75,11 +84,9 @@ hpms::WalkmapAdapter* hpms::SupplierAdaptee::CreateWalkmap(const std::string& na
 
 std::string hpms::SupplierAdaptee::GetImplName()
 {
-#ifdef BACKEND_IMPL_NAME
-    return BACKEND_IMPL_NAME;
-#else
-    return "Ogre 3D";
-#endif
+    std::stringstream ss;
+    ss << "Ogre 3D " << OGRE_VERSION_MAJOR << OGRE_VERSION_MINOR << OGRE_VERSION_PATCH << " (" << OGRE_VERSION_NAME << ")";
+    return ss.str();
 }
 
 

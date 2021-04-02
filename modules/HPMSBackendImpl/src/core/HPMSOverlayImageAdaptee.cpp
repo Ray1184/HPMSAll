@@ -18,21 +18,13 @@ void hpms::OverlayImageAdaptee::SetPosition(const glm::vec3& position)
     ogrePanel->setPosition(position.x, position.y);
     if (z != (int) position.z)
     {
-        std::string newOverlayName = "Overlay_" + std::to_string((int) position.z);
-        std::string oldOverlayName = "Overlay_" + std::to_string(z);
-        Ogre::OverlayManager* overlayManager = ctx->GetOverlayManager();
-        Ogre::Overlay* newOverlay = overlayManager->create(newOverlayName);
-        Ogre::Overlay* oldOverlay = overlayManager->create(oldOverlayName);
-        oldOverlay->remove2D(ogrePanel);
-        newOverlay->setZOrder((int) position.z);
-        newOverlay->add2D(ogrePanel);
-        newOverlay->show();
+        overlay->setZOrder((unsigned int) position.z);
     }
 
 
 }
 
-glm::vec3 hpms::OverlayImageAdaptee::GetPosition()
+glm::vec3 hpms::OverlayImageAdaptee::GetPosition() const
 {
     return glm::vec3(ogrePanel->getLeft(), ogrePanel->getTop(), ogrePanel->getZOrder());
 }
@@ -42,7 +34,7 @@ void hpms::OverlayImageAdaptee::SetRotation(const glm::quat& rotation)
     // Not implementend.
 }
 
-glm::quat hpms::OverlayImageAdaptee::GetRotation()
+glm::quat hpms::OverlayImageAdaptee::GetRotation() const
 {
     // Not implementend.
     return glm::quat();
@@ -53,7 +45,7 @@ void hpms::OverlayImageAdaptee::SetScale(const glm::vec3& scale)
     // Not implementend.
 }
 
-glm::vec3 hpms::OverlayImageAdaptee::GetScale()
+glm::vec3 hpms::OverlayImageAdaptee::GetScale() const
 {
     // Not implementend.
     return glm::vec3();
@@ -66,7 +58,7 @@ void hpms::OverlayImageAdaptee::SetVisible(bool visible)
 
 }
 
-bool hpms::OverlayImageAdaptee::IsVisible()
+bool hpms::OverlayImageAdaptee::IsVisible() const
 {
     Check(ogrePanel);
     return ogrePanel->isEnabled();
@@ -103,28 +95,36 @@ void hpms::OverlayImageAdaptee::Hide()
         ogrePanel->hide();
     }
 }
-hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, unsigned int x, unsigned int y, int zOrder, OgreContext* ctx) : name(imagePath),
-                                                                                                                                             AdapteeCommon(ctx)
+
+hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, int x, int y, int zOrder, OgreContext* ctx) : name(imagePath),
+                                                                                                                                             AdapteeCommon(ctx),
+                                                                                                                                             ogrePanel(nullptr),
+                                                                                                                                             overlay(nullptr)
 {
     Check();
+    std::string name = imagePath + "_" + std::to_string(x) + std::to_string(y) + std::to_string(zOrder);
     Ogre::OverlayManager* overlayManager = ctx->GetOverlayManager();
-    ogrePanel = dynamic_cast<Ogre::OverlayContainer*>(overlayManager->createOverlayElement("Panel", "Overlay_" + imagePath));
-    unsigned int width, height;
-    auto material = hpms::MaterialHelper::CreateTexturedMaterial(imagePath, &width, &height);
-    ogrePanel->setMaterial(material);
-    ogrePanel->setPosition(x, y);
-    unsigned int pixelation = ctx->GetSettings().pixelRatio;
+    overlay = overlayManager->getByName("Overlay_" + name);
+    if (overlay == nullptr)
+    {
+        overlay = overlayManager->create("Overlay_" + name);
+        ogrePanel = dynamic_cast<Ogre::OverlayContainer*>(overlayManager->createOverlayElement("Panel", "OverlayElement_" + name));
+        unsigned int width, height;
+        auto material = hpms::MaterialHelper::CreateTexturedMaterial(imagePath, &width, &height, name);
+        ogrePanel->setMaterial(material);
+        ogrePanel->setMetricsMode(Ogre::GMM_PIXELS);
+        ogrePanel->setPosition(x, y);
+        ogrePanel->setDimensions(width, height);
 
-    // NOTE: Overlay doesn't work well with RTT, so are excluded and pixelated manually (see HPMSRenderToTexture.cpp).
-    ogrePanel->setDimensions(width * pixelation, height * pixelation);
-    ogrePanel->setMetricsMode(Ogre::GMM_PIXELS);
-    std::string overlayName = "Overlay_" + std::to_string(zOrder);
-    Ogre::Overlay* overlay = overlayManager->create(overlayName);
+        overlay->add2D(ogrePanel);
+    } else
+    {
+        ogrePanel = overlay->getChild("OverlayElement_" + name);
+    }
     overlay->setZOrder(zOrder);
-    overlay->add2D(ogrePanel);
     SetBlending(BlendingType::NORMAL);
     overlay->show();
-    Hide();
+
 
 }
 

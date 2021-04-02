@@ -17,8 +17,9 @@ hpms::LuaLogic::~LuaLogic()
 void hpms::LuaLogic::OnCreate()
 {
     vm->RegisterAll();
-    auto* script = hpms::GetScript("InitConfig.lua");
+    auto* script = hpms::LoadScript("InitConfig.lua");
     vm->ExecuteStatement(script->GetContent());
+    hpms::DestroyScript(script);
     LuaRef config = vm->GetGlobal("config");
     std::string firstScript = config["first_script"];
     LoadState(firstScript);
@@ -61,19 +62,14 @@ void hpms::LuaLogic::OnDestroy()
 
 bool hpms::LuaLogic::TriggerStop()
 {
-    if (currentState->Quit())
-    {
-        return true;
-    }
-    return false;
+    return currentState->Quit();
 }
 
 void hpms::LuaLogic::LoadState(const std::string& scriptName)
 {
-    auto* script = hpms::GetScript(scriptName);
+    auto* script = hpms::LoadScript(scriptName);
     vm->ExecuteStatement(script->GetContent());
-    LuaRef scene = vm->GetGlobal("scene");
-    std::string mode = scene["mode"];
+    hpms::DestroyScript(script);
     currentState = hpms::SafeNew<GameState>(vm);
 }
 

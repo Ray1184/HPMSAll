@@ -11,21 +11,20 @@
 
 namespace hpms {
 
-    void InitContext(hpms::WindowSettings& windowSettings);
+    void InitContext(const hpms::WindowSettings& windowSettings, hpms::CustomLogic* logic);
 
     void DestroyContext();
 
     SupplierAdapter* GetSupplier();
 
-    void DestroySupplier(hpms::SupplierAdapter*& supplier);
+    SimulatorAdapter* GetSimulator();
 
-    SimulatorAdapter* GetSimulator(hpms::CustomLogic* logic);
-
-    void DestroySimulator(hpms::SimulatorAdapter* simulator);
-
-    ScriptAdapter* GetScript(const std::string& name);
+    ScriptAdapter* LoadScript(const std::string& name);
 
     void DestroyScript(ScriptAdapter* script);
+
+    // DEBUG USE ONLY
+    OgreContext* GetContext();
 
 
 }

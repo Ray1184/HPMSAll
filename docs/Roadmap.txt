@@ -2,8 +2,9 @@
 ------------------------------------------------------------------------------------------------------
  Testare tutti i suppliers/funzioni del backend sul runtime.    | DONE
  Adattare states e logiche runtime.                             | DONE
- Mappare tutti i suppliers/funzioni nella VM lua.               | PROGRESS
+ Mappare tutti i suppliers/funzioni nella VM lua.               | DONE
  Demo tecnica minimale.                                         | TODO
+ Batch esportazione scena da blender in python.                 | TODO
  Implementare funzioni di gestione camera e switch tra stati.   | TODO
  Demo tecnica.                                                  | TODO
  Implementare prime logiche di gioco e GUI.                     | TODO

@@ -156,7 +156,9 @@ set(SOURCES
         src/utils/HPMSCalcUtils.cpp
         src/utils/HPMSSectorUtils.cpp
         src/core/HPMSScriptAdaptee.cpp
-        src/facade/HPMSEngineFacade.cpp)
+        src/facade/HPMSEngineFacade.cpp
+        src/core/HPMSOverlayTextAreaAdaptee.cpp
+        src/core/HPMSTextBoxHelper.cpp)
 
 add_definitions(-DBACKEND_IMPL_NAME="Ogre 3D ${OGRE_VERSION}")
 

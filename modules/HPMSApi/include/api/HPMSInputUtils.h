@@ -6,6 +6,7 @@
 
 #include <vector>
 #include <string>
+#include <common/HPMSObject.h>
 
 namespace hpms {
     struct MouseEvent : public Object

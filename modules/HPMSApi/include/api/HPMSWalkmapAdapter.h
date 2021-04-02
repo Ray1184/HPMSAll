@@ -65,7 +65,12 @@ namespace hpms
 
         virtual bool IsPerimetral() = 0;
 
-        virtual std::string GetSectorId() = 0;
+        virtual std::string GetSectorId() const = 0;
+
+        inline virtual void SetSectorId(const std::string& sectorId)
+        {
+            // Not implemented.
+        }
 
         virtual const std::vector<SideAdapter*>& GetPerimetralSides() const = 0;
 
@@ -106,6 +111,8 @@ namespace hpms
         virtual std::string GetId() = 0;
 
         virtual TriangleAdapter* SampleTriangle(const glm::vec3& pos, float tolerance) = 0;
+
+        virtual std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side) = 0;
 
     };
 }

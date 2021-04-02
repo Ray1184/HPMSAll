@@ -48,7 +48,7 @@ bool hpms::OgreContext::CreateWindowPair(const OgreWindowSettings& settings)
         {
             SDL_InitSubSystem(SDL_INIT_VIDEO);
         }
-
+        SDL_ShowCursor(false);
         auto p = root->getRenderSystem()->getRenderWindowDescription();
         miscParams.insert(p.miscParams.begin(), p.miscParams.end());
         p.miscParams = miscParams;

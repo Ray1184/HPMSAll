@@ -61,7 +61,7 @@ endfunction()
 # \arg:OUTPUT Output variable where result is stored.
 #
 function(LIST_PATHS FOLDER PREFIX ABSOLUTE_PATH OUTPUT)
-    file(GLOB FILE_LIST ${FOLDER}/*.*)
+    file(GLOB FILE_LIST ${FOLDER}/*)
     set(TMP_OUT "")
     foreach (FILE_DEF ${FILE_LIST})
         set(FILE_DEF_1 ${FILE_DEF})

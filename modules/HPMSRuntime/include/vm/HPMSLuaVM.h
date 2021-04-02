@@ -14,7 +14,7 @@ extern "C" {
 
 
 #include <glm/glm.hpp>
-#include <vm/LuaRegister.h>
+#include <vm/HPMSLuaRegister.h>
 #include <common/HPMSUtils.h>
 #include <facade/HPMSApiFacade.h>
 
@@ -28,18 +28,17 @@ namespace hpms
 
         virtual ~LuaVM();
 
-        inline void ExecuteScript(const std::string& path);
+        void ExecuteScript(const std::string& path);
 
-        inline void ExecuteStatement(const std::string& stat);
+        void ExecuteStatement(const std::string& stat);
 
-        inline LuaRef GetGlobal(const std::string& name);
+        LuaRef GetGlobal(const std::string& name);
 
+        void RegisterAll();
 
-        inline void RegisterAll();
+        void Close();
 
-        inline void Close();
-
-        inline const std::string Name() const override;
+        const std::string Name() const override;
 
     private:
         lua_State* state;

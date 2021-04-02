@@ -16,7 +16,6 @@ namespace hpms
     {
     private:
         LuaVM* vm;
-        std::unordered_map<std::string, bool> keyStatusMap;
         GameState* currentState;
         bool clear;
     public:

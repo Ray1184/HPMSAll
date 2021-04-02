@@ -6,6 +6,12 @@
 
 namespace hpms
 {
+    enum BlendingType
+    {
+        NORMAL = 0,
+        OVERLAY = 1
+    };
+
     class ImageAdapter
     {
     public:

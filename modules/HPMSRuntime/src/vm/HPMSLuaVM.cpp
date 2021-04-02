@@ -39,6 +39,7 @@ LuaRef hpms::LuaVM::GetGlobal(const std::string& name)
 
 void hpms::LuaVM::RegisterAll()
 {
+
     hpms::LuaRegister::RegisterCommonMath(state);
     hpms::LuaRegister::RegisterVector2(state);
     hpms::LuaRegister::RegisterVector3(state);
@@ -46,17 +47,20 @@ void hpms::LuaVM::RegisterAll()
     hpms::LuaRegister::RegisterMatrix4(state);
     hpms::LuaRegister::RegisterKeyEvent(state);
     hpms::LuaRegister::RegisterKeyList(state);
+    hpms::LuaRegister::RegisterMouseEvent(state);
+    hpms::LuaRegister::RegisterMouseList(state);
     hpms::LuaRegister::RegisterQuaternion(state);
     hpms::LuaRegister::RegisterEntity(state);
     hpms::LuaRegister::RegisterNode(state);
-    hpms::LuaRegister::RegisterPicture(state);
+    hpms::LuaRegister::RegisterBackgroundImage(state);
+    hpms::LuaRegister::RegisterOverlayImage(state);
+    hpms::LuaRegister::RegisterTextArea(state);
+    hpms::LuaRegister::RegisterLight(state);
     hpms::LuaRegister::RegisterAssetManager(state);
-    hpms::LuaRegister::RegisterScene(state);
     hpms::LuaRegister::RegisterCamera(state);
     hpms::LuaRegister::RegisterWalkMap(state);
     hpms::LuaRegister::RegisterTriangle(state);
     hpms::LuaRegister::RegisterCollisor(state);
-    hpms::LuaRegister::RegisterAnimator(state);
     hpms::LuaRegister::RegisterLogic(state);
 }
 

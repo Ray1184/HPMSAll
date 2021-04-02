@@ -43,7 +43,3 @@ hpms::AnimationAdaptee::~AnimationAdaptee()
 {
 
 }
-
-void hpms
-
-
