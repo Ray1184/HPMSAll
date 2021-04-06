@@ -156,6 +156,8 @@ bool hpms::OgreContext::Setup()
     LOG_DEBUG("Creating OGRE viewport.");
     CreateViewports();
     Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
+    Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TextureFilterOptions::TFO_NONE);
+    Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::FilterOptions::FO_NONE, Ogre::FilterOptions::FO_NONE, Ogre::FilterOptions::FO_NONE);
 
     LOG_DEBUG("Creating OGRE resource listener.");
     CreateResourceListener();

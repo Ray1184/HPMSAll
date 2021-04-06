@@ -41,8 +41,6 @@ namespace hpms
             material = Ogre::MaterialManager::getSingleton().create("Material_" + materialName,
                                                                     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
-            auto* textState = material->getTechnique(0)->getPass(0)->createTextureUnitState(texture->getName());
-            textState->setTextureFiltering(Ogre::TFO_NONE);
             material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
             material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
             material->getTechnique(0)->getPass(0)->setLightingEnabled(false);

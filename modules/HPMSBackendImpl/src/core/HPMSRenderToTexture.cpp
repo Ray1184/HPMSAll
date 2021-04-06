@@ -49,7 +49,6 @@ void hpms::RenderToTexture::Initialize()
     renderMaterial->getTechnique(0)->getPass(0)->setLightingEnabled(false);
     Ogre::TextureUnitState* textState = renderMaterial->getTechnique(0)->getPass(0)->createTextureUnitState(
             RTT_TEXTURE_NAME);
-    textState->setTextureFiltering(Ogre::TFO_NONE);
 
     renderScreen->setMaterial(renderMaterial);
 
