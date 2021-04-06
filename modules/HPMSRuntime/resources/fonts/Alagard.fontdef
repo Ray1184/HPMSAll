@@ -1,8 +1,8 @@
-BlueHighway
+Alagard
 {
 	type truetype
-	source bluehigh.ttf
-	size 16
+	source Alagard.ttf
+	size 14
 	resolution 96
 	code_points 1-255
 }

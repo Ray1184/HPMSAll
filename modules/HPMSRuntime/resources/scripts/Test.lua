@@ -23,11 +23,11 @@ scene = {
         hpms_title = hpms.make_overlay("HPMS.png", 0, 0, 0)
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 
-        text = hpms.make_textarea("HPMSText", "Typewriter", 15, 20, 80, 550, 400, 10, hpms.vec4(1.0, 0.8, 0.1, 1.0))
-        rem = hpms.stream_text(text, "Richard Prinn alzograve; la testa.", 8)
+        text = hpms.make_textarea("HPMSText", "Alagard", 14, 20, 80, 550, 400, 10, hpms.vec4(1.0, 0.8, 0.1, 1.0))
+        rem = hpms.stream_text(text, "Richard Prinn alzò la testa.", 8)
         text.color = hpms.vec4(1.0, 0.8, 0.1, 1.0)
 
-        text2 = hpms.make_textarea("HPMSText2", "Typewriter", 20, 0, 20, 320, 200, 10, hpms.vec4(1.0, 0.8, 0.1, 1.0))
+        text2 = hpms.make_textarea("HPMSText2", "Alagard", 14, 0, 20, 320, 200, 10, hpms.vec4(1.0, 0.8, 0.1, 1.0))
         text2.text = 'Text example number 2'
 
         light = hpms.make_light(hpms.vec3(0, 0, 0))

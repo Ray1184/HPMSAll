@@ -4,8 +4,8 @@
 #include <facade/HPMSEngineFacade.h>
 #include <states/HPMSLuaLogic.h>
 
-#define WIDTH 960
-#define HEIGHT 600
+#define WIDTH 320
+#define HEIGHT 200
 
 void Dump()
 {

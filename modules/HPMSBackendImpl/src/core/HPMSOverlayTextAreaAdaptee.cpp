@@ -135,7 +135,6 @@ std::string hpms::OverlayTextAreaAdaptee::SetText(const std::string& text, int m
 
 
     auto font = textArea->getFont();
-    std::cout << text << std::endl;
     std::stringstream textBuffer;
     std::stringstream finalBuffer;
 
@@ -146,7 +145,6 @@ std::string hpms::OverlayTextAreaAdaptee::SetText(const std::string& text, int m
     while (code == CODE_WORKING && lines < maxLines)
     {
         std::string token = ProcessLine(textToProcess, maxWidth, font, &code);
-        std::cout << token << std::endl;
         textToProcess = textToProcess.substr(token.length(), textToProcess.length() - 1);
         finalBuffer << hpms::Trim(token) << "\n";
         lines++;
@@ -218,6 +216,11 @@ hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName,
         textArea->setCharHeight(fontSize);
         textArea->setColour(Ogre::ColourValue(1.0, 1.0, 1.0));
         textArea->setFontName(fontName);
+        auto mat = textArea->getFont()->getMaterial();
+        auto* tec = mat->getTechnique(0);
+        auto* pass = tec->getPass(0);
+        auto* unit = pass->getTextureUnitState(0);
+        unit->setTextureFiltering(Ogre::TFO_NONE);
         ogrePanel->addChild(textArea);
 
         overlay->add2D(ogrePanel);
