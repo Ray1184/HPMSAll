@@ -216,6 +216,7 @@ hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName,
         textArea->setCharHeight(fontSize);
         textArea->setColour(Ogre::ColourValue(1.0, 1.0, 1.0));
         textArea->setFontName(fontName);
+        textArea->getMaterial()->setTextureFiltering(Ogre::TextureFilterOptions::TFO_NONE);
         ogrePanel->addChild(textArea);
         overlay->add2D(ogrePanel);
     } else
