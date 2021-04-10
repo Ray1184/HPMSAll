@@ -38,8 +38,8 @@ scene = {
         hpms_title = hpms.make_overlay("HPMS.png", 0, 0, 0)
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 
-        text = hpms.make_textarea("HPMSText", "Alagard", 16, 20, 80, 550, 400, 10, hpms.vec4(1.0, 0.8, 0.1, 1.0))
-        rem = hpms.stream_text(text, "HPMS test label.", 8)
+        text = hpms.make_textarea("HPMSText", "Alagard", 16, 20, 80, 320, 400, 10, hpms.vec4(1.0, 0.8, 0.1, 1.0))
+        rem = hpms.stream_text(text, "HPMS test label 123456789123456789 qwertyuiopasdfghjklzxcvbnm 12345678909876543.", 8)
         --text.color = hpms.vec4(1.0, 0.8, 0.1, 1.0)
 
 
