@@ -282,9 +282,19 @@ namespace hpms
             node->AttachObject(obj);
         }
 
-        static inline void AMRemoveNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
+        static inline void LSetNodeCamera(SceneNodeAdapter* node, CameraAdapter* cam)
+        {
+            node->AttachObject(cam);
+        }
+
+        static inline void LSRemoveNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
         {
             node->DetachObject(obj);
+        }
+
+        static inline void LSetBoneNode(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner, const glm::vec3& offsetPosition = glm::vec3(), const glm::quat& offsetRotation = glm::quat())
+        {
+            boneOwner->AttachObjectToBone(boneNode, objToAttach, offsetPosition, offsetRotation);
         }
 
         static inline hpms::WalkmapAdapter* AMCreateWalkMap(const std::string& name)
@@ -386,6 +396,11 @@ namespace hpms
                 anim->SetPlaying(false);
             }
             entity->GetAnimationByName(animName)->SetPlaying(true);
+        }
+
+        static inline void LUpdateAnimation(hpms::EntityAdapter* entity, const std::string& animName, float tpf)
+        {
+            entity->GetAnimationByName(animName)->Update(tpf);
         }
 
 

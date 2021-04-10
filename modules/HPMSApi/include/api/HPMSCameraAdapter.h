@@ -33,6 +33,11 @@ namespace hpms
             return 0.0;
         }
 
+        inline float GetFovY() const {
+            // Not used.
+            return 0.0;
+        }
+
         virtual void SetNear(float near) = 0;
 
         virtual void SetFar(float far) = 0;

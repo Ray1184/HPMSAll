@@ -150,8 +150,6 @@ namespace hpms
             (glm::quat) > ()
                     .addConstructor < void(*)
             (float, float, float, float) > ()
-                    .addConstructor < void(*)
-            (glm::vec3) > ()
                     .addData("x", &glm::quat::x)
                     .addData("y", &glm::quat::y)
                     .addData("z", &glm::quat::z)
@@ -303,6 +301,7 @@ namespace hpms
                     .addProperty("rotation", &hpms::CameraAdapter::GetRotation, &hpms::CameraAdapter::SetRotation)
                     .addProperty("near", &hpms::CameraAdapter::GetNear, &hpms::CameraAdapter::SetNear)
                     .addProperty("far", &hpms::CameraAdapter::GetFar, &hpms::CameraAdapter::SetFar)
+                    .addProperty("fovy", &hpms::CameraAdapter::GetFovY, &hpms::CameraAdapter::SetFovY)
                     .endClass()
                     .endNamespace();
         }
@@ -312,6 +311,8 @@ namespace hpms
             getGlobalNamespace(state)
                     .beginNamespace("hpms")
                     .addFunction("set_node_entity", &hpms::LuaExtensions::LSetNodeEntity)
+                    .addFunction("set_node_camera", &hpms::LuaExtensions::LSetNodeCamera)
+                    .addFunction("set_bone_node", &hpms::LuaExtensions::LSetBoneNode)
                     .addFunction("set_ambient", &hpms::LuaExtensions::LSetAmbient)
                     .addFunction("get_camera", &hpms::LuaExtensions::LGetCamera)
                     .addFunction("camera_lookat", &hpms::LuaExtensions::LCameraLookAt)
@@ -322,6 +323,7 @@ namespace hpms
                     .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
                     .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
                     .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
+                    .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
                     .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
                     .endNamespace();
         }
