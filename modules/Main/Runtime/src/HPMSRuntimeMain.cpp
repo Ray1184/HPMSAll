@@ -52,6 +52,9 @@ int main(int argc, char *argv[])
         s.pixelRatio = WIDTH / 320;
         auto* customLogic = hpms::SafeNew<hpms::LuaLogic>();
         hpms::InitContext(s, customLogic);
+        std::stringstream ss;
+        ss << "Rendering engine implementation: " << hpms::GetSupplier()->GetImplName();
+        LOG_INFO(ss.str().c_str());
         hpms::GetSimulator()->Run();
         hpms::SafeDelete(customLogic);
         hpms::DestroyContext();

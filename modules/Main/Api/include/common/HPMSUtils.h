@@ -14,7 +14,7 @@
 #include <functional>
 #include <common/HPMSNames.h>
 #include <cassert>
-#include <stringapiset.h>
+#include <iostream>
 
 #define HPMS_ASSERT(check, msg) assert(check)
 #define LOG_ERROR(msg) hpms::ErrorHandler(__FILE__, __LINE__, msg)
@@ -54,21 +54,31 @@ namespace hpms
         static ConfigManager& Instance();
     };
 
+    inline void Print(const std::stringstream& ss)
+    {
+        printf(ss.str().c_str());
+    }
 
     inline void ErrorHandler(const char* file, int line, const char* message)
     {
-        printf("[ERROR] - File %s, at line %d: %s", file, line, message);
+        std::stringstream ss;
+        ss << "[ERROR] - File" << file << ", at line " << std::to_string(line) << ": " << message;
+        Print(ss);
         exit(-1);
     }
 
     inline void MsgHandler(const char* desc, const char* message)
     {
-        printf("[%s] - %s\n", desc, message);
+        std::stringstream ss;
+        ss << "[" << desc << "] - " << message << std::endl;
+        Print(ss);
     }
 
     inline void MsgHandler(const char* message)
     {
-        printf("%s\n", message);
+        std::stringstream ss;
+        ss << message << std::endl;
+        Print(ss);
     }
 
 
@@ -235,66 +245,43 @@ namespace hpms
         return (int) GetConfF(key, (float) defaultValue);
     }
 
-    inline bool IsNumber(const std::string& s)
+    bool IsNumber(const std::string& s);
+
+    std::string ReplaceAll(const std::string& source, const std::string& from, const std::string& to);
+
+
+    inline std::string GetFilenameExtension(const std::string& filename)
     {
-        std::size_t charPost(0);
+        std::string::size_type idx;
+        std::string extension("");
 
-        charPost = s.find_first_not_of(' ');
-        if (charPost == s.size())
-        { return false; }
+        idx = filename.rfind('.');
 
-        if (s[charPost] == '+' || s[charPost] == '-')
-        { ++charPost; }
-
-        int nNm, nPt;
-        for (nNm = 0, nPt = 0; std::isdigit(s[charPost]) || s[charPost] == '.'; ++charPost)
+        if (idx != std::string::npos)
         {
-            s[charPost] == '.' ? ++nPt : ++nNm;
-        }
-        if (nPt > 1 || nNm < 1)
-        {
-            return false;
+            extension = filename.substr(idx + 1);
         }
 
-
-        while (s[charPost] == ' ')
-        {
-            ++charPost;
-        }
-
-        return charPost == s.size();
+        return extension;
     }
 
-    inline std::string ReplaceAll(const std::string& source, const std::string& from, const std::string& to)
-    {
-        std::string newString;
-        newString.reserve(source.length());
-
-        std::string::size_type lastPos = 0;
-        std::string::size_type findPos;
-
-        while (std::string::npos != (findPos = source.find(from, lastPos)))
-        {
-            newString.append(source, lastPos, findPos - lastPos);
-            newString += to;
-            lastPos = findPos + from.length();
-        }
-
-        newString += source.substr(lastPos);
-
-        return newString;
-    }
-
-    inline const wchar_t* ConvertToUTF16(const char* pStr)
-    {
-        static wchar_t wszBuf[1024];
-        MultiByteToWideChar(CP_OEMCP, 0, pStr, -1, wszBuf, sizeof(wszBuf));
-        return wszBuf;
-    }
-
-    void ProcessFileLines(const std::string& fileName, std::function<void(const std::string&)> callback);
+    void ProcessFileLines(const std::string& fileName, const std::function<void(const std::string&)>& callback);
 
     std::string ReadFile(const std::string& fileName);
+
+    inline void WriteLinesToFile(const std::string& outputFile, const std::vector<std::string>& lines)
+    {
+        if (lines.empty())
+        {
+            return;
+        }
+        std::ofstream ostream(outputFile);
+        for (auto& line : lines)
+        {
+            ostream << line << std::endl;
+        }
+        ostream.close();
+    }
 
     void RandomString(char* s, int len);
 

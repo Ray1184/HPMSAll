@@ -12,7 +12,8 @@ set(PODS_VERSION master)
 set(GLM_VERSION 0.9.9.8)
 
 
-include(../../cmake/Shared.cmake)
+include(../../../cmake/Shared.cmake)
+include(../../../cmake/OgreUtils.cmake)
 
 # Other libraries setup.
 install_from_repo(https://github.com/LuaDist/lua.git LUA ${LUA_VERSION} TRUE /src/)
@@ -33,42 +34,14 @@ install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
 install_from_repo(https://github.com/vinniefalco/LuaBridge.git LUABRIDGE ${LUABRIDGE_VERSION} TRUE /Source/LuaBridge/)
 
-# Ogre setup.
-get_filename_component(BUILD_TYPE ${CMAKE_BINARY_DIR} NAME)
-set(OGRE_BUILD ${OGRE_ROOT}/${BUILD_TYPE})
-set(OGRE_H_0 ${OGRE_BUILD}/include)
-set(OGRE_H_1 ${OGRE_BUILD}/Dependencies/include)
-set(OGRE_H_2 ${OGRE_ROOT}/OgreMain/include)
-set(OGRE_H_3 ${OGRE_ROOT}/Components/Overlay/include)
-set(OGRE_H_4 ${OGRE_ROOT}/Components/Property/include)
-set(OGRE_H_5 ${OGRE_ROOT}/RenderSystems/GL/include)
-set(OGRE_H_6 ${OGRE_ROOT}/PlugIns/STBICodec/include)
-set(OGRE_H_7 ${OGRE_ROOT}/RenderSystems/GL/include)
-
-message(STATUS "Ogre includes: ")
-message(STATUS "OGRE_H_0: ${OGRE_H_0}")
-message(STATUS "OGRE_H_1: ${OGRE_H_1}")
-message(STATUS "OGRE_H_2: ${OGRE_H_2}")
-message(STATUS "OGRE_H_3: ${OGRE_H_3}")
-message(STATUS "OGRE_H_4: ${OGRE_H_4}")
-message(STATUS "OGRE_H_5: ${OGRE_H_5}")
-message(STATUS "OGRE_H_6: ${OGRE_H_6}")
-message(STATUS "OGRE_H_7: ${OGRE_H_7}")
-
-include_directories(../HPMSApi/include)
-include_directories(../HPMSBackendImpl/include)
+ogre_include(${OGRE_ROOT})
+include_directories(../Api/include)
+include_directories(../BackendImpl/include)
 include_directories(include)
-include_directories(${OGRE_H_0})
-include_directories(${OGRE_H_1})
-include_directories(${OGRE_H_2})
-include_directories(${OGRE_H_3})
-include_directories(${OGRE_H_4})
-include_directories(${OGRE_H_5})
-include_directories(${OGRE_H_6})
-include_directories(${OGRE_H_7})
 
 # Copy dist to build.
-file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/)
+file(COPY ${PROJECT_SOURCE_DIR}/../../shared-dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
+file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
 
 
 set(SOURCES
@@ -78,7 +51,6 @@ set(SOURCES
         src/states/HPMSGameState.cpp
         src/logic/gui/HPMSGuiText.cpp)
 add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp ${SOURCES})
-#add_executable(HPMSRuntime src/HPMSTestMain.cpp ${SOURCES})
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSBackendImpl)
 
 # Resources installation through python.
@@ -90,5 +62,5 @@ execute_process(
         COMMAND ${Python_EXECUTABLE} ${BUILD_MODULE} ${PROJECT_SOURCE_DIR} ${CMAKE_BINARY_DIR}
 )
 
-cat(${CMAKE_BINARY_DIR}/bin/data/Core.ini ${CMAKE_BINARY_DIR}/bin/data/Resources.ini)
-file(REMOVE ${CMAKE_BINARY_DIR}/bin/data/Core.ini)
+cat(${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini ${CMAKE_BINARY_DIR}/bin/rt/data/Resources.ini)
+file(REMOVE ${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini)

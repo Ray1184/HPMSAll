@@ -16,7 +16,7 @@ def add_resource(res, resources, bin_path):
     res_name = ntpath.basename(res).capitalize()
     entry = 'Zip=data/packs/' + res_name + '.zip'
     resources.append(entry)
-    shutil.make_archive(bin_path + '/bin/data/packs/' + res_name, 'zip', res)
+    shutil.make_archive(bin_path + '/bin/rt/data/packs/' + res_name, 'zip', res)
     echo('Adding ' + res + ' to data/packs/' + res_name + '.zip.')
 
 
@@ -40,7 +40,7 @@ def deploy():
     for res in resources:
         add_resource(res, res_entries, bin_path)
 
-    res_ini = bin_path + '/bin/data/Resources.ini'
+    res_ini = bin_path + '/bin/rt/data/Resources.ini'
     if os.path.exists(res_ini):
         os.remove(res_ini)
     with open(res_ini, 'w') as f:

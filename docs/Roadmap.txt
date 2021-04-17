@@ -3,6 +3,7 @@
  Testare tutti i suppliers/funzioni del backend sul runtime.    | DONE
  Adattare states e logiche runtime.                             | DONE
  Mappare tutti i suppliers/funzioni nella VM lua.               | DONE
+ Text box e bone attachment.                                    | DONE
  Demo tecnica minimale.                                         | TODO
  Batch esportazione scena da blender in python.                 | TODO
  Implementare funzioni di gestione camera e switch tra stati.   | TODO

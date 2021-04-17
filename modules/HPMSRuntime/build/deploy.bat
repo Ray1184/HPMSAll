@@ -1,1 +1,0 @@
-C:/Users/greppi/AppData/Local/Programs/Python/Python37/python.exe deploy.py C:/Users/greppi/Desktop/Nick/Projects/HPMSAll/modules/HPMSRuntime C:/Users/greppi/Desktop/Nick/Projects/HPMSAll/cmake-build-debug

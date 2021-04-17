@@ -10,7 +10,7 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 set(DYNALO_VERSION 1.0.3)
 set(GLM_VERSION 0.9.9.8)
 
-include(../../cmake/Shared.cmake)
+include(../../../cmake/Shared.cmake)
 
 # Other libraries setup.
 install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)

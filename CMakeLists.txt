@@ -6,10 +6,14 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
-set(OGRE_ROOT ${PROJECT_SOURCE_DIR}/../Ogre3D)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+message(STATUS "Ogre root path: $ENV{OGRE_ROOT}")
 
-add_subdirectory(modules/HPMSApi)
-add_subdirectory(modules/HPMSBackendImpl)
-add_subdirectory(modules/HPMSRuntime)
+if ($ENV{OGRE_ROOT} STREQUAL "")
+    message(FATAL_ERROR "OGRE_ROOT environment variable must be set to build HPMS.")
+endif ()
+
+set(OGRE_ROOT $ENV{OGRE_ROOT})
+
+add_subdirectory(modules/Main)
+add_subdirectory(modules/Extra)

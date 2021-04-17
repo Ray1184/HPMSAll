@@ -4,14 +4,14 @@
 
 #include <common/HPMSUtils.h>
 
-void hpms::ProcessFileLines(const std::string& fileName, std::function<void(const std::string&)> callback)
+void hpms::ProcessFileLines(const std::string& fileName, const std::function<void(const std::string&)>& callback)
 {
     std::ifstream file(fileName);
     if (file)
     {
         for (std::string line; getline(file, line);)
         {
-            callback(line);
+            callback(hpms::Trim(line));
         }
     } else
     {
@@ -38,7 +38,9 @@ std::string hpms::ReadFile(const std::string& fileName)
         ss << "Cannot open/read file with name " << fileName;
         LOG_ERROR(ss.str().c_str());
     }
+    return "";
 }
+
 
 std::vector<std::string> hpms::Split(const std::string& stringToSplit, const std::string& reg)
 {
@@ -90,6 +92,56 @@ void hpms::RandomString(char* s, int len)
     }
 
     s[len] = 0;
+}
+
+std::string hpms::ReplaceAll(const std::string& source, const std::string& from, const std::string& to)
+{
+    std::string newString;
+    newString.reserve(source.length());
+
+    std::string::size_type lastPos = 0;
+    std::string::size_type findPos;
+
+    while (std::string::npos != (findPos = source.find(from, lastPos)))
+    {
+        newString.append(source, lastPos, findPos - lastPos);
+        newString += to;
+        lastPos = findPos + from.length();
+    }
+
+    newString += source.substr(lastPos);
+
+    return newString;
+}
+
+bool hpms::IsNumber(const std::string& s)
+{
+    std::size_t charPost(0);
+
+    charPost = s.find_first_not_of(' ');
+    if (charPost == s.size())
+    { return false; }
+
+    if (s[charPost] == '+' || s[charPost] == '-')
+    { ++charPost; }
+
+    int nNm, nPt;
+    for (nNm = 0, nPt = 0; std::isdigit(s[charPost]) || s[charPost] == '.'; ++charPost)
+    {
+        s[charPost] == '.' ? ++nPt : ++nNm;
+    }
+    if (nPt > 1 || nNm < 1)
+    {
+        return false;
+    }
+
+
+    while (s[charPost] == ' ')
+    {
+        ++charPost;
+    }
+
+    return charPost == s.size();
 }
 
 

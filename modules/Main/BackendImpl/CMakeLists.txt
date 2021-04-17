@@ -15,8 +15,8 @@ if (NOT DEFINED DEP_PATH)
 endif ()
 
 
-include(../../cmake/Shared.cmake)
-
+include(../../../cmake/Shared.cmake)
+include(../../../cmake/OgreUtils.cmake)
 
 # Other libraries setup.
 install_from_repo(https://github.com/mtrempoltsev/pods.git PODS ${PODS_VERSION} FALSE /include/)
@@ -30,15 +30,6 @@ set(OGRE_BIN ${OGRE_BUILD}/bin)
 set(OGRE_BIN_2 ${OGRE_BUILD}/Dependencies/bin)
 set(OGRE_LIB ${OGRE_BUILD}/lib)
 set(OGRE_LIB_2 ${OGRE_BUILD}/Dependencies/lib)
-set(OGRE_H_0 ${OGRE_BUILD}/include)
-set(OGRE_H_1 ${OGRE_BUILD}/Dependencies/include)
-set(OGRE_H_2 ${OGRE_ROOT}/OgreMain/include)
-set(OGRE_H_3 ${OGRE_ROOT}/Components/Overlay/include)
-set(OGRE_H_4 ${OGRE_ROOT}/Components/Property/include)
-set(OGRE_H_5 ${OGRE_ROOT}/RenderSystems/GL/include)
-set(OGRE_H_6 ${OGRE_ROOT}/PlugIns/STBICodec/include)
-set(OGRE_H_7 ${OGRE_ROOT}/RenderSystems/GL/include)
-
 
 find_library(OGRE_MAIN
         NAMES OgreMain libOgreMain OgreMain.dll libOgreMain.dll OgreMain_d libOgreMain_d OgreMain_d.dll libOgreMain_d.dll
@@ -109,29 +100,12 @@ message(STATUS "OGRE_ZLIB: ${OGRE_ZLIB}")
 message(STATUS "OGRE_ZLIBSTATIC: ${OGRE_ZLIBSTATIC}")
 message(STATUS "OGRE_ZZIP: ${OGRE_ZZIP}")
 
-message(STATUS "Ogre includes: ")
-message(STATUS "OGRE_H_0: ${OGRE_H_0}")
-message(STATUS "OGRE_H_1: ${OGRE_H_1}")
-message(STATUS "OGRE_H_2: ${OGRE_H_2}")
-message(STATUS "OGRE_H_3: ${OGRE_H_3}")
-message(STATUS "OGRE_H_4: ${OGRE_H_4}")
-message(STATUS "OGRE_H_5: ${OGRE_H_5}")
-message(STATUS "OGRE_H_6: ${OGRE_H_6}")
-message(STATUS "OGRE_H_7: ${OGRE_H_7}")
-
-include_directories(../HPMSApi/include)
+ogre_include(${OGRE_ROOT})
+include_directories(../Api/include)
 include_directories(include)
-include_directories(${OGRE_H_0})
-include_directories(${OGRE_H_1})
-include_directories(${OGRE_H_2})
-include_directories(${OGRE_H_3})
-include_directories(${OGRE_H_4})
-include_directories(${OGRE_H_5})
-include_directories(${OGRE_H_6})
-include_directories(${OGRE_H_7})
 
 # Copy dist to build.
-file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/)
+file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
 
 set(SOURCES
         src/input/HPMSInputHandler.cpp
@@ -160,11 +134,8 @@ set(SOURCES
         src/core/HPMSOverlayTextAreaAdaptee.cpp
         src/core/HPMSTextBoxHelper.cpp)
 
-add_definitions(-DBACKEND_IMPL_NAME="Ogre 3D ${OGRE_VERSION}")
-
 add_library(HPMSBackendImpl SHARED ${SOURCES})
 
-#add_executable(HPMSBackendImpl src/Main.cpp ${SOURCES})
 target_link_libraries(HPMSBackendImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGRE_SDL2})
 
 # Installation.
@@ -172,16 +143,16 @@ string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
 add_custom_command(TARGET HPMSBackendImpl
         POST_BUILD
         # Copy Ogre dll files do build.
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN_2}/ ${CMAKE_BINARY_DIR}/bin/
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/rt/
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/rt/
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN_2}/ ${CMAKE_BINARY_DIR}/bin/rt/
         # Delete folders and files.
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/debug
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/release
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/minsizerel
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/relwithdebinfo
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/resources.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/samples.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/plugins.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/tests.cfg
+        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/rt/debug
+        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/rt/release
+        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/rt/minsizerel
+        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/rt/relwithdebinfo
+        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/resources.cfg
+        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/samples.cfg
+        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/plugins.cfg
+        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/tests.cfg
         )
