@@ -1,6 +1,6 @@
 # Tools project
 cmake_minimum_required(VERSION 3.17)
-project(HPMSWalkmapImporter)
+project(HPMSWalkmapConverter)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
@@ -33,15 +33,15 @@ include_directories(include)
 file(COPY ${PROJECT_SOURCE_DIR}/../../shared-dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/ext/)
 
 set(SOURCES
-        src/tools/HPMSWalkmapImporter.cpp)
+        src/tools/HPMSWalkmapConverter.cpp)
 
-add_executable(HPMSWalkmapImporter src/HPMSWalkmapImporterMain.cpp ${SOURCES})
+add_executable(HPMSWalkmapConverter src/HPMSWalkmapConverterMain.cpp ${SOURCES})
 
-target_link_libraries(HPMSWalkmapImporter HPMSBackendImpl)
+target_link_libraries(HPMSWalkmapConverter HPMSBackendImpl)
 
 # Installation.
 string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
-add_custom_command(TARGET HPMSWalkmapImporter
+add_custom_command(TARGET HPMSWalkmapConverter
         POST_BUILD
         # Copy Ogre dll files do build.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/ext/

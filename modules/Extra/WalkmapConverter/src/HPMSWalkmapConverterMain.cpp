@@ -1,12 +1,12 @@
 /*!
- * File HPMSWalkmapImporterMain.cpp
+ * File HPMSWalkmapConverterMain.cpp
  */
 
 #include <string>
 #include <iostream>
 #include <pods/buffers.h>
 #include <resource/HPMSWalkmap.h>
-#include <tools/HPMSWalkmapImporter.h>
+#include <tools/HPMSWalkmapConverter.h>
 
 struct ProcessResult {
     int code;
@@ -51,13 +51,13 @@ int main(int argc, char** argv)
 
     ProcessResult ret;
 
-    if (fileExtension == ".obj")
+    if (fileExtension == "obj")
     {
         LOG_INFO("Processing input in STANDARD mode.");
         ret = Serialize(inputPath, outputPath);
 
     }
-    else if (fileExtension == ".batch")
+    else if (fileExtension == "batch")
     {
         LOG_INFO("Processing input in BATCH mode.");
         if (argc >= 3)
@@ -65,6 +65,11 @@ int main(int argc, char** argv)
             LOG_WARN("Output path ignored in batch mode.");
             ret =  SerializeBatch(inputPath);
         }
+    }
+    else {
+        std::stringstream sserr;
+        sserr << "Extension ." << fileExtension << " is not a valid walkmap input format." << std::endl;
+        LOG_ERROR(sserr.str().c_str());
     }
 
     if (ret.code == 0)
@@ -89,7 +94,7 @@ std::string GetOutputPath(const std::string& inputPath)
 
 ProcessResult Serialize(const std::string& inputPath, const std::string& outputPath)
 {
-    hpms::WalkmapData* item = hpms::WalkmapImporter::LoadWalkmap(inputPath);
+    hpms::WalkmapData* item = hpms::WalkmapConverter::LoadWalkmap(inputPath);
     pods::ResizableOutputBuffer out;
     pods::BinarySerializer<decltype(out)> serializer(out);
     if (serializer.save(*item) != pods::Error::NoError)

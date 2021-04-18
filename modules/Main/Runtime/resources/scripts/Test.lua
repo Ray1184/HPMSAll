@@ -7,34 +7,25 @@ scene = {
         -- Init function callback.
         hpms.set_ambient(hpms.vec3(0.1, 0.1, 0.1))
         local cam = hpms.get_camera()
-        cam.position = hpms.vec3(2, -3, 2)
-        cam.rotation = hpms.quat(0.756635, 0.580586, 0.183058, 0.238566)
+        cam.position = hpms.vec3(0, -3, 1.5)
+        cam.rotation = hpms.quat(0.793353, 0.608762, 0.0, 0.0)
         cam.near = 0.5
         cam.far = 100
-        cam.fovy = 0.6280287372719928
+        cam.fovy = 0.6926049161625412
         mx = 0
         my = 0
-        --hpms.camera_lookat(cam, hpms.vec3(0, 0, 0))
         entity = hpms.make_entity("DummyAnim.mesh")
         weapon = hpms.make_entity("DummySword.mesh")
         hpms.set_bone_node("Hand.L", weapon, entity, hpms.vec3(0, 0.3, 0), hpms.from_euler(0, 0, 0))
         hpms.play_anim(entity, "my_animation")
-        --cube.scale = hpms.vec3(0.2, 0.2, 0.2)
-        --atnode = hpms.make_node("CubeNode")
 
         node = hpms.make_node("DummyAnimNode")
-
-        --node.rotation = hpms.from_euler(hpms.to_radians(-90), 0, 0)
-        --node.position = hpms.vec3(0, -3, 0)
         hpms.set_node_entity(node, entity)
-        --node.scale = hpms.vec3(3, 3, 3)
-        --hpms.set_node_entity(atnode, cube)
 
+        map = hpms.make_walkmap("Dummy_Map.walkmap")
+        collisor = hpms.make_node_collisor(node, map, 0)
 
-        --dentity = hpms.make_depth_entity("DepthCube.mesh")
-        --dnode = hpms.make_node("DepthCubeNode")
-        --hpms.set_node_entity(dnode, dentity)
-        back = hpms.make_background("Derceto.png")
+        back = hpms.make_background("B_01.png")
         hpms_title = hpms.make_overlay("HPMS.png", 0, 0, 0)
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 

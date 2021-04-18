@@ -1,11 +1,11 @@
 /*!
- * File WalkmapImporter.cpp
+ * File WalkmapConverter.cpp
  */
 
-#include <tools/HPMSWalkmapImporter.h>
+#include <tools/HPMSWalkmapConverter.h>
 #include <utils/HPMSCalcUtils.h>
 
-hpms::WalkmapData* hpms::WalkmapImporter::LoadWalkmap(const std::string& path)
+hpms::WalkmapData* hpms::WalkmapConverter::LoadWalkmap(const std::string& path)
 {
     std::vector<hpms::Sector> sectors;
     ProcessSectors(sectors, path);
@@ -14,7 +14,7 @@ hpms::WalkmapData* hpms::WalkmapImporter::LoadWalkmap(const std::string& path)
     return map;
 }
 
-void hpms::WalkmapImporter::ProcessSectors(std::vector<hpms::Sector>& sectors, const std::string& path)
+void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector>& sectors, const std::string& path)
 {
     std::vector<glm::vec3> vertices;
     std::vector<hpms::Face> faces;
@@ -66,7 +66,7 @@ void hpms::WalkmapImporter::ProcessSectors(std::vector<hpms::Sector>& sectors, c
 }
 
 
-void hpms::WalkmapImporter::ProcessPerimetralSides(std::vector<hpms::Sector>& sectors)
+void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector>& sectors)
 {
     std::vector<Triangle> allTris;
     for (auto& sector : sectors)

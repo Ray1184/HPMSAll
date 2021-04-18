@@ -8,4 +8,4 @@ set(CMAKE_STATIC_LIBRARY_PREFIX)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/ext)
 
-add_subdirectory(WalkmapImporter)
+add_subdirectory(WalkmapConverter)

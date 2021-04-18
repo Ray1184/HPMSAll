@@ -1,5 +1,5 @@
 /*!
- * File HPMSWalkmapImporter.h
+ * File HPMSWalkmapConverter.h
  */
 
 #pragma once
@@ -10,7 +10,7 @@
 
 namespace hpms
 {
-    class WalkmapImporter
+    class WalkmapConverter
     {
     public:
         static hpms::WalkmapData* LoadWalkmap(const std::string& path);
