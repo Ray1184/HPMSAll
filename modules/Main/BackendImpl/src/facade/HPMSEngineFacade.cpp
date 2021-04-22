@@ -63,6 +63,12 @@ hpms::SimulatorAdapter* hpms::GetSimulator()
     return gSimulator;
 }
 
+hpms::NativeAdapter* hpms::GetNative()
+{
+    HPMS_ASSERT(gContext, "Context must be initialized.");
+    return gNative;
+}
+
 hpms::ScriptAdapter* hpms::LoadScript(const std::string& name)
 {
     return hpms::SafeNew<ScriptAdaptee>(name);

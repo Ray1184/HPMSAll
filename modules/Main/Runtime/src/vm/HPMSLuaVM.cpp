@@ -62,6 +62,7 @@ void hpms::LuaVM::RegisterAll()
     hpms::LuaRegister::RegisterTriangle(state);
     hpms::LuaRegister::RegisterCollisor(state);
     hpms::LuaRegister::RegisterLogic(state);
+    hpms::LuaRegister::RegisterDebug(state);
 }
 
 void hpms::LuaVM::Close()
