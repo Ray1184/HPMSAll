@@ -359,6 +359,14 @@ namespace hpms
                     .endNamespace();
         }
 
+        inline static void RegisterDebug(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .addFunction("debug_draw_walkmap", &hpms::LuaExtensions::DDebugDrawWalkmap)
+                    .endNamespace();
+        }
+
 
     };
 }

@@ -4,11 +4,13 @@
 
 #include <facade/HPMSEngineFacade.h>
 #include <core/HPMSRenderToTexture.h>
+#include <core/HPMSNativeAdaptee.h>
 
 hpms::OgreContext* gContext = nullptr;
 hpms::RenderToTexture* gRtt = nullptr;
 hpms::SupplierAdapter* gSupplier = nullptr;
 hpms::SimulatorAdapter* gSimulator = nullptr;
+hpms::NativeAdapter* gNative = nullptr;
 
 void hpms::InitContext(const hpms::WindowSettings& windowSettings, hpms::CustomLogic* logic)
 {
@@ -28,6 +30,7 @@ void hpms::InitContext(const hpms::WindowSettings& windowSettings, hpms::CustomL
             gRtt = hpms::SafeNew<hpms::RenderToTexture>(gContext, fbWidth, fbHeight);
             gSupplier = hpms::SafeNew<hpms::SupplierAdaptee>(gContext);
             gSimulator = hpms::SafeNew<hpms::SimulatorAdaptee>(gContext, logic);
+            gNative = hpms::SafeNew<hpms::NativeAdaptee>(gContext);
         }
 
     } catch (std::exception& e)
@@ -39,6 +42,7 @@ void hpms::InitContext(const hpms::WindowSettings& windowSettings, hpms::CustomL
 
 void hpms::DestroyContext()
 {
+    hpms::SafeDelete(gNative);
     hpms::SafeDelete(gSimulator);
     hpms::SafeDelete(gSupplier);
     hpms::SafeDelete(gRtt);

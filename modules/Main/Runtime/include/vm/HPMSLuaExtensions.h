@@ -12,6 +12,7 @@
 #include <facade/HPMSApiFacade.h>
 #include <logic/interaction/HPMSCollisor.h>
 #include <logic/gui/HPMSGuiText.h>
+#include <debug/HPMSDebugUtils.h>
 
 namespace hpms
 {
@@ -401,6 +402,12 @@ namespace hpms
         static inline void LUpdateAnimation(hpms::EntityAdapter* entity, const std::string& animName, float tpf)
         {
             entity->GetAnimationByName(animName)->Update(tpf);
+        }
+
+        // Debug Logic.
+        static inline void DDebugDrawWalkmap(hpms::WalkmapAdapter* walkmap)
+        {
+            hpms::DebugUtils::DrawWalkmap(walkmap);
         }
 
 

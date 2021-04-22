@@ -8,6 +8,7 @@
 #include <core/HPMSOgreContext.h>
 #include <core/HPMSSimulatorAdaptee.h>
 #include <core/HPMSScriptAdaptee.h>
+#include <api/HPMSNativeAdapter.h>
 
 namespace hpms {
 
@@ -20,6 +21,8 @@ namespace hpms {
     SimulatorAdapter* GetSimulator();
 
     ScriptAdapter* LoadScript(const std::string& name);
+
+    NativeAdapter* GetNative();
 
     void DestroyScript(ScriptAdapter* script);
 

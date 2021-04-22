@@ -132,7 +132,7 @@ set(SOURCES
         src/core/HPMSScriptAdaptee.cpp
         src/facade/HPMSEngineFacade.cpp
         src/core/HPMSOverlayTextAreaAdaptee.cpp
-        src/core/HPMSTextBoxHelper.cpp)
+        src/core/HPMSNativeAdaptee.cpp)
 
 add_library(HPMSBackendImpl SHARED ${SOURCES})
 

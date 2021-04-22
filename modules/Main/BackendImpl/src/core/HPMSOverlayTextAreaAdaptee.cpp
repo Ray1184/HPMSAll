@@ -3,13 +3,8 @@
  */
 
 #include <core/HPMSOverlayTextAreaAdaptee.h>
-#include <core/HPMSTextBoxHelper.h>
 #include <OgreFontManager.h>
-#include <OgreImage.h>
-#include <sstream>
 #include <iostream>
-#include <algorithm>
-#include <windows.h>
 
 #define CODE_FINISHED 0
 #define CODE_WORKING 1

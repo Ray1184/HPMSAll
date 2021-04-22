@@ -15,6 +15,24 @@ namespace hpms
     {
     public:
         inline static Ogre::MaterialPtr
+        CreateStandardColorMaterial(const Ogre::ColourValue& ambient, const Ogre::ColourValue& diffuse)
+        {
+            std::string colorString = std::to_string(ambient.r) + "_" + std::to_string(ambient.g) + "_" + std::to_string(ambient.b) + "_" + std::to_string(ambient.a) +
+                                      std::to_string(diffuse.r) + "_" + std::to_string(diffuse.g) + "_" + std::to_string(diffuse.b) + "_" + std::to_string(diffuse.a);
+            auto material = Ogre::MaterialManager::getSingleton().getByName("Material_" + colorString);
+            if (material.get())
+            {
+                return material;
+            }
+            material = Ogre::MaterialManager::getSingleton().create("Material_" + colorString,
+                                                                    Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
+
+            material->getTechnique(0)->getPass(0)->setAmbient(ambient);
+            material->getTechnique(0)->getPass(0)->setAmbient(diffuse);
+            return material;
+        }
+
+        inline static Ogre::MaterialPtr
         CreateTexturedMaterial(const std::string& textureName, unsigned int* width = nullptr, unsigned int* height = nullptr, std::string materialName = "_undef_")
         {
             auto material = Ogre::MaterialManager::getSingleton().getByName("Material_" + materialName);
@@ -22,6 +40,7 @@ namespace hpms
             {
                 return material;
             }
+
 
             Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().load(textureName, "General");
             if (width)
