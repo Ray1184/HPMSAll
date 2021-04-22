@@ -11,6 +11,18 @@ std::string hpms::WalkmapAdaptee::GetId()
     return walkmap->GetData()->GetId();
 }
 
+void hpms::WalkmapAdaptee::Visit(const std::function<void(TriangleAdapter*)>& visitor)
+{
+    Check(walkmap.get());
+    for (const auto& sector : walkmap->GetData()->GetSectors())
+    {
+        for (const auto& tri : sector.GetTriangles())
+        {
+            visitor(triangles[tri]);
+        }
+    }
+}
+
 hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos, float tolerance)
 {
     Check(walkmap.get());
@@ -46,6 +58,8 @@ hpms::WalkmapAdaptee::~WalkmapAdaptee()
         hpms::SafeDelete(ad);
     }
 }
+
+
 
 float hpms::TriangleAdaptee::X1()
 {

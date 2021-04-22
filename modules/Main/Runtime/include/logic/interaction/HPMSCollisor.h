@@ -31,7 +31,7 @@ namespace hpms
 
 
         Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance) : actor(actor), walkMap(walkMap),
-                                                                    tolerance(tolerance), ignore(false), outOfDate(false)
+                                                                    tolerance(tolerance), ignore(false), outOfDate(true)
         {}
 
 

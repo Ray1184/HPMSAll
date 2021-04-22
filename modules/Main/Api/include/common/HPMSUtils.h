@@ -120,15 +120,15 @@ namespace hpms
     inline void SafeDelete(T*& ptr)
     {
 
-
+        if (ptr)
+        {
 #if !defined(_DEBUG) && !defined(NDEBUG)
 
         std::string name = ptr->Name();
         AllocCounter::Instance().allocMap[name]--;
 
 #endif
-        if (ptr)
-        {
+
             delete ptr;
             ptr = nullptr;
         }

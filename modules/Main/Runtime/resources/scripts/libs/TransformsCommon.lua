@@ -28,8 +28,5 @@ return {
     end,
     rotate = function(actor, rx, ry, rz)
         actor.rotation = lib.quat_mul(actor.rotation, lib.from_euler(lib.to_radians(rx), lib.to_radians(ry), lib.to_radians(rz)))
-    end,
-    rotate = function(actor, rx, ry, rz)
-        actor.rotation = lib.quat_mul(actor.rotation, lib.from_euler(lib.to_radians(rx), lib.to_radians(ry), lib.to_radians(rz)))
     end
 }
