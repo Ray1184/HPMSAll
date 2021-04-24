@@ -29,7 +29,7 @@ scene = {
         hpms.set_node_entity(node, entity)
         hpms.set_node_entity(doornode, door)
 
-        map = hpms.make_walkmap("Walkmap2.walkmap")
+        map = hpms.make_walkmap("Dummy_Map.walkmap")
 
         hpms.debug_draw_walkmap(map)
         collisor = hpms.make_node_collisor(node, map, 0)
