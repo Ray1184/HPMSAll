@@ -6,22 +6,22 @@
 
 float hpms::CalcHeightOf2DPointInside3DSector(const hpms::Triangle& sec, const glm::vec2& pos)
 {
-    float det = (sec.z2 - sec.z3) * (sec.x1 - sec.x3) + (sec.x3 - sec.x2) * (sec.z1 - sec.z3);
-    float l1 = ((sec.z2 - sec.z3) * (pos.x - sec.x3) + (sec.x3 - sec.x2) * (pos.y - sec.z3)) / det;
-    float l2 = ((sec.z3 - sec.z1) * (pos.x - sec.x3) + (sec.x1 - sec.x3) * (pos.y - sec.z3)) / det;
+    float det = (sec.FW2 - sec.FW3) * (sec.SD1 - sec.SD3) + (sec.SD3 - sec.SD2) * (sec.FW1 - sec.FW3);
+    float l1 = ((sec.FW2 - sec.FW3) * (pos.x - sec.SD3) + (sec.SD3 - sec.SD2) * (pos.y - sec.FW3)) / det;
+    float l2 = ((sec.FW3 - sec.FW1) * (pos.x - sec.SD3) + (sec.SD1 - sec.SD3) * (pos.y - sec.FW3)) / det;
     float l3 = 1.0f - l1 - l2;
-    return l1 * sec.y1 + l2 * sec.y2 + l3 * sec.y3;
+    return l1 * sec.UP1 + l2 * sec.UP2 + l3 * sec.UP3;
 }
 
 bool hpms::Is2DPointInside3DSector(const hpms::Triangle& sec, const glm::vec2& pos, float tolerance)
 {
-    float dX = pos.x - sec.x3;
-    float dY = pos.y - sec.y3;
-    float dX21 = sec.x3 - sec.x2;
-    float dY12 = sec.y2 - sec.y3;
-    float d = dY12 * (sec.x1 - sec.x3) + dX21 * (sec.y1 - sec.y3);
+    float dX = pos.x - sec.SD3;
+    float dY = pos.y - sec.FW3;
+    float dX21 = sec.SD3 - sec.SD2;
+    float dY12 = sec.FW2 - sec.FW3;
+    float d = dY12 * (sec.SD1 - sec.SD3) + dX21 * (sec.FW1 - sec.FW3);
     float s = dY12 * dX + dX21 * dY;
-    float t = (sec.y3 - sec.y1) * dX + (sec.x1 - sec.x3) * dY;
+    float t = (sec.FW3 - sec.FW1) * dX + (sec.SD1 - sec.SD3) * dY;
     bool inside;
     if (d < 0)
     {

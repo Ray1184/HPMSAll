@@ -2,6 +2,8 @@
  * File HPMSMathUtils.cpp
  */
 
+
+
 #include <common/HPMSMathUtils.h>
 
 float hpms::IntersectRayLineSegment(float originX, float originY, float dirX, float dirY, float aX, float aY, float bX,

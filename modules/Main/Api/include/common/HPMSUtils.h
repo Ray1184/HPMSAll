@@ -12,7 +12,7 @@
 #include <fstream>
 #include <unordered_map>
 #include <functional>
-#include <common/HPMSNames.h>
+#include <common/HPMSDefs.h>
 #include <cassert>
 #include <iostream>
 

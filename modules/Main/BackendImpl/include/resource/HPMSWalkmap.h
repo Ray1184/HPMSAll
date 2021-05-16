@@ -8,9 +8,11 @@
 #include <OgreResourceManager.h>
 #include <common/HPMSObject.h>
 #include <common/HPMSUtils.h>
+#include <common/HPMSDefs.h>
 #include <pods/pods.h>
 #include <pods/buffers.h>
 #include <pods/binary.h>
+#include <common/HPMSCoordSystem.h>
 
 #define UNDEFINED_SECTOR "__undef__"
 
@@ -77,6 +79,8 @@ namespace hpms
         float x1, y1, z1;
         float x2, y2, z2;
         float x3, y3, z3;
+
+
 
         Triangle(const std::string& groupId,
                  const std::vector<Side>& perimetralSides, float x1, float y1, float z1, float x2, float y2, float z2,

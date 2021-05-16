@@ -6,6 +6,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
+#include <common/HPMSCoordSystem.h>
 
 namespace hpms {
     float
@@ -16,12 +17,12 @@ namespace hpms {
     inline float
     IntersectRayLineSegment(const glm::vec3& origin, const glm::vec2& dir, const glm::vec2& a, const glm::vec2& b)
     {
-        return IntersectRayLineSegment(origin.x, origin.z, dir.x, dir.y, a.x, a.y, b.x, b.y);
+        return IntersectRayLineSegment(SD(origin), FW(origin), dir.x, dir.y, a.x, a.y, b.x, b.y);
     }
 
     inline glm::vec2 Perpendicular(const glm::vec2 origin)
     {
-        return {origin.y, -origin.x};
+        return {FW(origin), -SD(origin)};
     }
 
 
