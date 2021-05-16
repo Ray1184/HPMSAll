@@ -1,7 +1,7 @@
 require('data/scripts/libs/Context')
 utils = require('data/scripts/libs/Utils')
 
-if context:inst().dummy then
+if context:is_dummy() then
     return {
         -- Asset functions.
         make_entity = function(path)

@@ -21,6 +21,22 @@ function context:new()
     return ctx
 end
 
+function context:set_coord_system_blender()
+    self.instance.coord_system = 'blender'
+end
+
+function context:set_coord_system_gl()
+    self.instance.coord_system = 'gl'
+end
+
+function context:is_coord_system_blender()
+    return self.instance.mode == 'blender'
+end
+
+function context:is_coord_system_gl()
+    return self.instance.mode == 'gl'
+end
+
 function context:set_mode_r25d()
     self.instance.mode = 'r25d'
 end
@@ -34,15 +50,15 @@ function context:set_mode_gui()
 end
 
 function context:is_mode_r25d()
-    return instance.mode == 'r25d'
+    return self.instance.mode == 'r25d'
 end
 
 function context:is_mode_3d()
-    return instance.mode == '3d'
+    return self.instance.mode == '3d'
 end
 
 function context:is_mode_gui()
-    return instance.mode == 'gui'
+    return self.instance.mode == 'gui'
 end
 
 function context:set_scene(s)
@@ -84,6 +100,10 @@ end
 
 function context:disable_dummy()
     self.instance.dummy = false
+end
+
+function context:is_dummy()
+    return self.instance.dummy == true
 end
 
 function context:inst()
