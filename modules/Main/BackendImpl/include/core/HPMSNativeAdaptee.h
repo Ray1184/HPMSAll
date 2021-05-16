@@ -19,6 +19,8 @@ namespace hpms
 
         virtual ~NativeAdaptee();
 
+        void Clear() override;
+
         void BeginLine(const glm::vec4& ambient, const glm::vec4& diffuse) override;
 
         void DrawLine(const glm::vec3& p1, const glm::vec3& p2) override;

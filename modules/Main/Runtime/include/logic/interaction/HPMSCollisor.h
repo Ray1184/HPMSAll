@@ -11,7 +11,7 @@
 #include <logic/HPMSController.h>
 #include <common/HPMSUtils.h>
 
-#define VEC_FORWARD glm::vec3(0, -1, 0)
+#define VEC_FORWARD glm::vec3(0, 1, 0)
 
 namespace hpms
 {

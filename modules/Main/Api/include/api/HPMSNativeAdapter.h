@@ -17,6 +17,8 @@ namespace hpms
             return "NativeAdapter";
         }
 
+        virtual void Clear() = 0;
+
         virtual void BeginLine(const glm::vec4& ambient, const glm::vec4& diffuse) = 0;
 
         virtual void DrawLine(const glm::vec3& p1, const glm::vec3& p2) = 0;

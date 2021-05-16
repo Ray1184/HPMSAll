@@ -16,12 +16,12 @@ float hpms::CalcHeightOf2DPointInside3DSector(const hpms::Triangle& sec, const g
 bool hpms::Is2DPointInside3DSector(const hpms::Triangle& sec, const glm::vec2& pos, float tolerance)
 {
     float dX = pos.x - sec.x3;
-    float dY = pos.y - sec.z3;
+    float dY = pos.y - sec.y3;
     float dX21 = sec.x3 - sec.x2;
-    float dY12 = sec.z2 - sec.z3;
-    float d = dY12 * (sec.x1 - sec.x3) + dX21 * (sec.z1 - sec.z3);
+    float dY12 = sec.y2 - sec.y3;
+    float d = dY12 * (sec.x1 - sec.x3) + dX21 * (sec.y1 - sec.y3);
     float s = dY12 * dX + dX21 * dY;
-    float t = (sec.z3 - sec.z1) * dX + (sec.x1 - sec.x3) * dY;
+    float t = (sec.y3 - sec.y1) * dX + (sec.x1 - sec.x3) * dY;
     bool inside;
     if (d < 0)
     {

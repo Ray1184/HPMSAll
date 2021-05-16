@@ -405,9 +405,24 @@ namespace hpms
         }
 
         // Debug Logic.
+        static inline void DDebugDrawClear()
+        {
+            hpms::DebugUtils::ClearAllDraws();
+        }
+
         static inline void DDebugDrawWalkmap(hpms::WalkmapAdapter* walkmap)
         {
             hpms::DebugUtils::DrawWalkmap(walkmap);
+        }
+
+        static inline void DDebugDrawCollisorTriangle(hpms::Collisor* collisor)
+        {
+            hpms::DebugUtils::DrawCollisorSector(collisor);
+        }
+
+        static inline void DDebugDrawSampledTriangle(hpms::WalkmapAdapter* walkmap, hpms::ActorAdapter* actor)
+        {
+            hpms::DebugUtils::DrawSampledSector(walkmap, actor);
         }
 
 

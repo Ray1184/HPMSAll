@@ -28,7 +28,7 @@ namespace hpms
                                                                     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
 
             material->getTechnique(0)->getPass(0)->setAmbient(ambient);
-            material->getTechnique(0)->getPass(0)->setAmbient(diffuse);
+            material->getTechnique(0)->getPass(0)->setDiffuse(diffuse);
             return material;
         }
 

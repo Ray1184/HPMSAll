@@ -10,9 +10,10 @@ void hpms::SampleTriangle(const glm::vec3& pos, const hpms::WalkmapPtr& walkMap,
     {
         for (const auto& tri : sector.GetTriangles())
         {
-            if (hpms::Is2DPointInside3DSector(tri, glm::vec2(pos.x, pos.z), tolerance))
+            if (hpms::Is2DPointInside3DSector(tri, glm::vec2(pos.x, pos.y), tolerance))
             {
                 *res = tri;
+                return;
             }
         }
     }

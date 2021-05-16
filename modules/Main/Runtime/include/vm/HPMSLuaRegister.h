@@ -363,7 +363,10 @@ namespace hpms
         {
             getGlobalNamespace(state)
                     .beginNamespace("hpms")
+                    .addFunction("debug_draw_clear", &hpms::LuaExtensions::DDebugDrawClear)
                     .addFunction("debug_draw_walkmap", &hpms::LuaExtensions::DDebugDrawWalkmap)
+                    .addFunction("debug_draw_sampled_triangle", &hpms::LuaExtensions::DDebugDrawSampledTriangle)
+                    .addFunction("debug_draw_collisor_triangle", &hpms::LuaExtensions::DDebugDrawCollisorTriangle)
                     .endNamespace();
         }
 

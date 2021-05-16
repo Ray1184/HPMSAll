@@ -5,6 +5,11 @@
 #include <core/HPMSNativeAdaptee.h>
 #include <core/HPMSMaterialHelper.h>
 
+void hpms::NativeAdaptee::Clear()
+{
+    manualObject->clear();
+}
+
 void hpms::NativeAdaptee::BeginLine(const glm::vec4& ambient, const glm::vec4& diffuse)
 {
     manualObject->begin(hpms::MaterialHelper::CreateStandardColorMaterial(

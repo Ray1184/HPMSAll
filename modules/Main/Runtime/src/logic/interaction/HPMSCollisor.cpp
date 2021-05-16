@@ -32,10 +32,10 @@ void hpms::Collisor::Update()
             {
                 glm::vec2 n = glm::normalize(hpms::Perpendicular(sidePair.first - sidePair.second));
                 glm::vec3 v = nextPosition - actor->GetPosition();
-                glm::vec2 vn = n * glm::dot(glm::vec2(v.x, v.z), n);
-                glm::vec2 vt = glm::vec2(v.x, v.z) - vn;
-                glm::vec3 correctPosition = glm::vec3(actor->GetPosition().x + vt.x, actor->GetPosition().y,
-                                                      actor->GetPosition().z + vt.y);
+                glm::vec2 vn = n * glm::dot(glm::vec2(v.x, v.y), n);
+                glm::vec2 vt = glm::vec2(v.x, v.y) - vn;
+                glm::vec3 correctPosition = glm::vec3(actor->GetPosition().x + vt.x, actor->GetPosition().y + vt.y,
+                                                      actor->GetPosition().z);
 
                 auto* correctTriangle = walkMap->SampleTriangle(correctPosition, tolerance);
 

@@ -9,17 +9,25 @@ scene = {
         -- Init function callback.
         --context:inst().dummy = false
         hpms.set_ambient(hpms.vec3(0.1, 0.1, 0.1))
-        local cam = hpms.get_camera()
+        cam = hpms.get_camera()
+        --cam.position = hpms.vec3(0, 1.5, 3)
+        --cam.rotation = hpms.from_euler(hpms.to_radians(90 - 75), hpms.to_radians(0.0), hpms.to_radians(0.0))
+        --cam.near = 0.5
+        --cam.far = 100
+        --cam.fovy = hpms.to_radians(40)
+        --mx = 0
+        --my = 0
         cam.position = hpms.vec3(0, -3, 1.5)
-        cam.rotation = hpms.quat(0.793353, 0.608762, 0.0, 0.0)
+        cam.rotation = hpms.quat(0.793353, 0.608761, 0, 0)
         cam.near = 0.5
         cam.far = 100
-        cam.fovy = hpms.to_radians(60)
+        cam.fovy = hpms.to_radians(40)
         mx = 0
         my = 0
-        entity = hpms.make_entity("DummyAnim.mesh")
+
+        entity = hpms.make_entity("EY_DummyAnim.mesh")
         door = hpms.make_entity("Door.mesh")
-        weapon = hpms.make_entity("DummySword.mesh")
+        weapon = hpms.make_entity("EY_DummySword.mesh")
         node = hpms.make_node("DummyAnimNode")
         doornode = hpms.make_node("DoorNode")
         hpms.set_bone_node("Hand.L", weapon, entity, hpms.vec3(0, 0.3, 0), hpms.from_euler(0, 0, 0))
@@ -29,7 +37,7 @@ scene = {
         hpms.set_node_entity(node, entity)
         hpms.set_node_entity(doornode, door)
 
-        map = hpms.make_walkmap("Dummy_Map.walkmap")
+        map = hpms.make_walkmap("Dummy_Scene.walkmap")
 
         hpms.debug_draw_walkmap(map)
         collisor = hpms.make_node_collisor(node, map, 0)
@@ -47,6 +55,9 @@ scene = {
         light = hpms.make_light(hpms.vec3(0, 0, 0))
         light.position = hpms.vec3(0, -3, 1.5)
 
+        rotcam = 0
+        speedcam = 0
+
     end,
     input = function(keys, mouse_buttons, x, y)
         -- Input function callback.
@@ -57,6 +68,9 @@ scene = {
 
 
         -- Input function callback.
+        hpms.debug_draw_clear()
+        hpms.debug_draw_walkmap(map)
+        hpms.debug_draw_collisor_triangle(collisor)
 
         if keys ~= nil then
             if hpms.key_action_performed(keys, 'S', 1) then
@@ -90,8 +104,6 @@ scene = {
                 -- TODO Inventary
             end
         end
-
-
 
         mx = limitx(x)
         my = limity(y)
@@ -129,7 +141,7 @@ scene = {
 }
 
 function f_move_collisor_towards_direction(coll, ratio)
-    local dir = hpms.get_direction(coll.rotation, hpms.vec3(0, 1, 0))
+    local dir = hpms.get_direction(coll.rotation, hpms.vec3(0, -1, 0))
     local nextPos = hpms.vec3_add(coll.position, hpms.vec3(ratio * dir.x, ratio * dir.y, 0))
     hpms.move_collisor_dir(coll, nextPos, hpms.vec2(dir.x, dir.y))
 end
