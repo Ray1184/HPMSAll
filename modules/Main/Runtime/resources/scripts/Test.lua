@@ -1,13 +1,15 @@
 -- Scene script.
---require('data/scripts/libs/Context')
+dependencies = {'libs/Dep1.lua'}
 --common = require("data/scripts/libs/TransformsCommon")
 scene = {
     name = "Scene_01",
     version = "1.0.0",
     quit = false,
+    --include = 'libs/Utils.lua',
     setup = function()
         -- Init function callback.
         --context:inst().dummy = false
+        test_echo1()
         hpms.set_ambient(hpms.vec3(0.1, 0.1, 0.1))
         cam = hpms.get_camera()
         --cam.position = hpms.vec3(0, 1.5, 3)

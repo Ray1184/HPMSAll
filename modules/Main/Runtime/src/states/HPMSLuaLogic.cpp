@@ -4,6 +4,8 @@
 
 #include <states/HPMSLuaLogic.h>
 
+#define ENTRY_POINT "InitConfig.lua"
+
 hpms::LuaLogic::LuaLogic() : clear(false), currentState(nullptr)
 {
     vm = hpms::SafeNew<LuaVM>();
@@ -17,7 +19,7 @@ hpms::LuaLogic::~LuaLogic()
 void hpms::LuaLogic::OnCreate()
 {
     vm->RegisterAll();
-    auto* script = hpms::LoadScript("InitConfig.lua");
+    auto* script = hpms::LoadScript(ENTRY_POINT);
     vm->ExecuteStatement(script->GetContent());
     hpms::DestroyScript(script);
     LuaRef config = vm->GetGlobal("config");
@@ -67,9 +69,34 @@ bool hpms::LuaLogic::TriggerStop()
 
 void hpms::LuaLogic::LoadState(const std::string& scriptName)
 {
+    vm->ClearState();
     auto* script = hpms::LoadScript(scriptName);
     vm->ExecuteStatement(script->GetContent());
     hpms::DestroyScript(script);
+    this->SolveLuaDependencies();
     currentState = hpms::SafeNew<GameState>(vm);
+}
+
+void hpms::LuaLogic::SolveLuaDependencies()
+{
+
+    LuaRef dependencies = vm->GetGlobal("dependencies");
+    if (dependencies)
+    {
+        for (unsigned int i = 1; i < dependencies.length() + 1; i++)
+        {
+            auto dep = dependencies[i].tostring();
+            if (std::find(loadedDeps.begin(), loadedDeps.end(), dep) != loadedDeps.end())
+            {
+                continue;
+            }
+            auto* script = hpms::LoadScript(dep);
+            vm->ExecuteStatement(script->GetContent());
+            hpms::DestroyScript(script);
+            loadedDeps.push_back(dep);
+            SolveLuaDependencies();
+
+        }
+    }
 }
 

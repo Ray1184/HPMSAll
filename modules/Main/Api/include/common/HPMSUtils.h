@@ -62,7 +62,7 @@ namespace hpms
     inline void ErrorHandler(const char* file, int line, const char* message)
     {
         std::stringstream ss;
-        ss << "[ERROR] - File" << file << ", at line " << std::to_string(line) << ": " << message;
+        ss << "[ERROR] - File " << file << ", at line " << std::to_string(line) << ": " << message;
         Print(ss);
         exit(-1);
     }

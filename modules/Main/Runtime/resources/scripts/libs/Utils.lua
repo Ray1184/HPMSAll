@@ -4,7 +4,9 @@
 ---
 --- Utils functions.
 ---
+
 local debug_flag = false
+
 return {
     enable_debug = function()
         debug_flag = true

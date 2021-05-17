@@ -85,7 +85,7 @@ hpms::WalkmapAdapter* hpms::SupplierAdaptee::CreateWalkmap(const std::string& na
 std::string hpms::SupplierAdaptee::GetImplName()
 {
     std::stringstream ss;
-    ss << "Ogre 3D " << OGRE_VERSION_MAJOR << OGRE_VERSION_MINOR << OGRE_VERSION_PATCH << " (" << OGRE_VERSION_NAME << ")";
+    ss << "Ogre 3D " << OGRE_VERSION_MAJOR << "." << OGRE_VERSION_MINOR << "." << OGRE_VERSION_PATCH << " (" << OGRE_VERSION_NAME << ")";
     return ss.str();
 }
 

@@ -18,6 +18,8 @@ namespace hpms
         LuaVM* vm;
         GameState* currentState;
         bool clear;
+        std::vector<std::string> loadedDeps;
+        void SolveLuaDependencies();
     public:
         LuaLogic();
 

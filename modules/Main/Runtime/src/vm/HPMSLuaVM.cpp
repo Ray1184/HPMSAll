@@ -37,6 +37,12 @@ LuaRef hpms::LuaVM::GetGlobal(const std::string& name)
     return getGlobal(state, name.c_str());
 }
 
+void hpms::LuaVM::ClearState()
+{
+    int stackSize = lua_gettop(state);
+    lua_pop(state, stackSize);
+}
+
 void hpms::LuaVM::RegisterAll()
 {
 
@@ -75,3 +81,5 @@ const std::string hpms::LuaVM::Name() const
 {
     return "LuaVM";
 }
+
+

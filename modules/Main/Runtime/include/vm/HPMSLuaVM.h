@@ -34,6 +34,8 @@ namespace hpms
 
         LuaRef GetGlobal(const std::string& name);
 
+        void ClearState();
+
         void RegisterAll();
 
         void Close();
