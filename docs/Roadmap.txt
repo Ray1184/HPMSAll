@@ -4,6 +4,7 @@
  Adattare states e logiche runtime.                             | DONE
  Mappare tutti i suppliers/funzioni nella VM lua.               | DONE
  Text box e bone attachment.                                    | DONE
+ Collisioni.                                                    | DONE
  Demo tecnica minimale.                                         | TODO
  Batch esportazione scena da blender in python.                 | TODO
  Implementare funzioni di gestione camera e switch tra stati.   | TODO
