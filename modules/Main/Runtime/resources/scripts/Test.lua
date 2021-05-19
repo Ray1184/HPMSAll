@@ -38,7 +38,7 @@ scene = {
         back = hpms.make_background("B_01.png")
         back2 = hpms.make_background("B_02.png")
         back.visible = false
-        back2.visible = true
+        back2.visible = false
         hpms_title = hpms.make_overlay("HPMS.png", 0, 0, 0)
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 
@@ -110,6 +110,11 @@ scene = {
 
     end,
     update = function(tpf)
+
+
+        speed = 0
+        rotate = 0
+
         cursor.position = hpms.vec3(mx - 30, my - 20, 100)
         hpms.update_anim(entity, "my_animation", tpf / 2)
         hpms.update_collisor(collisor)
