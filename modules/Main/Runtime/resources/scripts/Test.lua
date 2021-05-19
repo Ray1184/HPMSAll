@@ -12,8 +12,6 @@ scene = {
         test_echo1()
         hpms.set_ambient(hpms.vec3(0.1, 0.1, 0.1))
         cam = hpms.get_camera()
-        cam.position = hpms.vec3(0, -3, 1.5)
-        cam.rotation = hpms.quat(0.793353, 0.608761, 0, 0)
         cam.near = 0.5
         cam.far = 100
         cam.fovy = hpms.to_radians(40)
@@ -38,6 +36,9 @@ scene = {
         collisor = hpms.make_node_collisor(node, map, 0)
 
         back = hpms.make_background("B_01.png")
+        back2 = hpms.make_background("B_02.png")
+        back.visible = false
+        back2.visible = true
         hpms_title = hpms.make_overlay("HPMS.png", 0, 0, 0)
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 
@@ -48,7 +49,7 @@ scene = {
 
 
         light = hpms.make_light(hpms.vec3(0, 0, 0))
-        light.position = hpms.vec3(0, -3, 1.5)
+
 
         rotcam = 0
         speedcam = 0
@@ -115,6 +116,23 @@ scene = {
         f_move_collisor_towards_direction(collisor, speed * tpf)
         f_rotate(node, 0, 0, rotate * tpf * 10)
 
+
+        sector = collisor.sector
+        if sector.id == 'SG_01' then
+            back.visible = true
+            back2.visible = false
+            cam.position = hpms.vec3(0, -3, 1.5)
+            cam.rotation = hpms.quat(0.793353, 0.608761, 0, 0)
+            light.position = hpms.vec3(0, -3, 1.5)
+        end
+        if sector.id == 'SG_02' then
+            back.visible = false
+            back2.visible = true
+            cam.position = hpms.vec3(0, 3, 1.5)
+            cam.rotation = hpms.quat(0, 0, 0.608761, 0.793353)
+            light.position = hpms.vec3(0, 3, 1.5)
+        end
+
     end,
     cleanup = function()
         -- Close function callback.
@@ -126,6 +144,7 @@ scene = {
         hpms.delete_overlay(hpms_title)
         hpms.delete_overlay(cursor)
         hpms.delete_background(back)
+        hpms.delete_background(back2)
         hpms.delete_node(doornode)
         hpms.delete_entity(door)
         hpms.delete_node(node)

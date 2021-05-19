@@ -35,6 +35,9 @@ void hpms::LuaLogic::OnUpdate(float tpf)
     {
         currentState->Init();
         currentState->SetStatus(Status::RUNNING);
+
+        // Run first update after init, in order to avoid 1 black frame.
+        currentState->Update(tpf);
     } else if (currentState->GetStatus() == Status::RUNNING)
     {
         currentState->Update(tpf);
