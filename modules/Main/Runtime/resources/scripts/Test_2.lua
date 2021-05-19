@@ -42,7 +42,7 @@ scene = {
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 
         text = hpms.make_textarea("Footer", "Alagard", 16, 10, 180, 320, 30, 10, hpms.vec4(1, 1, 0.8, 1.0))
-        rem = hpms.stream_text(text, "Test Room A", 8)
+        rem = hpms.stream_text(text, "Test Room B", 8)
         --text.color = hpms.vec4(1.0, 0.8, 0.1, 1.0)
 
 
@@ -80,16 +80,17 @@ scene = {
             if hpms.key_action_performed(keys, 'ESC', 1) then
                 scene.quit = true
             end
-            if hpms.key_action_performed(keys, 'N', 1) then
-                scene.next = 'Test_2.lua'
-                scene.finished = true
-            end
             if hpms.key_action_performed(keys, 'UP', 2) then
                 speed = 1
             elseif hpms.key_action_performed(keys, 'DOWN', 2) then
                 speed = -1
             else
                 speed = 0
+            end
+
+            if hpms.key_action_performed(keys, 'N', 1) then
+                scene.next = 'Test.lua'
+                scene.finished = true
             end
 
             if hpms.key_action_performed(keys, 'RIGHT', 2) then

@@ -404,7 +404,13 @@ namespace hpms
             entity->GetAnimationByName(animName)->Update(tpf);
         }
 
-        // Debug Logic.
+        // System Logic.
+        static inline void SLSwitchState(const std::string& scriptToExec)
+        {
+
+        }
+
+        // Debug Utils.
         static inline void DDebugDrawClear()
         {
             hpms::DebugUtils::ClearAllDraws();

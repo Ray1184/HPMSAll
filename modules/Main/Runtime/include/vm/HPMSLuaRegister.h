@@ -306,27 +306,7 @@ namespace hpms
                     .endNamespace();
         }
 
-        inline static void RegisterLogic(lua_State* state)
-        {
-            getGlobalNamespace(state)
-                    .beginNamespace("hpms")
-                    .addFunction("set_node_entity", &hpms::LuaExtensions::LSetNodeEntity)
-                    .addFunction("set_node_camera", &hpms::LuaExtensions::LSetNodeCamera)
-                    .addFunction("set_bone_node", &hpms::LuaExtensions::LSetBoneNode)
-                    .addFunction("set_ambient", &hpms::LuaExtensions::LSetAmbient)
-                    .addFunction("get_camera", &hpms::LuaExtensions::LGetCamera)
-                    .addFunction("camera_lookat", &hpms::LuaExtensions::LCameraLookAt)
-                    .addFunction("camera_fovy", &hpms::LuaExtensions::LCameraFovY)
-                    .addFunction("get_animator", &hpms::LuaExtensions::LGetAnimator)
-                    .addFunction("enable_controller", &hpms::LuaExtensions::LEnableController)
-                    .addFunction("disable_controller", &hpms::LuaExtensions::LDisableController)
-                    .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
-                    .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
-                    .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
-                    .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
-                    .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
-                    .endNamespace();
-        }
+
 
         inline static void RegisterWalkMap(lua_State* state)
         {
@@ -356,6 +336,36 @@ namespace hpms
                     .addProperty("rotation", &hpms::Collisor::GetRotation, &hpms::Collisor::SetRotation)
                     .addProperty("sector", &hpms::Collisor::GetCurrentTriangle, &hpms::Collisor::SetCurrentTriangle)
                     .endClass()
+                    .endNamespace();
+        }
+
+        inline static void RegisterLogic(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .addFunction("set_node_entity", &hpms::LuaExtensions::LSetNodeEntity)
+                    .addFunction("set_node_camera", &hpms::LuaExtensions::LSetNodeCamera)
+                    .addFunction("set_bone_node", &hpms::LuaExtensions::LSetBoneNode)
+                    .addFunction("set_ambient", &hpms::LuaExtensions::LSetAmbient)
+                    .addFunction("get_camera", &hpms::LuaExtensions::LGetCamera)
+                    .addFunction("camera_lookat", &hpms::LuaExtensions::LCameraLookAt)
+                    .addFunction("camera_fovy", &hpms::LuaExtensions::LCameraFovY)
+                    .addFunction("get_animator", &hpms::LuaExtensions::LGetAnimator)
+                    .addFunction("enable_controller", &hpms::LuaExtensions::LEnableController)
+                    .addFunction("disable_controller", &hpms::LuaExtensions::LDisableController)
+                    .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
+                    .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
+                    .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
+                    .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
+                    .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
+                    .endNamespace();
+        }
+
+        inline static void RegisterSysLogic(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .addFunction("switch_state", &hpms::LuaExtensions::SLSwitchState)
                     .endNamespace();
         }
 

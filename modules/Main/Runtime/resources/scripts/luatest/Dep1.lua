@@ -1,4 +1,4 @@
-dependencies = {'libs/Dep2.lua', 'libs/Dep3.lua'}
+dependencies = {'luatest/Dep2.lua', 'luatest/Dep3.lua'}
 
 test_echo1 = function ()
     print('### DEP 1')

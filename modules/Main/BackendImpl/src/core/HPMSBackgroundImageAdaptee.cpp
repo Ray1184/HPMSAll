@@ -76,7 +76,7 @@ void hpms::BackgroundImageAdaptee::Hide()
 
 hpms::BackgroundImageAdaptee::BackgroundImageAdaptee(const std::string& imagePath, OgreContext* ctx) : name(imagePath), AdapteeCommon(ctx), enabled(false)
 {
-    auto backgroundMaterial = hpms::MaterialHelper::CreateTexturedMaterial(imagePath);
+    auto backgroundMaterial = hpms::MaterialHelper::CreateTexturedMaterial(imagePath, nullptr, nullptr, imagePath);
     ogreBackground = hpms::SafeNewRaw<Ogre::Rectangle2D>(true);
     ogreBackground->setCorners(-1.0, 1.0, 1.0, -1.0);
     ogreBackground->setMaterial(backgroundMaterial);

@@ -20,7 +20,7 @@ namespace hpms
             std::string colorString = std::to_string(ambient.r) + "_" + std::to_string(ambient.g) + "_" + std::to_string(ambient.b) + "_" + std::to_string(ambient.a) +
                                       std::to_string(diffuse.r) + "_" + std::to_string(diffuse.g) + "_" + std::to_string(diffuse.b) + "_" + std::to_string(diffuse.a);
             auto material = Ogre::MaterialManager::getSingleton().getByName("Material_" + colorString);
-            if (material.get())
+            if (material)
             {
                 return material;
             }
@@ -36,7 +36,8 @@ namespace hpms
         CreateTexturedMaterial(const std::string& textureName, unsigned int* width = nullptr, unsigned int* height = nullptr, std::string materialName = "_undef_")
         {
             auto material = Ogre::MaterialManager::getSingleton().getByName("Material_" + materialName);
-            if (material.get())
+
+            if (material)
             {
                 return material;
             }

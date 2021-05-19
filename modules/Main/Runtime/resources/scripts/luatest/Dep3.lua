@@ -1,4 +1,4 @@
-dependencies = {'libs/Dep4.lua'}
+dependencies = {'luatest/Dep4.lua'}
 
 
 test_echo3 = function ()

@@ -26,6 +26,13 @@ void hpms::GameState::Update(float tpf)
     LuaRef sceneFun = vm->GetGlobal("scene");
     LuaRef updateFunc = sceneFun["update"];
     updateFunc(tpf);
+    LuaRef finished = sceneFun["finished"];
+    if (finished.isBool() && finished)
+    {
+        LuaRef next = sceneFun["next"];
+        SetStateToSwitch(next.tostring());
+        status = FINISHED;
+    }
 }
 
 void hpms::GameState::Cleanup()
