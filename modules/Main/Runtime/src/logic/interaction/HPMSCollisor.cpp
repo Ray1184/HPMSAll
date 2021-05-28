@@ -23,6 +23,11 @@ void hpms::Collisor::Update()
         return;
     } else
     {
+        // No sampling.
+        if (currentTriangle == nullptr) {
+            return;
+        }
+
         // Check potential collisions.
         for (auto* side : currentTriangle->GetPerimetralSides())
         {

@@ -16,7 +16,7 @@ scene = {
         cam.rotation = hpms.quat(0.793353, 0.608761, 0, 0)
         cam.near = 0.5
         cam.far = 100
-        cam.fovy = hpms.to_radians(40)
+        cam.fovy = hpms.to_radians(45)
         mx = 0
         my = 0
 
@@ -115,6 +115,7 @@ scene = {
         hpms.update_collisor(collisor)
         f_move_collisor_towards_direction(collisor, speed * tpf)
         f_rotate(node, 0, 0, rotate * tpf * 10)
+        print(rotate)
 
     end,
     cleanup = function()

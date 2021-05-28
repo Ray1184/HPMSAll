@@ -1,0 +1,16 @@
+Conversioni Blender / OpenGL
+-------------------------------
+Xgl     -> Xb
+Ygl     -> Zb
+Zgl     -> -Yb
+RXgl    -> 90 – RXb
+RYgl    -> – RZb
+RZgl    -> Ryb
+-------------------------------
+
+Trasformazioni
+-------------------------------
+Camera  -> Non trasformare
+Ogre3D  -> xyz
+OBJ     -> Forward Y, Up Z
+-------------------------------
