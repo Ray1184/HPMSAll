@@ -7,13 +7,22 @@ scene = {
     next = 'undef',
     setup = function()
         -- Init function callback.
+        -- INIT VARS
+        mx = 0
+        my = 0
+        speed = 0
+        rotate = 0
+        action = false
+        block_time = false
+        textbuffer = ''
+
+
         hpms.set_ambient(hpms.vec3(0.1, 0.1, 0.1))
         cam = hpms.get_camera()
         cam.near = 0.05
         cam.far = 50
         cam.fovy = hpms.to_radians(45)
-        mx = 0
-        my = 0
+
 
         entity = hpms.make_entity("EY_DummyAnim.mesh")
         node = hpms.make_node("DummyAnimNode")
@@ -37,15 +46,9 @@ scene = {
         cursor = hpms.make_overlay("Cursor.png", 0, 0, 100)
 
         light = hpms.make_light(hpms.vec3(0, 0, 0))
-        speed = 0
-        rotate = 0
-        action = false
-        block_time = false
 
-        -- MESSAGE MGMT
-        msg_showing = false
         textarea = hpms.make_textarea("Footer", "Alagard", 16, 10, 150, 300, 40, 10, hpms.vec4(1, 1, 0.8, 1.0))
-        textbuffer = ''
+
 
 
     end,
@@ -76,7 +79,7 @@ scene = {
                 scene.quit = true
             end
             if hpms.key_action_performed(keys, 'E', 1) then
-                print("enter")
+               -- print("enter")
                 action = true
             end
             if hpms.key_action_performed(keys, 'N', 1) then
@@ -100,7 +103,6 @@ scene = {
             end
             if hpms.key_action_performed(keys, 'I', 1) then
                 -- TODO Inventary
-                msg_box('Mhhh... devo essermi addormentata. Che ore sono? La sveglia non funziona, probabilmente e\' saltata la corrente... Ma... amore dove sei? C\'e\' nessuno?')
             end
         end
 
@@ -112,7 +114,7 @@ scene = {
 
         if block_time then
             if action then
-                msg_box(textbuffer)
+                flush_message_box(textbuffer)
             end
         else
             cursor.position = hpms.vec3(mx - 30, my - 20, 100)
@@ -128,6 +130,15 @@ scene = {
                 reset_background()
                 change_view()
             end
+
+            trigger_dist(hpms.vec3(-1, -0.6, 0.0), 0.1, node, function()
+                msg_box('Non me lo ricordavo cosi\' questo quadro. Mhh... no, qui proprio non c\'e\' mai stato un quadro. Che cos\'e\'? I pezzi sembrano muoversi, cosa succede se...', function()
+                    print('MESSAGGIO TERMINATO')
+                end)
+            end)
+
+            -- consume pending actions
+            action = false
         end
 
 
@@ -153,6 +164,15 @@ scene = {
 --
 -- UTILITY FUNCTIONS!!!!!
 --
+function trigger_dist(position, distance, node, callback)
+    local calc_dist = hpms.vec3_dist(position, node.position)
+   -- print(calc_dist)
+    if calc_dist <= distance and action then
+        callback()
+        action = false
+    end
+end
+
 function reset_background()
     back1.visible = false
     back2.visible = false
@@ -186,9 +206,9 @@ end
 
 function change_view()
     if sampled == 'S_1' then
-        cam.position = hpms.vec3(0.6499999761581421, -0.25, 0.699999988079071)
-        light.position = hpms.vec3(0.6499999761581421, -0.25, 0.699999988079071)
-        cam.rotation = hpms.quat(0.34618860483169556, 0.24240386486053467, -0.5198367834091187, -0.7424038648605347)
+        cam.position = hpms.vec3(0.6499999761581421, -0.37614867091178894, 0.49240946769714355)
+        light.position = hpms.vec3(0.6499999761581421, -0.37614867091178894, 0.49240946769714355)
+        cam.rotation = hpms.quat(0.3265744745731354, 0.26128023862838745, -0.5674629211425781, -0.709272563457489)
         back1.visible = true
     end
     if sampled == 'S_10' then
@@ -210,8 +230,8 @@ function change_view()
         back12.visible = true
     end
     if sampled == 'S_2' then
-        cam.position = hpms.vec3(1.4500000476837158, -1.399999976158142, 0.5)
-        light.position = hpms.vec3(1.4500000476837158, -1.399999976158142, 0.5)
+        cam.position = hpms.vec3(1.3504865169525146, -1.399999976158142, 0.5)
+        light.position = hpms.vec3(1.3504865169525146, -1.399999976158142, 0.5)
         cam.rotation = hpms.quat(0.7077327966690063, 0.5938583016395569, 0.24598416686058044, 0.2931525409221649)
         back2.visible = true
     end
@@ -260,6 +280,17 @@ function change_view()
 end
 
 function msg_box(message)
+    msg_box(message, nil)
+end
+
+function msg_box(message, do_after_message)
+    flush_message_box(message)
+    postmsg_callback = do_after_message
+
+
+end
+
+function flush_message_box(message)
     textbuffer = hpms.stream_text(textarea, message, 3)
     action = false
     if textbuffer == '' and message == '' then
@@ -267,7 +298,9 @@ function msg_box(message)
     else
         block_time = true
     end
-
+    if not block_time and postmsg_callback ~= nil then
+        postmsg_callback()
+    end
 end
 
 --
