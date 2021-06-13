@@ -356,8 +356,10 @@ namespace hpms
                     .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
                     .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
                     .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
+                    .addFunction("stop_anim", &hpms::LuaExtensions::LStopAnimation)
                     .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
                     .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
+                    .addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
                     .endNamespace();
         }
 

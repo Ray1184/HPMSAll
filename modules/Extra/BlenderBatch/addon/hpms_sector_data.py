@@ -15,10 +15,13 @@ class HPMSSectorDataPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        if context.object.name.startswith("SG_"):
+        row = layout.row()
+        row.prop(context.object.hpms_sector_obj_prop, "sector")
+        obj = context.object
+        if obj.hpms_sector_obj_prop.sector:
             self.draw_data(context)
         else:
-            layout.label(text="To define an HPMS sector group, object name must starts with 'SG_'")
+            layout.label(text="Enable to define HPMS sector properties")
 
     def draw_data(self, context):
 
@@ -111,6 +114,13 @@ class HPMSRoomListItem(bpy.types.PropertyGroup):
         description="Assigned room")
 
 
+class HPMSSectorObjectProperties(bpy.types.PropertyGroup):
+    """Group of properties representing an sector configuration."""
+    sector: bpy.props.BoolProperty(
+        name="Activate HPMS Sector",
+        description="Toggle for mark this object as HPMS sector")
+
+
 class HPMSRoomList(bpy.types.UIList):
     def draw_item(self, context, layout, data, item, icon, active_data, active_propname, index):
         custom_icon = 'WORKSPACE'
@@ -157,7 +167,8 @@ classes = (
     HPMSRoomList,
     HPMSRoomDropdownOperator,
     HPMSCameraDropdownOperator,
-    HPMSSectorDataPanel
+    HPMSSectorDataPanel,
+    HPMSSectorObjectProperties
 )
 
 
@@ -171,9 +182,11 @@ def register():
                                                                   default="None")
     bpy.types.Object.hpms_current_cam = bpy.props.StringProperty(name="Current camera for selected sector",
                                                                  default="None")
+    bpy.types.Object.hpms_sector_obj_prop = bpy.props.PointerProperty(type=HPMSSectorObjectProperties)
 
 
 def unregister():
+    del bpy.types.Object.hpms_sector_obj_prop
     del bpy.types.Object.hpms_current_cam
     del bpy.types.Object.hpms_current_room
     del bpy.types.Scene.list_index

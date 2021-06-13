@@ -1,0 +1,37 @@
+-- STAMPA TUTTE LE CAMERE
+import bpy
+
+
+all_cams = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
+print('\n\n\n\n\n\n\n\n')
+for cam in all_cams:
+    name = cam.name
+    num = name.split('_')[1]
+    print('if sampled == \'S_' + num + '\' then ')
+    x = cam.location.x
+    y = cam.location.y
+    z = cam.location.z
+    print('  cam.position = hpms.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')
+    print('  light.position = hpms.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')
+    r = cam.rotation_euler.to_quaternion()
+    print('  cam.rotation = hpms.quat(' + str(r.w) + ', ' + str(r.x) + ', ' + str(r.y) + ', ' + str(r.z) + ')')
+    print('  back' + str(num) + '.visible = true')
+    print('end')
+
+-- STAMPA TUTTI I TRIGGER
+import bpy
+
+
+all_triggers = [obj for obj in bpy.data.objects if obj.name.split('_')[0] == 'T']
+print('\n\n\n\n\n\n\n\n')
+for obj in all_triggers:
+    name = obj.name
+    x = obj.location.x
+    y = obj.location.y
+    z = obj.location.z
+    print('-- TRIGGER OGGETTO ' + name)
+    print('trigger_dist(hpms.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + '), 0.1, node, function()')
+    print('   msg_box(....., function()')
+    print('      -- TODO')
+    print('   end)')
+    print('end)')

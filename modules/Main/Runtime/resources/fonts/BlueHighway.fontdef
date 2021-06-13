@@ -2,7 +2,7 @@ BlueHighway
 {
 	type truetype
 	source bluehigh.ttf
-	size 16
+	size 48
 	resolution 96
 	code_points 1-255
 }

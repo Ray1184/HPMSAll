@@ -1,0 +1,7 @@
+AlagardBig
+{
+	type truetype
+	source Alagard.ttf
+	size 42
+	code_points 1-255
+}

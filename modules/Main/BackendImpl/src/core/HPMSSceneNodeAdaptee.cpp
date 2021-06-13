@@ -65,6 +65,12 @@ bool hpms::SceneNodeAdaptee::IsVisible() const
 hpms::SceneNodeAdapter* hpms::SceneNodeAdaptee::CreateChild(const std::string& name)
 {
     Check(ogreNode);
+    if (ctx->GetSceneManager()->hasSceneNode(name))
+    {
+        auto* rawChildNode = dynamic_cast<Ogre::SceneNode*>(ogreNode->getChild(name));
+        auto* childNodeAdaptee = hpms::SafeNew<hpms::SceneNodeAdaptee>(ctx, rawChildNode, name, this);
+        return childNodeAdaptee;
+    }
     auto* rawChildNode = ogreNode->createChildSceneNode(name);
     auto* childNodeAdaptee = hpms::SafeNew<hpms::SceneNodeAdaptee>(ctx, rawChildNode, name, this);
     return childNodeAdaptee;

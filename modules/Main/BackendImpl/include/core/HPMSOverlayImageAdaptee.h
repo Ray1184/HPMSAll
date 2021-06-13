@@ -30,6 +30,8 @@ namespace hpms
 
         virtual std::string GetName() override;
 
+        virtual void SetAlpha(float alpha) override;
+
         virtual void SetPosition(const glm::vec3& position) override;
 
         virtual glm::vec3 GetPosition() const override;

@@ -15,10 +15,13 @@ class HPMSEntityDataPanel(bpy.types.Panel):
 
     def draw(self, context):
         layout = self.layout
-        if context.object.name.startswith("EY_"):
+        row = layout.row()
+        row.prop(context.object.hpms_entity_obj_prop, "entity")
+        obj = context.object
+        if obj.hpms_entity_obj_prop.entity:
             self.draw_data(context)
         else:
-            layout.label(text="To define an HPMS entity, object name must starts with 'EY_'")
+            layout.label(text="Enable to define HPMS entity properties")
 
     def draw_data(self, context):
 
@@ -88,12 +91,17 @@ class HPMSEntityDataPanel(bpy.types.Panel):
 
 def update_player(self, context):
     for obj in bpy.data.objects:
-        if obj.name.startswith("EY_") and obj.hpms_entity_obj_prop.player and obj.name != context.object.name:
+        if obj.hpms_entity_obj_prop.entity and obj.hpms_entity_obj_prop.player and obj.name != context.object.name:
             obj.hpms_entity_obj_prop.player = False
 
 
 class HPMSEntityObjectProperties(bpy.types.PropertyGroup):
     """Group of properties representing an entity configuration."""
+    entity: bpy.props.BoolProperty(
+        name="Activate HPMS Entity",
+        description="Toggle for mark this object as HPMS entity",
+        update=update_player)
+
     player: bpy.props.BoolProperty(
         name="Player Entity",
         description="Toggle for mark this entity as main player",

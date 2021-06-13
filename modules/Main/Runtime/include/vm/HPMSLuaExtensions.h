@@ -390,6 +390,14 @@ namespace hpms
             collisor->Move(position, direction);
         }
 
+        static inline void LStopAnimation(hpms::EntityAdapter* entity)
+        {
+            for (auto* anim : entity->GetAllAnimations())
+            {
+                anim->Zero();
+            }
+        }
+
         static inline void LPlayAnimation(hpms::EntityAdapter* entity, const std::string& animName)
         {
             for (auto* anim : entity->GetAllAnimations())
@@ -402,6 +410,11 @@ namespace hpms
         static inline void LUpdateAnimation(hpms::EntityAdapter* entity, const std::string& animName, float tpf)
         {
             entity->GetAnimationByName(animName)->Update(tpf);
+        }
+
+        static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)
+        {
+            overlayImage->SetAlpha(alpha);
         }
 
         // System Logic.

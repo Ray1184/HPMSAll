@@ -5,7 +5,7 @@
 #include <states/HPMSLuaLogic.h>
 #include <sstream>
 
-#define ENTRY_POINT "InitConfig.lua"
+#define ENTRY_POINT "Init.lua"
 
 hpms::LuaLogic::LuaLogic() : clear(false), currentState(nullptr)
 {

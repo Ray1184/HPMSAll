@@ -1,5 +1,7 @@
 -- Scene script.
-dependencies = {'luatest/Dep1.lua'}
+dependencies = {
+    'luatest/Dep1.lua'
+}
 scene = {
     name = "Scene_01",
     version = "1.0.0",
@@ -49,7 +51,6 @@ scene = {
 
 
         light = hpms.make_light(hpms.vec3(0, 0, 0))
-
 
         rotcam = 0
         speedcam = 0
@@ -120,7 +121,6 @@ scene = {
         hpms.update_collisor(collisor)
         f_move_collisor_towards_direction(collisor, speed * tpf)
         f_rotate(node, 0, 0, rotate * tpf * 10)
-
 
         sector = collisor.sector
         if sector.id == 'SG_01' then

@@ -21,6 +21,8 @@ namespace hpms
 
         virtual void Update(float tpf) override;
 
+        virtual void Zero() override;
+
         virtual bool IsPlaying() override;
 
         virtual void SetPlaying(bool playing) override;

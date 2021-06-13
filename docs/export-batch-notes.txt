@@ -1,0 +1,56 @@
+-------------------------------------------------------------------------------------------------------------------------------------------
+CONTENUTI
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+L'obiettivo del batch python è di esportare da una scena in blender:
+
+- Le entity 3D (convertite automaticamente in .mesh)
+- Le mappe di profondità (convertite automaticamente in .mesh)
+- Le mappe di collisioni (convertite automaticamente in .walkmap)
+- Rendering di ogni camera (opzionale)
+- Lo script con tutta la logica di scena (gestione camere, triggers ecc...)
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+ENTITY
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Per ogni oggetto 3D marcato come "Entity" nel tab HPMS Settings, il batch esporterà il model in formato mesh.xml (OGRE),
+Al termine dell'esportazione, su ogni mesh.xml verrà lanciato il runtime "OgreXMLConverter.exe", che convertirà l'xml
+in formato binario.
+Per le mappe di profondità (marcate come "Depth Map" nel tab HPMS Settings) l'esportazione è analoga, ma non viene esportato
+il material (definito tramite script come trasparente e scrittura di profondità).
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+WALKMAP
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Per ogni oggetto 3D marcato come "Walkmap" nel tab HPMS Settings, il batch esporterà una mappa di settori calpestabili
+in formato .walkmap.obj (Wavefront).
+Al termine dell'esportazione, su ogni .walkmap.obj, verrà lanciato il runtime "HPMSWalkmapConverter.exe", che convertirà l'obj
+in formato binario.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+RENDERING
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+Per ogni camera attivata da un settore della walkmap (tab HPMS Settings) viene effettuato un rendering massivo e ogni immagine
+viene salvata in formato png con lo stesso nome della camera. Le configurazioni di rendering (risoluzione, motore, filtri ecc...) vendono
+definiti in un file esterno.
+Il processo è opzionale a causa del carico computazionale.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+SCRIPT
+-------------------------------------------------------------------------------------------------------------------------------------------
+
+In base al contenuto della scena verrà prodotto in automatico lo script LUA relativo.
+In particolare verranno popolate le seguenti sezioni:
+
+- setup
+    - caricamento di tutte le entity, mappe di profondità e walkmap;
+    - creazione degli oggetti interagibili per tutte le entity marcate con tipologie varie di interazione;
+    - caricamento di tutti i backgrounds renderizzati.
+- update
+    - aggiornamento delle viste in base al settore calpestato dalla entity marcata come "Player" nel tab HPMS Settings;
+    - check condizione/azione per trigger degli eventi.
+- cleanup
+    - dealloc di tutte le entity, mappe di profondità e walkmap caricate.

@@ -3,6 +3,7 @@
  */
 
 #include <core/HPMSOverlayImageAdaptee.h>
+#include <OgreColourValue.h>
 
 
 std::string hpms::OverlayImageAdaptee::GetName()
@@ -54,8 +55,12 @@ glm::vec3 hpms::OverlayImageAdaptee::GetScale() const
 void hpms::OverlayImageAdaptee::SetVisible(bool visible)
 {
     Check(ogrePanel);
-    ogrePanel->setEnabled(visible);
-
+    if (visible)
+    {
+        ogrePanel->show();
+    } else {
+        ogrePanel->hide();
+    }
 }
 
 bool hpms::OverlayImageAdaptee::IsVisible() const
@@ -96,6 +101,14 @@ void hpms::OverlayImageAdaptee::Hide()
     }
 }
 
+void hpms::OverlayImageAdaptee::SetAlpha(float alpha)
+{
+    Check();
+    auto* texState = ogrePanel->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
+    texState->setAlphaOperation(Ogre::LayerBlendOperationEx::LBX_MODULATE, Ogre::LayerBlendSource::LBS_TEXTURE, Ogre::LayerBlendSource::LBS_MANUAL, 1.0f, alpha);
+}
+
+
 hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, int x, int y, int zOrder, OgreContext* ctx) : name(imagePath),
                                                                                                                                              AdapteeCommon(ctx),
                                                                                                                                              ogrePanel(nullptr),
@@ -116,11 +129,13 @@ hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, int
         ogrePanel->setPosition(x, y);
         ogrePanel->setDimensions(width, height);
 
+
         overlay->add2D(ogrePanel);
     } else
     {
         ogrePanel = overlay->getChild("OverlayElement_" + name);
     }
+    ogrePanel->show();
     overlay->setZOrder(zOrder);
     SetBlending(BlendingType::NORMAL);
     overlay->show();
@@ -130,7 +145,10 @@ hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, int
 
 hpms::OverlayImageAdaptee::~OverlayImageAdaptee()
 {
+    ogrePanel->hide();
+    overlay->hide();
 }
+
 
 
 

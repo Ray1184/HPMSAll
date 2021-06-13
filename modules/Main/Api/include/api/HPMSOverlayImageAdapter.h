@@ -24,6 +24,8 @@ namespace hpms
 
         }
 
+        virtual void SetAlpha(float alpha) = 0;
+
         virtual void SetBlending(BlendingType mode) = 0;
 
         virtual void SetPosition(const glm::vec3& position) override = 0;

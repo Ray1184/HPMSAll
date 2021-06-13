@@ -10,6 +10,12 @@ void hpms::AnimationAdaptee::Update(float tpf)
     ogreAnim->addTime(tpf);
 }
 
+void hpms::AnimationAdaptee::Zero()
+{
+    Check(ogreAnim);
+    ogreAnim->setTimePosition(0);
+}
+
 bool hpms::AnimationAdaptee::IsPlaying()
 {
     Check(ogreAnim);

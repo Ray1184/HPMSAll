@@ -4,8 +4,8 @@
 #include <facade/HPMSEngineFacade.h>
 #include <states/HPMSLuaLogic.h>
 
-#define WIDTH 960
-#define HEIGHT 600
+#define WIDTH 320 * 4
+#define HEIGHT 200 * 4
 
 void Dump()
 {
@@ -50,6 +50,7 @@ int main(int argc, char *argv[])
         s.width = WIDTH;
         s.height = HEIGHT;
         s.pixelRatio = WIDTH / 320;
+        s.fullScreen = true;
         auto* customLogic = hpms::SafeNew<hpms::LuaLogic>();
         hpms::InitContext(s, customLogic);
         std::stringstream ss;

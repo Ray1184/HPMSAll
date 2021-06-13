@@ -221,6 +221,7 @@ hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName,
         ogrePanel = overlay->getChild("OverlayElementText_" + name);
         textArea = dynamic_cast<Ogre::TextAreaOverlayElement*>(ogrePanel->getChild("OverlayElementTextArea_" + name));
     }
+    ogrePanel->show();
     overlay->setZOrder(zOrder);
     SetBlending(BlendingType::NORMAL);
     overlay->show();
@@ -229,7 +230,8 @@ hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName,
 
 hpms::OverlayTextAreaAdaptee::~OverlayTextAreaAdaptee()
 {
-
+    overlay->hide();
+    ogrePanel->show();
 }
 
 void hpms::OverlayTextAreaAdaptee::SetCaptionSafe(const std::string& text)
