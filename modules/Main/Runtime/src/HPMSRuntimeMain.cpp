@@ -50,7 +50,7 @@ int main(int argc, char *argv[])
         s.width = WIDTH;
         s.height = HEIGHT;
         s.pixelRatio = WIDTH / 320;
-        s.fullScreen = true;
+        s.fullScreen = false;
         auto* customLogic = hpms::SafeNew<hpms::LuaLogic>();
         hpms::InitContext(s, customLogic);
         std::stringstream ss;

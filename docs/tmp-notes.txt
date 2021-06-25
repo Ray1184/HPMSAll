@@ -35,3 +35,51 @@ for obj in all_triggers:
     print('      -- TODO')
     print('   end)')
     print('end)')
+
+-- GENERA IL BOUNDING BOX DI TUTTE LE MESHES IN SCENA
+import bpy
+from mathutils import Vector
+from bpy import context
+import numpy as np
+import itertools
+import bmesh
+
+# multiply 3d coord list by matrix
+def np_matmul_coords(coords, matrix, space=None):
+    M = (space @ matrix @ space.inverted()
+         if space else matrix).transposed()
+    ones = np.ones((coords.shape[0], 1))
+    coords4d = np.hstack((coords, ones))
+
+    return np.dot(coords4d, M)[:,:-1]
+    return coords4d[:,:-1]
+
+# get the global coordinates of all object bounding box corners
+# o = bpy.data.objects['DummyAnim']
+objs = [o for o in bpy.data.objects if o.type == 'MESH']
+for o in objs:
+    coords = np.vstack(tuple(np_matmul_coords(np.array(o.bound_box), o.matrix_world.copy())))
+    print('#' * 72)
+    # bottom front left (all the mins)
+    bfl = coords.min(axis=0)
+    # top back right
+    tbr = coords.max(axis=0)
+    G  = np.array((bfl, tbr)).T
+    # bound box coords ie the 8 combinations of bfl tbr.
+    bbc = [i for i in itertools.product(*G)]
+
+
+    base_bbc = np.vstack((bbc[0], bbc[2], bbc[4], bbc[6]))
+    for side in base_bbc:
+        print(side)
+
+
+    mesh_data = bpy.data.meshes.new(o.name + '_AABB')
+
+    mesh_data.from_pydata(base_bbc, [], [])
+    mesh_data.update()
+
+    obj = bpy.data.objects.new(o.name + '_AABB', mesh_data)
+
+    scene = bpy.context.scene
+    scene.collection.objects.link(obj)

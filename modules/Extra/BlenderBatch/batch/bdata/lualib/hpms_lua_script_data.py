@@ -8,6 +8,8 @@ from enum import Enum
 import datetime
 
 INDENT = '    '
+USER_SECTION_START = '-- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE'
+USER_SECTION_END = '-- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE'
 
 
 class IScriptSection:
@@ -27,22 +29,23 @@ class LuaStatement(IScriptSection):
         else:
             self.content = content
 
+    def append(self, val):
+        self.content += str(val)
+
     def get_script(self):
         return self.content
 
 
 class LuaUserCode(IScriptSection):
 
-    def __init__(self, content=None):
+    def __init__(self, content=None, callback_name='dummy'):
         self.content = content
+        self.callback_name = callback_name
 
     def get_script(self):
-        user_content = '-- USER SECTION START\n'
-        if self.content:
-            user_content += self.content
-        else:
-            user_content += '\n-- Write here additional code...\n'
-        user_content += '\n-- USER SECTION END'
+        user_content = USER_SECTION_START + ' [' + self.callback_name + ']\n'
+        user_content += self.content
+        user_content += '\n' + USER_SECTION_END + ' [' + self.callback_name + ']'
         return user_content
 
 
@@ -67,7 +70,9 @@ class LuaCallback(IScriptSection):
             for line in stat.get_script().splitlines():
                 fun_body += '\n' + INDENT + line
         if self.user_section is None:
-            self.user_section = LuaUserCode()
+            self.user_section = LuaUserCode('-- TODO', self.name)
+        else:
+            self.user_section.callback_name = self.name
         for line in self.user_section.get_script().splitlines():
             fun_body += '\n' + INDENT + line
         for stat in self.statements_post:
@@ -87,16 +92,17 @@ class LuaCallback(IScriptSection):
 
 
 class LuaFieldType(Enum):
+    EXPR = 0
     BOOL = 1
     STRING = 2
     INT = 3
     DECIMAL = 4
-    OBJECT = 5
+    VAR = 5
 
 
 class LuaField(IScriptSection):
 
-    def __init__(self, name, value='Template', ftype=LuaFieldType.STRING):
+    def __init__(self, name, value='Template', ftype=LuaFieldType.EXPR):
         self.name = name
         self.ftype = ftype
         self.value = value
@@ -115,6 +121,8 @@ class LuaMacroSection(IScriptSection):
         self.statements = []
         self.fields = []
         self.callbacks = []
+        self.fields_dict = {}
+        self.callbacks_dict = {}
 
     def get_script(self):
         script_data = '\n' + self.name + ' = {'
@@ -149,9 +157,17 @@ class LuaMacroSection(IScriptSection):
 
     def add_field(self, field):
         self.fields.append(field)
+        self.fields_dict[field.name] = field
 
     def add_callback(self, callback):
         self.callbacks.append(callback)
+        self.callbacks_dict[callback.name] = callback
+
+    def get_field(self, field_name):
+        return self.fields_dict[field_name]
+
+    def get_callback(self, callback_name):
+        return self.callbacks_dict[callback_name]
 
 
 class LuaScript(IScriptSection):
@@ -159,6 +175,7 @@ class LuaScript(IScriptSection):
     def __init__(self, name='Template'):
         self.name = name
         self.sections = []
+        self.sections_dict = {}
 
     def get_script(self):
         date = datetime.datetime.now().strftime("%d-%m-%Y")
@@ -171,4 +188,7 @@ class LuaScript(IScriptSection):
 
     def add_section(self, section):
         self.sections.append(section)
+        self.sections_dict[section.name] = section
 
+    def get_section(self, section_name):
+        return self.sections_dict[section_name]

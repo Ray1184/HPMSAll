@@ -5,7 +5,29 @@
 #include <core/HPMSEntityAdaptee.h>
 #include <core/HPMSEntityHelper.h>
 #include <core/HPMSAnimationAdaptee.h>
-#include <core/HPMSAttachableItem.h>
+
+
+glm::vec3 hpms::AABBAdaptee::GetCorner(hpms::AABBAdapter::Corner corner)
+{
+    Ogre::Vector3 aabbCorner = ogreAABB.getCorner(static_cast<Ogre::AxisAlignedBox::CornerEnum>(corner));
+    return glm::vec3(aabbCorner.x, aabbCorner.y, aabbCorner.z);
+}
+
+
+hpms::AABBAdaptee::AABBAdaptee(Ogre::Entity* entity)
+{
+    if (entity != nullptr)
+    {
+        ogreAABB = entity->getBoundingBox();
+    }
+}
+
+
+hpms::AABBAdaptee::~AABBAdaptee()
+{
+
+}
+
 
 std::string hpms::EntityAdaptee::GetName()
 {
@@ -144,11 +166,30 @@ Ogre::MovableObject* hpms::EntityAdaptee::GetNative()
     return ogreEntity;
 }
 
+
+hpms::AABBAdapter* hpms::EntityAdaptee::GetAABB()
+{
+    return aabb;
+}
+
+void hpms::EntityAdaptee::NotifyAttached()
+{
+    ogreEntity->setUpdateBoundingBoxFromSkeleton(true);
+    aabb->SetOgreAabb(ogreEntity->getWorldBoundingBox(true));
+}
+
+void hpms::EntityAdaptee::NotifyDetached()
+{
+
+}
+
+
 hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx),
                                                                                       mode(hpms::EntityMode::COLOR_AND_DEPTH)
 {
     Check();
     ogreEntity = ctx->GetSceneManager()->createEntity(name);
+    ogreEntity->setUpdateBoundingBoxFromSkeleton(true);
     if (ogreEntity->getAllAnimationStates() != nullptr)
     {
         for (auto& it : ogreEntity->getAllAnimationStates()->getAnimationStates())
@@ -158,19 +199,17 @@ hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& na
             animMap[it.first] = animAdaptee;
         }
     }
+    aabb = hpms::SafeNew<AABBAdaptee>();
 
 }
 
 hpms::EntityAdaptee::~EntityAdaptee()
 {
+    hpms::SafeDelete(aabb);
     for (auto* animAdaptee : animList)
     {
         hpms::SafeDelete(animAdaptee);
     }
     (ctx)->GetSceneManager()->destroyEntity(ogreEntity);
 }
-
-
-
-
 

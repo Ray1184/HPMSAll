@@ -6,4 +6,4 @@ LOCAL_DIR=C:/Users/nicco/Desktop/Projects/HPMSAll/modules/Main/Runtime/build
 
 cd ${LOCAL_DIR} || exit
 
-python deploy.py ${SRC_DIR} ${BIN_DIR}
+C:/Users/nicco/AppData/Local/Programs/Python/Python39/python.exe ${SRC_DIR} ${BIN_DIR}

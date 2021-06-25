@@ -429,6 +429,11 @@ namespace hpms
             hpms::DebugUtils::ClearAllDraws();
         }
 
+        static inline void DDebugDrawBoundingBox(hpms::EntityAdapter* entity)
+        {
+            hpms::DebugUtils::DrawBoundingBox(entity);
+        }
+
         static inline void DDebugDrawWalkmap(hpms::WalkmapAdapter* walkmap)
         {
             hpms::DebugUtils::DrawWalkmap(walkmap);

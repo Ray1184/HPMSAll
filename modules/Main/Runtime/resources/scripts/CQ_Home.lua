@@ -122,6 +122,8 @@ scene = {
             st_player_rot = collisor.rotation
         end
 
+        hpms.debug_draw_clear()
+        hpms.debug_draw_aabb(cipo)
 
     end,
     cleanup = function()

@@ -12,7 +12,7 @@ scene = {
     next = 'TBD',
     setup = function()
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [setup]
-        -- TODO
+        hpms.debug_draw()
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [setup]
     end,
     input = function(keys, mouse_buttons, x, y)

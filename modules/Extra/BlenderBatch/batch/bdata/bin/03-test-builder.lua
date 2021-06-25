@@ -1,4 +1,4 @@
--- SceneTemplate
+-- TestHPMS
 -- Generated with Blend2HPMS batch on date 17-06-2021
 
 dependencies = {
@@ -11,8 +11,17 @@ scene = {
     finished = false,
     next = 'TBD',
     setup = function()
+        x = 25
+        y = hpms.det(x)
+        if x > y then
+            if hpms.valid() then
+                print('GOOD')
+            end
+        else
+            hpms.next_calc()
+        end
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [setup]
-        -- TODO
+        hpms.debug_draw()
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [setup]
     end,
     input = function(keys, mouse_buttons, x, y)

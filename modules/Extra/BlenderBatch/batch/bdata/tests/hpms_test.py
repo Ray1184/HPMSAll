@@ -1,7 +1,6 @@
 import unittest
-import hpms_lua_script_data
-import hpms_lua_script_generator
 import os
+from ..lualib import hpms_lua_script_generator, hpms_lua_script_data, hpms_lua_statement_builder
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -60,6 +59,21 @@ class LuaTest(unittest.TestCase):
 
         with open(dir_path + '/../bin/02-test-template.lua', 'w') as script_file:
             script_file.write(template.get_script())
+
+    @staticmethod
+    def test_script_statement_builder():
+        builder = hpms_lua_statement_builder.LuaStatementBuilder()
+        builder.assign_s('x', 25) \
+            .assign_s('y', 'hpms.det(x)') \
+            .if_s().binary_s('x', 'y', hpms_lua_statement_builder.LuaBinaryOperator.GT) \
+            .then_s() \
+            .st_s('print(\'ERROR\')') \
+            .else_s() \
+            .st_s('hpms.next_calc()') \
+            .end_s()
+
+        with open(dir_path + '/../bin/03-test-builder.lua', 'w') as script_file:
+            script_file.write(builder.build().get_script())
 
 
 if __name__ == '__main__':
