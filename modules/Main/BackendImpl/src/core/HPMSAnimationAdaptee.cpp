@@ -3,10 +3,12 @@
  */
 
 #include <core/HPMSAnimationAdaptee.h>
+#include <iostream>
 
 void hpms::AnimationAdaptee::Update(float tpf)
 {
     Check(ogreAnim);
+    std::cout << ogreAnim->getTimePosition() << std::endl;
     ogreAnim->addTime(tpf);
 }
 

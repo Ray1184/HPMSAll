@@ -85,10 +85,6 @@ void hpms::SceneNodeAdaptee::AttachObject(hpms::ActorAdapter* actor)
         ogreNode->attachObject(a->GetNative());
     }
 
-    if (auto* e = dynamic_cast<EntityAdaptee*>(actor))
-    {
-        e->NotifyAttached();
-    }
 
 }
 
@@ -98,10 +94,6 @@ void hpms::SceneNodeAdaptee::DetachObject(hpms::ActorAdapter* actor)
     if (auto* a = dynamic_cast<AttachableItem*>(actor))
     {
         ogreNode->detachObject(a->GetNative());
-    }
-    if (auto* e = dynamic_cast<EntityAdaptee*>(actor))
-    {
-        e->NotifyDetached();
     }
 
 }

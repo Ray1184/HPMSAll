@@ -39,7 +39,7 @@ scene = {
 
         animating = false
         hpms.play_anim(cipo, "my_animation")
-
+        --hpms.debug_draw_aabb(cipo)
 
     end,
     input = function(keys, mouse_buttons, x, y)

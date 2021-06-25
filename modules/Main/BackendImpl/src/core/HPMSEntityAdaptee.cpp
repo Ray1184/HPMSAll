@@ -7,28 +7,6 @@
 #include <core/HPMSAnimationAdaptee.h>
 
 
-glm::vec3 hpms::AABBAdaptee::GetCorner(hpms::AABBAdapter::Corner corner)
-{
-    Ogre::Vector3 aabbCorner = ogreAABB.getCorner(static_cast<Ogre::AxisAlignedBox::CornerEnum>(corner));
-    return glm::vec3(aabbCorner.x, aabbCorner.y, aabbCorner.z);
-}
-
-
-hpms::AABBAdaptee::AABBAdaptee(Ogre::Entity* entity)
-{
-    if (entity != nullptr)
-    {
-        ogreAABB = entity->getBoundingBox();
-    }
-}
-
-
-hpms::AABBAdaptee::~AABBAdaptee()
-{
-
-}
-
-
 std::string hpms::EntityAdaptee::GetName()
 {
     Check(ogreEntity);
@@ -166,30 +144,34 @@ Ogre::MovableObject* hpms::EntityAdaptee::GetNative()
     return ogreEntity;
 }
 
-
-hpms::AABBAdapter* hpms::EntityAdaptee::GetAABB()
+void hpms::EntityAdaptee::SetDynamicBoundingRadius(bool flag)
 {
-    return aabb;
+    EntityAdaptee::dynamicBoundingRadius = flag;
 }
 
-void hpms::EntityAdaptee::NotifyAttached()
+
+
+float hpms::EntityAdaptee::GetBoundingRadius()
 {
-    ogreEntity->setUpdateBoundingBoxFromSkeleton(true);
-    aabb->SetOgreAabb(ogreEntity->getWorldBoundingBox(true));
+    Check(ogreEntity);
+    if (dynamicBoundingRadius)
+    {
+        UpdateBoundingRadius();
+    }
+    return ogreEntity->getBoundingRadius();
 }
 
-void hpms::EntityAdaptee::NotifyDetached()
+void hpms::EntityAdaptee::UpdateBoundingRadius()
 {
 
 }
-
 
 hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx),
-                                                                                      mode(hpms::EntityMode::COLOR_AND_DEPTH)
+                                                                                      mode(hpms::EntityMode::COLOR_AND_DEPTH),
+                                                                                      dynamicBoundingRadius(false)
 {
     Check();
     ogreEntity = ctx->GetSceneManager()->createEntity(name);
-    ogreEntity->setUpdateBoundingBoxFromSkeleton(true);
     if (ogreEntity->getAllAnimationStates() != nullptr)
     {
         for (auto& it : ogreEntity->getAllAnimationStates()->getAnimationStates())
@@ -199,17 +181,18 @@ hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& na
             animMap[it.first] = animAdaptee;
         }
     }
-    aabb = hpms::SafeNew<AABBAdaptee>();
+    boundingRadius = ogreEntity->getBoundingRadius();
 
 }
 
 hpms::EntityAdaptee::~EntityAdaptee()
 {
-    hpms::SafeDelete(aabb);
     for (auto* animAdaptee : animList)
     {
         hpms::SafeDelete(animAdaptee);
     }
     (ctx)->GetSceneManager()->destroyEntity(ogreEntity);
 }
+
+
 

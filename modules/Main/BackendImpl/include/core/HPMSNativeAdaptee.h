@@ -21,11 +21,13 @@ namespace hpms
 
         void Clear() override;
 
-        void BeginLine(const glm::vec4& ambient, const glm::vec4& diffuse) override;
+        void BeginDraw(const glm::vec4& ambient, const glm::vec4& diffuse) override;
 
         void DrawLine(const glm::vec3& p1, const glm::vec3& p2) override;
 
-        void EndLine() override;
+        void DrawCircle(const glm::vec3& center, float radius) override;
+
+        void EndDraw() override;
 
 
     };

@@ -18,37 +18,17 @@
 
 namespace hpms
 {
-    class AABBAdaptee : public AABBAdapter
-    {
-    private:
-        Ogre::AxisAlignedBox ogreAABB;
-    public:
 
-        explicit AABBAdaptee(Ogre::Entity* entity = nullptr);
-
-        virtual ~AABBAdaptee();
-
-        inline const Ogre::AxisAlignedBox& GetOgreAabb() const
-        {
-            return ogreAABB;
-        }
-
-        inline void SetOgreAabb(const Ogre::AxisAlignedBox& ogreAabb)
-        {
-            ogreAABB = ogreAabb;
-        }
-
-        glm::vec3 GetCorner(Corner corner) override;
-    };
 
     class EntityAdaptee : public EntityAdapter, public AdapteeCommon, public AttachableItem
     {
     private:
         Ogre::Entity* ogreEntity;
-        AABBAdaptee* aabb;
         hpms::EntityMode mode;
         std::map<std::string, hpms::AnimationAdapter*> animMap;
         std::vector<hpms::AnimationAdapter*> animList;
+        bool dynamicBoundingRadius;
+        float boundingRadius;
 
     public:
         EntityAdaptee(hpms::OgreContext* ctx, const std::string& name);
@@ -89,10 +69,11 @@ namespace hpms
 
         virtual Ogre::MovableObject* GetNative() override;
 
-        AABBAdapter* GetAABB() override;
+        void SetDynamicBoundingRadius(bool flag) override;
 
-        void NotifyAttached();
+        float GetBoundingRadius() override;
 
-        void NotifyDetached();
+    private:
+        void UpdateBoundingRadius();
     };
 }

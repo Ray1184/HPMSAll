@@ -26,32 +26,11 @@ namespace hpms
             drawer->Clear();
         }
         inline static void DrawBoundingBox(hpms::ActorAdapter* actor) {
-            auto* aabb = actor->GetAABB();
-            if (aabb == nullptr)
-            {
-                std::stringstream ss;
-                ss << "Bounding Box not defined for type " << typeid(actor).name();
-                LOG_WARN(ss.str().c_str());
-                return;
-            }
-            auto* drawer = hpms::GetNative();
-            glm::vec3 prev;
-            drawer->BeginLine(BLUE, BLUE);
-            for (int i = AABBAdapter::Corner::FAR_LEFT_BOTTOM; i < AABBAdapter::Corner::NEAR_RIGHT_BOTTOM; i++)
-            {
-                glm::vec3 curr = actor->GetAABB()->GetCorner(static_cast<AABBAdapter::Corner>(i));
-                prev = curr;
-                if (i == 0) {
-                    glm::vec3 last = actor->GetAABB()->GetCorner(static_cast<AABBAdapter::Corner>(AABBAdapter::Corner::NEAR_RIGHT_BOTTOM));
-                    drawer->DrawLine(last, curr);
-                    continue;
-                }
-                curr = actor->GetAABB()->GetCorner(static_cast<AABBAdapter::Corner>(i));
-                drawer->DrawLine(prev, curr);
-                prev = curr;
-            }
-            drawer->EndLine();
 
+            auto* drawer = hpms::GetNative();
+            drawer->BeginDraw(BLUE, BLUE);
+            drawer->DrawCircle(actor->GetPosition(), actor->GetBoundingRadius() * actor->GetScale().x);
+            drawer->EndDraw();
         }
 
         inline static void DrawWalkmap(hpms::WalkmapAdapter* walkmap)
@@ -61,9 +40,9 @@ namespace hpms
             {
                 DrawTriangle(drawer, tri);
             };
-            drawer->BeginLine(T_WHITE, T_WHITE);
+            drawer->BeginDraw(T_WHITE, T_WHITE);
             walkmap->Visit(drawProcess);
-            drawer->EndLine();
+            drawer->EndDraw();
         }
 
         inline static void DrawCollisorSector(hpms::Collisor* collisor)
@@ -72,9 +51,9 @@ namespace hpms
             auto* tri = collisor->GetCurrentTriangle();
             if (tri)
             {
-                drawer->BeginLine(RED, RED);
+                drawer->BeginDraw(RED, RED);
                 DrawTriangle(drawer, tri);
-                drawer->EndLine();
+                drawer->EndDraw();
             }
         }
 
@@ -84,9 +63,9 @@ namespace hpms
             auto* tri = walkmap->SampleTriangle(actor->GetPosition(), 0.0);
             if (tri)
             {
-                drawer->BeginLine(RED, RED);
+                drawer->BeginDraw(RED, RED);
                 DrawTriangle(drawer, tri);
-                drawer->EndLine();
+                drawer->EndDraw();
             }
         }
 
