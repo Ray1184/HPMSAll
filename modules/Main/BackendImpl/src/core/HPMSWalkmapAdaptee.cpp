@@ -4,6 +4,7 @@
 
 #include <core/HPMSWalkmapAdaptee.h>
 #include <utils/HPMSSectorUtils.h>
+#include <common/HPMSMathUtils.h>
 
 std::string hpms::WalkmapAdaptee::GetId()
 {
@@ -30,6 +31,31 @@ hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos
     hpms::SampleTriangle(pos, walkmap, tolerance, &sampled);
     return triangles[sampled];
 }
+
+bool hpms::WalkmapAdaptee::IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius)
+{
+    Check(walkmap.get());
+    for (const auto& sector : walkmap->GetData()->GetSectors())
+    {
+        for (const auto& tri : sector.GetTriangles())
+        {
+            if (tri.IsPerimetral())
+            {
+                for (const auto& side : tri.GetPerimetralSides())
+                {
+                    auto sideCoords = hpms::GetSideCoordsFromTriangle(&tri, &side);
+                    auto collides = hpms::IntersectCircleLineSegment(pos, radius, sideCoords.first, sideCoords.second);
+                    if (collides)
+                    {
+                        return true;
+                    }
+                }
+            }
+        }
+    }
+    return false;
+}
+
 
 std::pair<glm::vec2, glm::vec2> hpms::WalkmapAdaptee::GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side)
 {
@@ -58,8 +84,6 @@ hpms::WalkmapAdaptee::~WalkmapAdaptee()
         hpms::SafeDelete(ad);
     }
 }
-
-
 
 float hpms::TriangleAdaptee::X1()
 {

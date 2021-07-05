@@ -113,6 +113,8 @@ namespace hpms
 
         virtual TriangleAdapter* SampleTriangle(const glm::vec3& pos, float tolerance) = 0;
 
+        virtual bool IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius) = 0;
+
         virtual void Visit(const std::function<void(TriangleAdapter* tri)>& visitor) = 0;
 
         virtual std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side) = 0;

@@ -144,31 +144,13 @@ Ogre::MovableObject* hpms::EntityAdaptee::GetNative()
     return ogreEntity;
 }
 
-void hpms::EntityAdaptee::SetDynamicBoundingRadius(bool flag)
-{
-    EntityAdaptee::dynamicBoundingRadius = flag;
-}
-
-
-
 float hpms::EntityAdaptee::GetBoundingRadius()
 {
-    Check(ogreEntity);
-    if (dynamicBoundingRadius)
-    {
-        UpdateBoundingRadius();
-    }
-    return ogreEntity->getBoundingRadius();
-}
-
-void hpms::EntityAdaptee::UpdateBoundingRadius()
-{
-
+    return boundingRadius;
 }
 
 hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx),
-                                                                                      mode(hpms::EntityMode::COLOR_AND_DEPTH),
-                                                                                      dynamicBoundingRadius(false)
+                                                                                      mode(hpms::EntityMode::COLOR_AND_DEPTH)
 {
     Check();
     ogreEntity = ctx->GetSceneManager()->createEntity(name);
@@ -181,7 +163,7 @@ hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& na
             animMap[it.first] = animAdaptee;
         }
     }
-    boundingRadius = ogreEntity->getBoundingRadius();
+    boundingRadius = 0.3098;
 
 }
 

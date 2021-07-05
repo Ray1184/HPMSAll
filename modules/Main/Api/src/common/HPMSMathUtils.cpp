@@ -22,3 +22,21 @@ float hpms::IntersectRayLineSegment(float originX, float originY, float dirX, fl
     }
     return -1.0f;
 }
+
+bool hpms::IntersectCircleLineSegment(const glm::vec2& origin, float radius, glm::vec2& pointA, glm::vec2& pointB)
+{
+    double baX = pointB.x - pointA.x;
+    double baY = pointB.y - pointA.y;
+    double caX = origin.x - pointA.x;
+    double caY = origin.y - pointA.y;
+
+    double a = baX * baX + baY * baY;
+    double bBy2 = baX * caX + baY * caY;
+    double c = caX * caX + caY * caY - radius * radius;
+
+    double pBy2 = bBy2 / a;
+    double q = c / a;
+
+    double disc = pBy2 * pBy2 - q;
+    return disc >= 0;
+}

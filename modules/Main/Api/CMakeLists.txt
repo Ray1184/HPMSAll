@@ -19,6 +19,7 @@ include_directories(include)
 
 set(SOURCES
         src/common/HPMSUtils.cpp
-        src/common/HPMSMathUtils.cpp)
+        src/common/HPMSMathUtils.cpp
+        src/common/HPMSLibsUtils.cpp)
 
 add_library(HPMSApi STATIC ${SOURCES})

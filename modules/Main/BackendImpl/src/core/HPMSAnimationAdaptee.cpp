@@ -8,7 +8,6 @@
 void hpms::AnimationAdaptee::Update(float tpf)
 {
     Check(ogreAnim);
-    std::cout << ogreAnim->getTimePosition() << std::endl;
     ogreAnim->addTime(tpf);
 }
 
@@ -42,7 +41,9 @@ void hpms::AnimationAdaptee::SetLoop(bool loop)
     ogreAnim->setLoop(loop);
 }
 
-hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : AdapteeCommon(nullptr), ogreAnim(ogreAnim)
+hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : AdapteeCommon(nullptr),
+                                                                           ogreAnim(ogreAnim),
+                                                                           currentFrameIndex(0)
 {
 
 }
@@ -50,4 +51,9 @@ hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : Adapt
 hpms::AnimationAdaptee::~AnimationAdaptee()
 {
 
+}
+
+size_t hpms::AnimationAdaptee::GetCurrentFrameIndex()
+{
+    return currentFrameIndex;
 }

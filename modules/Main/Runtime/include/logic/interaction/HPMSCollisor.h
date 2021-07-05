@@ -73,6 +73,10 @@ namespace hpms
 
         void Update() override;
 
+    private:
+        void DetectBySector();
+        void DetectByBoundingRadius();
 
+        void CorrectPositionAfterCollision(const std::pair<glm::vec2, glm::vec2>& sidePair);
     };
 }

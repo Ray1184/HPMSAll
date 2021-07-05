@@ -45,8 +45,6 @@ namespace hpms
 
         virtual hpms::AnimationAdapter* GetAnimationByName(const std::string& animName) = 0;
 
-        virtual void SetDynamicBoundingRadius(bool flag) = 0;
-
         virtual void SetPosition(const glm::vec3& position) override = 0;
 
         virtual glm::vec3 GetPosition() const override = 0;

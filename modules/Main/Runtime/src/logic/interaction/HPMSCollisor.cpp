@@ -3,7 +3,6 @@
  */
 
 #include <logic/interaction/HPMSCollisor.h>
-#include <common/HPMSCoordSystem.h>
 
 void hpms::Collisor::Update()
 {
@@ -13,6 +12,38 @@ void hpms::Collisor::Update()
     }
 
     outOfDate = false;
+    DetectBySector();
+
+}
+
+// Slower, high precision (NOT WORKING)
+void hpms::Collisor::DetectByBoundingRadius()
+{
+    bool intersect = false;
+    currentTriangle = walkMap->SampleTriangle(nextPosition, 0);
+    auto collisionProcess = [&](hpms::TriangleAdapter* tri)
+    {
+        for (auto* side : tri->GetPerimetralSides())
+        {
+            std::pair<glm::vec2, glm::vec2> sidePair = walkMap->GetSideCoordsFromTriangle(tri, side);
+            if (hpms::IntersectCircleLineSegment(nextPosition, actor->GetBoundingRadius(), sidePair.first, sidePair.second))
+            {
+                CorrectPositionAfterCollision(sidePair);
+                intersect = true;
+                return;
+            }
+        }
+    };
+    walkMap->Visit(collisionProcess);
+    if (!intersect)
+    {
+        actor->SetPosition(nextPosition);
+    }
+}
+
+// Faster, low precision (ACTUALLY USED)
+void hpms::Collisor::DetectBySector()
+{
     auto* nextTriangle = walkMap->SampleTriangle(nextPosition, tolerance);
 
     if (nextTriangle)
@@ -32,29 +63,34 @@ void hpms::Collisor::Update()
         for (auto* side : currentTriangle->GetPerimetralSides())
         {
             std::pair<glm::vec2, glm::vec2> sidePair = walkMap->GetSideCoordsFromTriangle(currentTriangle, side);
-            float t = hpms::IntersectRayLineSegment(actor->GetPosition(), direction, sidePair.first, sidePair.second);
+            float t = IntersectRayLineSegment(actor->GetPosition(), direction, sidePair.first, sidePair.second);
             // Correct side.
             if (t > -1)
             {
-                glm::vec2 n = glm::normalize(hpms::Perpendicular(sidePair.first - sidePair.second));
-                glm::vec3 v = nextPosition - actor->GetPosition();
-                glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
-                glm::vec2 vt = glm::vec2(SD(v), FW(v)) - vn;
-                glm::vec3 correctPosition = ADDV3_V2(actor->GetPosition(), vt);
-
-                auto* correctTriangle = walkMap->SampleTriangle(correctPosition, tolerance);
-
-                if (correctTriangle != nullptr)
-                {
-                    // Calculated position is good, move actor to calculated position.
-                    actor->SetPosition(correctPosition);
-
-                    // Assign for safe, but correctTriangle should be the original.
-                    currentTriangle = correctTriangle;
-                }
+                CorrectPositionAfterCollision(sidePair);
                 return;
             }
         }
+    }
+}
+
+void hpms::Collisor::CorrectPositionAfterCollision(const std::pair<glm::vec2, glm::vec2>& sidePair)
+{
+    glm::vec2 n = glm::normalize(Perpendicular(sidePair.first - sidePair.second));
+    glm::vec3 v = nextPosition - actor->GetPosition();
+    glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
+    glm::vec2 vt = glm::vec2(SD(v), FW(v)) - vn;
+    glm::vec3 correctPosition = ADDV3_V2(actor->GetPosition(), vt);
+
+    auto* correctTriangle = walkMap->SampleTriangle(correctPosition, tolerance);
+
+    if (correctTriangle != nullptr)
+    {
+        // Calculated position is good, move actor to calculated position.
+        actor->SetPosition(correctPosition);
+
+        // Assign for safe, but correctTriangle should be the original.
+        currentTriangle = correctTriangle;
     }
 }
 

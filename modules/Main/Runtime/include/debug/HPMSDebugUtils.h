@@ -29,7 +29,7 @@ namespace hpms
 
             auto* drawer = hpms::GetNative();
             drawer->BeginDraw(BLUE, BLUE);
-            drawer->DrawCircle(actor->GetPosition(), actor->GetBoundingRadius() * actor->GetScale().x);
+            drawer->DrawCircle(actor->GetPosition(), actor->GetBoundingRadius() * (actor->GetScale().x + actor->GetScale().y + actor->GetScale().z) / 3);
             drawer->EndDraw();
         }
 

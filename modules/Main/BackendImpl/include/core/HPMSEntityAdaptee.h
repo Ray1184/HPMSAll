@@ -27,7 +27,6 @@ namespace hpms
         hpms::EntityMode mode;
         std::map<std::string, hpms::AnimationAdapter*> animMap;
         std::vector<hpms::AnimationAdapter*> animList;
-        bool dynamicBoundingRadius;
         float boundingRadius;
 
     public:
@@ -69,11 +68,6 @@ namespace hpms
 
         virtual Ogre::MovableObject* GetNative() override;
 
-        void SetDynamicBoundingRadius(bool flag) override;
-
         float GetBoundingRadius() override;
-
-    private:
-        void UpdateBoundingRadius();
     };
 }

@@ -1,5 +1,5 @@
 -- TestRoom2
--- Generated with Blend2HPMS batch on date 17-06-2021
+-- Generated with Blend2HPMS batch on date 04-07-2021
 
 dependencies = {
     'luatest/Dep1.lua',

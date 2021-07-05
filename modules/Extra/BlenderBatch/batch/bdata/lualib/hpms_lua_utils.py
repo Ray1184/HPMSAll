@@ -1,4 +1,0 @@
-"""
-HPMS Lua utils.
-
-"""

@@ -60,7 +60,6 @@ class LuaScriptTemplate:
                 user_section_found = False
                 user_data.pop(0)
                 diff = len(user_data[0]) - len(user_data[0].strip())
-                print(diff)
                 user_data_formatted = []
                 for user_data_exp in user_data:
                     user_data_exp_formatted = user_data_exp[diff:]

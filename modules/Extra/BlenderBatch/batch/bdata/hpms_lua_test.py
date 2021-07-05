@@ -1,6 +1,10 @@
-import unittest
 import os
-from ..lualib import hpms_lua_script_generator, hpms_lua_script_data, hpms_lua_statement_builder
+import unittest
+
+import hpms_lua_script_data
+import hpms_lua_script_generator
+import hpms_lua_statement_builder
+import hpms_utils as logger
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 
@@ -49,7 +53,7 @@ class LuaTest(unittest.TestCase):
         lua_script.add_section(dep_section)
         lua_script.add_section(scene_section)
 
-        with open(dir_path + '/../bin/01-test-script.lua', 'w') as script_file:
+        with open(dir_path + '/bin/01-test-script.lua', 'w') as script_file:
             script_file.write(lua_script.get_script())
 
     @staticmethod
@@ -57,24 +61,44 @@ class LuaTest(unittest.TestCase):
         generator = hpms_lua_script_generator.LuaScriptTemplate()
         template = generator.generate_scene_template()
 
-        with open(dir_path + '/../bin/02-test-template.lua', 'w') as script_file:
+        with open(dir_path + '/bin/02-test-template.lua', 'w') as script_file:
             script_file.write(template.get_script())
 
     @staticmethod
     def test_script_statement_builder():
         builder = hpms_lua_statement_builder.LuaStatementBuilder()
-        builder.assign_s('x', 25) \
-            .assign_s('y', 'hpms.det(x)') \
-            .if_s().binary_s('x', 'y', hpms_lua_statement_builder.LuaBinaryOperator.GT) \
-            .then_s() \
-            .st_s('print(\'ERROR\')') \
-            .else_s() \
-            .st_s('hpms.next_calc()') \
+        builder.assign_s('x', 25).nl_s() \
+            .assign_s('y', 'hpms.det(x)').nl_s() \
+            .if_s().binary_s('x', 'y', hpms_lua_statement_builder.LuaBinaryOperator.GT).then_s().nla_s() \
+            .if_s().st_s(hpms_lua_script_data.LuaStatement('hpms.valid()')).then_s().nla_s() \
+            .st_s(hpms_lua_script_data.LuaStatement('print(\'GOOD\')')).nlr_s() \
+            .end_s().nlr_s() \
+            .else_s().nla_s() \
+            .st_s(hpms_lua_script_data.LuaStatement('hpms.next_calc()')).nlr_s() \
             .end_s()
 
-        with open(dir_path + '/../bin/03-test-builder.lua', 'w') as script_file:
-            script_file.write(builder.build().get_script())
+        generator = hpms_lua_script_generator.LuaScriptTemplate()
+        scene_script = generator.generate_scene_template()
+        scene_script.name = 'TestHPMS'
+        scene_script.get_section('scene').get_callback('setup').add_statement_pre(builder.build())
+        scene_script.get_section('scene').get_callback('setup').set_user_section(hpms_lua_script_data.LuaUserCode('hpms.debug_draw()'))
+        with open(dir_path + '/bin/03-test-builder.lua', 'w') as script_file:
+            script_file.write(scene_script.get_script())
+
+    @staticmethod
+    def test_restore_template_with_user_data():
+        with open(dir_path + '/bin/03-test-builder.lua') as reader:
+            script_file_content_list = reader.readlines()
+
+        generator = hpms_lua_script_generator.LuaScriptTemplate()
+        script_file_content = "\n".join(script_file_content_list)
+        restored_script = generator.restore_template_with_user_data(script_file_content)
+
+        with open(dir_path + '/bin/04-test-restored-data.lua', 'w') as script_file:
+            script_file.write(restored_script.get_script())
 
 
 if __name__ == '__main__':
+    logger.info('Starting test block')
     unittest.main()
+    logger.info('Finishing test block')

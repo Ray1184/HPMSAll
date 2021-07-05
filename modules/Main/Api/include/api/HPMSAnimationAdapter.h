@@ -34,5 +34,7 @@ namespace hpms
         virtual bool IsLoop() = 0;
 
         virtual void SetLoop(bool loop) = 0;
+
+        virtual size_t GetCurrentFrameIndex() = 0;
     };
 }

@@ -29,7 +29,7 @@ scene = {
         map = hpms.make_walkmap("Home.walkmap")
 
         --hpms.debug_draw_walkmap(map)
-        collisor = hpms.make_node_collisor(cipo_node, map, 0)
+        collisor = hpms.make_node_collisor(cipo_node, map, 0.3098)
         collisor.position = st_player_pos
         collisor.rotation = st_player_rot
         create_backgrounds_1()
