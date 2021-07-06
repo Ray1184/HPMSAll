@@ -1,5 +1,14 @@
+"""
+HPMS utility functions.
+
+"""
+
+import sys
+import os
 from sys import platform
 from datetime import datetime
+
+sys.path.append(os.path.dirname(os.path.realpath(__file__)))
 
 log_level = 3
 
