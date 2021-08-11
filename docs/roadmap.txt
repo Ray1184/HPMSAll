@@ -4,14 +4,15 @@
  Adattare states e logiche runtime.                             | DONE
  Mappare tutti i suppliers/funzioni nella VM lua.               | DONE
  Text box e bone attachment.                                    | DONE
- Collisioni.                                                    | DONE
+ Collisioni.                                                    | IN PROGRESS
  Demo tecnica minimale.                                         | DONE
- Batch esportazione scena da blender in python.                 | TODO
- Implementare console LUA in tempo reale.                       | TODO
+ Batch esportazione scena da blender in Java/Python             | IN PROGRESS
+ Implementare console LUA in tempo reale.                       | DONE
  Implementare funzioni di gestione camera e switch tra stati.   | DONE
  Demo tecnica.                                                  | DONE
  Implementare prime logiche di gioco e GUI rudimentali.         | DONE
  Demo minimale.                                                 | DONE
+ Implementare LUA Debug.                                        | TODO
  Implementare cinematica.                                       | TODO
  Implementare sistema messaggi.                                 | TODO
  Implementare meccaniche di gioco.                              | TODO

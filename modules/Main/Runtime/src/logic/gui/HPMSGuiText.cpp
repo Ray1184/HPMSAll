@@ -27,7 +27,7 @@ std::string hpms::GuiText::DrawTextStream(const std::string& text, unsigned int 
 
 void hpms::GuiText::SetPosition(const glm::vec3& position)
 {
-
+    textArea->SetPosition(position);
 }
 
 glm::vec3 hpms::GuiText::GetPosition() const

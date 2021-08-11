@@ -108,7 +108,9 @@ namespace hpms
 
         bool IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius) override;
 
-        virtual void Visit(const std::function<void(TriangleAdapter* tri)>& visitor) override;
+        virtual void ForEachTriangle(const std::function<bool(TriangleAdapter* tri)>& visitor) override;
+
+        virtual void ForEachSide(const std::function<bool(const glm::vec2& sizeAPos, const glm::vec2& sizeBPos)>& visitor) override;
 
         virtual std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side) override;
     };

@@ -23,20 +23,53 @@ float hpms::IntersectRayLineSegment(float originX, float originY, float dirX, fl
     return -1.0f;
 }
 
-bool hpms::IntersectCircleLineSegment(const glm::vec2& origin, float radius, glm::vec2& pointA, glm::vec2& pointB)
+bool hpms::IntersectCircleLineSegment(const glm::vec2& origin, float radius, const glm::vec2& pointA, const glm::vec2& pointB)
 {
-    double baX = pointB.x - pointA.x;
-    double baY = pointB.y - pointA.y;
-    double caX = origin.x - pointA.x;
-    double caY = origin.y - pointA.y;
+    float baX = pointB.x - pointA.x;
+    float baY = pointB.y - pointA.y;
+    float caX = origin.x - pointA.x;
+    float caY = origin.y - pointA.y;
 
-    double a = baX * baX + baY * baY;
-    double bBy2 = baX * caX + baY * caY;
-    double c = caX * caX + caY * caY - radius * radius;
+    float a = baX * baX + baY * baY;
+    float bBy2 = baX * caX + baY * caY;
+    float c = caX * caX + caY * caY - radius * radius;
 
-    double pBy2 = bBy2 / a;
-    double q = c / a;
+    float pBy2 = bBy2 / a;
+    float q = c / a;
 
-    double disc = pBy2 * pBy2 - q;
+    float disc = pBy2 * pBy2 - q;
     return disc >= 0;
 }
+
+bool hpms::PointInsideCircle(const glm::vec2& point, const glm::vec2& t, float radius)
+{
+    return std::pow(point.x - t.x, 2) + std::pow(point.y - t.y, 2) < std::pow(radius, 2);
+}
+
+bool hpms::PointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const std::vector<glm::vec2>& data)
+{
+    float x1, y1, x2, y2;
+    size_t len = data.size();
+    x2 = data[len].x + t.x;
+    y2 = data[len].y + t.y;
+    int wn = 0;
+    for (size_t idx = 0; idx < len; idx++)
+    {
+        x1 = x2;
+        y1 = y2;
+        x2 = data[idx].x + t.x;
+        y2 = data[idx].y + t.y;
+        if (y1 > point.y)
+        {
+            if ((y2 <= point.y) && (x1 - point.x) * (y2 - point.y) < (x2 - point.x) * (y1 - point.y))
+            {
+                wn++;
+            } else if ((y2 > point.y) && (x1 - point.x) * (y2 - point.y) > (x2 - point.x) * (y1 - point.y))
+            {
+                wn--;
+            }
+        }
+    }
+    return wn % 2 != 0;
+}
+

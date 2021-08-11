@@ -1,0 +1,8 @@
+Fragmentcore
+{
+	type truetype
+	source Fragmentcore.ttf
+	size 15
+	resolution 180
+	code_points 1-255
+}

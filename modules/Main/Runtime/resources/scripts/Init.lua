@@ -5,6 +5,6 @@
 -- scene script.
 --
 config = {
-    first_script = "CQ_Menu.lua"
+    first_script = "Test.lua"
 }
 

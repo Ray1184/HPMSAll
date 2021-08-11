@@ -13,6 +13,7 @@
 #include <logic/interaction/HPMSCollisor.h>
 #include <logic/gui/HPMSGuiText.h>
 #include <debug/HPMSDebugUtils.h>
+#include <LuaBridge/Vector.h>
 
 namespace hpms
 {
@@ -45,15 +46,6 @@ namespace hpms
             return hpms::CalcDirection(rot, forward);
         }
 
-        static inline float ToRadians(float degrees)
-        {
-            return glm::radians(degrees);
-        }
-
-        static inline float ToDegrees(float radians)
-        {
-            return glm::degrees(radians);
-        }
 
         static inline glm::vec3 SumVec3(const glm::vec3& v1, const glm::vec3& v2)
         {
@@ -188,9 +180,42 @@ namespace hpms
             return v[i][j];
         }
 
-        // STL utils.
+        // Math calc utils.
+        static inline float MCToRadians(float degrees)
+        {
+            return glm::radians(degrees);
+        }
+
+        static inline float MCToDegrees(float radians)
+        {
+            return glm::degrees(radians);
+        }
+
+        static inline bool MCPointInsideCircle(const glm::vec2& point, const glm::vec2& t, float radius) {
+            return hpms::PointInsideCircle(point, t, radius);
+        }
+
+        static inline bool MCPointInsidePolygon(const glm::vec2& point, glm::vec2& t, const std::vector<glm::vec2>& data) {
+            return hpms::PointInsidePolygon(point, t, data);
+        }
+
+
 
         // LUA Key handling.
+        static inline std::string KHKeyInput(const std::vector<hpms::KeyEvent>& events)
+        {
+            if (events.empty() || events[0].state != KeyEvent::PRESSED_FIRST_TIME) {
+                return "";
+            }
+            if (events.size() >= 2 && (events[1].name == "LSHIFT" || events[1].name == "RSHIFT")) {
+                return "SH_" + events[0].name;
+            }
+            if (events.size() >= 2 && (events[1].name == "LALT" || events[1].name == "RSALT")) {
+                return "AL_" + events[0].name;
+            }
+            return events[0].name;
+        }
+
         static inline bool KHKeyAction(const std::vector<hpms::KeyEvent>& events, const std::string& name, int action)
         {
             for (const auto& event : events)
@@ -447,6 +472,11 @@ namespace hpms
         static inline void DDebugDrawSampledTriangle(hpms::WalkmapAdapter* walkmap, hpms::ActorAdapter* actor)
         {
             hpms::DebugUtils::DrawSampledSector(walkmap, actor);
+        }
+
+        static inline void DDebugDrawPerimeter(hpms::WalkmapAdapter* walkmap)
+        {
+            hpms::DebugUtils::DrawPerimeter(walkmap);
         }
 
 

@@ -26,13 +26,12 @@ namespace hpms
         glm::vec2 direction{};
         bool outOfDate;
         hpms::TriangleAdapter* currentTriangle{nullptr};
+        std::vector<glm::vec2> perimeter;
     public:
 
 
 
-        Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance) : actor(actor), walkMap(walkMap),
-                                                                    tolerance(tolerance), ignore(false), outOfDate(true)
-        {}
+        Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance);
 
 
         void SetPosition(const glm::vec3& position) override;
@@ -77,6 +76,6 @@ namespace hpms
         void DetectBySector();
         void DetectByBoundingRadius();
 
-        void CorrectPositionAfterCollision(const std::pair<glm::vec2, glm::vec2>& sidePair);
+        void CorrectPositionAfterCollision(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
     };
 }

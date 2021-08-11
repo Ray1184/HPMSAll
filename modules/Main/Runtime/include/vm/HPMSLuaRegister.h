@@ -11,6 +11,7 @@ extern "C" {
 
 #include <vector>
 #include <LuaBridge/LuaBridge.h>
+#include <LuaBridge/Vector.h>
 #include <glm/vec2.hpp>
 #include <glm/vec3.hpp>
 #include <glm/vec4.hpp>
@@ -27,7 +28,6 @@ namespace hpms
     class LuaRegister
     {
     public:
-
 
         inline static void RegisterAssetManager(lua_State* state)
         {
@@ -133,8 +133,10 @@ namespace hpms
         {
             getGlobalNamespace(state)
                     .beginNamespace("hpms")
-                    .addFunction("to_radians", &hpms::LuaExtensions::ToRadians)
-                    .addFunction("to_degrees", &hpms::LuaExtensions::ToDegrees)
+                    .addFunction("to_radians", &hpms::LuaExtensions::MCToRadians)
+                    .addFunction("to_degrees", &hpms::LuaExtensions::MCToDegrees)
+                    .addFunction("point_inside_circle", &hpms::LuaExtensions::MCPointInsideCircle)
+                    .addFunction("point_inside_polygon", &hpms::LuaExtensions::MCPointInsidePolygon)
                     .endNamespace();
 
         }
@@ -266,6 +268,7 @@ namespace hpms
                     .beginNamespace("hpms")
                     .beginClass<std::vector<KeyEvent>>("key_list")
                     .endClass()
+                    .addFunction("current_key_code", &hpms::LuaExtensions::KHKeyInput)
                     .addFunction("key_action_performed", &hpms::LuaExtensions::KHKeyAction)
                     .endNamespace();
         }
@@ -380,6 +383,7 @@ namespace hpms
                     .addFunction("debug_draw_walkmap", &hpms::LuaExtensions::DDebugDrawWalkmap)
                     .addFunction("debug_draw_sampled_triangle", &hpms::LuaExtensions::DDebugDrawSampledTriangle)
                     .addFunction("debug_draw_collisor_triangle", &hpms::LuaExtensions::DDebugDrawCollisorTriangle)
+                    .addFunction("debug_draw_perimeter", &hpms::LuaExtensions::DDebugDrawPerimeter)
                     .endNamespace();
         }
 

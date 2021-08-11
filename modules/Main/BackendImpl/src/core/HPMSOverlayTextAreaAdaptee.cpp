@@ -231,7 +231,9 @@ hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName,
 hpms::OverlayTextAreaAdaptee::~OverlayTextAreaAdaptee()
 {
     overlay->hide();
-    ogrePanel->show();
+    ogrePanel->hide();
+    textArea->setCaption("");
+    textArea->hide();
 }
 
 void hpms::OverlayTextAreaAdaptee::SetCaptionSafe(const std::string& text)

@@ -7,9 +7,13 @@
 #include <glm/glm.hpp>
 #include <glm/ext.hpp>
 #include <common/HPMSCoordSystem.h>
+#include <cmath>
+#include <vector>
 
 namespace hpms
 {
+
+
     float
     IntersectRayLineSegment(float originX, float originY, float dirX, float dirY, float aX, float aY, float bX,
                             float bY);
@@ -21,10 +25,10 @@ namespace hpms
         return IntersectRayLineSegment(SD(origin), FW(origin), dir.x, dir.y, a.x, a.y, b.x, b.y);
     }
 
-    bool IntersectCircleLineSegment(const glm::vec2& origin, float radius, glm::vec2& pointA, glm::vec2& pointB);
+    bool IntersectCircleLineSegment(const glm::vec2& origin, float radius, const glm::vec2& pointA, const glm::vec2& pointB);
 
     inline bool
-    IntersectCircleLineSegment(const glm::vec3& origin, float radius, glm::vec3& pointA, glm::vec3& pointB)
+    IntersectCircleLineSegment(const glm::vec3& origin, float radius, const glm::vec3& pointA, const glm::vec3& pointB)
     {
         auto origin2d = glm::vec2(SD(origin), FW(origin));
         auto pointA2d = glm::vec2(SD(pointA), FW(pointA));
@@ -33,13 +37,13 @@ namespace hpms
     }
 
     inline bool
-    IntersectCircleLineSegment(const glm::vec3& origin, float radius, glm::vec2& pointA, glm::vec2& pointB)
+    IntersectCircleLineSegment(const glm::vec3& origin, float radius, const glm::vec2& pointA, const glm::vec2& pointB)
     {
         auto origin2d = glm::vec2(SD(origin), FW(origin));
         return IntersectCircleLineSegment(origin2d, radius, pointA, pointB);
     }
 
-    inline glm::vec2 Perpendicular(const glm::vec2 origin)
+    inline glm::vec2 Perpendicular(const glm::vec2& origin)
     {
         return {FW(origin), -SD(origin)};
     }
@@ -51,4 +55,9 @@ namespace hpms
         glm::vec3 dir = rotMat * forward;
         return glm::normalize(dir);
     }
+
+    bool PointInsideCircle(const glm::vec2& point, const glm::vec2& data, float radius);
+
+    bool PointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const std::vector<glm::vec2>& data);
+
 }

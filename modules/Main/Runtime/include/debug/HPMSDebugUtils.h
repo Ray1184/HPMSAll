@@ -13,7 +13,7 @@
 #define GREEN glm::vec4(0, 1, 0, 1)
 #define BLUE glm::vec4(0, 0, 1, 1)
 #define WHITE glm::vec4(1, 1, 1, 1)
-#define T_WHITE glm::vec4(1, 1, 1, 0.5)
+#define T_WHITE glm::vec4(1, 1, 1, 0.3)
 
 namespace hpms
 {
@@ -25,12 +25,29 @@ namespace hpms
             auto* drawer = hpms::GetNative();
             drawer->Clear();
         }
-        inline static void DrawBoundingBox(hpms::ActorAdapter* actor) {
+
+        inline static void DrawBoundingBox(hpms::ActorAdapter* actor)
+        {
 
             auto* drawer = hpms::GetNative();
             drawer->BeginDraw(BLUE, BLUE);
             drawer->DrawCircle(actor->GetPosition(), actor->GetBoundingRadius() * (actor->GetScale().x + actor->GetScale().y + actor->GetScale().z) / 3);
             drawer->EndDraw();
+        }
+
+        inline static void DrawPerimeter(hpms::WalkmapAdapter* walkmap)
+        {
+            auto* drawer = hpms::GetNative();
+            auto drawProcess = [drawer](const glm::vec2& posA, const glm::vec2& posB)
+            {
+                drawer->BeginDraw(GREEN, GREEN);
+                drawer->DrawLine(glm::vec3(posA.x, posA.y, 0), glm::vec3(posB.x, posB.y, 0));
+                drawer->EndDraw();
+                return false;
+            };
+
+            walkmap->ForEachSide(drawProcess);
+
         }
 
         inline static void DrawWalkmap(hpms::WalkmapAdapter* walkmap)
@@ -39,9 +56,10 @@ namespace hpms
             auto drawProcess = [drawer](hpms::TriangleAdapter* tri)
             {
                 DrawTriangle(drawer, tri);
+                return false;
             };
             drawer->BeginDraw(T_WHITE, T_WHITE);
-            walkmap->Visit(drawProcess);
+            walkmap->ForEachTriangle(drawProcess);
             drawer->EndDraw();
         }
 

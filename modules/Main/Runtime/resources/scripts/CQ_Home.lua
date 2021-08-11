@@ -1,5 +1,5 @@
 -- Scene script.
-dependencies = { 'CQ_Utils.lua' }
+dependencies = { 'CQ_Utils.lua', 'libs/gui/Area2D.lua' }
 scene = {
     name = "Scene_01",
     version = "1.0.0",
@@ -48,6 +48,8 @@ scene = {
 
         speed = 0
         rotate = 0
+
+        print(shape2d:point_inside(x, y))
 
         if keys ~= nil then
             if hpms.key_action_performed(keys, 'ESC', 1) then

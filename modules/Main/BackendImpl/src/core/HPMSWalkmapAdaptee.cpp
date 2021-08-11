@@ -12,14 +12,37 @@ std::string hpms::WalkmapAdaptee::GetId()
     return walkmap->GetData()->GetId();
 }
 
-void hpms::WalkmapAdaptee::Visit(const std::function<void(TriangleAdapter*)>& visitor)
+void hpms::WalkmapAdaptee::ForEachTriangle(const std::function<bool(TriangleAdapter*)>& visitor)
 {
     Check(walkmap.get());
     for (const auto& sector : walkmap->GetData()->GetSectors())
     {
         for (const auto& tri : sector.GetTriangles())
         {
-            visitor(triangles[tri]);
+            bool exit = visitor(triangles[tri]);
+            if (exit) {
+                return;
+            }
+        }
+    }
+}
+
+void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2&, const glm::vec2&)>& visitor)
+{
+    Check(walkmap.get());
+    for (const auto& sector : walkmap->GetData()->GetSectors())
+    {
+        for (const auto& tri : sector.GetTriangles())
+        {
+            if (tri.IsPerimetral()) {
+                for (const auto& side : tri.GetPerimetralSides()) {
+                    auto coords = hpms::GetSideCoordsFromTriangle(&tri, &side);
+                    bool exit = visitor(coords.first, coords.second);
+                    if (exit) {
+                        return;
+                    }
+                }
+            }
         }
     }
 }
