@@ -2,13 +2,13 @@ package org.ray1184.hpms.batch.commands;
 
 import org.junit.jupiter.api.Test;
 import org.ray1184.hpms.batch.lua.LuaScript;
-import org.ray1184.hpms.batch.lua.LuaScriptTemplate;
+import org.ray1184.hpms.batch.lua.LuaScriptGenerator;
 
 public class LuaScriptTest {
 
     @Test
     public void testTemplate() {
-        LuaScriptTemplate templateGen = new LuaScriptTemplate();
+        LuaScriptGenerator templateGen = new LuaScriptGenerator();
         LuaScript template = templateGen.generateTemplate();
         System.out.println("######################################");
         System.out.println(template.getScript());

@@ -1,4 +1,0 @@
-org/ray1184/hpms/batch/commands/BlenderCommandTest.java
- org.ray1184.hpms.batch.commands.BlenderCommandTest
-org/ray1184/hpms/batch/commands/LuaScriptTest.java
- org.ray1184.hpms.batch.commands.LuaScriptTest

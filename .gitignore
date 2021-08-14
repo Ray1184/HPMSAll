@@ -1,2 +1,7 @@
 ﻿.idea
 cmake-build-debug
+modules/Extra/BlenderPlugin/thirdparty/blender_autocomplete-master
+modules/Extra/BlenderPlugin/batch/bdata/bin
+modules/Extra/BlenderPlugin/batch/bdata/__pycache__
+modules/Extra/BlenderPlugin/BlenderBatch/.gradle
+modules/Extra/BlenderPlugin/BlenderBatch/build

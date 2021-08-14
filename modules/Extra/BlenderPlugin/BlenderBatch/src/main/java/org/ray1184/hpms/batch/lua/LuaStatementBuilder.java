@@ -59,16 +59,21 @@ public class LuaStatementBuilder {
         return this;
     }
 
-    public LuaStatementBuilder varExpr(String template, Object... tokens) {
+    public LuaStatementBuilder expr(String template, Object... tokens) {
         template = template.replace("\\?", "__$$QSTNMRK$$__");
         for (Object token : tokens) {
             template = StringUtils.replaceOnce(template, "?", String.valueOf(token));
         }
         template = template.replace("__$$QSTNMRK$$__", "?");
         statement.addContent(template);
-        statement.addContent(" ");
         return this;
     }
+
+    public LuaStatementBuilder expr(String content) {
+        statement.addContent(content);
+        return this;
+    }
+
 
     public LuaStatementBuilder newLine() {
         statement.addContent("\n" + LuaScriptPart.INDENT);
@@ -91,9 +96,8 @@ public class LuaStatementBuilder {
         return this;
     }
 
-    public LuaStatementBuilder expr(String content) {
-        statement.addContent(content);
-        statement.addContent(" ");
+
+    public LuaStatementBuilder dummy() {
         return this;
     }
 

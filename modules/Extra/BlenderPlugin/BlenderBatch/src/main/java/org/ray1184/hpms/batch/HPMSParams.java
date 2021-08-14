@@ -1,30 +1,31 @@
 package org.ray1184.hpms.batch;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.cli.*;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @Slf4j
 public class HPMSParams {
 
-
     private final CommandLine cmd;
 
+    @Getter
     private final Map<String, Object> sessionParams;
+
+    private final Map<IniParam, Object> iniParams;
 
     private HPMSParams(CommandLine cmd) {
         this.cmd = cmd;
         sessionParams = new HashMap<>();
+        iniParams = loadIniParams();
     }
 
     @SneakyThrows
-    public static HPMSParams fromCmdLine(String[] args) {
+    public static HPMSParams build(String[] args) {
         Options options = new Options();
         options.addOption(Option.builder("e").longOpt("exe").hasArg(true).required(true).desc("Blender runtime exec path").build());
         options.addOption(Option.builder("b").longOpt("blend").hasArg(true).required(true).desc("Blender source file").build());
@@ -44,6 +45,17 @@ public class HPMSParams {
             formatter.printHelp("HPMSBatch", options);
             throw e;
         }
+    }
+
+    @SneakyThrows
+    private Map<IniParam, Object> loadIniParams() {
+        Map<IniParam, Object> ini = new HashMap<>();
+        Properties props = new Properties();
+        props.load(getClass().getClassLoader().getResourceAsStream("batch.ini"));
+        for (IniParam iniParam : IniParam.values()) {
+            ini.put(iniParam, props.get(iniParam.name()));
+        }
+        return ini;
     }
 
     public String getRuntimeExe() {
@@ -71,18 +83,25 @@ public class HPMSParams {
     }
 
     public boolean isRender() {
-        return Boolean.parseBoolean(cmd.getOptionValue("render"));
+        return cmd.hasOption("render");
     }
 
     public boolean isCleanup() {
-        return Boolean.parseBoolean(cmd.getOptionValue("cleanup"));
+        return cmd.hasOption("cleanup");
     }
 
     public Option[] getCmdParams() {
         return cmd.getOptions();
     }
 
-    public Map<String, Object> getSessionParams() {
-        return sessionParams;
+    public Object getIniParam(IniParam param) {
+        return iniParams.get(param);
+    }
+
+    public enum IniParam {
+        SCRIPTS_VERSION,
+        CAM_FOVY,
+        CAM_NEAR,
+        CAM_FAR
     }
 }

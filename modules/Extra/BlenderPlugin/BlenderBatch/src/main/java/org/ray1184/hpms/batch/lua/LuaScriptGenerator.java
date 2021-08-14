@@ -5,7 +5,7 @@ import org.ray1184.hpms.batch.utils.FinalObjectWrapper;
 
 import java.util.*;
 
-public class LuaScriptTemplate {
+public class LuaScriptGenerator {
 
     private static Map<String, String> extractUserDataBySections(String scriptContent) {
         Map<String, String> userDataBySection = new HashMap<>();
@@ -42,9 +42,9 @@ public class LuaScriptTemplate {
         script.getSection(section).getCallback(callback).setUserCode(new LuaUserCode(userDataBySection.get(callback), callback));
     }
 
-    public LuaScript restoreWithUserData(String scriptContent) {
+    public LuaScript restoreWithUserData(String name, String version, String scriptContent) {
         Map<String, String> userDataBySection = extractUserDataBySections(scriptContent);
-        LuaScript template = generateTemplate();
+        LuaScript template = generateTemplate(name, version);
         setSectionUserData(template, "scene", "setup", userDataBySection);
         setSectionUserData(template, "scene", "input", userDataBySection);
         setSectionUserData(template, "scene", "update", userDataBySection);
@@ -52,12 +52,12 @@ public class LuaScriptTemplate {
         return template;
     }
 
-    public LuaScript generateTemplate() {
+    public LuaScript generateTemplate(String name, String version) {
         LuaScript template = new LuaScript("SceneTemplate");
         template.addSection(new LuaMacroSection("dependencies"));
         LuaMacroSection scene = new LuaMacroSection("scene");
-        scene.addStatement(new LuaStatement("name = 'SceneTemplate'"));
-        scene.addStatement(new LuaStatement("version = 1.0"));
+        scene.addStatement(new LuaStatement("name = '" + name + "'"));
+        scene.addStatement(new LuaStatement("version = '" + version + "'"));
         scene.addStatement(new LuaStatement("quit = false"));
         scene.addStatement(new LuaStatement("finished = false"));
         scene.addStatement(new LuaStatement("next = 'TBD'"));

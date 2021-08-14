@@ -19,7 +19,7 @@ public class HPMSRunner {
         log.info("#########################################################");
         log.info("HPMS Batch STARTED");
         log.info("#########################################################");
-        HPMSParams params = HPMSParams.fromCmdLine(args);
+        HPMSParams params = HPMSParams.build(args);
         log.info("Params:");
         Arrays.stream(params.getCmdParams()).forEach(o -> log.info(StringUtils.rightPad(o.getDescription() + " ", 45, "-") + "> " + (o.hasArg() ? o.getValue() : "Yes")));
         log.info("#########################################################");
