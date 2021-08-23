@@ -59,10 +59,16 @@ public class LuaCallback implements LuaScriptPart {
     }
 
     public void addStatementPre(LuaStatement statement) {
+        if (statement == null) {
+            return;
+        }
         statementsPre.add(statement);
     }
 
     public void addStatementPost(LuaStatement statement) {
+        if (statement == null) {
+            return;
+        }
         statementsPost.add(statement);
     }
 

@@ -13,6 +13,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import static org.ray1184.hpms.batch.HPMSParams.IniParam.DEPENDENCIES;
 
 @Slf4j
 public class T03_GenerateScripts implements HPMSTask {
@@ -20,7 +25,7 @@ public class T03_GenerateScripts implements HPMSTask {
     @Override
     public Integer execute(HPMSParams params) {
         String scriptsPath = params.getOutputPath() + File.separator + "resources" + File.separator + "scripts";
-        SceneDataResponse sceneData = (SceneDataResponse) HPMSCommands.SCENE_DATA.exec();
+        SceneDataResponse sceneData = (SceneDataResponse) execCachedCommand(params, HPMSCommands.SCENE_DATA);
         if (sceneData.getReturnCode() == BlenderProcess.RETURN_ERROR) {
             return HPMSProcess.RET_CODE_ERROR;
         }
@@ -57,15 +62,27 @@ public class T03_GenerateScripts implements HPMSTask {
     }
 
     private void fillScript(HPMSParams params, SceneDataResponse.RoomInfo roomInfo, LuaScript roomScript) {
+        LuaMacroSection depRef = roomScript.getSection("dependencies");
+        getDependencies(params).forEach(s -> {
+            depRef.addStatement(new LuaStatement(s));
+        });
+
         LuaMacroSection sceneRef = roomScript.getSection("scene");
         sceneRef.getCallback("setup").addStatementPre(ScriptSections.SETUP_PRE.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("setup").addStatementPost(ScriptSections.SETUP_POST.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("input").addStatementPre(ScriptSections.INPUT_PRE.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("input").addStatementPre(ScriptSections.INPUT_POST.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("update").addStatementPre(ScriptSections.UPDATE_PRE.getCustomStatement(params, roomInfo));
-        sceneRef.getCallback("update").addStatementPre(ScriptSections.UPDATE_PRE.getCustomStatement(params, roomInfo));
+        sceneRef.getCallback("update").addStatementPre(ScriptSections.UPDATE_POST.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("cleanup").addStatementPre(ScriptSections.CLEANUP_PRE.getCustomStatement(params, roomInfo));
-        sceneRef.getCallback("cleanup").addStatementPre(ScriptSections.CLEANUP_PRE.getCustomStatement(params, roomInfo));
+        sceneRef.getCallback("cleanup").addStatementPre(ScriptSections.CLEANUP_POST.getCustomStatement(params, roomInfo));
+    }
+
+    private List<String> getDependencies(HPMSParams params) {
+        List<String> deps = new ArrayList<>();
+        String[] includes = params.getIniParam(DEPENDENCIES).toString().split(",");
+        Collections.addAll(deps, includes);
+        return deps;
     }
 
     @Override
@@ -81,20 +98,20 @@ public class T03_GenerateScripts implements HPMSTask {
 
                 LuaStatementBuilder builder = new LuaStatementBuilder(name());
                 builder.dummy()//
-                        .expr("lib = backend:get()").newLine().newLine()//
+                        .expr("lib = backend:get()").newLine()//
                         .expr("cam = lib.get_camera()").newLine()//
                         .expr("cam.near = ?", params.getIniParam(HPMSParams.IniParam.CAM_NEAR)).newLine()//
                         .expr("cam.far = ?", params.getIniParam(HPMSParams.IniParam.CAM_FAR)).newLine()//
-                        .expr("cam.fovy = lib.to_radians(?)", params.getIniParam(HPMSParams.IniParam.CAM_FOVY)).newLine().newLine()//
-                        .expr("light = lib.make_light(lib.vec3(0, 0, 0))").newLine().newLine()//
-                        .expr("scn_mgr = scene_manager:new(scene.name, cam)").newLine().newLine().newLine();
+                        .expr("cam.fovy = lib.to_radians(?)", params.getIniParam(HPMSParams.IniParam.CAM_FOVY)).newLine()//
+                        .expr("light = lib.make_light(lib.vec3(0, 0, 0))").newLine()//
+                        .expr("scn_mgr = scene_manager:new(scene.name, cam)").newLine();
                 roomInfo.getSectors().forEach(s -> {
                     SceneDataResponse.RoomInfo.SectorInfo.CameraInfo camInfo = s.getActiveCamera();
                     builder.dummy()//
-                            .expr("back_? = lib.make_background('?')", camInfo.getName(), roomInfo.getName() + File.separator + camInfo.getName() + ".png").newLine()
+                            .expr("back_? = lib.make_background('?')", camInfo.getName().toLowerCase(), roomInfo.getName() + File.separator + camInfo.getName() + ".png").newLine()
                             .expr("scn_mgr:sample_view_by_callback(function() return sector.id == '?' end, back_?, lib.vec3(?, ?, ?), lib.quat(?, ?, ?, ?))",
-                                    s.getId(), roomInfo.getName(), camInfo.getPosition().getX(), camInfo.getPosition().getY(), camInfo.getPosition().getZ(),
-                                    camInfo.getRotation().getW(), camInfo.getRotation().getX(), camInfo.getRotation().getY(), camInfo.getRotation().getZ()).newLine().newLine();
+                                    s.getId(), camInfo.getName().toLowerCase(), camInfo.getPosition().getX(), camInfo.getPosition().getY(), camInfo.getPosition().getZ(),
+                                    camInfo.getRotation().getW(), camInfo.getRotation().getX(), camInfo.getRotation().getY(), camInfo.getRotation().getZ()).newLine();
 
                 });
                 return builder.build();
@@ -105,30 +122,28 @@ public class T03_GenerateScripts implements HPMSTask {
             @Override
             public LuaStatement getCustomStatement(HPMSParams params, SceneDataResponse.RoomInfo roomInfo) {
 
-                return new LuaStatementBuilder(name()).build();
+                return null;
             }
         },
         INPUT_PRE {
             @Override
             public LuaStatement getCustomStatement(HPMSParams params, SceneDataResponse.RoomInfo roomInfo) {
 
-                return new LuaStatementBuilder(name()).build();
+                return null;
             }
         },
         INPUT_POST {
             @Override
             public LuaStatement getCustomStatement(HPMSParams params, SceneDataResponse.RoomInfo roomInfo) {
 
-                return new LuaStatementBuilder(name()).build();
+                return null;
             }
         },
         UPDATE_PRE {
             @Override
             public LuaStatement getCustomStatement(HPMSParams params, SceneDataResponse.RoomInfo roomInfo) {
 
-                LuaStatementBuilder builder = new LuaStatementBuilder(name());
-                builder.expr("scn_mgr:update()").newLine().newLine();
-                return builder.build();
+                return null;
             }
         },
         UPDATE_POST {
@@ -145,7 +160,7 @@ public class T03_GenerateScripts implements HPMSTask {
             @Override
             public LuaStatement getCustomStatement(HPMSParams params, SceneDataResponse.RoomInfo roomInfo) {
 
-                return new LuaStatementBuilder(name()).build();
+                return null;
             }
         },
         CLEANUP_POST {
@@ -153,7 +168,7 @@ public class T03_GenerateScripts implements HPMSTask {
             public LuaStatement getCustomStatement(HPMSParams params, SceneDataResponse.RoomInfo roomInfo) {
 
                 LuaStatementBuilder builder = new LuaStatementBuilder(name());
-                builder.expr("lib.delete(light)").newLine().newLine();
+                builder.expr("lib.delete(light)").newLine();
                 roomInfo.getSectors().forEach(s -> {
                     SceneDataResponse.RoomInfo.SectorInfo.CameraInfo camInfo = s.getActiveCamera();
                     builder.expr("lib.delete(back_?)", camInfo.getName()).newLine();

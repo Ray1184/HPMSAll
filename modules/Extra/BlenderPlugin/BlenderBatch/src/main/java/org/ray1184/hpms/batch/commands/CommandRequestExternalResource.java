@@ -1,5 +1,6 @@
 package org.ray1184.hpms.batch.commands;
 
+import lombok.Getter;
 import lombok.SneakyThrows;
 
 import java.net.URL;
@@ -13,10 +14,14 @@ public class CommandRequestExternalResource extends CommandRequest {
 
     private final String fileName;
 
+    @Getter
+    private final String scriptName;
+
     @SneakyThrows
-    public CommandRequestExternalResource(String fileName) {
+    public CommandRequestExternalResource(String fileName, String scriptName) {
         super();
         this.fileName = fileName;
+        this.scriptName = scriptName;
         URL res = getClass().getClassLoader().getResource(fileName);
         assert res != null;
         fileContent = Files.readAllLines(Paths.get(res.toURI()));

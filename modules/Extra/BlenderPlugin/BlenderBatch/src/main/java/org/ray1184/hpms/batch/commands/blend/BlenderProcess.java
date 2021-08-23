@@ -29,7 +29,7 @@ public class BlenderProcess {
         Files.writeString(tempFile, pythonCode);
         String pythonFilePath = tempFile.toAbsolutePath().toString();
         String output = new ProcessExecutor().command(ctx.getBlenderExecPath(), "--background", ctx.getBlenderSourcePath(), "--python", pythonFilePath)//
-                .redirectError(Slf4jStream.of(getClass()).asInfo())//
+                .redirectError(Slf4jStream.of(getClass()).asError())//
                 .readOutput(true)//
                 .execute()//
                 .outputUTF8();

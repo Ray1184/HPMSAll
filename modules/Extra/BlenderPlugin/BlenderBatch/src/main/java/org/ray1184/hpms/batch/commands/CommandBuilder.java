@@ -32,8 +32,8 @@ public class CommandBuilder {
     }
 
     @SneakyThrows
-    public CommandBuilder request(String resource) {
-        this.request = new CommandRequestExternalResource(resource);
+    public CommandBuilder request(String resource, String scriptName) {
+        this.request = new CommandRequestExternalResource(resource, scriptName);
         return this;
     }
 
@@ -47,6 +47,8 @@ public class CommandBuilder {
         this.info = info;
         return this;
     }
+
+
 
 
 }

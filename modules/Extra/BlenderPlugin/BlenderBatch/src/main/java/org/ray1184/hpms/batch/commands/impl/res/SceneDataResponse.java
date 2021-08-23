@@ -1,114 +1,53 @@
 package org.ray1184.hpms.batch.commands.impl.res;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.ray1184.hpms.batch.commands.CommandResponse;
 
 import java.util.List;
 
-@Getter
-@Setter
-@ToString
+@EqualsAndHashCode(callSuper = true)
+@Data
 public class SceneDataResponse extends CommandResponse {
+
     private List<RoomInfo> rooms;
 
-    @Getter
-    @Setter
-    @ToString
+    @Data
     public static class RoomInfo {
         private String name;
-        private List<SectorInfo> sectors;
-        private List<TriggerInfo> triggers;
-        private List<EntityInfo> entities;
-        private CollisionInfo collisionData;
-        private DepthInfo depthData;
+        private List<ObjectInfo> objects;
 
-
-        @Getter
-        @Setter
-        @ToString
-        public static class SectorInfo {
-            private String id;
-            private CameraInfo activeCamera;
-
-
-            @Getter
-            @Setter
-            @ToString
-            public static class CameraInfo {
-                private String name;
-                private PositionInfo position;
-                private RotationInfo rotation;
-
-
-            }
-        }
-
-        @Getter
-        @Setter
-        @ToString
-        public static class TriggerInfo {
+        @Data
+        public static class ObjectInfo {
             private String name;
-
-        }
-
-        @Getter
-        @Setter
-        @ToString
-        public static class EntityInfo {
-            private String name;
+            private String type;
+            private String event;
             private PositionInfo position;
             private RotationInfo rotation;
-            private Boolean collisionBased;
-            private Type type;
 
-            enum Type {
-                PLAYER,
-                NPC,
-                STATIC,
-                PUSHABLE,
-                COLLECTIBLE
+
+            @Data
+            public static class PositionInfo {
+                private Double x;
+                private Double y;
+                private Double z;
+
 
             }
-        }
 
-        @Getter
-        @Setter
-        @ToString
-        public static class CollisionInfo {
-            private String name;
+            @Data
+            public static class RotationInfo {
+                private Double w;
+                private Double x;
+                private Double y;
+                private Double z;
 
-        }
+            }
 
-        @Getter
-        @Setter
-        @ToString
-        public static class DepthInfo {
-            private String name;
 
         }
-    }
-
-    @Getter
-    @Setter
-    @ToString
-    public static class PositionInfo {
-        private Double x;
-        private Double y;
-        private Double z;
-
 
     }
 
-    @Getter
-    @Setter
-    @ToString
-    public static class RotationInfo {
-        private Double w;
-        private Double x;
-        private Double y;
-        private Double z;
 
-    }
 }

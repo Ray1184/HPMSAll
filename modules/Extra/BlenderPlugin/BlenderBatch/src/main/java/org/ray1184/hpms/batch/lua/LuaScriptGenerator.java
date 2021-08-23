@@ -27,8 +27,8 @@ public class LuaScriptGenerator {
                         userData.remove(0);
                         int diff = userData.get(0).length() - userData.get(0).trim().length();
                         List<String> userDataFormatted = new ArrayList<>();
-                        userData.forEach(sl -> userDataFormatted.add(sl.substring(diff + 1)));
-                        userDataBySection.put(lastSectionWrapper.getObject(), StringUtils.join(userDataFormatted));
+                        userData.forEach(sl -> userDataFormatted.add(sl.substring(diff)));
+                        userDataBySection.put(lastSectionWrapper.getObject(), StringUtils.join(userDataFormatted, "\n"));
                         userData.clear();
                     }
                     if (l.trim().length() > 0 && userSectionFoundWrapper.getObject()) {
@@ -49,11 +49,16 @@ public class LuaScriptGenerator {
         setSectionUserData(template, "scene", "input", userDataBySection);
         setSectionUserData(template, "scene", "update", userDataBySection);
         setSectionUserData(template, "scene", "cleanup", userDataBySection);
+        setCommonUserData(template, userDataBySection);
         return template;
     }
 
+    private void setCommonUserData(LuaScript script, Map<String, String> userDataBySection) {
+        script.setUserCode(new LuaUserCode(userDataBySection.get("common"), "common"));
+    }
+
     public LuaScript generateTemplate(String name, String version) {
-        LuaScript template = new LuaScript("SceneTemplate");
+        LuaScript template = new LuaScript(name);
         template.addSection(new LuaMacroSection("dependencies"));
         LuaMacroSection scene = new LuaMacroSection("scene");
         scene.addStatement(new LuaStatement("name = '" + name + "'"));

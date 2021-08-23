@@ -85,6 +85,9 @@ void hpms::LuaLogic::LoadState(const std::string& scriptName)
     hpms::DestroyScript(script);
     loadedDeps.clear();
     this->SolveLuaDependencies();
+    std::stringstream ss2;
+    ss2 << "All dependencies solved for script " << scriptName;
+    LOG_DEBUG(ss2.str().c_str());
     currentState = hpms::SafeNew<GameState>(vm);
 }
 
@@ -100,6 +103,9 @@ void hpms::LuaLogic::SolveLuaDependencies()
             if (std::find(loadedDeps.begin(), loadedDeps.end(), dep) != loadedDeps.end())
             {
                 // Skip dependency if already loaded in LUA context.
+                std::stringstream ss;
+                ss << "Skipping dependency " << dep << ", already present in LUA context.";
+                LOG_DEBUG(ss.str().c_str());
                 continue;
             }
             std::stringstream ss;

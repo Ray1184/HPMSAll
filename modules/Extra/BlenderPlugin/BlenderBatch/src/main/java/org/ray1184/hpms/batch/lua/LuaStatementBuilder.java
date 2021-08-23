@@ -31,7 +31,7 @@ public class LuaStatementBuilder {
     }
 
     private void addIndent() {
-        indent += "    ";
+        indent += LuaScriptPart.INDENT;
     }
 
     private void remIndent() {
@@ -76,7 +76,7 @@ public class LuaStatementBuilder {
 
 
     public LuaStatementBuilder newLine() {
-        statement.addContent("\n" + LuaScriptPart.INDENT);
+        statement.addContent("\n" + indent);
         return this;
     }
 

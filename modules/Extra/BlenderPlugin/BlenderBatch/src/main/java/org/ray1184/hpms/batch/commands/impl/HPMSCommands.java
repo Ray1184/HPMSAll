@@ -25,10 +25,12 @@ public enum HPMSCommands {
 
     private final Map<String, Object> params;
 
-    HPMSCommands(Class<? extends CommandResponse> responseClass, String scriptName, String info) {
+    HPMSCommands(Class<? extends CommandResponse> responseClass, String scriptPath, String info) {
         params = new HashMap<>();
+        String[] scriptNameTokens = scriptPath.split("/");
+        String scriptName = scriptNameTokens[scriptNameTokens.length - 1].replace(".py", "");
         commandProcessor = new CommandBuilder()//
-                .request(scriptName)//
+                .request(scriptPath, scriptName)//
                 .response(responseClass)//
                 .info(name() + " - [" + info + "]")//
                 .build();

@@ -11,11 +11,10 @@ import java.util.*;
 @Slf4j
 public class HPMSParams {
 
-    private final CommandLine cmd;
 
+    private final CommandLine cmd;
     @Getter
     private final Map<String, Object> sessionParams;
-
     private final Map<IniParam, Object> iniParams;
 
     private HPMSParams(CommandLine cmd) {
@@ -33,6 +32,7 @@ public class HPMSParams {
         options.addOption(Option.builder("s").longOpt("sysres").hasArg(true).required(true).desc("System binaries and resources directory").build());
         options.addOption(Option.builder("r").longOpt("render").hasArg(false).required(false).desc("Render views").build());
         options.addOption(Option.builder("c").longOpt("cleanup").hasArg(false).required(false).desc("Cleanup project instead of update").build());
+        //options.addOption(Option.builder("i").longOpt("input").hasArg(true).required(true).desc("Input configuration path").build());
         options.addOption(Option.builder("f").longOpt("filter").hasArg(true).required(false).desc("Filter on set on rooms (comma separated)").build());
         options.addOption(Option.builder("n").longOpt("name").hasArg(true).required(false).desc("Project and runtime name").build());
 
@@ -102,6 +102,8 @@ public class HPMSParams {
         SCRIPTS_VERSION,
         CAM_FOVY,
         CAM_NEAR,
-        CAM_FAR
+        CAM_FAR,
+        MOCK,
+        DEPENDENCIES
     }
 }

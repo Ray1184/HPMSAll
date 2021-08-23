@@ -42,6 +42,8 @@ public abstract class CommandRequest {
 
     protected abstract List<String> getStatements();
 
+    protected abstract String getScriptName();
+
     @SneakyThrows
     public final String buildScript(Map<String, Object> params) {
         StringBuilder sb = new StringBuilder();

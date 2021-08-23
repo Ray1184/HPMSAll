@@ -5,6 +5,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.ray1184.hpms.batch.commands.blend.BlenderProcess;
 
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
 
 @Slf4j
@@ -37,6 +40,24 @@ public class CommandProcessor {
         String scriptContent = req.buildScript(params);
         String commandName = info != null ? info : req.getClass().getSimpleName();
         log.debug("IN ---> Request command {} \n{}", commandName, scriptContent);
+        if (BlenderContext.getInstance().isMock()) {
+            return getMockResponse(req, commandName);
+        }
+        return getBlenderResponse(req, scriptContent, commandName);
+    }
+
+    @SneakyThrows
+    private CommandResponse getMockResponse(CommandRequest req, String commandName) {
+        String mockPath = "mocks/" + req.getScriptName() + ".json";
+        URL res = getClass().getClassLoader().getResource(mockPath);
+        assert res != null;
+        String mockResponseContent = Files.readString(Paths.get(res.toURI()));
+        BlenderProcess.ProcessResponse out = new BlenderProcess.ProcessResponse(mockResponseContent, BlenderProcess.RETURN_OK);
+        log.debug("OUT <--- Response command (MOCK) {} {}", commandName, mockResponseContent);
+        return serialize(commandFactory, out);
+    }
+
+    private CommandResponse getBlenderResponse(CommandRequest req, String scriptContent, String commandName) throws Exception {
         BlenderProcess process = new BlenderProcess();
         BlenderProcess.ProcessResponse out = process.run(scriptContent, req.getClass().getSimpleName());
         if (out.getRetCode() == BlenderProcess.RETURN_OK) {

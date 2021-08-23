@@ -1,6 +1,7 @@
 package org.ray1184.hpms.batch.lua;
 
 import lombok.Getter;
+import lombok.Setter;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -13,6 +14,9 @@ public class LuaScript implements LuaScriptPart {
     private final String name;
     private final List<LuaScriptPart> sections;
     private final Map<String, LuaMacroSection> sectionsMap;
+
+    @Setter
+    private LuaUserCode userCode;
 
     public LuaScript(String name) {
         this.name = name;
@@ -35,6 +39,11 @@ public class LuaScript implements LuaScriptPart {
                 .append(currentDate);
 
         sections.forEach(s -> Arrays.asList(s.getScript().split("\\r?\\n")).forEach(l -> scriptData.append("\n").append(l)));
+        if (userCode == null) {
+            userCode = new LuaUserCode("-- TODO", "common");
+        }
+        scriptData.append("\n")//
+                .append(userCode.getScript());
         return scriptData.toString();
     }
 

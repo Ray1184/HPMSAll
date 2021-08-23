@@ -1,0 +1,56 @@
+{
+  "rooms": [
+    {
+      "sectors": [
+        {
+          "id": "SG_01",
+          "activeCamera": {
+            "name": "CM_01",
+            "position": {
+              "x": 1.5,
+              "y": 5.0,
+              "z": 1.0
+            },
+            "rotation": {
+              "w": 0.0,
+              "x": 0.5,
+              "y": 0.15,
+              "z": 1.8
+            }
+          }
+        }
+      ],
+      "triggers": [
+        {
+          "name": "T01_TestTrigger"
+        }
+      ],
+      "entities": [
+        {
+          "name": "E01_TestPlayerEntity",
+          "position": {
+            "x": 0.5,
+            "y": 1.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "w": 1.0,
+            "x": 0.3,
+            "y": 0.1,
+            "z": 1.5
+          },
+          "collisionBased": true,
+          "type": "PLAYER"
+        }
+      ],
+      "collisionData": {
+        "name": "C01_TestCollision"
+      },
+      "depthData": {
+        "name": "D01_TestDepth"
+      },
+      "name": "R01_TestRoom"
+    }
+  ],
+  "returnCode": 0
+}

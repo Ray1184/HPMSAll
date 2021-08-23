@@ -13,6 +13,7 @@ public class BlenderContext {
     private String blenderExecPath;
     private String blenderSourcePath;
     private String blenderVersion;
+    private boolean mock;
 
     private BlenderContext() {
     }
@@ -27,5 +28,6 @@ public class BlenderContext {
     public void init(HPMSParams params) {
         blenderExecPath = params.getRuntimeExe();
         blenderSourcePath = params.getBlendFilePath();
+        mock = Boolean.parseBoolean(String.valueOf(params.getIniParam(HPMSParams.IniParam.MOCK)));
     }
 }
