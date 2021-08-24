@@ -21,9 +21,15 @@ public class SceneDataResponse extends CommandResponse {
         public static class ObjectInfo {
             private String name;
             private String type;
-            private String event;
+            private EventInfo event;
             private PositionInfo position;
             private RotationInfo rotation;
+
+            @Data
+            public static class EventInfo {
+                private String name;
+                private String params;
+            }
 
 
             @Data

@@ -6,8 +6,6 @@ import org.ray1184.hpms.batch.HPMSParams;
 import org.ray1184.hpms.batch.commands.impl.HPMSCommands;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
 
-import java.util.List;
-
 import static org.ray1184.hpms.batch.HPMSProcess.RET_CODE_ERROR;
 import static org.ray1184.hpms.batch.HPMSProcess.RET_CODE_OK;
 
@@ -24,29 +22,14 @@ public class T02_ExportResources implements HPMSTask {
         sceneInfo.getRooms().stream()//
                 .filter(r -> CollectionUtils.isEmpty(params.getFilterRooms()) || params.getFilterRooms().contains(r.getName()))//
                 .forEach(r -> {
-                    exportEntities(params, r.getEntities());
-                    exportSectors(params, r.getSectors());
-                    exportCollisionData(params, r.getCollisionData());
-                    exportDepthData(params, r.getDepthData());
+//                    exportEntities(params, r.getEntities());
+//                    exportSectors(params, r.getSectors());
+//                    exportCollisionData(params, r.getCollisionData());
+//                    exportDepthData(params, r.getDepthData());
                 });
         return RET_CODE_OK;
     }
 
-    private void exportDepthData(HPMSParams params, SceneDataResponse.RoomInfo.DepthInfo depthData) {
-        // TODO
-    }
-
-    private void exportCollisionData(HPMSParams params, SceneDataResponse.RoomInfo.CollisionInfo collisionData) {
-        // TODO
-    }
-
-    private void exportSectors(HPMSParams params, List<SceneDataResponse.RoomInfo.SectorInfo> sectors) {
-        // TODO
-    }
-
-    private void exportEntities(HPMSParams params, List<SceneDataResponse.RoomInfo.EntityInfo> entities) {
-        // TODO
-    }
 
     @Override
     public boolean enabled() {

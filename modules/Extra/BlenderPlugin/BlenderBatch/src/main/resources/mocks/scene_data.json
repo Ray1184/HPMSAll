@@ -1,33 +1,14 @@
 {
   "rooms": [
     {
-      "sectors": [
+      "objects": [
         {
-          "id": "SG_01",
-          "activeCamera": {
-            "name": "CM_01",
-            "position": {
-              "x": 1.5,
-              "y": 5.0,
-              "z": 1.0
-            },
-            "rotation": {
-              "w": 0.0,
-              "x": 0.5,
-              "y": 0.15,
-              "z": 1.8
-            }
-          }
-        }
-      ],
-      "triggers": [
-        {
-          "name": "T01_TestTrigger"
-        }
-      ],
-      "entities": [
-        {
-          "name": "E01_TestPlayerEntity",
+          "name": "SG_01",
+          "type": "sector",
+          "event": {
+            "name": "activate_cam",
+            "params": "CM_01"
+          },
           "position": {
             "x": 0.5,
             "y": 1.0,
@@ -38,17 +19,43 @@
             "x": 0.3,
             "y": 0.1,
             "z": 1.5
+          }
+        },
+        {
+          "name": "EY_01",
+          "type": "entity",
+          "event": {
+            "name": "entity_descriptors",
+            "params": "player,collisor"
           },
-          "collisionBased": true,
-          "type": "PLAYER"
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "w": 0.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          }
+        },
+        {
+          "name": "CM_01",
+          "type": "camera",
+          "position": {
+            "x": 3.5,
+            "y": 1.5,
+            "z": 2.0
+          },
+          "rotation": {
+            "w": 0.0,
+            "x": 0.5,
+            "y": 1.1,
+            "z": 1.2
+          }
         }
       ],
-      "collisionData": {
-        "name": "C01_TestCollision"
-      },
-      "depthData": {
-        "name": "D01_TestDepth"
-      },
       "name": "R01_TestRoom"
     }
   ],

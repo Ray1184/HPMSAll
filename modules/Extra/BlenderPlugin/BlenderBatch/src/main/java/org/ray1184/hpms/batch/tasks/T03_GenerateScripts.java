@@ -7,6 +7,7 @@ import org.ray1184.hpms.batch.commands.blend.BlenderProcess;
 import org.ray1184.hpms.batch.commands.impl.HPMSCommands;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
 import org.ray1184.hpms.batch.lua.*;
+import org.ray1184.hpms.batch.tasks.t03.SceneObject;
 import org.ray1184.hpms.batch.utils.FinalObjectWrapper;
 
 import java.io.File;
@@ -105,15 +106,17 @@ public class T03_GenerateScripts implements HPMSTask {
                         .expr("cam.fovy = lib.to_radians(?)", params.getIniParam(HPMSParams.IniParam.CAM_FOVY)).newLine()//
                         .expr("light = lib.make_light(lib.vec3(0, 0, 0))").newLine()//
                         .expr("scn_mgr = scene_manager:new(scene.name, cam)").newLine();
-                roomInfo.getSectors().forEach(s -> {
-                    SceneDataResponse.RoomInfo.SectorInfo.CameraInfo camInfo = s.getActiveCamera();
-                    builder.dummy()//
-                            .expr("back_? = lib.make_background('?')", camInfo.getName().toLowerCase(), roomInfo.getName() + File.separator + camInfo.getName() + ".png").newLine()
-                            .expr("scn_mgr:sample_view_by_callback(function() return sector.id == '?' end, back_?, lib.vec3(?, ?, ?), lib.quat(?, ?, ?, ?))",
-                                    s.getId(), camInfo.getName().toLowerCase(), camInfo.getPosition().getX(), camInfo.getPosition().getY(), camInfo.getPosition().getZ(),
-                                    camInfo.getRotation().getW(), camInfo.getRotation().getX(), camInfo.getRotation().getY(), camInfo.getRotation().getZ()).newLine();
+                SceneObject.filter(roomInfo, SceneObject.VIEW_ACTIVATOR).forEach(a -> {
+                    SceneObject.filter(roomInfo, SceneObject.CAMS).stream().filter(c -> a.getEvent().getParams().contains(c.getName())).forEach(c -> {
+                        builder.dummy()//
+                                .expr("back_? = lib.make_background('?')", c.getName().toLowerCase(), roomInfo.getName() + File.separator + c.getName() + ".png").newLine()
+                                .expr("scn_mgr:sample_view_by_callback(function() return sector.id == '?' end, back_?, lib.vec3(?, ?, ?), lib.quat(?, ?, ?, ?))",
+                                        a.getName(), c.getName().toLowerCase(), c.getPosition().getX(), c.getPosition().getY(), c.getPosition().getZ(),
+                                        c.getRotation().getW(), c.getRotation().getX(), c.getRotation().getY(), c.getRotation().getZ()).newLine();
 
+                    });
                 });
+
                 return builder.build();
             }
 
@@ -169,9 +172,11 @@ public class T03_GenerateScripts implements HPMSTask {
 
                 LuaStatementBuilder builder = new LuaStatementBuilder(name());
                 builder.expr("lib.delete(light)").newLine();
-                roomInfo.getSectors().forEach(s -> {
-                    SceneDataResponse.RoomInfo.SectorInfo.CameraInfo camInfo = s.getActiveCamera();
-                    builder.expr("lib.delete(back_?)", camInfo.getName()).newLine();
+
+                SceneObject.filter(roomInfo, SceneObject.VIEW_ACTIVATOR).forEach(a -> {
+                    SceneObject.filter(roomInfo, SceneObject.CAMS).stream().filter(c -> a.getEvent().getParams().contains(c.getName())).forEach(c -> {
+                        builder.expr("lib.delete(back_?)", c.getName()).newLine();
+                    });
                 });
                 return builder.build();
             }
