@@ -33,16 +33,14 @@ public enum SceneObject {
     private String event;
 
     public static List<SceneDataResponse.RoomInfo.ObjectInfo> filter(SceneDataResponse.RoomInfo roomInfo, SceneObject sceneObject) {
-        return roomInfo.getObjects().stream()//
-                .filter(o -> {
-                    if (sceneObject.event != null) {
-                        return o.getType().equalsIgnoreCase(sceneObject.type) &&
-                                o.getEvent().getName().equals(sceneObject.event);
-                    } else {
-                        return o.getType().equalsIgnoreCase(sceneObject.type);
-                    }
-                })//
-                .collect(Collectors.toList());
+        return roomInfo.getObjects().stream().filter(o -> {
+            if (sceneObject.event != null) {
+                return o.getType().equalsIgnoreCase(sceneObject.type) &&
+                        o.getEvents().stream().anyMatch(e -> e.getName().equalsIgnoreCase(sceneObject.event));
+            } else {
+                return o.getType().equalsIgnoreCase(sceneObject.type);
+            }
+        }).collect(Collectors.toList());
     }
 
     public abstract List<LuaStatement> solve(SceneDataResponse sceneDataResponse);

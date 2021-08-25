@@ -1,24 +1,38 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+
+
 def process():
-    data = {'rooms': []}
-    for room in bpy.context.scene.hpms_room_list:
-        room_info = {'name': room.name, 'sectors': []}
-        sectors = [sec for sec in bpy.data.objects if
-                   sec.hpms_sector_obj_prop.sector and room.name == sec.hpms_current_room]
-        for sec in sectors:
-            cam_name = sec.hpms_current_cam
-            cam = [obj for obj in bpy.data.objects if obj.fieldType == 'CAMERA' and obj.name == cam_name][0]
-            r = cam.rotation_euler.to_quaternion()
-            room_info['sectors'].append(
-                {'id': sec.name, 'activeCamera': {'name': cam.name,
-                                                  'position': {
-                                                      'x': cam.location.x,
-                                                      'y': cam.location.y,
-                                                      'z': cam.location.z},
-                                                  'rotation': {
-                                                      'w': r.w,
-                                                      'x': r.x,
-                                                      'y': r.y,
-                                                      'z': r.z,
-                                                  }}, 'trigger': {}})
-        data['rooms'].append(room_info)
+    data = {"rooms": []}
+    for room in bpy.data.collections:
+        room_info = {"name": room.name, "objects": []}
+        objects = [obj for obj in bpy.data.objects if "hpms_type" in obj]
+        for obj in objects:
+            object = {}
+            type = obj["hpms_type"]
+            events = []
+            if "hpms_events" in obj:
+                evt_names = obj["hpms_events"].split(",")
+                for evt_name in evt_names:
+                    events.append({"name": evt_name, "params": obj[evt_name]})
+            position = {"x": obj.location.x, "y": obj.location.y, "z": obj.location.z}
+            quat_rot = obj.rotation_euler.to_quaternion()
+            rotation = {
+                "w": quat_rot.w,
+                "x": quat_rot.x,
+                "y": quat_rot.y,
+                "z": quat_rot.z,
+            }
+            room_info["objects"].append(
+                {
+                    "name": obj.name,
+                    "type": type,
+                    "position": position,
+                    "rotation": rotation,
+                    "events": events,
+                }
+            )
+
+        data["rooms"].append(room_info)
+        log(DEBUG, str(data))
     return data

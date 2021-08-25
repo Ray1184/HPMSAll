@@ -4,6 +4,7 @@ import org.ray1184.hpms.batch.HPMSParams;
 import org.ray1184.hpms.batch.commands.CommandResponse;
 import org.ray1184.hpms.batch.commands.impl.HPMSCommands;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public interface HPMSTask {
@@ -21,8 +22,12 @@ public interface HPMSTask {
     }
 
     default CommandResponse execCachedCommand(HPMSParams params, HPMSCommands command, Map<String, Object> args) {
+        if (args == null) {
+            args = new HashMap<>();
+        }
         String cacheKey = command.name() + "-" + args.hashCode();
-        params.getSessionParams().computeIfAbsent(cacheKey, k -> command.exec(args));
+        Map<String, Object> finalArgs = args;
+        params.getSessionParams().computeIfAbsent(cacheKey, k -> command.exec(finalArgs));
         return (CommandResponse) params.getSessionParams().get(cacheKey);
     }
 }

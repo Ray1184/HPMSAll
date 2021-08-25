@@ -64,7 +64,7 @@ public class CommandProcessor {
             log.debug("OUT <--- Response command {} {}", commandName, out.getContent());
         } else {
             log.error("OUT <--- Partial response for diagnostics {} \n{}", commandName, out.getContent());
-            throw new Exception("Wrong python code in command request");
+            throw new Exception("Wrong python code in command request, check blender.log for details");
         }
         return serialize(commandFactory, out);
     }

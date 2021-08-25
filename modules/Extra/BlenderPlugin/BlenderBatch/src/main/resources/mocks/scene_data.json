@@ -1,63 +1,68 @@
 {
   "rooms": [
     {
+      "name": "R_Debug_01",
       "objects": [
-        {
-          "name": "SG_01",
-          "type": "sector",
-          "event": {
-            "name": "activate_cam",
-            "params": "CM_01"
-          },
-          "position": {
-            "x": 0.5,
-            "y": 1.0,
-            "z": 0.0
-          },
-          "rotation": {
-            "w": 1.0,
-            "x": 0.3,
-            "y": 0.1,
-            "z": 1.5
-          }
-        },
-        {
-          "name": "EY_01",
-          "type": "entity",
-          "event": {
-            "name": "entity_descriptors",
-            "params": "player,collisor"
-          },
-          "position": {
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          },
-          "rotation": {
-            "w": 0.0,
-            "x": 0.0,
-            "y": 0.0,
-            "z": 0.0
-          }
-        },
         {
           "name": "CM_01",
           "type": "camera",
           "position": {
-            "x": 3.5,
-            "y": 1.5,
-            "z": 2.0
+            "x": 0.0,
+            "y": -4.699999809265137,
+            "z": 1.5
           },
           "rotation": {
-            "w": 0.0,
-            "x": 0.5,
-            "y": 1.1,
-            "z": 1.2
-          }
+            "w": 0.7933533787727356,
+            "x": 0.6087613701820374,
+            "y": 0.0,
+            "z": -0.0
+          },
+          "events": [
+          ]
+        },
+        {
+          "name": "EY_DummyAnim",
+          "type": "entity",
+          "position": {
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "rotation": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "events": [
+            {
+              "name": "entity_descriptors",
+              "params": "player,collisor"
+            }
+          ]
+        },
+        {
+          "name": "SG_01",
+          "type": "sector",
+          "position": {
+            "x": -0.00558018684387207,
+            "y": 0.03194861114025116,
+            "z": 0.010539054870605469
+          },
+          "rotation": {
+            "w": 1.0,
+            "x": 0.0,
+            "y": 0.0,
+            "z": 0.0
+          },
+          "events": [
+            {
+              "name": "activate_cam",
+              "params": "CM_01"
+            }
+          ]
         }
-      ],
-      "name": "R01_TestRoom"
+      ]
     }
-  ],
-  "returnCode": 0
+  ]
 }
