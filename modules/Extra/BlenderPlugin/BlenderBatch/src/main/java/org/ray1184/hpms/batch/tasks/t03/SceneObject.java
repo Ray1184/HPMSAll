@@ -29,8 +29,8 @@ public enum SceneObject {
         }
     };
 
-    private String type;
-    private String event;
+    private final String type;
+    private final String event;
 
     public static List<SceneDataResponse.RoomInfo.ObjectInfo> filter(SceneDataResponse.RoomInfo roomInfo, SceneObject sceneObject) {
         return roomInfo.getObjects().stream().filter(o -> {

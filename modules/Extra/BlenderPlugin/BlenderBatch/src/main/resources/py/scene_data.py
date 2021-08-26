@@ -1,7 +1,3 @@
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-
-
 def process():
     data = {"rooms": []}
     for room in bpy.data.collections:
