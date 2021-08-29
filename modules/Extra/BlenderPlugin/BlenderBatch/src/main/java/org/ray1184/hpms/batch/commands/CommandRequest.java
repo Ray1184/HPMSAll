@@ -21,7 +21,7 @@ public abstract class CommandRequest {
 
     @SneakyThrows
     public CommandRequest() {
-        URL res = getClass().getClassLoader().getResource("templates/py_template.txt");
+        URL res = getClass().getClassLoader().getResource("templates/py_template.py");
         assert res != null;
         templateContent = Files.readString(Paths.get(res.toURI()));
     }

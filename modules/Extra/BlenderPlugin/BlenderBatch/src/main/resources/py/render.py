@@ -1,6 +1,8 @@
+# Rendering core script
+
 # Mandatory params
 CAMS_TO_RENDER = $CAMS_TO_RENDER
-BASE_PATH = $BASE_PATH
+OUTPUT_PATH = $OUTPUT_PATH
 
 # Optional params
 PREVIEW = $PREVIEW or True
@@ -15,6 +17,7 @@ FILTER_SIZE = $FILTER_SIZE or 0.01
 
 # CYCLES settings
 FILTER_WIDTH = $FILTER_WIDTH or 0.01
+AA_SAMPLES = $AA_SAMPLES or 1
 FILTER_TYPE = $FILTER_TYPE or 'GAUSSIAN'
 EXPOSURE = $EXPOSURE or 1.5
 PREVIEW_SAMPLES = $PREVIEW_SAMPLES or 16
@@ -22,6 +25,14 @@ SAMPLES = $SAMPLES or 256
 MAX_BOUNCES = $MAX_BOUNCES or 0
 CLAMP_INDIRECT = $CLAMP_INDIRECT or 1
 MAP_RESOLUTION = $MAP_RESOLUTION or 1024
+
+# EEVEE settings
+GTAO_DISTANCE = $GTAO_DISTANCE or 1
+VOLUMETRIC_TILE_SIZE = $VOLUMETRIC_TILE_SIZE or '2'
+GI_DIFFUSE_BOUNCES = $GI_DIFFUSE_BOUNCES or 1
+GI_CUBEMAP_RESOLUTION = $GI_CUBEMAP_RESOLUTION or '128'
+GI_VISIBILITY_RESOLUTION = $GI_VISIBILITY_RESOLUTION or '16'
+GI_IRRADIANCE_SMOOTHING = $GI_IRRADIANCE_SMOOTHING or 0
 
 from math import radians
 
@@ -41,7 +52,7 @@ def configure_renderer(preview):
         bpy.context.scene.cycles.device = DEVICE
         bpy.context.scene.cycles.filter_type = FILTER_TYPE
         bpy.context.scene.cycles.filter_width = FILTER_WIDTH
-        bpy.context.scene.cycles.aa_samples = 1
+        bpy.context.scene.cycles.aa_samples = AA_SAMPLES
         bpy.context.scene.cycles.film_exposure = EXPOSURE
         bpy.context.scene.cycles.sample_clamp_indirect = CLAMP_INDIRECT
         bpy.context.scene.cycles.glossy_bounces = MAX_BOUNCES
@@ -58,13 +69,13 @@ def configure_renderer(preview):
         bpy.context.scene.eevee.use_ssr = True
         bpy.context.scene.eevee.use_ssr_refraction = True
         bpy.context.scene.eevee.use_gtao = True
-        bpy.context.scene.eevee.gtao_distance = 1
+        bpy.context.scene.eevee.gtao_distance = GTAO_DISTANCE
         bpy.context.scene.eevee.use_volumetric_shadows = True
-        bpy.context.scene.eevee.volumetric_tile_size = '2'
-        bpy.context.scene.eevee.gi_diffuse_bounces = 1
-        bpy.context.scene.eevee.gi_cubemap_resolution = '128'
-        bpy.context.scene.eevee.gi_visibility_resolution = '16'
-        bpy.context.scene.eevee.gi_irradiance_smoothing = 0
+        bpy.context.scene.eevee.volumetric_tile_size = VOLUMETRIC_TILE_SIZE
+        bpy.context.scene.eevee.gi_diffuse_bounces = GI_DIFFUSE_BOUNCES
+        bpy.context.scene.eevee.gi_cubemap_resolution = GI_CUBEMAP_RESOLUTION
+        bpy.context.scene.eevee.gi_visibility_resolution = GI_VISIBILITY_RESOLUTION
+        bpy.context.scene.eevee.gi_irradiance_smoothing = GI_IRRADIANCE_SMOOTHING
 
 
 def config_cam(cam):
@@ -93,8 +104,7 @@ def process():
     for cam_name in cam_names:
         cam_obj = [obj for obj in bpy.data.objects if obj.fieldType == 'CAMERA' and obj.name == cam_name][0]
         bpy.context.scene.camera = cam_obj
-        log(INFO, 'Rendering cam: ' + cam_name)
-        render_image(BASE_PATH, cam_name)
-        data['outputs'].append(render_image(BASE_PATH, cam_name))
+        log(INFO, 'Rendering cam: ' + cam_name + '.png')
+        data['outputs'].append(render_image(OUTPUT_PATH, cam_name))
     log(INFO, 'Rendering done')
     return data
