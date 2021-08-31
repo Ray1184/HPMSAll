@@ -8,7 +8,7 @@ OBJECTS = $OBJECTS
 COLLECTION_NAME = $COLLECTION_NAME or None
 FORWARD = $FORWARD or 'Y'
 UP = $UP or 'Z'
-EXPORT_ANIMATIONS = EXPORT_ANIMATIONS or False
+EXPORT_ANIMATIONS = $EXPORT_ANIMATIONS or False
 
 
 def export(path, file_name):
@@ -29,9 +29,9 @@ def process():
         return
     objects = [obj for obj in get_objects(COLLECTION_NAME) if obj.name in OBJECTS]
     for object in objects:
-        log(INFO, 'Exporting OGRE ' + FILE_NAME)
+        log(INFO, 'Exporting OGRE ' + object.name)
         unselect_all()
-        triangulate_object(object)
+        #triangulate_object(object)
         object.select_set(True)
-        data['outputs'].append(export(OUTPUT_PATH, FILE_NAME))
+        data['outputs'].append(export(OUTPUT_PATH, object.name))
         log(INFO, 'Exporting OGRE done')

@@ -78,7 +78,11 @@ public class HPMSParams {
     }
 
     public List<String> getFilterRooms() {
-        return Arrays.asList(cmd.getOptionValue("filter").split(","));
+        String tokens = cmd.getOptionValue("filter");
+        if (tokens == null) {
+            return new ArrayList<>();
+        }
+        return Arrays.asList(tokens.split(","));
     }
 
     public boolean isRender() {

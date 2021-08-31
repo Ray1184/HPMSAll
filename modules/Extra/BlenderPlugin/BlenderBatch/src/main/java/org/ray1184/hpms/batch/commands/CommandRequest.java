@@ -51,7 +51,7 @@ public abstract class CommandRequest {
         if (CollectionUtils.isNotEmpty(statements)) {
             statements.forEach(s -> sb.append("\n").append(s));
         } else {
-            throw new Exception("Command request must have at least one statement");
+            throw new RuntimeException("Command request must have at least one statement");
         }
         String content = sb.toString();
         templateContent = addParam("LOG_FN", getLogFunction().toString(), templateContent);
@@ -77,7 +77,13 @@ public abstract class CommandRequest {
     }
 
     private String addUserParam(String k, Object v, String script) {
-        String val = v instanceof String ? "'" + v + "'" : String.valueOf(v);
+        String val = String.valueOf(v);
+        if (v instanceof Boolean) {
+            val = ((Boolean) v) ? "True" : "False";
+        }
+        if (v instanceof String) {
+            val = "'" + v + "'";
+        }
         return addParam(k, val, script);
     }
 

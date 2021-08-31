@@ -15,9 +15,8 @@ public enum HPMSCommands {
     // @formatter:off
     BL_VERSION          (BlenderInfoResponse.class   ,    "py/bl_info.py"              ,  "Retrieve installed blender version"     ),
     SCENE_DATA          (SceneDataResponse.class     ,    "py/scene_data.py"           ,  "Retrieve info for current scene"        ),
-    // EXPORT_ENTITIES     (ExportResponse.class        ,    "py/export_entities.py"      ,  "Export all entities"                    ),
-    // EXPORT_DEPTH        (ExportResponse.class        ,    "py/export_depth.py"         ,  "Export all depth masks"                 ),
-    // EXPORT_COLLISIONS   (ExportResponse.class        ,    "py/export_collisions.py"    ,  "Export all collision maps"              ),
+    EXPORT_OGRE         (ExportResponse.class        ,    "py/export_ogre.py"          ,  "Export models in OGRE format"           ),
+    EXPORT_AGGR_OBJ     (ExportResponse.class        ,    "py/export_aggr_obj.py"      ,  "Aggregate and export in OBJ format"     ),
     RENDERING           (ExportResponse.class        ,    "py/render.py"               ,  "Rendering by given cams"                );
     // @formatter:on
 
