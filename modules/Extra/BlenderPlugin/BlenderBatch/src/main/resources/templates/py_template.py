@@ -28,7 +28,8 @@ def unselect_all():
         obj.select_set(False)
 
 
-def triangulate_object(me):
+def triangulate_object(obj):
+    me = obj.to_mesh()
     bm = bmesh.new()
     bm.from_mesh(me)
     bmesh.ops.triangulate(bm, faces=bm.faces)
@@ -49,6 +50,19 @@ def get_hpms_objects(collection_name, type=None):
     else:
         return [obj for obj in coll_objects if 'hpms_type' in obj and obj['hpms_type'] == type]
 
+def stop_logging():
+    logfile = 'logs/blender_detail.log'
+    open(logfile, 'a').close()
+    old = os.dup(1)
+    sys.stdout.flush()
+    os.close(1)
+    os.open(logfile, os.O_WRONLY)
+    return old
+
+def resume_logging(old):
+    os.close(1)
+    os.dup(old)
+    os.close(old)
 
 def log(level, msg):
     date = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')

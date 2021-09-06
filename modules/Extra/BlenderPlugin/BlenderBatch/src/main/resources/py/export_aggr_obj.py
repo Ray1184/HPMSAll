@@ -26,5 +26,9 @@ def process():
         triangulate_object(object)
         object.select_set(True)
     log(INFO, 'Exporting OBJ ' + FILE_NAME)
-    data['outputs'].append(export(OUTPUT_PATH, FILE_NAME))
+    old = stop_logging()
+    exported = export(OUTPUT_PATH, FILE_NAME)
+    resume_logging(old)
+    data['outputs'].append(exported)
     log(INFO, 'Exporting OBJ done')
+    return data

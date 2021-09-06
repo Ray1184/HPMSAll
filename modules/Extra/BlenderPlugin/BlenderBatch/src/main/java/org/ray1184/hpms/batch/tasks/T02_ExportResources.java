@@ -8,11 +8,10 @@ import org.ray1184.hpms.batch.commands.impl.HPMSCommands;
 import org.ray1184.hpms.batch.commands.impl.res.ExportResponse;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
 import org.ray1184.hpms.batch.tasks.utils.FileSystem;
-import org.ray1184.hpms.batch.tasks.utils.SceneObject;
 import org.ray1184.hpms.batch.tasks.utils.NativeConverter;
+import org.ray1184.hpms.batch.tasks.utils.SceneObject;
 import org.ray1184.hpms.batch.utils.FinalObjectWrapper;
 
-import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,8 +35,8 @@ public class T02_ExportResources implements HPMSTask {
                 .forEach(r -> {
                     Integer res = RET_CODE_OK;
                     params.getSessionParams().put("CURRENT_ROOM", r.getName());
-                    res += exportEntities(params, SceneObject.filter(r, SceneObject.ENTITY));
                     res += exportSectors(params, SceneObject.filter(r, SceneObject.SECTOR));
+                    res += exportEntities(params, SceneObject.filter(r, SceneObject.ENTITY));
                     res += exportCollisionData(params, SceneObject.filter(r, SceneObject.COLLISION_DATA));
                     res += exportDepthData(params, SceneObject.filter(r, SceneObject.DEPTH_DATA));
                     if (res != RET_CODE_OK) {

@@ -19,6 +19,7 @@ def export(path, file_name):
                         EX_FORCE_LAMPS=True, EX_MATERIALS=True, EX_SEPARATE_MATERIALS=True,
                         EX_COPY_SHADER_PROGRAMS=True, EX_ARMATURE_ANIMATION=EXPORT_ANIMATIONS,
                         EX_SHAPE_ANIMATIONS=EXPORT_ANIMATIONS)
+
     return target_file
 
 
@@ -31,10 +32,12 @@ def process():
     for object in objects:
         log(INFO, 'Exporting OGRE ' + object.name)
         unselect_all()
-        #triangulate_object(object)
         object.select_set(True)
+        old = stop_logging()
         exported = export(OUTPUT_PATH, object.name)
+        resume_logging(old)
         data['outputs'].append(exported + '.mesh.xml')
         if EXPORT_ANIMATIONS:
             data['outputs'].append(exported + '.skeleton.xml')
         log(INFO, 'Exporting OGRE done')
+    return data
