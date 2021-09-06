@@ -107,6 +107,8 @@ public class HPMSParams {
         CAM_NEAR,
         CAM_FAR,
         MOCK,
-        DEPENDENCIES
+        DEPENDENCIES,
+        NATIVE_WALKMAPS_CONVERTER,
+        NATIVE_OGRE_CONVERTER
     }
 }

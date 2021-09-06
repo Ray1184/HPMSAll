@@ -9,7 +9,8 @@ import org.ray1184.hpms.batch.commands.impl.res.ExportResponse;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
 import org.ray1184.hpms.batch.tasks.utils.FileSystem;
 import org.ray1184.hpms.batch.tasks.utils.SceneObject;
-import org.ray1184.hpms.batch.utils.NativeConverter;
+import org.ray1184.hpms.batch.tasks.utils.NativeConverter;
+import org.ray1184.hpms.batch.utils.FinalObjectWrapper;
 
 import java.io.File;
 import java.util.HashMap;
@@ -65,20 +66,30 @@ public class T02_ExportResources implements HPMSTask {
         if (exportResponse.getReturnCode() != RET_CODE_OK) {
             return RET_CODE_ERROR;
         }
-        boolean converted = NativeConverter.WALKMAP.convert(outputPath + File.separator + roomName + "obj.walkmap", outputPath + File.separator + roomName + ".walkmap");
-        return RET_CODE_OK;
+        FinalObjectWrapper<Boolean> resWrapper = new FinalObjectWrapper<>();
+        exportResponse.getOutputs().forEach(o -> {
+            boolean converted = NativeConverter.WALKMAP.convert(params, o);
+            resWrapper.setObject(resWrapper.getObject() && converted);
+        });
+        return resWrapper.getObject() ? RET_CODE_OK : RET_CODE_ERROR;
     }
 
     private Integer exportEntities(HPMSParams params, List<SceneDataResponse.RoomInfo.ObjectInfo> objs) {
         Map<String, Object> args = new HashMap<>();
-        args.put("OUTPUT_PATH", FileSystem.getInstance().toPythonPath(FileSystem.Asset.MODELS));
+        String outputPath = FileSystem.getInstance().toPythonPath(FileSystem.Asset.MODELS);
+        args.put("OUTPUT_PATH", outputPath);
         args.put("OBJECTS", StringUtils.join(objs.stream().map(SceneDataResponse.RoomInfo.ObjectInfo::getName).collect(Collectors.toList()), ","));
         args.put("EXPORT_ANIMATIONS", true);
         ExportResponse exportResponse = (ExportResponse) execCachedCommand(params, HPMSCommands.EXPORT_OGRE, args);
         if (exportResponse.getReturnCode() != RET_CODE_OK) {
             return RET_CODE_ERROR;
         }
-        return RET_CODE_OK;
+        FinalObjectWrapper<Boolean> resWrapper = new FinalObjectWrapper<>();
+        exportResponse.getOutputs().forEach(o -> {
+            boolean converted = NativeConverter.OGRE_MESH.convert(params, o);
+            resWrapper.setObject(resWrapper.getObject() && converted);
+        });
+        return resWrapper.getObject() ? RET_CODE_OK : RET_CODE_ERROR;
     }
 
     @Override

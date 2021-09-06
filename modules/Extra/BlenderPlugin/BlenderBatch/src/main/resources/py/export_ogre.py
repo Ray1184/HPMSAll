@@ -33,5 +33,8 @@ def process():
         unselect_all()
         #triangulate_object(object)
         object.select_set(True)
-        data['outputs'].append(export(OUTPUT_PATH, object.name))
+        exported = export(OUTPUT_PATH, object.name)
+        data['outputs'].append(exported + '.mesh.xml')
+        if EXPORT_ANIMATIONS:
+            data['outputs'].append(exported + '.skeleton.xml')
         log(INFO, 'Exporting OGRE done')
