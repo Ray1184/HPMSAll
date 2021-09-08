@@ -40,6 +40,12 @@ public enum SceneObject {
             return null;
         }
     },
+    TRIGGER("TRIGGER", null) {
+        @Override
+        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
+            return null;
+        }
+    },
     VIEW_ACTIVATOR("SECTOR", "ACTIVATE_CAM") {
         @Override
         public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {

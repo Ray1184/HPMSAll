@@ -93,6 +93,6 @@ public class T02_ExportResources implements HPMSTask {
 
     @Override
     public boolean enabled() {
-        return true;
+        return false;
     }
 }
