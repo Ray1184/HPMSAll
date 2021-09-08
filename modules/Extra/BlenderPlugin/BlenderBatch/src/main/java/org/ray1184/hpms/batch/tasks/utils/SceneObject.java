@@ -2,7 +2,6 @@ package org.ray1184.hpms.batch.tasks.utils;
 
 import lombok.AllArgsConstructor;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
-import org.ray1184.hpms.batch.lua.LuaStatement;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -10,57 +9,38 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public enum SceneObject {
 
-    CAMERA("CAMERA", null) {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    SECTOR("SECTOR", null) {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    ENTITY("ENTITY", null) {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    COLLISION_DATA("COLLISION", null) {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    DEPTH_DATA("DEPTH", null) {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    TRIGGER("TRIGGER", null) {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    VIEW_ACTIVATOR("SECTOR", "ACTIVATE_CAM") {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    },
-    ENTITY_DESCRIPTORS("ENTITY", "ENTITY_DESCRIPTORS") {
-        @Override
-        public List<LuaStatement> solve(SceneDataResponse sceneDataResponse) {
-            return null;
-        }
-    };
+    // @formatter:off
+    CAMERA              ("CAMERA",      null                    ),
+    SECTOR              ("SECTOR",      null                    ),
+    ENTITY              ("ENTITY",      null                    ),
+    COLLISION_DATA      ("COLLISION",   null                    ),
+    DEPTH_DATA          ("DEPTH",       null                    ),
+    TRIGGER_POS         ("TRIGGER",     "BY_POSITION"           ),
+    VIEW_ACTIVATOR      ("SECTOR",      "ACTIVATE_CAM"          ),
+    ENTITY_DESCRIPTORS  ("ENTITY",      "ENTITY_DESCRIPTORS"    );
+    // @formatter:on
 
     private final String type;
     private final String event;
+
+    public static SceneDataResponse.RoomInfo.ObjectInfo.EventInfo eventByName(SceneDataResponse.RoomInfo.ObjectInfo objectInfo, String eventName) {
+        for (SceneDataResponse.RoomInfo.ObjectInfo.EventInfo e : objectInfo.getEvents()) {
+            if (e.getName().equalsIgnoreCase(eventName)) {
+                return e;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T getParam(SceneDataResponse.RoomInfo.ObjectInfo.EventInfo event, int index) {
+        String[] tokens = event.getParams().split(",");
+        String tok = tokens[index];
+        try {
+            return (T) Double.valueOf(tok);
+        } catch (NumberFormatException e) {
+            return (T) tok;
+        }
+    }
 
     public static List<SceneDataResponse.RoomInfo.ObjectInfo> filter(SceneDataResponse.RoomInfo roomInfo, SceneObject sceneObject) {
         return roomInfo.getObjects().stream().filter(o -> {
@@ -73,6 +53,5 @@ public enum SceneObject {
         }).collect(Collectors.toList());
     }
 
-    public abstract List<LuaStatement> solve(SceneDataResponse sceneDataResponse);
 
 }
