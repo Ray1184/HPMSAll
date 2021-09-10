@@ -32,7 +32,23 @@ public enum ScriptSection {
                                     c.getRotation().getW(), c.getRotation().getX(), c.getRotation().getY(), c.getRotation().getZ()).newLine()));
 
             // Entities setup
-            SceneObject.filter(roomInfo, SceneObject.ENTITY_DESCRIPTORS).forEach(t -> {
+            SceneObject.filter(roomInfo, SceneObject.ENTITY).forEach(e -> {
+                builder.dummy()//
+                        .expr("entity_? = lib.make_entity('?.mesh')", e.getName().toLowerCase(), e.getName()).newLine()//
+                        .expr("entity_node_? = lib.make_node('?Node')", e.getName().toLowerCase(), e.getName()).newLine()//
+                        .expr("lib.set_node_entity(entity_node_?, entity_?)", e.getName().toLowerCase(), e.getName().toLowerCase()).newLine();
+
+
+            });
+
+
+            // Entities descriptors setup
+            SceneObject.filter(roomInfo, SceneObject.ENTITY_DESCRIPTORS).forEach(e -> {
+                SceneDataResponse.RoomInfo.ObjectInfo.EventInfo event = e.getEvents().get(0);
+                String[] types = event.getParams().split(",");
+                for (String type : types) {
+                    EntityHandler.Descriptor.byLabel(type).handleSetupPre(roomInfo, builder, e);
+                }
 
             });
 
