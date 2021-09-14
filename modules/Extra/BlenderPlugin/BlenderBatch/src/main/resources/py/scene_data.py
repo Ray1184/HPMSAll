@@ -21,12 +21,14 @@ def process():
                 'y': quat_rot.y,
                 'z': quat_rot.z,
             }
+            scale = {'x': obj.scale.x, 'y': obj.scale.y, 'z': obj.scale.z}
             room_info['objects'].append(
                 {
                     'name': obj.name,
                     'type': type,
                     'position': position,
                     'rotation': rotation,
+                    'scale': scale,
                     'events': events,
                 }
             )

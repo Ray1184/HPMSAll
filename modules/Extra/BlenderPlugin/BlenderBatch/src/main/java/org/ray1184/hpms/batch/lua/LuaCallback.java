@@ -51,6 +51,7 @@ public class LuaCallback implements LuaScriptPart {
             userCode.setCallbackName(name);
         }
         Arrays.asList(userCode.getScript().split("\\r?\\n")).forEach(l -> callback.append("\n").append(INDENT).append(l));
+        callback.append("\n");
 
 
         statementsPost.forEach(s -> Arrays.asList(s.getScript().split("\\r?\\n")).forEach(l -> callback.append("\n").append(INDENT).append(l)));

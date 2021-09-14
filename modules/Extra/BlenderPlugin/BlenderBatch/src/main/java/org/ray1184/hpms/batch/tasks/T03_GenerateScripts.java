@@ -6,8 +6,11 @@ import org.ray1184.hpms.batch.HPMSProcess;
 import org.ray1184.hpms.batch.commands.blend.BlenderProcess;
 import org.ray1184.hpms.batch.commands.impl.HPMSCommands;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
-import org.ray1184.hpms.batch.lua.*;
-import org.ray1184.hpms.batch.tasks.t03.ScriptSection;
+import org.ray1184.hpms.batch.lua.LuaMacroSection;
+import org.ray1184.hpms.batch.lua.LuaScript;
+import org.ray1184.hpms.batch.lua.LuaScriptGenerator;
+import org.ray1184.hpms.batch.lua.LuaStatement;
+import org.ray1184.hpms.batch.tasks.scene.ScriptSection;
 import org.ray1184.hpms.batch.tasks.utils.FileSystem;
 import org.ray1184.hpms.batch.utils.FinalObjectWrapper;
 
@@ -64,19 +67,17 @@ public class T03_GenerateScripts implements HPMSTask {
 
     private void fillScript(HPMSParams params, SceneDataResponse.RoomInfo roomInfo, LuaScript roomScript) {
         LuaMacroSection depRef = roomScript.getSection("dependencies");
-        getDependencies(params).forEach(s -> {
-            depRef.addStatement(new LuaStatement(s));
-        });
+        getDependencies(params).forEach(s -> depRef.addStatement(new LuaStatement(s)));
 
         LuaMacroSection sceneRef = roomScript.getSection("scene");
         sceneRef.getCallback("setup").addStatementPre(ScriptSection.SETUP_PRE.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("setup").addStatementPost(ScriptSection.SETUP_POST.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("input").addStatementPre(ScriptSection.INPUT_PRE.getCustomStatement(params, roomInfo));
-        sceneRef.getCallback("input").addStatementPre(ScriptSection.INPUT_POST.getCustomStatement(params, roomInfo));
+        sceneRef.getCallback("input").addStatementPost(ScriptSection.INPUT_POST.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("update").addStatementPre(ScriptSection.UPDATE_PRE.getCustomStatement(params, roomInfo));
-        sceneRef.getCallback("update").addStatementPre(ScriptSection.UPDATE_POST.getCustomStatement(params, roomInfo));
+        sceneRef.getCallback("update").addStatementPost(ScriptSection.UPDATE_POST.getCustomStatement(params, roomInfo));
         sceneRef.getCallback("cleanup").addStatementPre(ScriptSection.CLEANUP_PRE.getCustomStatement(params, roomInfo));
-        sceneRef.getCallback("cleanup").addStatementPre(ScriptSection.CLEANUP_POST.getCustomStatement(params, roomInfo));
+        sceneRef.getCallback("cleanup").addStatementPost(ScriptSection.CLEANUP_POST.getCustomStatement(params, roomInfo));
     }
 
     private List<String> getDependencies(HPMSParams params) {
@@ -92,5 +93,4 @@ public class T03_GenerateScripts implements HPMSTask {
     }
 
 
-    
 }

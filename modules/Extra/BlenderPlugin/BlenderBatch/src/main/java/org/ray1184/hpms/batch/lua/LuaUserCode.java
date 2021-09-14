@@ -21,7 +21,8 @@ public class LuaUserCode implements LuaScriptPart {
     @Override
     public String getScript() {
         StringBuilder userContent = new StringBuilder();
-        userContent.append(USER_SECTION_START)
+        userContent.append("\n")
+                .append(USER_SECTION_START)
                 .append(" [")
                 .append(callbackName)
                 .append("]\n")

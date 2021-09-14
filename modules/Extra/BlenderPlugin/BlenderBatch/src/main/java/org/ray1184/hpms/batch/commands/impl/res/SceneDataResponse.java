@@ -24,6 +24,7 @@ public class SceneDataResponse extends CommandResponse {
             private List<EventInfo> events;
             private PositionInfo position;
             private RotationInfo rotation;
+            private ScaleInfo scale;
 
             @Data
             public static class EventInfo {
@@ -41,12 +42,22 @@ public class SceneDataResponse extends CommandResponse {
 
             }
 
+
             @Data
             public static class RotationInfo {
                 private Double w;
                 private Double x;
                 private Double y;
                 private Double z;
+
+            }
+
+            @Data
+            public static class ScaleInfo {
+                private Double x;
+                private Double y;
+                private Double z;
+
 
             }
 

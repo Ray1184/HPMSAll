@@ -5,11 +5,10 @@ import lombok.Setter;
 
 public class LuaStatement implements LuaScriptPart {
 
+    @Getter
+    private final String name;
     @Setter
     private String content;
-
-    @Getter
-    private String name;
 
     public LuaStatement(String name, String content, boolean plainString) {
         if (plainString) {
@@ -17,6 +16,7 @@ public class LuaStatement implements LuaScriptPart {
         } else {
             this.content = content;
         }
+        this.name = name;
     }
 
     public LuaStatement(String name, String content) {

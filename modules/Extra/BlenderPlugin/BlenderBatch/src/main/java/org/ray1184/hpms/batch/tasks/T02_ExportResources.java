@@ -7,9 +7,9 @@ import org.ray1184.hpms.batch.HPMSParams;
 import org.ray1184.hpms.batch.commands.impl.HPMSCommands;
 import org.ray1184.hpms.batch.commands.impl.res.ExportResponse;
 import org.ray1184.hpms.batch.commands.impl.res.SceneDataResponse;
+import org.ray1184.hpms.batch.tasks.scene.SceneObject;
 import org.ray1184.hpms.batch.tasks.utils.FileSystem;
 import org.ray1184.hpms.batch.tasks.utils.NativeConverter;
-import org.ray1184.hpms.batch.tasks.utils.SceneObject;
 import org.ray1184.hpms.batch.utils.FinalObjectWrapper;
 
 import java.util.HashMap;
