@@ -1,15 +1,34 @@
 import java.util.ArrayList;
 import java.util.List;
 
+class AABB {
+  public PVector a;
+  public PVector b;
+  public PVector c;
+  public PVector d;
+
+
+  public void set(PVector a, PVector b, PVector c, PVector d) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+    this.d = d;
+  }
+}
+
 List<PVector> points;
-int SIDES = 11;
-PVector[] sortedPoints = new PVector[SIDES * 2];
+int boundingRadius = 50;
+int boxRad = 20;
+PVector[] sortedPoints = null;
 int[] fx = new int[] {3, 1, 2, 4, 5, 6, 7, 8, 9, 10, 11};
 int[] fy = new int[] {5, 2, 4, 3, 6, 7, 8, 9, 10, 11, 1};
-int factor = 20;
+int factor = 50;
 boolean inside = false;
+int tx = 500;
+int ty = 350;
 PVector mousePos = new PVector(0, 0);
 PVector delta = new PVector(0, 0);
+AABB aabb = new AABB();
 String objData = "v -1.000000 -1.000000 0.000000"
   + "\nv 1.000000 -1.000000 0.000000"
   + "\nv -1.505155 1.137769 0.000000"
@@ -34,54 +53,72 @@ String objData = "v -1.000000 -1.000000 0.000000"
   + "\nl 11 1";
 
 PVector[] loadSortedSizesObj(String data) {
-  String[] lines = data.split("\r\n");
+  String[] lines = data.split("\n");
   List<PVector> sortedData = new ArrayList<PVector>();
   List<PVector> vertices = new ArrayList<PVector>();
-  List<Integer> sides = new ArrayList<Integer>();
+  List<PVector> sides = new ArrayList<PVector>();
   for (String line : lines) {
     char type = line.charAt(0);
     String content = line.substring(2).trim();
     String[] tokens = content.split(" ");
     switch (type) {
     case 'v':
-      vertices.add(new PVector(Float.parseFloat(tokens[0]), Float.parseFloat(tokens[1]), Float.parseFloat(tokens[2])));
+      vertices.add(new PVector(Float.parseFloat(tokens[0]) * factor + tx, Float.parseFloat(tokens[1]) * factor + ty, Float.parseFloat(tokens[2]) * factor));
       break;
     case 'l':
-      sides.add(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]));
+      sides.add(new PVector(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1])));
       break;
     }
   }
-  
+
+  assert(sides.size() > 2); // at least a triangle
+  Integer first = int(sides.get(0).x);
+  Integer second = int(sides.get(0).y);
+  PVector vertA = vertices.get(first - 1);
+  PVector vertB = vertices.get(second - 1);
+  Integer lastIndex = second;
+  sortedData.add(vertA);
+  sortedData.add(vertB);
+
+  for (int i = 1; i < sides.size(); i++) {
+    Integer next = getNextIndex(lastIndex, sides);
+    PVector vert = vertices.get(next - 1);
+    sortedData.add(vert);
+    lastIndex = next;
+  }
+
+
   return sortedData.toArray(new PVector[sortedData.size()]);
 }
 
-void setup() {
-  size(640, 360);
-  points = new ArrayList<PVector>();
-  points.add(new PVector(-1.000000, -1.000000));
-  points.add(new PVector(1.000000, -1.000000 ));
-  points.add(new PVector(-1.505155, 1.137769 ));
-  points.add(new PVector(3.365042, 2.033271  ));
-  points.add(new PVector(-0.678538, 3.893158 ));
-  points.add(new PVector(-5.408622, 3.824274 ));
-  points.add(new PVector(-8.301780, 0.265230 ));
-  points.add(new PVector(-5.615276, -4.097469));
-  points.add(new PVector(7.495781, -0.102155 ));
-  points.add(new PVector(6.003279, 0.196345  ));
-  points.add(new PVector(-0.104498, -1.801312));
+Integer getNextIndex(Integer index, List<PVector> sides) {
 
-  int c = 0;
-  for (int i = 0; i < sortedPoints.length; i += 2) {
-    sortedPoints[i] = new PVector(points.get(fx[c] - 1).x, points.get(fx[c] - 1).y);
-    sortedPoints[i + 1] = new PVector(points.get(fy[c] - 1).x, points.get(fy[c] - 1).y);
-    c++;
+  for (PVector side : sides) {
+    if (int(side.x) == index) {
+      return int(side.y);
+    }
   }
+  println("SIDE NOT FOUND WITH INDEX " + index);
+  return null;
+}
+
+void setup() {
+  size(1000, 600);
+  sortedPoints = loadSortedSizesObj(objData);
+  for (PVector sp : sortedPoints) {
+    println(sp.x + ", " + sp.y);
+  }
+  noFill();
+  ellipseMode(CENTER);
 }
 
 void draw() {
   background(0);
   mousePos.set(mouseX, mouseY);
-  inside = pointInsidePolygon(mousePos, delta, sortedPoints);
+  aabb.set(new PVector(mouseX - boxRad, mouseY - boxRad), new PVector(mouseX + boxRad, mouseY - boxRad), new PVector(mouseX + boxRad, mouseY + boxRad), new PVector(mouseX - boxRad, mouseY + boxRad));
+  rotateAABB(aabb, 10);
+  inside = aabbInsidePolygon(aabb, sortedPoints, delta);
+
   if (inside) {
     stroke(255, 0, 0);
     strokeWeight(3);
@@ -89,36 +126,65 @@ void draw() {
     stroke(255);
     strokeWeight(1);
   }
-  translate(400, 200);
-  for (int i = 0; i < SIDES * 2; i += 2) {
-    line(sortedPoints[i].x * factor, sortedPoints[i].y * factor, sortedPoints[i + 1].x * factor, sortedPoints[i + 1].y * factor);
+  pushMatrix();
+  for (int i = 0; i < sortedPoints.length - 1; i++) {
+    line((sortedPoints[i].x), (sortedPoints[i].y), (sortedPoints[i + 1].x), (sortedPoints[i + 1].y));
   }
+  beginShape();
+  vertex(aabb.a.x, aabb.a.y);
+  vertex(aabb.b.x, aabb.b.y);
+  vertex(aabb.c.x, aabb.c.y);
+  vertex(aabb.a.x, aabb.d.y);
+  vertex(aabb.a.x, aabb.a.y);
+  endShape();
+  popMatrix();
+}
+
+boolean aabbInsidePolygon(AABB aabb, PVector[] polygon, PVector t) {
+  return pointInsidePolygon(aabb.a, polygon, t) || pointInsidePolygon(aabb.b, polygon, t) ||
+    pointInsidePolygon(aabb.c, polygon, t) || pointInsidePolygon(aabb.d, polygon, t);
 }
 
 
-boolean pointInsidePolygon(PVector point, PVector t, PVector[] data)
-{
-  float x1, y1, x2, y2;
-  int len = data.length;
-  x2 = data[len].x + t.x;
-  y2 = data[len].y + t.y;
-  int wn = 0;
-  for (int idx = 0; idx < len; idx++)
-  {
-    x1 = x2;
-    y1 = y2;
-    x2 = data[idx].x + t.x;
-    y2 = data[idx].y + t.y;
-    if (y1 > point.y)
-    {
-      if ((y2 <= point.y) && (x1 - point.x) * (y2 - point.y) < (x2 - point.x) * (y1 - point.y))
-      {
-        wn++;
-      } else if ((y2 > point.y) && (x1 - point.x) * (y2 - point.y) > (x2 - point.x) * (y1 - point.y))
-      {
-        wn--;
-      }
+boolean pointInsidePolygon(PVector point, PVector[] polygon, PVector t) {
+
+  float x = point.x - t.x;
+  float y = point.y - t.y;
+  int i, j = polygon.length - 1;
+  boolean oddNodes = false;
+
+  for (i = 0; i < polygon.length; i++) {
+    if ((polygon[i].y < y && polygon[j].y >= y
+      ||   polygon[j].y < y && polygon[i].y >= y)
+      &&  (polygon[i].x <= x || polygon[j].x <= x)) {
+      oddNodes ^= (polygon[i].x + (y - polygon[i].y) / (polygon[j].y - polygon[i].y) * (polygon[j].x - polygon[i].x) < x);
     }
+    j = i;
   }
-  return wn % 2 != 0;
+
+  return oddNodes;
+}
+
+void rotateAABB(AABB aabb, float f) {
+  PVector a = aabb.a;
+  PVector b = aabb.b;
+  PVector c = aabb.c;
+  PVector d = aabb.d;
+
+  a.set(a.x - mouseX, a.y - mouseY);
+  b.set(b.x - mouseX, b.y - mouseY);
+  c.set(c.x - mouseX, c.y - mouseY);
+  d.set(d.x - mouseX, d.y - mouseY);
+
+  a.rotate(radians(f));
+  b.rotate(radians(f));
+  c.rotate(radians(f));
+  d.rotate(radians(f));
+
+  a.set(a.x + mouseX, a.y + mouseY);
+  b.set(b.x + mouseX, b.y + mouseY);
+  c.set(c.x + mouseX, c.y + mouseY);
+  d.set(d.x + mouseX, d.y + mouseY);
+
+  aabb.set(a, b, c, d);
 }
