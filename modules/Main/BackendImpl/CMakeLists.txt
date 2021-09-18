@@ -132,7 +132,8 @@ set(SOURCES
         src/core/HPMSScriptAdaptee.cpp
         src/facade/HPMSEngineFacade.cpp
         src/core/HPMSOverlayTextAreaAdaptee.cpp
-        src/core/HPMSNativeAdaptee.cpp src/thirdparty/TPBetaGUI.cpp)
+        src/core/HPMSNativeAdaptee.cpp
+        src/thirdparty/TPNewMOC.cpp src/core/HPMSCollisionAdaptee.cpp include/utils/HPMSImplUtils.h)
 
 add_library(HPMSBackendImpl SHARED ${SOURCES})
 
