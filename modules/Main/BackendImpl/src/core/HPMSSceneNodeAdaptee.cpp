@@ -5,7 +5,6 @@
 #include <core/HPMSSceneNodeAdaptee.h>
 #include <core/HPMSEntityAdaptee.h>
 #include <core/HPMSBackgroundImageAdaptee.h>
-#include <OgreDefaultDebugDrawer.h>
 
 std::string hpms::SceneNodeAdaptee::GetName()
 {
@@ -83,6 +82,19 @@ void hpms::SceneNodeAdaptee::AttachObject(hpms::ActorAdapter* actor)
     if (auto* a = dynamic_cast<AttachableItem*>(actor))
     {
         ogreNode->attachObject(a->GetNative());
+        if (auto* e = dynamic_cast<EntityAdaptee*>(actor))
+        {
+            allAttachedEntities.push_back(e);
+            allAttachedEntitiesInTree.push_back(e);
+            auto* currParent = parent;
+            while (currParent)
+            {
+                std::vector<EntityAdapter*> entitiesInTree = currParent->GetAttachedEntitiesInTree();
+                entitiesInTree.push_back(e);
+                currParent = parent->GetParent();
+            }
+        }
+
     }
 
 
@@ -94,6 +106,32 @@ void hpms::SceneNodeAdaptee::DetachObject(hpms::ActorAdapter* actor)
     if (auto* a = dynamic_cast<AttachableItem*>(actor))
     {
         ogreNode->detachObject(a->GetNative());
+        if (auto* e = dynamic_cast<EntityAdaptee*>(actor))
+        {
+            auto it = std::find(allAttachedEntities.begin(), allAttachedEntities.end(), e);
+            auto itTree = std::find(allAttachedEntitiesInTree.begin(), allAttachedEntitiesInTree.end(), e);
+            if (it != allAttachedEntities.end())
+            {
+                allAttachedEntities.erase(it);
+            }
+
+            if (itTree != allAttachedEntities.end())
+            {
+                allAttachedEntities.erase(itTree);
+            }
+
+            auto* currParent = parent;
+            while (currParent)
+            {
+                std::vector<EntityAdapter*> parentEntitesTree = currParent->GetAttachedEntitiesInTree();
+                auto itTreeParent = std::find(parentEntitesTree.begin(), parentEntitesTree.end(), e);
+                if (itTreeParent != parentEntitesTree.end())
+                {
+                    parentEntitesTree.erase(it);
+                }
+                currParent = parent->GetParent();
+            }
+        }
     }
 
 }
@@ -121,17 +159,29 @@ hpms::SceneNodeAdaptee::SceneNodeAdaptee(hpms::OgreContext* ctx, const std::stri
 
 hpms::SceneNodeAdaptee::SceneNodeAdaptee(hpms::OgreContext* ctx, Ogre::SceneNode* ogreSceneNode, const std::string& name, SceneNodeAdapter* parent, bool root)
         : AdapteeCommon(ctx),
-        ogreNode(ogreSceneNode),
-        parent(parent),
-        root(root)
+          ogreNode(ogreSceneNode),
+          parent(parent),
+          root(root)
 {
 }
 
 hpms::SceneNodeAdaptee::~SceneNodeAdaptee()
 {
     Check();
-    if (!root) {
+    if (!root)
+    {
         (ctx)->GetSceneManager()->destroySceneNode(ogreNode);
     }
 }
+
+std::vector<hpms::EntityAdapter*> hpms::SceneNodeAdaptee::GetAttachedEntities()
+{
+    return allAttachedEntities;
+}
+
+std::vector<hpms::EntityAdapter*> hpms::SceneNodeAdaptee::GetAttachedEntitiesInTree()
+{
+    return allAttachedEntitiesInTree;
+}
+
 

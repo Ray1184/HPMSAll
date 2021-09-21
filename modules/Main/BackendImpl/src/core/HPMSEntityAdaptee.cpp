@@ -100,6 +100,9 @@ void hpms::EntityAdaptee::SetMode(hpms::EntityMode mode)
         case hpms::EntityMode::COLOR_ONLY:
             hpms::EntityHelper::SetWriteColorOnly(ogreEntity);
             break;
+        case hpms::EntityMode::HIDDEN:
+            hpms::EntityHelper::SetWriteNothing(ogreEntity);
+            break;
         default:
             hpms::EntityHelper::SetWriteDepthAndColor(ogreEntity);
             break;

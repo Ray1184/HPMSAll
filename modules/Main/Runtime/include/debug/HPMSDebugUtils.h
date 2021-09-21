@@ -63,16 +63,16 @@ namespace hpms
             drawer->EndDraw();
         }
 
-        inline static void DrawCollisorSector(hpms::Collisor* collisor)
+        inline static void DrawCollisorSector(hpms::Collisor3D* collisor)
         {
-            auto* drawer = hpms::GetNative();
-            auto* tri = collisor->GetCurrentTriangle();
-            if (tri)
-            {
-                drawer->BeginDraw(RED, RED);
-                DrawTriangle(drawer, tri);
-                drawer->EndDraw();
-            }
+//            auto* drawer = hpms::GetNative();
+//            auto* tri = collisor->GetCurrentTriangle();
+//            if (tri)
+//            {
+//                drawer->BeginDraw(RED, RED);
+//                DrawTriangle(drawer, tri);
+//                drawer->EndDraw();
+//            }
         }
 
         inline static void DrawSampledSector(hpms::WalkmapAdapter* walkmap, hpms::ActorAdapter* actor)

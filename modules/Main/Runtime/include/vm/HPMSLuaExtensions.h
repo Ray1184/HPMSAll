@@ -10,7 +10,7 @@
 #include <api/HPMSInputUtils.h>
 #include <common/HPMSMathUtils.h>
 #include <facade/HPMSApiFacade.h>
-#include <logic/interaction/HPMSCollisor.h>
+#include <logic/interaction/HPMSCollisor3D.h>
 #include <logic/gui/HPMSGuiText.h>
 #include <debug/HPMSDebugUtils.h>
 #include <LuaBridge/Vector.h>
@@ -253,8 +253,20 @@ namespace hpms
             return entity;
         }
 
+        static inline hpms::EntityAdapter* AMCreateCollisionEntity(const std::string& name, bool dynamic)
+        {
+            auto* entity = hpms::GetSupplier()->CreateEntity(name);
+            entity->SetMode(EntityMode::HIDDEN);
+            hpms::GetSupplier()->GetCollisionManager()->RegisterEntity(entity, dynamic ? DYNAMIC : STATIC);
+            return entity;
+        }
+
+
+
         static inline void AMDeleteEntity(EntityAdapter* entity)
         {
+            // Always try to unregister entity, this will be done only for collision entities.
+            hpms::GetSupplier()->GetCollisionManager()->UnregisterEntity(entity);
             hpms::SafeDelete(entity);
         }
 
@@ -303,25 +315,7 @@ namespace hpms
             hpms::SafeDelete(text);
         }
 
-        static inline void LSetNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
-        {
-            node->AttachObject(obj);
-        }
 
-        static inline void LSetNodeCamera(SceneNodeAdapter* node, CameraAdapter* cam)
-        {
-            node->AttachObject(cam);
-        }
-
-        static inline void LSRemoveNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
-        {
-            node->DetachObject(obj);
-        }
-
-        static inline void LSetBoneNode(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner, const glm::vec3& offsetPosition = glm::vec3(), const glm::quat& offsetRotation = glm::quat())
-        {
-            boneOwner->AttachObjectToBone(boneNode, objToAttach, offsetPosition, offsetRotation);
-        }
 
         static inline hpms::WalkmapAdapter* AMCreateWalkMap(const std::string& name)
         {
@@ -333,20 +327,19 @@ namespace hpms
             hpms::SafeDelete(walkMap);
         }
 
-        static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, float tolerance)
+        static inline hpms::Collisor3D* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, float tolerance)
         {
-            auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, tolerance);
+            auto* c = hpms::SafeNew<hpms::Collisor3D>(entity, tolerance);
             return c;
         }
 
-        static inline hpms::Collisor* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, float tolerance)
+        static inline hpms::Collisor3D* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, float tolerance)
         {
-            auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, tolerance);
+            auto* c = hpms::SafeNew<hpms::Collisor3D>(node, tolerance);
             return c;
         }
 
-
-        static inline void AMDeleteCollisor(Collisor* collisor)
+        static inline void AMDeleteCollisor(Collisor3D* collisor)
         {
             hpms::SafeDelete(collisor);
         }
@@ -361,6 +354,7 @@ namespace hpms
             hpms::SafeDelete(light);
         }
 
+
         // LUA Logic.
         static inline CameraAdapter* LGetCamera()
         {
@@ -371,8 +365,6 @@ namespace hpms
         {
             cam->LookAt(at);
         }
-
-
 
         static inline void LCameraFovY(CameraAdapter* cam, float fov)
         {
@@ -404,13 +396,12 @@ namespace hpms
             controller->SetActive(false);
         }
 
-
-        static inline void LUpdateCollisor(hpms::Collisor* coll)
+        static inline void LUpdateCollisor(hpms::Collisor3D* coll)
         {
             coll->Update();
         }
 
-        static inline void LMoveCollisor(hpms::Collisor* collisor, glm::vec3 position, glm::vec2 direction)
+        static inline void LMoveCollisor(hpms::Collisor3D* collisor, glm::vec3 position, glm::vec2 direction)
         {
             collisor->Move(position, direction);
         }
@@ -442,6 +433,31 @@ namespace hpms
             overlayImage->SetAlpha(alpha);
         }
 
+        static inline void LSetNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
+        {
+            node->AttachObject(obj);
+        }
+
+        static inline void LSetNodeCamera(SceneNodeAdapter* node, CameraAdapter* cam)
+        {
+            node->AttachObject(cam);
+        }
+
+        static inline void LSDetachNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
+        {
+            node->DetachObject(obj);
+        }
+
+        static inline void LSetBoneNode(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner, const glm::vec3& offsetPosition = glm::vec3(), const glm::quat& offsetRotation = glm::quat())
+        {
+            boneOwner->AttachObjectToBone(boneNode, objToAttach, offsetPosition, offsetRotation);
+        }
+
+        static inline void LDetachBoneNode(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner)
+        {
+            boneOwner->DetachObjectFromBone(boneNode, objToAttach);
+        }
+
         // System Logic.
         static inline void SLSwitchState(const std::string& scriptToExec)
         {
@@ -464,7 +480,7 @@ namespace hpms
             hpms::DebugUtils::DrawWalkmap(walkmap);
         }
 
-        static inline void DDebugDrawCollisorTriangle(hpms::Collisor* collisor)
+        static inline void DDebugDrawCollisorTriangle(hpms::Collisor3D* collisor)
         {
             hpms::DebugUtils::DrawCollisorSector(collisor);
         }

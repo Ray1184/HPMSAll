@@ -49,8 +49,8 @@ namespace Collision
         assert(false);
     }
 
-    SCheckCollisionAnswer CollisionTools::check_ray_collision(const Ogre::Vector3& fromPoint, const Ogre::Vector3& toPoint, const float collisionRadius,
-                                                              const float rayHeightLevel, const Ogre::uint32 queryMask, void* ignore, bool stopOnFirstPositive)
+    SCheckCollisionAnswer CollisionTools::check_ray_collision(const Ogre::Vector3& fromPoint, const Ogre::Vector3& toPoint, const std::vector<Ogre::Entity*>& ignoreList, const float collisionRadius,
+                                                              const float rayHeightLevel, const Ogre::uint32 queryMask, bool stopOnFirstPositive)
     {
 
         // convert points to a collision ray
@@ -63,7 +63,7 @@ namespace Collision
         ray.setDirection(normal);
 
         // do the query
-        SCheckCollisionAnswer ret = check_ray_collision(ray, queryMask, ignore, collisionRadius, stopOnFirstPositive);
+        SCheckCollisionAnswer ret = check_ray_collision(ray, ignoreList, queryMask, collisionRadius, stopOnFirstPositive);
 
         // make sure its within radius range
         if (ret.collided)
@@ -76,7 +76,7 @@ namespace Collision
     }
 
 
-    SCheckCollisionAnswer CollisionTools::check_ray_collision(const Ogre::Ray& ray, const Ogre::uint32 queryMask, void* ignore,
+    SCheckCollisionAnswer CollisionTools::check_ray_collision(const Ogre::Ray& ray, const std::vector<Ogre::Entity*>& ignoreList, const Ogre::uint32 queryMask,
                                                               Ogre::Real maxDistance, bool stopOnFirstPositive)
     {
         // create return structure
@@ -84,7 +84,7 @@ namespace Collision
         memset(&ret, 0, sizeof(ret));
 
         // first do a simple ray query on all the entities we registered
-        std::list<CollisionTools::RayQueryEntry> results = get_basic_ray_query_entities_list(ray, queryMask, ignore, maxDistance, stopOnFirstPositive);
+        std::list<CollisionTools::RayQueryEntry> results = get_basic_ray_query_entities_list(ray, ignoreList, queryMask, maxDistance, stopOnFirstPositive);
 
         // no results? stop here
         if (results.size() <= 0)
@@ -394,7 +394,7 @@ namespace Collision
     }
 
     // do a simple ray query and return a list of results sorted by distance
-    std::list<CollisionTools::RayQueryEntry> CollisionTools::get_basic_ray_query_entities_list(const Ogre::Ray& ray, const Ogre::uint32 queryMask, void* ignore,
+    std::list<CollisionTools::RayQueryEntry> CollisionTools::get_basic_ray_query_entities_list(const Ogre::Ray& ray, const std::vector<Ogre::Entity*>& ignoreList, const Ogre::uint32 queryMask,
                                                                                                Ogre::Real maxDistance, bool stopOnFirstPositive)
     {
         // return vector
@@ -405,8 +405,11 @@ namespace Collision
         for (auto data = m_Entities.begin(); (data != m_Entities.end() && !Stop); ++data)
         {
             // skip the ignored entity
-            if (data->Entity == ignore)
+            if (std::find(ignoreList.begin(), ignoreList.end(), data->Entity) != ignoreList.end())
+            {
                 continue;
+            }
+
 
             // skip if query mask don't fit
             if ((data->Entity->getQueryFlags() & queryMask) == 0)

@@ -35,6 +35,13 @@ namespace hpms
             material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(true);
         }
 
+        inline static void SetWriteNothing(Ogre::Entity* entity)
+        {
+            auto material = entity->getSubEntity(0)->getMaterial();
+            material->getTechnique(0)->getPass(0)->setColourWriteEnabled(false);
+            material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
+        }
+
 
     };
 }

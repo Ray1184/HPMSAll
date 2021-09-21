@@ -11,11 +11,13 @@
 #include <api/HPMSEntityAdapter.h>
 #include <thirdparty/TPNewMOC.h>
 #include <unordered_map>
+#include <core/HPMSEntityAdaptee.h>
 
 namespace hpms
 {
     class CollisionAdaptee : public CollisionAdapter, public AdapteeCommon {
     private:
+        std::unordered_map<std::string, std::vector<Ogre::Entity*>> toIgnoreCache;
         Collision::CollisionTools* collisionTools;
         std::unordered_map<std::string, hpms::EntityAdapter*> registeredEntities;
     public:
@@ -27,6 +29,8 @@ namespace hpms
 
         void UnregisterEntity(EntityAdapter* entity) override;
 
-        CollisionResponse CheckRayCollision(const CollisionRay& ray, const CollisionOptions& options) override;
+        CollisionResponse CheckRayCollision(ActorAdapter* sender, const CollisionRay& ray, const CollisionOptions& options) override;
+
+        const std::vector<Ogre::Entity*>& GetIgnoreListByActor(hpms::ActorAdapter* sender, std::vector<EntityAdapter*> toIgnore) const;
     };
 }

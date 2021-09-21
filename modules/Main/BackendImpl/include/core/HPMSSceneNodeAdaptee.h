@@ -7,13 +7,13 @@
 
 #include <api/HPMSSceneNodeAdapter.h>
 #include <core/HPMSAdapteeCommon.h>
+#include <core/HPMSEntityAdaptee.h>
 #include <common/HPMSUtils.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <Ogre.h>
 #include <core/HPMSOgreContext.h>
 #include <vector>
-#include <map>
 
 namespace hpms
 {
@@ -22,6 +22,9 @@ namespace hpms
     private:
         Ogre::SceneNode* ogreNode;
         SceneNodeAdapter* parent;
+        std::vector<hpms::EntityAdapter*> allAttachedEntities;
+        std::vector<hpms::EntityAdapter*> allAttachedEntitiesInTree;
+
         bool root;
 
     public:
@@ -58,5 +61,11 @@ namespace hpms
         virtual SceneNodeAdapter* RemoveChild(const std::string& name) override;
 
         virtual SceneNodeAdapter* GetParent() override;
+
+        virtual std::vector<EntityAdapter*> GetAttachedEntities() override;
+
+        virtual std::vector<EntityAdapter*> GetAttachedEntitiesInTree() override;
+
+
     };
 }

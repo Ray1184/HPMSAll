@@ -32,7 +32,7 @@ namespace hpms
 
         glm::vec3 collisionPoint;
 
-        EntityAdapter* collisionEntityName;
+        EntityAdapter* collidedEntity;
 
         float closestDistance;
 
@@ -58,6 +58,8 @@ namespace hpms
 
     struct CollisionRay
     {
+        CollisionRay(const glm::vec3& origin, const glm::vec3& direction) : origin(origin), direction(direction)
+        {}
 
         glm::vec3 origin;
         glm::vec3 direction;
@@ -66,9 +68,16 @@ namespace hpms
 
     struct CollisionOptions
     {
-        unsigned int flags = 0xFFFFFFFF;
-        EntityAdapter* toIgnore;
+        CollisionOptions() : maxDistance(10), toIgnore(std::vector<EntityAdapter*>()), flags(0xFFFFFFFF)
+        {}
+
+        CollisionOptions(float maxDistance, const std::vector<EntityAdapter*>& toIgnore) : maxDistance(maxDistance), toIgnore(toIgnore), flags(0xFFFFFFFF)
+        {}
+
         float maxDistance;
+        std::vector<EntityAdapter*> toIgnore;
+        unsigned int flags;
+
 
     };
 
@@ -89,7 +98,7 @@ namespace hpms
 
         virtual void UnregisterEntity(EntityAdapter* entity) = 0;
 
-        virtual CollisionResponse CheckRayCollision(const CollisionRay& ray, const CollisionOptions& options) = 0;
+        virtual CollisionResponse CheckRayCollision(ActorAdapter* sender, const CollisionRay& ray, const CollisionOptions& options) = 0;
 
 
     };

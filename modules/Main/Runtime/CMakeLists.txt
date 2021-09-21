@@ -46,7 +46,7 @@ file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
 
 set(SOURCES
         src/vm/HPMSLuaVM.cpp
-        src/logic/interaction/HPMSCollisor.cpp
+        src/logic/interaction/HPMSCollisor3D.cpp
         src/states/HPMSLuaLogic.cpp
         src/states/HPMSGameState.cpp
         src/logic/gui/HPMSGuiText.cpp)

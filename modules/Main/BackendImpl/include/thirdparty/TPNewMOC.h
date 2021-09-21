@@ -124,7 +124,7 @@ namespace Collision
         // ignore - will ignore the entity who has the address of 'ignore'. use this if you want to prevent a character from colliding with itself..
         // maxDistance - beyond this distance we'll ignore entities
         // stopOnFirstPositive - if true, will stop on first positive collision (instead of nearest)
-        SCheckCollisionAnswer check_ray_collision(const Ogre::Ray& ray, const Ogre::uint32 queryMask = 0xFFFFFFFF, void* ignore = nullptr, Ogre::Real maxDistance = 0xffff, bool stopOnFirstPositive = false);
+        SCheckCollisionAnswer check_ray_collision(const Ogre::Ray& ray, const std::vector<Ogre::Entity*>& ignoreList, const Ogre::uint32 queryMask = 0xFFFFFFFF, Ogre::Real maxDistance = 0xffff, bool stopOnFirstPositive = false);
 
         // check ray collision. check out "SCheckCollisionAnswer" for info about return values.
         // fromPoint - ray starting point
@@ -134,8 +134,8 @@ namespace Collision
         // queryMask - ogre's query mask (you can set for every entity
         // ignore - will ignore the entity who has the address of 'ignore'. use this if you want to prevent a character from colliding with itself..
         // stopOnFirstPositive - if true, will stop on first positive collision (instead of nearest)
-        SCheckCollisionAnswer check_ray_collision(const Ogre::Vector3& fromPoint, const Ogre::Vector3& toPoint, const float collisionRadius = 1.0f,
-                                                  const float rayHeightLevel = 0.0f, const Ogre::uint32 queryMask = 0xFFFFFFFF, void* ignore = nullptr, bool stopOnFirstPositive = false);
+        SCheckCollisionAnswer check_ray_collision(const Ogre::Vector3& fromPoint, const Ogre::Vector3& toPoint, const std::vector<Ogre::Entity*>& ignoreList, const float collisionRadius = 1.0f,
+                                                  const float rayHeightLevel = 0.0f, const Ogre::uint32 queryMask = 0xFFFFFFFF, bool stopOnFirstPositive = false);
 
 
     private:
@@ -146,8 +146,8 @@ namespace Collision
         // stopOnFirstPositive - if true, will stop on first positive bounding box or sphere collision (not relevant for accurate collisions)
         typedef std::pair<const SCollidableEntity*, Ogre::Real> RayQueryEntry;
 
-        std::list<RayQueryEntry> get_basic_ray_query_entities_list(const Ogre::Ray& ray, const Ogre::uint32 queryMask = 0xFFFFFFFF,
-                                                                   void* ignore = nullptr, Ogre::Real maxDistance = 0xffff, bool stopOnFirstPositive = false);
+        std::list<RayQueryEntry> get_basic_ray_query_entities_list(const Ogre::Ray& ray, const std::vector<Ogre::Entity*>& ignoreList, const Ogre::uint32 queryMask = 0xFFFFFFFF,
+                                                                   Ogre::Real maxDistance = 0xffff, bool stopOnFirstPositive = false);
 
         // comparing function to arranage the result list of get_basic_ray_query_entities_list
         friend bool compare_query_distance(const CollisionTools::RayQueryEntry& first, const CollisionTools::RayQueryEntry& second);

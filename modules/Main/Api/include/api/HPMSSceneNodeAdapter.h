@@ -7,6 +7,7 @@
 
 #include <common/HPMSObject.h>
 #include <api/HPMSActorAdapter.h>
+#include <api/HPMSEntityAdapter.h>
 #include <vector>
 
 namespace hpms
@@ -49,5 +50,9 @@ namespace hpms
         virtual void SetVisible(bool visible) override = 0;
 
         virtual bool IsVisible() const override = 0;
+
+        virtual std::vector<EntityAdapter*> GetAttachedEntities() = 0;
+
+        virtual std::vector<EntityAdapter*> GetAttachedEntitiesInTree() = 0;
     };
 }

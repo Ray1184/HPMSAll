@@ -16,11 +16,11 @@ namespace hpms {
     }
 
     inline glm::quat QuatImplToApi(const Ogre::Quaternion& in) {
-        return glm::quat(in.x, in.y, in.z);
+        return glm::quat(in.w, in.x, in.y, in.z);
     }
 
     inline Ogre::Quaternion QuatApiToImpl(const glm::quat& in) {
-        return Ogre::Quaternion(in.x, in.y, in.z);
+        return Ogre::Quaternion(in.w, in.x, in.y, in.z);
     }
 
 }

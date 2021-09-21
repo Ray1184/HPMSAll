@@ -17,7 +17,8 @@ namespace hpms
     {
         COLOR_AND_DEPTH = 0,
         DEPTH_ONLY = 1,
-        COLOR_ONLY = 2
+        COLOR_ONLY = 2,
+        HIDDEN = 3
     };
 
     class EntityAdapter : public hpms::ActorAdapter
@@ -45,6 +46,8 @@ namespace hpms
 
         virtual hpms::AnimationAdapter* GetAnimationByName(const std::string& animName) = 0;
 
+        virtual std::string GetName() = 0;
+
         virtual void SetPosition(const glm::vec3& position) override = 0;
 
         virtual glm::vec3 GetPosition() const override = 0;
@@ -60,6 +63,8 @@ namespace hpms
         virtual void SetVisible(bool visible) override = 0;
 
         virtual bool IsVisible() const override = 0;
+
+
 
 
     };

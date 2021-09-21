@@ -10,6 +10,7 @@
 #include <core/HPMSEntityAdaptee.h>
 #include <core/HPMSSceneNodeAdaptee.h>
 #include <vector>
+#include <api/HPMSCollisionAdapter.h>
 
 namespace hpms
 {
@@ -20,6 +21,7 @@ namespace hpms
         std::vector<EntityAdapter*> entities;
         SceneNodeAdapter* rootNode;
         CameraAdapter* camera;
+        CollisionAdapter* collisionManager;
 
     public:
         explicit SupplierAdaptee(hpms::OgreContext* ctx);
@@ -48,6 +50,8 @@ namespace hpms
         virtual WalkmapAdapter* CreateWalkmap(const std::string& name) override;
 
         virtual std::string GetImplName() override;
+
+        hpms::CollisionAdapter* GetCollisionManager() override;
 
     };
 }
