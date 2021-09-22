@@ -9,13 +9,15 @@
 
 void hpms::Collisor3D::Update()
 {
+    actor->SetPosition(nextPosition);
     if (!active)
     {
         return;
     }
 
     auto* collisionManager = hpms::GetSupplier()->GetCollisionManager();
-    CollisionRay ray(GetPosition(), V2_TO_V3(direction));
+    // TEST ONLY
+    CollisionRay ray(glm::vec3(GetPosition().x, GetPosition().y, GetPosition().x + 0.5), V2_TO_V3(direction));
     auto resp = collisionManager->CheckRayCollision(this, ray, opts);
     std::stringstream ss;
     std::string closDist = "N/D";
@@ -25,7 +27,7 @@ void hpms::Collisor3D::Update()
         closDist = resp.closestDistance;
         collEnt = resp.collidedEntity->GetName();
     }
-    ss << "Ray collision: " << resp.hasCollision << "\nDistance: " << closDist << "\nactor Collided: " << collEnt;
+    ss << "Ray Info:\n-----------------\nFrom: " << ray.origin.x << "-" << ray.origin.y << "-" << ray.origin.z << "\nTo: " << ray.direction.x << "-" << ray.direction.y << "-" << ray.direction.z << "\nCollision: " << resp.hasCollision << "\nDistance: " << closDist << "\nactor Collided: " << collEnt << "\n-----------------";
     LOG_DEBUG(ss.str().c_str());
 
 }

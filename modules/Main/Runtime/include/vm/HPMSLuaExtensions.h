@@ -333,7 +333,7 @@ namespace hpms
             return c;
         }
 
-        static inline hpms::Collisor3D* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, float tolerance)
+        static inline hpms::Collisor3D* AMCreateNodeCollisor(SceneNodeAdapter* node, float tolerance)
         {
             auto* c = hpms::SafeNew<hpms::Collisor3D>(node, tolerance);
             return c;

@@ -5,6 +5,6 @@
 -- scene script.
 --
 config = {
-    first_script = "main/R_Debug_01.lua"
+    first_script = "main/Test.lua"
 }
 

@@ -17,7 +17,15 @@ function backend:get()
 
             -- Asset functions.
             make_entity = function(path)
-                return { dummy_id = 'Entity[' .. path .. ']' }
+                return { dummy_id = 'StandardEntity[' .. path .. ']' }
+            end,
+
+            make_depth_entity = function(path)
+                return { dummy_id = 'DepthEntity[' .. path .. ']' }
+            end,
+
+            make_collision_entity = function(path)
+                return { dummy_id = 'CollisionEntity[' .. path .. ']' }
             end,
 
             delete_entity = function(e)
@@ -212,6 +220,8 @@ function backend:get()
         log_debug('Using HPMS functions.')
         return {
             make_entity = hpms.make_entity,
+            make_depth_entity = hpms.make_depth_entity,
+            make_collision_entity = hpms.make_collision_entity,
             delete_entity = hpms.delete_entity,
             make_node = hpms.make_node,
             delete_node = hpms.delete_node,

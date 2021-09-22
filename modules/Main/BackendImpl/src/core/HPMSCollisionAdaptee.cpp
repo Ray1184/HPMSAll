@@ -54,9 +54,22 @@ void hpms::CollisionAdaptee::UnregisterEntity(EntityAdapter* entity)
 hpms::CollisionResponse hpms::CollisionAdaptee::CheckRayCollision(ActorAdapter* sender, const hpms::CollisionRay& ray, const hpms::CollisionOptions& options)
 {
     Ogre::Ray ogreRay(hpms::Vec3ApiToImpl(ray.origin), hpms::Vec3ApiToImpl(ray.direction));
-    auto ret = collisionTools->check_ray_collision(ogreRay, GetIgnoreListByActor(sender, options.toIgnore), options.flags, options.maxDistance);
-    auto* entityAdapter = registeredEntities[ret.entity->getName()];
+    if (!toIgnoreCache.count(sender->GetName())) {
+        std::vector<Ogre::Entity*> ogreIgnores;
+        for (auto* entity : options.toIgnore) {
+            auto* entityImpl = dynamic_cast<EntityAdaptee*>(entity);
+            ogreIgnores.push_back(dynamic_cast<Ogre::Entity*>(entityImpl->GetNative()));
+        }
+        toIgnoreCache.insert({sender->GetName(), ogreIgnores});
+    }
+    auto ignore = toIgnoreCache.at(sender->GetName());
+    auto ret = collisionTools->check_ray_collision(ogreRay, ignore, options.flags, options.maxDistance);
     CollisionTriangle triInfo{};
+    if (!ret.collided)
+    {
+        return CollisionResponse{false, hpms::Vec3ImplToApi(ret.position), nullptr, ret.closest_distance, false, triInfo};
+    }
+    auto* entityAdapter = registeredEntities[ret.entity->getName()];
     if (ret.hasTriInfo)
     {
         triInfo.v1 = hpms::Vec3ImplToApi(ret.triInfo.v1);
@@ -77,15 +90,4 @@ hpms::CollisionAdaptee::~CollisionAdaptee()
     hpms::SafeDeleteRaw(collisionTools);
 }
 
-const std::vector<Ogre::Entity*>& hpms::CollisionAdaptee::GetIgnoreListByActor(hpms::ActorAdapter* sender, std::vector<EntityAdapter*> toIgnore) const
-{
-    if (toIgnoreCache.count(sender->GetName())) {
-        std::vector<Ogre::Entity*> ogreIgnores;
-        for (auto* entity : toIgnore) {
-            auto* entityImpl = dynamic_cast<EntityAdaptee*>(entity);
-            ogreIgnores.push_back(dynamic_cast<Ogre::Entity*>(entityImpl->GetNative()));
-        }
-    }
-    return toIgnoreCache.at(sender->GetName());
-}
 

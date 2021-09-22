@@ -1,0 +1,3 @@
+- Debuggare il Minimal Ogre Collision e capire perchè non viene recepita nessuna collisione, verificare se:
+    - il raggio è corretto
+    - l'entità di collisione è coinvolta nel calcolo

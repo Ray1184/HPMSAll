@@ -35,7 +35,7 @@ namespace hpms
                     .beginNamespace("hpms")
                     .addFunction("make_entity", &hpms::LuaExtensions::AMCreateEntity)
                     .addFunction("make_depth_entity", &hpms::LuaExtensions::AMCreateDepthEntity)
-                    .addFunction("make_hidden_entity", &hpms::LuaExtensions::AMCreateCollisionEntity)
+                    .addFunction("make_collision_entity", &hpms::LuaExtensions::AMCreateCollisionEntity)
                     .addFunction("delete_entity", &hpms::LuaExtensions::AMDeleteEntity)
                     .addFunction("make_node", &hpms::LuaExtensions::AMCreateNode)
                     .addFunction("make_child_node", &hpms::LuaExtensions::AMCreateChildNode)
