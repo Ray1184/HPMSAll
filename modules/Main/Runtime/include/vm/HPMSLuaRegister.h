@@ -17,7 +17,7 @@ extern "C" {
 #include <glm/vec4.hpp>
 #include <glm/mat4x4.hpp>
 #include <vm/HPMSLuaExtensions.h>
-#include <logic/interaction/HPMSCollisor3D.h>
+#include <logic/interaction/HPMSCollisor.h>
 #include <api/HPMSEntityAdapter.h>
 #include <logic/gui/HPMSGuiText.h>
 
@@ -35,7 +35,6 @@ namespace hpms
                     .beginNamespace("hpms")
                     .addFunction("make_entity", &hpms::LuaExtensions::AMCreateEntity)
                     .addFunction("make_depth_entity", &hpms::LuaExtensions::AMCreateDepthEntity)
-                    .addFunction("make_collision_entity", &hpms::LuaExtensions::AMCreateCollisionEntity)
                     .addFunction("delete_entity", &hpms::LuaExtensions::AMDeleteEntity)
                     .addFunction("make_node", &hpms::LuaExtensions::AMCreateNode)
                     .addFunction("make_child_node", &hpms::LuaExtensions::AMCreateChildNode)
@@ -311,6 +310,7 @@ namespace hpms
         }
 
 
+
         inline static void RegisterWalkMap(lua_State* state)
         {
             getGlobalNamespace(state)
@@ -334,10 +334,10 @@ namespace hpms
         {
             getGlobalNamespace(state)
                     .beginNamespace("hpms")
-                    .beginClass<Collisor3D>("collisor")
-                    .addProperty("position", &hpms::Collisor3D::GetPosition, &hpms::Collisor3D::SetPosition)
-                    .addProperty("rotation", &hpms::Collisor3D::GetRotation, &hpms::Collisor3D::SetRotation)
-                   // .addProperty("sector", &hpms::Collisor3D::GetCurrentTriangle, &hpms::Collisor3D::SetCurrentTriangle)
+                    .beginClass<Collisor>("collisor")
+                    .addProperty("position", &hpms::Collisor::GetPosition, &hpms::Collisor::SetPosition)
+                    .addProperty("rotation", &hpms::Collisor::GetRotation, &hpms::Collisor::SetRotation)
+                    .addProperty("sector", &hpms::Collisor::GetCurrentTriangle, &hpms::Collisor::SetCurrentTriangle)
                     .endClass()
                     .endNamespace();
         }
@@ -349,8 +349,6 @@ namespace hpms
                     .addFunction("set_node_entity", &hpms::LuaExtensions::LSetNodeEntity)
                     .addFunction("set_node_camera", &hpms::LuaExtensions::LSetNodeCamera)
                     .addFunction("set_bone_node", &hpms::LuaExtensions::LSetBoneNode)
-                    .addFunction("detach_node_entity", &hpms::LuaExtensions::LSDetachNodeEntity)
-                    .addFunction("detach_bone_node", &hpms::LuaExtensions::LDetachBoneNode)
                     .addFunction("set_ambient", &hpms::LuaExtensions::LSetAmbient)
                     .addFunction("get_camera", &hpms::LuaExtensions::LGetCamera)
                     .addFunction("camera_lookat", &hpms::LuaExtensions::LCameraLookAt)

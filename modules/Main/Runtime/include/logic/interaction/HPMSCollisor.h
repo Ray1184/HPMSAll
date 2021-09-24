@@ -1,5 +1,5 @@
 /*!
- * File HPMSCollisor3D.h
+ * File HPMSCollisor.h
  */
 
 #pragma once
@@ -10,29 +10,29 @@
 #include <glm/gtx/perpendicular.hpp>
 #include <logic/HPMSController.h>
 #include <common/HPMSUtils.h>
-#include <facade/HPMSApiFacade.h>
-#include <vector>
 
 #define VEC_FORWARD glm::vec3(0, 1, 0)
-#define MAX_DIST 10
 
 namespace hpms
 {
-    class Collisor3D : public ActorAdapter, public Controller
+    class Collisor : public ActorAdapter, public Controller
     {
     private:
         hpms::ActorAdapter* actor;
+        hpms::WalkmapAdapter* walkMap;
         float tolerance;
         bool ignore;
         glm::vec3 nextPosition{};
         glm::vec2 direction{};
-        CollisionOptions opts{};
         bool outOfDate;
-
-
+        hpms::TriangleAdapter* currentTriangle{nullptr};
+        std::vector<glm::vec2> perimeter;
     public:
 
-        Collisor3D(ActorAdapter* actor, float tolerance);
+
+
+        Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance);
+
 
         void SetPosition(const glm::vec3& position) override;
 
@@ -58,6 +58,17 @@ namespace hpms
         const std::string Name() const override;
 
         void Move(const glm::vec3& nextPosition, const glm::vec2 direction);
+
+        inline TriangleAdapter* GetCurrentTriangle() const
+        {
+            return currentTriangle;
+        }
+
+        inline void SetCurrentTriangle(const TriangleAdapter* currentTriangle)
+        {
+            // Not implemented.
+            LOG_WARN("Cannot set sampled triangle inside script.");
+        }
 
         void Update() override;
 

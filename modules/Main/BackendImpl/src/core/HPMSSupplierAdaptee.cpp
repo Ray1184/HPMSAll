@@ -7,7 +7,6 @@
 #include <core/HPMSOverlayImageAdaptee.h>
 #include <core/HPMSBackgroundImageAdaptee.h>
 #include <core/HPMSOverlayTextAreaAdaptee.h>
-#include <core/HPMSCollisionAdaptee.h>
 #include <sstream>
 
 
@@ -69,12 +68,10 @@ hpms::SupplierAdaptee::SupplierAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(c
     rootNode = hpms::SafeNew<hpms::SceneNodeAdaptee>(ctx, ogreRootNode, ogreRootNode->getName(), nullptr, true);
     auto* ogreCamera = (ctx)->GetCamera();
     camera = hpms::SafeNew<hpms::CameraAdaptee>(ctx, ogreCamera->getName());
-    collisionManager = hpms::SafeNew<hpms::CollisionAdaptee>(ctx);
 }
 
 hpms::SupplierAdaptee::~SupplierAdaptee()
 {
-    hpms::SafeDelete(collisionManager);
     hpms::SafeDelete(camera);
     hpms::SafeDelete(rootNode);
     hpms::WalkmapManager::GetSingleton().unloadAll();
@@ -90,11 +87,6 @@ std::string hpms::SupplierAdaptee::GetImplName()
     std::stringstream ss;
     ss << "Ogre 3D " << OGRE_VERSION_MAJOR << "." << OGRE_VERSION_MINOR << "." << OGRE_VERSION_PATCH << " (" << OGRE_VERSION_NAME << ")";
     return ss.str();
-}
-
-hpms::CollisionAdapter* hpms::SupplierAdaptee::GetCollisionManager()
-{
-    return collisionManager;
 }
 
 

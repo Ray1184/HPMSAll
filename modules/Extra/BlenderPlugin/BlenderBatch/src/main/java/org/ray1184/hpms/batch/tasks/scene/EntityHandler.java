@@ -28,7 +28,7 @@ public class EntityHandler {
                 if (sectorInfoOpt.isEmpty()) {
                     throw new RuntimeException("Cannot create collisors without sector map");
                 }
-                scriptBuilder.expr("-- Collisor3D ? setup", e.getName()).newLine()//
+                scriptBuilder.expr("-- Collisor ? setup", e.getName()).newLine()//
                         .expr("collisor_? = lib.make_node_collisor(entity_node_?, walkmap_?, TRESHOLD)", e.getName().toLowerCase(), e.getName().toLowerCase(), roomInfo.getName().toLowerCase()).newLine()//
                         .expr("collisor_?.position = lib.vec3(?, ?, ?)", e.getName().toLowerCase(), e.getPosition().getX(), e.getPosition().getY(), e.getPosition().getZ()).newLine()//
                         .expr("collisor_?.rotation = lib.quat(?, ?, ?, ?)", e.getName().toLowerCase(), e.getRotation().getW(), e.getRotation().getX(), e.getRotation().getY(), e.getRotation().getZ()).newLine().newLine();//
@@ -41,7 +41,7 @@ public class EntityHandler {
                 if (sectorInfoOpt.isEmpty()) {
                     throw new RuntimeException("Cannot delete collisors without sector map");
                 }
-                scriptBuilder.expr("-- Collisor3D ? delete", e.getName()).newLine()//
+                scriptBuilder.expr("-- Collisor ? delete", e.getName()).newLine()//
                         .expr("lib.delete_collisor(collisor_?)", e.getName().toLowerCase(), e.getName().toLowerCase()).newLine().newLine();
             }
         },
@@ -49,7 +49,7 @@ public class EntityHandler {
             @Override
             public void handleSetupPre(SceneDataResponse.RoomInfo roomInfo, LuaStatementBuilder scriptBuilder, SceneDataResponse.RoomInfo.ObjectInfo e) {
 
-                scriptBuilder.expr("-- No-Collisor3D ? setup", e.getName()).newLine()//
+                scriptBuilder.expr("-- No-Collisor ? setup", e.getName()).newLine()//
                         .expr("entity_node_?.position = lib.vec3(?, ?, ?)", e.getPosition().getX(), e.getPosition().getY(), e.getPosition().getZ()).newLine()//
                         .expr("entity_node_?.rotation = lib.quat(?, ?, ?, ?)", e.getRotation().getW(), e.getRotation().getX(), e.getRotation().getY(), e.getRotation().getZ()).newLine().newLine();
 

@@ -13,7 +13,6 @@
 #include <api/HPMSCameraAdapter.h>
 #include <api/HPMSLightAdapter.h>
 #include <api/HPMSWalkmapAdapter.h>
-#include <api/HPMSCollisionAdapter.h>
 #include <string>
 
 namespace hpms
@@ -64,8 +63,6 @@ namespace hpms
         virtual void SetAmbientLight(const glm::vec3& rgb) = 0;
 
         virtual hpms::WalkmapAdapter* CreateWalkmap(const std::string& name) = 0;
-
-        virtual hpms::CollisionAdapter* GetCollisionManager() = 0;
 
     };
 }
