@@ -16,8 +16,8 @@ void hpms::Collisor3D::Update()
     }
 
     auto* collisionManager = hpms::GetSupplier()->GetCollisionManager();
-    // TEST ONLY
-    CollisionRay ray(glm::vec3(GetPosition().x, GetPosition().y, GetPosition().x + 0.5), V2_TO_V3(direction));
+    // TEST ONLY    ----------------------------------------------------------------X
+    CollisionRay ray(glm::vec3(GetPosition().x, GetPosition().y, GetPosition().z + 0.1), V2_TO_V3(direction));
     auto resp = collisionManager->CheckRayCollision(this, ray, opts);
     std::stringstream ss;
     std::string closDist = "N/D";
