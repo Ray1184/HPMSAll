@@ -1,3 +1,4 @@
-- Debuggare il Minimal Ogre Collision e capire perchè non viene recepita nessuna collisione, verificare se:
-    - il raggio è corretto
-    - l'entità di collisione è coinvolta nel calcolo
+- Collisioni precise:
+    - Nel modulo di esportazione delle walkmap salvare il perimetro in modo ordinato;
+    - Nel collisor utilizzare l'algoritmo circleInsidePolygon per verificare se il bounding circle delle entità collide col perimetro;
+    - Se il cerchio collide calcolare la nuova posizione tenendo conto dell'effetto "scivolamento" contro il muro per un movimento più fluido.
