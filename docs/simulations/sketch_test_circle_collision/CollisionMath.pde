@@ -7,7 +7,7 @@ static boolean circleInsidePolygon(BoundingCircle circle, PVector[] polygon, PVe
 
   for (int i = 0; i < polygon.length - 1; i++) {
     if (circleLineIntersect(polygon[i].x, polygon[i].y, polygon[i + 1].x, polygon[i + 1].y, circle.origin.x, circle.origin.y, circle.radius)) {
-      println("Intersection on: [X1: " + polygon[i].x + ", Y1: " + polygon[i].y + "] - [X2: " + polygon[i + 1].x + ", Y2: " + polygon[i + 1].y + "]");
+      //println("Intersection on: [X1: " + polygon[i].x + ", Y1: " + polygon[i].y + "] - [X2: " + polygon[i + 1].x + ", Y2: " + polygon[i + 1].y + "]");
       return false;
     }
   }
