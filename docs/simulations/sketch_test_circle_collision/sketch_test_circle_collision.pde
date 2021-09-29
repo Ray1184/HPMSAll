@@ -36,7 +36,7 @@ void setup() {
   size(1000, 600);
   bc = new BoundingCircle(new PVector(0, 0), 30);
   poly = new Polygon(objData, 60, 500, 300);
-  collisor = new Collisor(new Actor(bc), poly);
+  collisor = new Collisor(new Actor(), poly, bc);
   collisor.setPosition(new PVector(300, 200));
   noFill();
 }

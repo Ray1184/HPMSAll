@@ -1,18 +1,17 @@
 class Actor {
 
   PVector SIZE = new PVector(20, 20);
-  float BC_SIZE = 30;
+  
   PVector AXIS = new PVector(0, 0, 1);
   PVector position;
   PVector dir;
-  PVector bcPosition = new PVector();
   Quaternion rotation;
-  BoundingCircle bc;
+  
   PShape graphics;
   float currentRot;
 
-  Actor(BoundingCircle bc) {
-    this.bc = bc;    
+  Actor() {
+     
     position = new PVector(0, 0);
     dir = new PVector(0, -1);
     rotation = new Quaternion();
@@ -24,6 +23,10 @@ class Actor {
   void setPosition(PVector pos) {
     position.set(pos);
   }
+  
+  PVector getSize() {
+    return SIZE;
+  }
 
   void rotate(float ratio) {
     pushMatrix();
@@ -31,20 +34,23 @@ class Actor {
     dir.rotate(ratio);
     popMatrix();
   }
+  
+  PVector getPosition() {
+    return position;
+  }
+  
+  PVector getDir() {
+    return dir;
+  }
+
 
   void move(float ratio) {
-    position.add(ratio * dir.x, ratio * dir.y, 1);    
+    position.add(ratio * dir.x, ratio * dir.y);    
   }
 
-  BoundingCircle getBc() {
-    return bc;
-  }
 
   void render(float moveRatio, float rotRatio) {
-    rotate(rotRatio);
-    bcPosition.set(position.x - SIZE.x / 2, position.y - SIZE.y / 2);
-    bc.set(bcPosition, 20);
-    bc.render();
+    rotate(rotRatio);    
     shape(graphics, position.x, position.y, SIZE.x, SIZE.y);
   }
 }
