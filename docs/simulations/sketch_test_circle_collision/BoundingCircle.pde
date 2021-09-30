@@ -3,6 +3,7 @@ class BoundingCircle {
   float radius;
   
   BoundingCircle(PVector origin, float radius) {
+    this.origin = new PVector(0, 0);
     this.origin.set(origin);
     this.radius = radius;
   }

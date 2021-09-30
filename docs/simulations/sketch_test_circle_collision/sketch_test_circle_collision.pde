@@ -81,7 +81,7 @@ void draw() {
   background(0);  
   stroke(255);
   strokeWeight(1);
-  boolean inside = poly.bcInside(bc);
+  boolean inside = !poly.bcInside(bc).collided;
 
 
   pushMatrix();

@@ -1,18 +1,17 @@
-static boolean circleInsidePolygon(BoundingCircle circle, PVector[] polygon, PVector t) {
+static CollisionResponse circleInsidePolygon(BoundingCircle circle, PVector[] polygon, PVector t) {
   boolean inside = pointInsidePolygon(circle.origin, polygon, t);
   if (!inside) {
-    return false;
+    return new CollisionResponse();
   }
 
 
   for (int i = 0; i < polygon.length - 1; i++) {
     if (circleLineIntersect(polygon[i].x, polygon[i].y, polygon[i + 1].x, polygon[i + 1].y, circle.origin.x, circle.origin.y, circle.radius)) {
-      //println("Intersection on: [X1: " + polygon[i].x + ", Y1: " + polygon[i].y + "] - [X2: " + polygon[i + 1].x + ", Y2: " + polygon[i + 1].y + "]");
-      return false;
+      return new CollisionResponse(true, polygon[i], polygon[i + 1]);
     }
   }
 
-  return true;
+  return new CollisionResponse();
 }
 
 static boolean pointInsidePolygon(PVector point, PVector[] polygon, PVector t) {
@@ -80,4 +79,8 @@ static boolean isBetween(PVector pt1, PVector pt2, PVector pt) {
 
 static boolean circleLineIntersect(float x1, float y1, float x2, float y2, float cx, float cy, float cr ) {
   return circleLineIntersect(new PVector(x1, y1), new PVector(x2, y2), new PVector(cx, cy), cr);
+}
+
+static PVector correctPosition(PVector previous, PVector next, CollisionResponse cResp) {
+  return previous;
 }

@@ -5,7 +5,7 @@ class Collisor {
   
 
   Collisor(Actor actor, Polygon polygon, BoundingCircle bc) {
-    this.bc = bc;   
+    this.bc = bc;  
     this.actor = actor;
     this.polygon = polygon;
   }
@@ -22,18 +22,16 @@ class Collisor {
     PVector nextPos = actor.getPosition().get();
     PVector dir = actor.getDir();
     nextPos.add(ratio * dir.x, ratio * dir.y);
-    actor.move(ratio);
-    bc.set(nextPos, 20);
-    boolean inside = polygon.bcInside(bc);
-    if (!inside) {
-      
+    bc.set(new PVector(nextPos.x - actor.getSize().x / 2, nextPos.y - actor.getSize().x / 2), bc.radius);
+    CollisionResponse cResp = polygon.bcInside(bc);
+    boolean inside = !cResp.collided;
+    if (inside) {
+      actor.setPosition(nextPos);   
+    } else {
+      PVector correctPosition = correctPosition(actor.getPosition(), nextPos, cResp);
+      actor.setPosition(correctPosition);
+      bc.set(new PVector(correctPosition.x - actor.getSize().x / 2, correctPosition.y - actor.getSize().x / 2), bc.radius);
     }
-    //if (inside) {
-    //  actor.setPosition(shadow.getPosition());
-    //} else {
-    //  shadow.setPosition(actor.getPosition());
-    //}
-    //actor.move(ratio);
   }
 
   BoundingCircle getBc() {
@@ -45,5 +43,6 @@ class Collisor {
     actor.render(moveRatio, rotRatio);
     bc.set(new PVector(actor.getPosition().x - actor.getSize().x / 2, actor.getPosition().y - actor.getSize().x / 2), 20);
     bc.render();
+   
   }
 }

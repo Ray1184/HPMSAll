@@ -56,7 +56,7 @@ class Polygon {
     return null;
   }
 
-  boolean bcInside(BoundingCircle bc) {
+  CollisionResponse bcInside(BoundingCircle bc) {
     return circleInsidePolygon(bc, perimeter, new PVector(0, 0));
   }
 
