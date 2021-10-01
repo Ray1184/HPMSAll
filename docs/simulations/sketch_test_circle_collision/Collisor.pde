@@ -19,7 +19,7 @@ class Collisor {
   }
 
   void move(float ratio) {
-    PVector nextPos = actor.getPosition().get();
+    PVector nextPos = actor.getPosition().copy();
     PVector dir = actor.getDir();
     nextPos.add(ratio * dir.x, ratio * dir.y);
     bc.set(new PVector(nextPos.x - actor.getSize().x / 2, nextPos.y - actor.getSize().x / 2), bc.radius);
