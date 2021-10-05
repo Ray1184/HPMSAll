@@ -81,36 +81,14 @@ static boolean circleLineIntersect(float x1, float y1, float x2, float y2, float
   return circleLineIntersect(new PVector(x1, y1), new PVector(x2, y2), new PVector(cx, cy), cr);
 }
 
-static PVector correctPosition(PVector position, PVector nextPosition, CollisionResponse cResp) {
-  PVector sideA = cResp.sideCollidedA;
-  PVector sideB = cResp.sideCollidedB;
-
-  PVector dir = sideA.copy();
-  dir.sub(sideB);
-
-  PVector n = perp(dir);
-  n.normalize();
-
-  PVector v = nextPosition.copy();
-  v.sub(position);
-
-  PVector vn = n.copy();
-  PVector dot = v.copy();
-  dot.dot(n);
-  vn.cross(dot);
-
-  PVector vt = v.copy();
-  vt.sub(vn);
-
-  PVector correctPosition = position.copy();
-  correctPosition.add(vt);
-
+static PVector correctPosition(PVector prevPosition, PVector nextPosition, CollisionResponse cResp) {
+  PVector dir = nextPosition.copy().sub(prevPosition);
+  PVector side = cResp.sideCollidedB.copy().sub(cResp.sideCollidedA);
+  float alpha = PVector.angleBetween(side, dir);
+  float mag = dir.mag() * cos(alpha);
+  PVector slide = side.copy().normalize().mult(mag);
+  PVector correctPosition = prevPosition.copy().add(slide); 
   return correctPosition;
-  // glm::vec2 n = glm::normalize(Perpendicular(sideA - sideB));
-  // glm::vec3 v = nextPosition - actor->GetPosition();
-  // glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
-  // glm::vec2 vt = glm::vec2(SD(v), FW(v)) - vn;
-  // glm::vec3 correctPosition = ADDV3_V2(actor->GetPosition(), vt);
 }
 
 static PVector perp(PVector in) {
