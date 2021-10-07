@@ -14,6 +14,22 @@ static CollisionResponse circleInsidePolygon(BoundingCircle circle, PVector[] po
   return new CollisionResponse();
 }
 
+static CollisionResponse circleOutsidePolygon(BoundingCircle circle, PVector[] polygon, PVector t) {
+  boolean inside = pointInsidePolygon(circle.origin, polygon, t);
+  if (inside) {
+    return new CollisionResponse();
+  }
+
+
+  for (int i = 0; i < polygon.length - 1; i++) {
+    if (circleLineIntersect(polygon[i].x, polygon[i].y, polygon[i + 1].x, polygon[i + 1].y, circle.origin.x, circle.origin.y, circle.radius)) {
+      return new CollisionResponse(true, polygon[i], polygon[i + 1]);
+    }
+  }
+
+  return new CollisionResponse();
+}
+
 static boolean pointInsidePolygon(PVector point, PVector[] polygon, PVector t) {
 
   float x = point.x - t.x;
