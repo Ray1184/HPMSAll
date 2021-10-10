@@ -4,11 +4,19 @@
 
 #include <tools/HPMSWalkmapConverter.h>
 #include <utils/HPMSCalcUtils.h>
+#include <regex>
 
 hpms::WalkmapData* hpms::WalkmapConverter::LoadWalkmap(const std::string& path)
 {
     std::vector<hpms::Sector> sectors;
+    Polygon perimeter;
+    std::vector<hpms::Polygon> obstacles;
+    std::string basePath = path;
+    std::string perimeterPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".perimeter.obj");
+    std::string obstaclesPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".obstacles.obj");
     ProcessSectors(sectors, path);
+    ProcessPerimeter(perimeter, perimeterPath);
+    ProcessObstacles(obstacles, obstaclesPath);
     std::string roomName = hpms::GetFileName(path);
     auto* map = hpms::SafeNew<WalkmapData>(roomName, sectors);
     return map;
@@ -89,6 +97,16 @@ void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector>& s
 
         sector.SetTriangles(tris);
     }
+
+}
+
+void hpms::WalkmapConverter::ProcessPerimeter(const hpms::Polygon& polygon, const std::string& path)
+{
+
+}
+
+void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path)
+{
 
 }
 

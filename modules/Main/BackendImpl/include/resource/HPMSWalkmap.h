@@ -219,11 +219,20 @@ namespace hpms
             return !(rhs == *this);
         }
     };
+    class Polygon : public hpms::Object
+    {
+        virtual const std::string Name() const override
+        {
+            return "Polygon";
+        }
+    };
 
     class WalkmapData : public hpms::Object
     {
     private:
         std::vector<Sector> sectors;
+        Polygon perimeter;
+        std::vector<Polygon> obstacles;
         std::string id;
 
     public:
