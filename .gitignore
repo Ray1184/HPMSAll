@@ -5,3 +5,5 @@ modules/Extra/BlenderPlugin/batch/bdata/bin
 modules/Extra/BlenderPlugin/batch/bdata/__pycache__
 modules/Extra/BlenderPlugin/BlenderBatch/.gradle
 modules/Extra/BlenderPlugin/BlenderBatch/build
+docs/Simulations/.gradle
+docs/Simulations/build
