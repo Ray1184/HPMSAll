@@ -25,6 +25,8 @@ namespace hpms
     public:
 
         unsigned int idx1, idx2;
+        float x1, y1, z1;
+        float x2, y2, z2;
 
         Side(unsigned int idx1, unsigned int idx2) : idx1(idx1), idx2(idx2)
         {}
@@ -35,14 +37,21 @@ namespace hpms
         PODS_SERIALIZABLE(
                 1,
                 PODS_OPT(idx1),
-                PODS_OPT(idx2)
+                PODS_OPT(idx2),
+                PODS_OPT(x1),
+                PODS_OPT(y1),
+                PODS_OPT(z1),
+                PODS_OPT(x2),
+                PODS_OPT(y2),
+                PODS_OPT(z2)
 
         );
 
 
         bool operator==(const Side& rhs) const
         {
-            return idx1 == rhs.idx1 && idx2 == rhs.idx2;
+            return x1 == rhs.x1 && y1 == rhs.y1 && z1 == rhs.z1
+                   && x2 == rhs.x2 && y2 == rhs.y2 && z2 == rhs.z2;
         }
 
         bool operator!=(const Side& rhs) const
@@ -79,7 +88,6 @@ namespace hpms
         float x1, y1, z1;
         float x2, y2, z2;
         float x3, y3, z3;
-
 
 
         Triangle(const std::string& groupId,
@@ -219,8 +227,39 @@ namespace hpms
             return !(rhs == *this);
         }
     };
+
     class Polygon : public hpms::Object
     {
+    private:
+        std::vector<Side> sides;
+    public:
+        PODS_SERIALIZABLE(
+                1,
+                PODS_OPT(sides)
+
+        );
+
+        inline Polygon(const std::vector<Side>& sides) : sides(sides)
+        {}
+
+        inline Polygon()
+        {}
+
+        const std::vector<Side>& GetSides() const
+        {
+            return sides;
+        }
+
+        void SetSides(const std::vector<Side>& sides)
+        {
+            Polygon::sides = sides;
+        }
+
+        void SetSides(const std::vector<Side>& sides) const
+        {
+            Polygon::sides = sides;
+        }
+
         virtual const std::string Name() const override
         {
             return "Polygon";

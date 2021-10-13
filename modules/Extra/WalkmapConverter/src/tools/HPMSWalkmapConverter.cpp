@@ -102,12 +102,34 @@ void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector>& s
 
 void hpms::WalkmapConverter::ProcessPerimeter(const hpms::Polygon& polygon, const std::string& path)
 {
-
+    std::vector<Polygon> polys;
+    ProcessPolygons(polys, path);
+    auto processedPoly = polys[0];
+    polygon.SetSides(processedPoly.GetSides());
 }
 
 void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path)
 {
+    ProcessPolygons(obstacles, path);
+}
 
+void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon>& obstacles, const std::string& path)
+{
+    auto process = [](const std::string& line)
+    {
+        std::vector<std::string> tokens = hpms::Split(line, "\\s+");
+        char type = tokens[0].at(0);
+        switch (type)
+        {
+            case 'l':
+                break;
+            case 'v':
+                break;
+            default:
+                break;
+        }
+    };
+    hpms::ProcessFileLines(path, process);
 }
 
 unsigned int hpms::Face::ProcessIndex(const std::string& token)
