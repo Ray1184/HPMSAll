@@ -257,7 +257,7 @@ namespace hpms
 
         void SetSides(const std::vector<Side>& sides) const
         {
-            Polygon::sides = sides;
+            std::copy (sides.begin(), sides.end(), std::back_inserter(this->sides));
         }
 
         virtual const std::string Name() const override

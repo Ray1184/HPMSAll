@@ -5,6 +5,7 @@
 #include <tools/HPMSWalkmapConverter.h>
 #include <utils/HPMSCalcUtils.h>
 #include <regex>
+#include <algorithm>
 
 hpms::WalkmapData* hpms::WalkmapConverter::LoadWalkmap(const std::string& path)
 {
@@ -115,21 +116,32 @@ void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon>& obstac
 
 void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon>& obstacles, const std::string& path)
 {
-    auto process = [](const std::string& line)
+    std::vector<glm::vec3> vertices;
+    std::vector<glm::ivec2> lines;
+    auto process = [&vertices, &lines](const std::string& line)
     {
         std::vector<std::string> tokens = hpms::Split(line, "\\s+");
         char type = tokens[0].at(0);
         switch (type)
         {
             case 'l':
+                lines.emplace_back(std::stoi(tokens[1]), std::stoi(tokens[2]));
                 break;
             case 'v':
+                vertices.emplace_back(std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]));
                 break;
             default:
                 break;
         }
     };
     hpms::ProcessFileLines(path, process);
+    std::vector<std::vector<glm::ivec2>> splittedSides = SplitSides(lines);
+}
+
+std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const std::vector<glm::ivec2>& lines)
+{
+    std::vector<std::vector<glm::ivec2>> splittedSides;
+
 }
 
 unsigned int hpms::Face::ProcessIndex(const std::string& token)

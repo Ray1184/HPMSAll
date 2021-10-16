@@ -7,6 +7,7 @@
 #include <utility>
 #include <resource/HPMSWalkmap.h>
 #include <common/HPMSUtils.h>
+#include <glm/glm.hpp>
 
 namespace hpms
 {
@@ -26,6 +27,8 @@ namespace hpms
         static void ProcessPerimeter(const Polygon& polygon, const std::string& path);
 
         static void ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path);
+
+        static std::vector<std::vector<glm::ivec2>> SplitSides(const std::vector<glm::ivec2>& lines);
     };
 
     class Face
