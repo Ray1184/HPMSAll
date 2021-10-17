@@ -1,0 +1,5 @@
+{
+    "C_Cpp.default.configurationProvider": "ms-vscode.cmake-tools",
+    "cmake.buildDirectory": "${workspaceFolder}/cmake-build-${buildType}",
+    "cmake.environment": {"OGRE_ROOT": "C:/Users/nicco/Desktop/Projects/OgreBuild"}
+}

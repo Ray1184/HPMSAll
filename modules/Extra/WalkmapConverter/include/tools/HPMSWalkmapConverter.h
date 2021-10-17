@@ -24,7 +24,7 @@ namespace hpms
 
         static void ProcessPolygons(const std::vector<Polygon>& obstacles, const std::string& path);
 
-        static void ProcessPerimeter(const Polygon& polygon, const std::string& path);
+        static void ProcessPerimeter(Polygon* polygon, const std::string& path);
 
         static void ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path);
 

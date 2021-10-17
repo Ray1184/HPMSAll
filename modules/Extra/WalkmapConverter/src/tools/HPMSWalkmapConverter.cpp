@@ -106,7 +106,7 @@ void hpms::WalkmapConverter::ProcessPerimeter(const hpms::Polygon& polygon, cons
     std::vector<Polygon> polys;
     ProcessPolygons(polys, path);
     auto processedPoly = polys[0];
-    polygon.SetSides(processedPoly.GetSides());
+    //polygon.SetSides(processedPoly.GetSides());
 }
 
 void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path)

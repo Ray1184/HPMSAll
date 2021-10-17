@@ -6,6 +6,7 @@ import argparse
 import os
 import ntpath
 import shutil
+import sys
 
 
 def echo(msg):
@@ -16,7 +17,8 @@ def add_resource(res, resources, bin_path):
     res_name = ntpath.basename(res).capitalize()
     entry = 'Zip=data/packs/' + res_name + '.zip'
     resources.append(entry)
-    shutil.make_archive(bin_path + '/bin/rt/data/packs/' + res_name, 'zip', res)
+    shutil.make_archive(
+        bin_path + '/bin/rt/data/packs/' + res_name, 'zip', res)
     echo('Adding ' + res + ' to data/packs/' + res_name + '.zip.')
 
 
@@ -24,7 +26,8 @@ def deploy():
     echo('Resource deploy started.')
 
     parser = argparse.ArgumentParser(description='HPMS deploy args.')
-    parser.add_argument('paths', metavar='N', type=str, nargs='+', help='Deploy paths.')
+    parser.add_argument('paths', metavar='N', type=str,
+                        nargs='+', help='Deploy paths.')
 
     args = parser.parse_args()
 
@@ -35,7 +38,8 @@ def deploy():
     echo('Binary path: ' + bin_path)
 
     # Collect each folder in resources and zip
-    resources = [f.path for f in os.scandir(src_path + '/resources') if f.is_dir()]
+    resources = [f.path for f in os.scandir(
+        src_path + '/resources') if f.is_dir()]
     res_entries = ['# HPMS Resources', '[General]']
     for res in resources:
         add_resource(res, res_entries, bin_path)
@@ -51,4 +55,9 @@ def deploy():
     echo('Resource deploy finished.')
 
 
-deploy()
+try:
+    deploy()
+    sys.exit(0)
+except Exception as e:
+    echo(str(e))
+    sys.exit(1)

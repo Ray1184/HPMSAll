@@ -1,9 +1,21 @@
 #!/bin/bash
 
-SRC_DIR=C:/Users/nicco/Desktop/Projects/HPMSAll/modules/Main/Runtime
-BIN_DIR=C:/Users/nicco/Desktop/Projects/HPMSAll/cmake-build-debug
-LOCAL_DIR=C:/Users/nicco/Desktop/Projects/HPMSAll/modules/Main/Runtime/build
+PROJECT_DIR=$1
+PYTHON_EXE=$2
+
+SRC_DIR=${PROJECT_DIR}/modules/Main/Runtime
+BIN_DIR=${PROJECT_DIR}/cmake-build-debug
+LOCAL_DIR=${PROJECT_DIR}/modules/Main/Runtime/build
 
 cd ${LOCAL_DIR} || exit
 
-C:/Users/nicco/AppData/Local/Programs/Python/Python39/python.exe ${SRC_DIR} ${BIN_DIR}
+${PYTHON_EXE} deploy.py ${SRC_DIR} ${BIN_DIR}
+
+EXIT_CODE=$?
+
+echo "Task terminated with exit code ${EXIT_CODE}"
+
+read -p "Press any key to continue... " -n1 -s
+
+exit ${EXIT_CODE}
+

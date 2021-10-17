@@ -104,8 +104,7 @@ void hpms::OgreContext::CreateViewports()
 
 void hpms::OgreContext::InitRoot()
 {
-    root->setRenderSystem(
-            root->getRenderSystemByName("OpenGL Rendering Subsystem"));
+    root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
     root->initialise(false);
 }
 
