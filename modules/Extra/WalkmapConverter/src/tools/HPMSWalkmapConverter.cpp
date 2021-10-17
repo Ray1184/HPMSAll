@@ -16,7 +16,7 @@ hpms::WalkmapData* hpms::WalkmapConverter::LoadWalkmap(const std::string& path)
     std::string perimeterPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".perimeter.obj");
     std::string obstaclesPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".obstacles.obj");
     ProcessSectors(sectors, path);
-    ProcessPerimeter(perimeter, perimeterPath);
+    ProcessPerimeter(&perimeter, perimeterPath);
     ProcessObstacles(obstacles, obstaclesPath);
     std::string roomName = hpms::GetFileName(path);
     auto* map = hpms::SafeNew<WalkmapData>(roomName, sectors);
@@ -101,12 +101,11 @@ void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector>& s
 
 }
 
-void hpms::WalkmapConverter::ProcessPerimeter(const hpms::Polygon& polygon, const std::string& path)
+void hpms::WalkmapConverter::ProcessPerimeter(hpms::Polygon* polygon, const std::string& path)
 {
     std::vector<Polygon> polys;
     ProcessPolygons(polys, path);
-    auto processedPoly = polys[0];
-    //polygon.SetSides(processedPoly.GetSides());
+    *polygon = polys[0];
 }
 
 void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path)
