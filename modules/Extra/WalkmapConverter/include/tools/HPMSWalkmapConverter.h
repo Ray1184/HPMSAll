@@ -29,6 +29,8 @@ namespace hpms
         static void ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path);
 
         static std::vector<std::vector<glm::ivec2>> SplitSides(const std::vector<glm::ivec2>& lines);
+   
+        static void Next(glm::ivec2* current, const std::vector<glm::ivec2>& sides, glm::ivec2* next);
     };
 
     class Face

@@ -6,8 +6,9 @@
 #include <utils/HPMSCalcUtils.h>
 #include <regex>
 #include <algorithm>
+#include <sstream>
 
-hpms::WalkmapData* hpms::WalkmapConverter::LoadWalkmap(const std::string& path)
+hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
 {
     std::vector<hpms::Sector> sectors;
     Polygon perimeter;
@@ -19,11 +20,11 @@ hpms::WalkmapData* hpms::WalkmapConverter::LoadWalkmap(const std::string& path)
     ProcessPerimeter(&perimeter, perimeterPath);
     ProcessObstacles(obstacles, obstaclesPath);
     std::string roomName = hpms::GetFileName(path);
-    auto* map = hpms::SafeNew<WalkmapData>(roomName, sectors);
+    auto *map = hpms::SafeNew<WalkmapData>(roomName, sectors);
     return map;
 }
 
-void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector>& sectors, const std::string& path)
+void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector> &sectors, const std::string &path)
 {
     std::vector<glm::vec3> vertices;
     std::vector<hpms::Face> faces;
@@ -31,31 +32,30 @@ void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector>& sectors, 
     std::unordered_map<std::string, hpms::Sector> sectorsById;
     std::string currentSector;
 
-
-    auto process = [&vertices, &faces, &faceRefToSectorName, &currentSector, &sectorsById](const std::string& line)
+    auto process = [&vertices, &faces, &faceRefToSectorName, &currentSector, &sectorsById](const std::string &line)
     {
         std::vector<std::string> tokens = hpms::Split(line, "\\s+");
         char type = tokens[0].at(0);
         switch (type)
         {
-            case 'o':
-                currentSector = tokens[1];
-                sectorsById.insert({tokens[1], hpms::Sector(tokens[1])});
-                break;
-            case 'v':
-                vertices.emplace_back(std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]));
-                break;
-            case 'f':
-                faces.emplace_back(line, tokens[1], tokens[2], tokens[3]);
-                faceRefToSectorName.insert({line, currentSector});
-                break;
-            default:
-                break;
+        case 'o':
+            currentSector = tokens[1];
+            sectorsById.insert({tokens[1], hpms::Sector(tokens[1])});
+            break;
+        case 'v':
+            vertices.emplace_back(std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]));
+            break;
+        case 'f':
+            faces.emplace_back(line, tokens[1], tokens[2], tokens[3]);
+            faceRefToSectorName.insert({line, currentSector});
+            break;
+        default:
+            break;
         }
     };
     hpms::ProcessFileLines(path, process);
 
-    for (const auto& face : faces)
+    for (const auto &face : faces)
     {
         glm::vec3 t1 = glm::vec3(vertices[face.indexA].x, vertices[face.indexA].y, vertices[face.indexA].z);
         glm::vec3 t2 = glm::vec3(vertices[face.indexB].x, vertices[face.indexB].y, vertices[face.indexB].z);
@@ -65,7 +65,7 @@ void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector>& sectors, 
         sectorsById[sectorId].AddTriangle(tri);
     }
 
-    for (const auto& sec : sectorsById)
+    for (const auto &sec : sectorsById)
     {
         hpms::Sector sector = sec.second;
         sectors.push_back(sector);
@@ -74,20 +74,18 @@ void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector>& sectors, 
     ProcessPerimetralSides(sectors);
 }
 
-
-void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector>& sectors)
+void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector> &sectors)
 {
     std::vector<Triangle> allTris;
-    for (auto& sector : sectors)
+    for (auto &sector : sectors)
     {
-        for (const auto& tri : sector.GetTriangles())
+        for (const auto &tri : sector.GetTriangles())
         {
             allTris.push_back(tri);
         }
     }
 
-
-    for (auto& sector : sectors)
+    for (auto &sector : sectors)
     {
         std::vector<Triangle> tris;
         for (Triangle tri : sector.GetTriangles())
@@ -98,39 +96,38 @@ void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector>& s
 
         sector.SetTriangles(tris);
     }
-
 }
 
-void hpms::WalkmapConverter::ProcessPerimeter(hpms::Polygon* polygon, const std::string& path)
+void hpms::WalkmapConverter::ProcessPerimeter(hpms::Polygon *polygon, const std::string &path)
 {
     std::vector<Polygon> polys;
     ProcessPolygons(polys, path);
     *polygon = polys[0];
 }
 
-void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path)
+void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon> &obstacles, const std::string &path)
 {
     ProcessPolygons(obstacles, path);
 }
 
-void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon>& obstacles, const std::string& path)
+void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon> &obstacles, const std::string &path)
 {
     std::vector<glm::vec3> vertices;
     std::vector<glm::ivec2> lines;
-    auto process = [&vertices, &lines](const std::string& line)
+    auto process = [&vertices, &lines](const std::string &line)
     {
         std::vector<std::string> tokens = hpms::Split(line, "\\s+");
         char type = tokens[0].at(0);
         switch (type)
         {
-            case 'l':
-                lines.emplace_back(std::stoi(tokens[1]), std::stoi(tokens[2]));
-                break;
-            case 'v':
-                vertices.emplace_back(std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]));
-                break;
-            default:
-                break;
+        case 'l':
+            lines.emplace_back(std::stoi(tokens[1]), std::stoi(tokens[2]));
+            break;
+        case 'v':
+            vertices.emplace_back(std::stof(tokens[1]), std::stof(tokens[2]), std::stof(tokens[3]));
+            break;
+        default:
+            break;
         }
     };
     hpms::ProcessFileLines(path, process);
@@ -140,16 +137,54 @@ void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon>& obstacl
 std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const std::vector<glm::ivec2>& lines)
 {
     std::vector<std::vector<glm::ivec2>> splittedSides;
+    auto sorter = [](glm::ivec2 a, glm::ivec2 b)
+    { return a.x < b.x; };
+    std::sort(std::begin(lines), std::end(lines), sorter);
+    std::vector<glm::ivec2> refSides(lines);
+    glm::ivec2* next = nullptr;
+    while (!refSides.empty())
+    {
+        std::vector<glm::ivec2> subSides;
+        Next(next, refSides, next);
+        while (next)
+        {
+            subSides.push_back(*next);
+            auto finder = [&](const auto &val)
+            { return val.x == next->x && val.y == next->y; };
+            std::vector<glm::ivec2>::iterator i = std::find_if(refSides.begin(), refSides.end(), finder);
+        }
+    }
 
+    return splittedSides;
 }
 
-unsigned int hpms::Face::ProcessIndex(const std::string& token)
+void hpms::WalkmapConverter::Next(glm::ivec2* current, const std::vector<glm::ivec2>& sides, glm::ivec2* next)
+{
+    if (current == nullptr)
+    {
+        *next = sides[0];
+        return;
+    }
+    for (auto& side : sides)
+    {
+        if (side.x == current->y)
+        {
+            *next = side;
+            return;
+        }
+    }
+   
+    
+}
+
+unsigned int hpms::Face::ProcessIndex(const std::string &token)
 {
     int sIndex = token.find('/');
     if (sIndex < 0)
     {
         return std::stoi(token);
-    } else
+    }
+    else
     {
         return std::stoi(token.substr(0, sIndex));
     }
