@@ -245,6 +245,11 @@ namespace hpms
         inline Polygon()
         {}
 
+        inline Polygon(const Polygon& poly)
+        {
+            Polygon::sides = poly.sides;
+        }
+
         const std::vector<Side>& GetSides() const
         {
             return sides;
@@ -278,6 +283,11 @@ namespace hpms
 
         );
 
+        inline WalkmapData(const std::string& id, const std::vector<Sector>& sectorGroups, const Polygon& perimeter, const std::vector<Polygon>& obstacles) : id(id),
+                                                                                             sectors(sectorGroups),
+                                                                                             perimeter(perimeter),
+                                                                                             obstacles(obstacles)
+        {}
 
         inline WalkmapData(const std::string& id, const std::vector<Sector>& sectorGroups) : id(id),
                                                                                              sectors(sectorGroups)

@@ -20,7 +20,7 @@ hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
     ProcessPerimeter(&perimeter, perimeterPath);
     ProcessObstacles(obstacles, obstaclesPath);
     std::string roomName = hpms::GetFileName(path);
-    auto *map = hpms::SafeNew<WalkmapData>(roomName, sectors);
+    auto *map = hpms::SafeNew<WalkmapData>(roomName, sectors, perimeter, obstacles);
     return map;
 }
 
@@ -110,7 +110,7 @@ void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon> &obstac
     ProcessPolygons(obstacles, path);
 }
 
-void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon> &obstacles, const std::string &path)
+void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon> &polys, const std::string &path)
 {
     std::vector<glm::vec3> vertices;
     std::vector<glm::ivec2> lines;
@@ -132,6 +132,38 @@ void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon> &obstacl
     };
     hpms::ProcessFileLines(path, process);
     std::vector<std::vector<glm::ivec2>> splittedSides = SplitSides(lines);
+    RawPolygon rawPoly{vertices, splittedSides};
+    ParsePolygons(polys, rawPoly);
+}
+
+void hpms::WalkmapConverter::ParsePolygons(const std::vector<Polygon>& polys, const RawPolygon& rawPoly) {
+    for (auto& sides : rawPoly.sideGroups)
+    {
+        HPMS_ASSERT(sides.size() > 2, "At least a triangle is required (size >= 3)");
+        glm::ivec2 lastIndex = sides[0];
+        unsigned int first = lastIndex.x;
+        unsigned int second = lastIndex.y;
+        glm::vec3 vertA = rawPoly.vertices[first - 1];
+        glm::vec3 vertB = rawPoly.vertices[second - 1];
+        
+        /*
+         Integer first = PApplet.parseInt(sides.get(0).x);
+            Integer second = PApplet.parseInt(sides.get(0).y);
+            PVector vertA = vertices.get(first - 1);
+            PVector vertB = vertices.get(second - 1);
+            PVector lastIndex = sides.get(0);
+            sortedData.add(vertA);
+            sortedData.add(vertB);
+
+            for (int i = 1; i < sides.size(); i++) {
+                PVector next = Polygon.getNextIndex(lastIndex, sides);
+                PVector vert = vertices.get((int) (next.y - 1));
+                sortedData.add(vert);
+                lastIndex = next;
+            }
+            polygons.add(new Polygon(sortedData.toArray(new PVector[sortedData.size()]), applet));
+        */
+    }
 }
 
 std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const std::vector<glm::ivec2>& lines)
