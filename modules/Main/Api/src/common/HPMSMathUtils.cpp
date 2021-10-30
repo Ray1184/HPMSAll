@@ -2,8 +2,6 @@
  * File HPMSMathUtils.cpp
  */
 
-
-
 #include <common/HPMSMathUtils.h>
 
 float hpms::IntersectRayLineSegment(float originX, float originY, float dirX, float dirY, float aX, float aY, float bX,
@@ -23,7 +21,7 @@ float hpms::IntersectRayLineSegment(float originX, float originY, float dirX, fl
     return -1.0f;
 }
 
-bool hpms::IntersectCircleLineSegment(const glm::vec2& origin, float radius, const glm::vec2& pointA, const glm::vec2& pointB)
+bool hpms::CircleLineIntersect(const glm::vec2 &pointA, const glm::vec2 &pointB, const glm::vec2 &origin, float radius)
 {
     float baX = pointB.x - pointA.x;
     float baY = pointB.y - pointA.y;
@@ -38,38 +36,53 @@ bool hpms::IntersectCircleLineSegment(const glm::vec2& origin, float radius, con
     float q = c / a;
 
     float disc = pBy2 * pBy2 - q;
-    return disc >= 0;
+    if (disc < 0) {
+            return false;
+        }
 }
 
-bool hpms::PointInsideCircle(const glm::vec2& point, const glm::vec2& t, float radius)
+bool hpms::PointInsideCircle(const glm::vec2 &point, const glm::vec2 &t, float radius)
 {
     return std::pow(point.x - t.x, 2) + std::pow(point.y - t.y, 2) < std::pow(radius, 2);
 }
 
-bool hpms::PointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const std::vector<glm::vec2>& data)
+bool hpms::PointInsidePolygon(const glm::vec2 &point, const glm::vec2 &t, const std::vector<glm::vec2> &polygon)
 {
-    float x1, y1, x2, y2;
-    size_t len = data.size();
-    x2 = data[len].x + t.x;
-    y2 = data[len].y + t.y;
-    int wn = 0;
-    for (size_t idx = 0; idx < len; idx++)
+
+    float x = point.x - t.x;
+    float y = point.y - t.y;
+    unsigned int j = polygon.size() - 1;
+    bool oddNodes = false;
+
+    for (unsigned int i = 0; i < polygon.size(); i++)
     {
-        x1 = x2;
-        y1 = y2;
-        x2 = data[idx].x + t.x;
-        y2 = data[idx].y + t.y;
-        if (y1 > point.y)
+        if ((polygon[i].y + t.y < y && polygon[j].y + t.y >= y || polygon[j].y + t.y < y && polygon[i].y + t.y >= y) && (polygon[i].x + t.x <= x || polygon[j].x + t.x <= x))
         {
-            if ((y2 <= point.y) && (x1 - point.x) * (y2 - point.y) < (x2 - point.x) * (y1 - point.y))
-            {
-                wn++;
-            } else if ((y2 > point.y) && (x1 - point.x) * (y2 - point.y) > (x2 - point.x) * (y1 - point.y))
-            {
-                wn--;
-            }
+            oddNodes ^= (polygon[i].x + t.x + (y - polygon[i].y + t.y) / (polygon[j].y + t.y - polygon[i].y + t.y) * (polygon[j].x + t.x - polygon[i].x + t.x) < x);
         }
+        j = i;
     }
-    return wn % 2 != 0;
+
+    return oddNodes;
 }
 
+void hpms::CircleInteractPolygon(const glm::vec2& point, float radius, const glm::vec2& t, const std::vector<glm::vec2>& polygon, SideMode sideMode, CollisionResponse* response)
+{    
+    response->collided = false;
+    bool inside = PointInsidePolygon(point, t, polygon);
+
+    if ((!inside && sideMode == INSIDE) || (inside && sideMode == OUTSIDE)) 
+    {        
+        return;
+    }
+
+    for (int i = 0; i < polygon.size() - 1; i++) {
+            if (CircleLineIntersect(polygon[i], polygon[i + 1], point, radius)) {
+                response->collided = true;
+                response->sidePointA = polygon[i];
+                response->sidePointB = polygon[i + 1];
+                return;
+            }
+        }
+
+}

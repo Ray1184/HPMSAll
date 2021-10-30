@@ -106,7 +106,7 @@ namespace hpms
 
         virtual TriangleAdapter* SampleTriangle(const glm::vec3& pos, float tolerance) override;
 
-        bool IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius) override;
+        virtual void Collides(const glm::vec3& pos, float radius, CollisionResponse* response) override;
 
         virtual void ForEachTriangle(const std::function<bool(TriangleAdapter* tri)>& visitor) override;
 

@@ -105,12 +105,12 @@ void hpms::WalkmapConverter::ProcessPerimeter(hpms::Polygon *polygon, const std:
     *polygon = polys[0];
 }
 
-void hpms::WalkmapConverter::ProcessObstacles(const std::vector<Polygon> &obstacles, const std::string &path)
+void hpms::WalkmapConverter::ProcessObstacles(std::vector<Polygon> &obstacles, const std::string &path)
 {
     ProcessPolygons(obstacles, path);
 }
 
-void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon> &polys, const std::string &path)
+void hpms::WalkmapConverter::ProcessPolygons(std::vector<Polygon> &polys, const std::string &path)
 {
     std::vector<glm::vec3> vertices;
     std::vector<glm::ivec2> lines;
@@ -136,8 +136,9 @@ void hpms::WalkmapConverter::ProcessPolygons(const std::vector<Polygon> &polys, 
     ParsePolygons(polys, rawPoly);
 }
 
-void hpms::WalkmapConverter::ParsePolygons(const std::vector<Polygon>& polys, const RawPolygon& rawPoly) {
-    for (auto& sides : rawPoly.sideGroups)
+void hpms::WalkmapConverter::ParsePolygons(std::vector<Polygon> &polys, const RawPolygon &rawPoly)
+{
+    for (auto &sides : rawPoly.sideGroups)
     {
         HPMS_ASSERT(sides.size() > 2, "At least a triangle is required (size >= 3)");
         glm::ivec2 lastIndex = sides[0];
@@ -145,35 +146,31 @@ void hpms::WalkmapConverter::ParsePolygons(const std::vector<Polygon>& polys, co
         unsigned int second = lastIndex.y;
         glm::vec3 vertA = rawPoly.vertices[first - 1];
         glm::vec3 vertB = rawPoly.vertices[second - 1];
-        
-        /*
-         Integer first = PApplet.parseInt(sides.get(0).x);
-            Integer second = PApplet.parseInt(sides.get(0).y);
-            PVector vertA = vertices.get(first - 1);
-            PVector vertB = vertices.get(second - 1);
-            PVector lastIndex = sides.get(0);
-            sortedData.add(vertA);
-            sortedData.add(vertB);
+        std::vector<glm::vec2> sortedData;
+        sortedData.push_back(vertA);
+        sortedData.push_back(vertB);
 
-            for (int i = 1; i < sides.size(); i++) {
-                PVector next = Polygon.getNextIndex(lastIndex, sides);
-                PVector vert = vertices.get((int) (next.y - 1));
-                sortedData.add(vert);
-                lastIndex = next;
-            }
-            polygons.add(new Polygon(sortedData.toArray(new PVector[sortedData.size()]), applet));
-        */
+        for (int i = 1; i < sides.size(); i++)
+        {
+            glm::ivec2 next;
+            Next(&lastIndex, sides, &next);
+            glm::vec3 vert = rawPoly.vertices[lastIndex.y - 1];
+            sortedData.push_back(V3_TO_V2(vert));
+            lastIndex = next;
+        }
+        Polygon poly(sortedData);
+        polys.push_back(poly);
     }
 }
 
-std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const std::vector<glm::ivec2>& lines)
+std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const std::vector<glm::ivec2> &lines)
 {
     std::vector<std::vector<glm::ivec2>> splittedSides;
     auto sorter = [](glm::ivec2 a, glm::ivec2 b)
     { return a.x < b.x; };
     std::sort(std::begin(lines), std::end(lines), sorter);
     std::vector<glm::ivec2> refSides(lines);
-    glm::ivec2* next = nullptr;
+    glm::ivec2 *next = nullptr;
     while (!refSides.empty())
     {
         std::vector<glm::ivec2> subSides;
@@ -190,14 +187,14 @@ std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const st
     return splittedSides;
 }
 
-void hpms::WalkmapConverter::Next(glm::ivec2* current, const std::vector<glm::ivec2>& sides, glm::ivec2* next)
+void hpms::WalkmapConverter::Next(glm::ivec2 *current, const std::vector<glm::ivec2> &sides, glm::ivec2 *next)
 {
     if (current == nullptr)
     {
         *next = sides[0];
         return;
     }
-    for (auto& side : sides)
+    for (auto &side : sides)
     {
         if (side.x == current->y)
         {
@@ -205,8 +202,6 @@ void hpms::WalkmapConverter::Next(glm::ivec2* current, const std::vector<glm::iv
             return;
         }
     }
-   
-    
 }
 
 unsigned int hpms::Face::ProcessIndex(const std::string &token)

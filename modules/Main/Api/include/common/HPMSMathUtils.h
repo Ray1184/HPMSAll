@@ -13,6 +13,17 @@
 namespace hpms
 {
 
+    struct CollisionResponse {
+        bool collided;
+        glm::vec2 sidePointA;
+        glm::vec2 sidePointB;
+    };
+
+    enum SideMode {
+        INSIDE,
+        OUTSIDE
+    };
+
 
     float
     IntersectRayLineSegment(float originX, float originY, float dirX, float dirY, float aX, float aY, float bX,
@@ -25,23 +36,23 @@ namespace hpms
         return IntersectRayLineSegment(SD(origin), FW(origin), dir.x, dir.y, a.x, a.y, b.x, b.y);
     }
 
-    bool IntersectCircleLineSegment(const glm::vec2& origin, float radius, const glm::vec2& pointA, const glm::vec2& pointB);
-
-    inline bool
-    IntersectCircleLineSegment(const glm::vec3& origin, float radius, const glm::vec3& pointA, const glm::vec3& pointB)
+        inline bool
+    IntersectCircleLineSegment(const glm::vec3& pointA, const glm::vec3& pointB, const glm::vec3& origin, float radius)
     {
         auto origin2d = glm::vec2(SD(origin), FW(origin));
         auto pointA2d = glm::vec2(SD(pointA), FW(pointA));
         auto pointB2d = glm::vec2(SD(pointB), FW(pointB));
-        return IntersectCircleLineSegment(origin2d, radius, pointA2d, pointB2d);
+        return CircleLineIntersect(pointA2d, pointB2d, origin2d, radius);
     }
 
     inline bool
-    IntersectCircleLineSegment(const glm::vec3& origin, float radius, const glm::vec2& pointA, const glm::vec2& pointB)
+    IntersectCircleLineSegment(const glm::vec2& pointA, const glm::vec2& pointB, const glm::vec3& origin, float radius)
     {
         auto origin2d = glm::vec2(SD(origin), FW(origin));
-        return IntersectCircleLineSegment(origin2d, radius, pointA, pointB);
+        return CircleLineIntersect(pointA, pointB, origin2d, radius);
     }
+
+    bool CircleLineIntersect(const glm::vec2 &pointA, const glm::vec2 &pointB, const glm::vec2 &origin, float radius);
 
     inline glm::vec2 Perpendicular(const glm::vec2& origin)
     {
@@ -58,6 +69,10 @@ namespace hpms
 
     bool PointInsideCircle(const glm::vec2& point, const glm::vec2& data, float radius);
 
-    bool PointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const std::vector<glm::vec2>& data);
+    bool PointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const std::vector<glm::vec2>& polygon);
+
+    void CircleInteractPolygon(const glm::vec2& point, float radius, const glm::vec2& t, const std::vector<glm::vec2>& polygon, SideMode sideMode, CollisionResponse* response);
+
+    bool IsBetween(const glm::vec2 &pt1, const glm::vec2 &pt2, const glm::vec2 &pt);
 
 }

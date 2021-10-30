@@ -231,7 +231,7 @@ namespace hpms
     class Polygon : public hpms::Object
     {
     private:
-        std::vector<Side> sides;
+        std::vector<glm::vec2> data;
     public:
         PODS_SERIALIZABLE(
                 1,
@@ -239,7 +239,7 @@ namespace hpms
 
         );
 
-        inline Polygon(const std::vector<Side>& sides) : sides(sides)
+        inline Polygon(const std::vector<glm::vec2>& data) : data(data)
         {}
 
         inline Polygon()
@@ -247,17 +247,17 @@ namespace hpms
 
         inline Polygon(const Polygon& poly)
         {
-            Polygon::sides = poly.sides;
+            Polygon::data = poly.data;
         }
 
-        const std::vector<Side>& GetSides() const
+        const std::vector<glm::vec2>& GetData() const
         {
-            return sides;
+            return data;
         }
 
-        void SetSides(const std::vector<Side>& sides)
+        void SetData(const std::vector<glm::vec2>& data)
         {
-            Polygon::sides = sides;
+            Polygon::data = data;
         }
 
         virtual const std::string Name() const override

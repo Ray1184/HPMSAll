@@ -22,22 +22,24 @@ namespace hpms
 
         static void ProcessPerimetralSides(std::vector<hpms::Sector>& vector);
 
-        static void ProcessPolygons(const std::vector<Polygon>& polys, const std::string& path);
+        static void ProcessPolygons(std::vector<Polygon>& polys, const std::string& path);
 
         static void ProcessPerimeter(Polygon* polygon, const std::string& path);
 
-        static void ProcessObstacles(const std::vector<Polygon>& obstacles, const std::string& path);
+        static void ProcessObstacles(std::vector<Polygon>& obstacles, const std::string& path);
 
         static std::vector<std::vector<glm::ivec2>> SplitSides(const std::vector<glm::ivec2>& lines);
    
         static void Next(glm::ivec2* current, const std::vector<glm::ivec2>& sides, glm::ivec2* next);
+
+        static void ParsePolygons(std::vector<Polygon>& polys, const RawPolygon& rawPoly);
     };
 
     struct RawPolygon
     {
         std::vector<glm::vec3> vertices;
         std::vector<std::vector<glm::ivec2>> sideGroups;
-    } 
+    };
 
     class Face
     {

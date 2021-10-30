@@ -55,29 +55,34 @@ hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos
     return triangles[sampled];
 }
 
-bool hpms::WalkmapAdaptee::IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius)
+void hpms::Collides(const glm::vec3& pos, float radius, CollisionResponse* response)
 {
-    Check(walkmap.get());
-    for (const auto& sector : walkmap->GetData()->GetSectors())
-    {
-        for (const auto& tri : sector.GetTriangles())
-        {
-            if (tri.IsPerimetral())
-            {
-                for (const auto& side : tri.GetPerimetralSides())
-                {
-                    auto sideCoords = hpms::GetSideCoordsFromTriangle(&tri, &side);
-                    auto collides = hpms::IntersectCircleLineSegment(pos, radius, sideCoords.first, sideCoords.second);
-                    if (collides)
-                    {
-                        return true;
-                    }
-                }
-            }
-        }
-    }
-    return false;
+    
 }
+
+// bool hpms::WalkmapAdaptee::IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius)
+// {
+//     Check(walkmap.get());
+//     for (const auto& sector : walkmap->GetData()->GetSectors())
+//     {
+//         for (const auto& tri : sector.GetTriangles())
+//         {
+//             if (tri.IsPerimetral())
+//             {
+//                 for (const auto& side : tri.GetPerimetralSides())
+//                 {
+//                     auto sideCoords = hpms::GetSideCoordsFromTriangle(&tri, &side);
+//                     auto collides = hpms::IntersectCircleLineSegment(pos, radius, sideCoords.first, sideCoords.second);
+//                     if (collides)
+//                     {
+//                         return true;
+//                     }
+//                 }
+//             }
+//         }
+//     }
+//     return false;
+// }
 
 
 std::pair<glm::vec2, glm::vec2> hpms::WalkmapAdaptee::GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side)

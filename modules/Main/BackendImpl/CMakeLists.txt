@@ -31,6 +31,13 @@ set(OGRE_BIN_2 ${OGRE_BUILD}/Dependencies/bin)
 set(OGRE_LIB ${OGRE_BUILD}/lib)
 set(OGRE_LIB_2 ${OGRE_BUILD}/Dependencies/lib)
 
+message(STATUS "Ogre searching paths:")
+message(STATUS "OGRE_BUILD:" ${OGRE_BUILD})
+message(STATUS "OGRE_BIN:" ${OGRE_BIN})
+message(STATUS "OGRE_BIN_2:" ${OGRE_BIN_2})
+message(STATUS "OGRE_LIB:" ${OGRE_LIB})
+message(STATUS "OGRE_LIB_2:" ${OGRE_LIB_2})
+
 find_library(OGRE_MAIN
         NAMES OgreMain libOgreMain OgreMain.dll libOgreMain.dll OgreMain_d libOgreMain_d OgreMain_d.dll libOgreMain_d.dll
         PATHS ${OGRE_LIB}
