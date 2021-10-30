@@ -306,6 +306,25 @@ namespace hpms
             WalkmapData::sectors = sectors;
         }
 
+        const Polygon& GetPerimeter() const
+        {
+            return perimeter;
+        }
+
+        void SetPerimeter(const Polygon& perimeter)
+        {
+            WalkmapData::perimeter = perimeter;
+        }
+
+        const std::vector<Polygon>& GetObstacles() const
+        {
+            return obstacles;
+        }
+
+        void SetObstacles(const std::vector<Polygon>& obstacles)
+        {
+            WalkmapData::obstacles = obstacles;
+        }
 
         const std::string& GetId() const
         {

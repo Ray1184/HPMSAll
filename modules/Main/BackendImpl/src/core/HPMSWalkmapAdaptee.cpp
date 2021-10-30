@@ -12,33 +12,37 @@ std::string hpms::WalkmapAdaptee::GetId()
     return walkmap->GetData()->GetId();
 }
 
-void hpms::WalkmapAdaptee::ForEachTriangle(const std::function<bool(TriangleAdapter*)>& visitor)
+void hpms::WalkmapAdaptee::ForEachTriangle(const std::function<bool(TriangleAdapter *)> &visitor)
 {
     Check(walkmap.get());
-    for (const auto& sector : walkmap->GetData()->GetSectors())
+    for (const auto &sector : walkmap->GetData()->GetSectors())
     {
-        for (const auto& tri : sector.GetTriangles())
+        for (const auto &tri : sector.GetTriangles())
         {
             bool exit = visitor(triangles[tri]);
-            if (exit) {
+            if (exit)
+            {
                 return;
             }
         }
     }
 }
 
-void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2&, const glm::vec2&)>& visitor)
+void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2 &, const glm::vec2 &)> &visitor)
 {
     Check(walkmap.get());
-    for (const auto& sector : walkmap->GetData()->GetSectors())
+    for (const auto &sector : walkmap->GetData()->GetSectors())
     {
-        for (const auto& tri : sector.GetTriangles())
+        for (const auto &tri : sector.GetTriangles())
         {
-            if (tri.IsPerimetral()) {
-                for (const auto& side : tri.GetPerimetralSides()) {
+            if (tri.IsPerimetral())
+            {
+                for (const auto &side : tri.GetPerimetralSides())
+                {
                     auto coords = hpms::GetSideCoordsFromTriangle(&tri, &side);
                     bool exit = visitor(coords.first, coords.second);
-                    if (exit) {
+                    if (exit)
+                    {
                         return;
                     }
                 }
@@ -47,7 +51,7 @@ void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2&
     }
 }
 
-hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos, float tolerance)
+hpms::TriangleAdapter *hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3 &pos, float tolerance)
 {
     Check(walkmap.get());
     Triangle sampled;
@@ -55,50 +59,39 @@ hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos
     return triangles[sampled];
 }
 
-void hpms::Collides(const glm::vec3& pos, float radius, CollisionResponse* response)
-{
-    
-}
-
-// bool hpms::WalkmapAdaptee::IntersectionPerimetralSideCircle(const glm::vec3& pos, float radius)
-// {
-//     Check(walkmap.get());
-//     for (const auto& sector : walkmap->GetData()->GetSectors())
-//     {
-//         for (const auto& tri : sector.GetTriangles())
-//         {
-//             if (tri.IsPerimetral())
-//             {
-//                 for (const auto& side : tri.GetPerimetralSides())
-//                 {
-//                     auto sideCoords = hpms::GetSideCoordsFromTriangle(&tri, &side);
-//                     auto collides = hpms::IntersectCircleLineSegment(pos, radius, sideCoords.first, sideCoords.second);
-//                     if (collides)
-//                     {
-//                         return true;
-//                     }
-//                 }
-//             }
-//         }
-//     }
-//     return false;
-// }
-
-
-std::pair<glm::vec2, glm::vec2> hpms::WalkmapAdaptee::GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side)
+void hpms::WalkmapAdaptee::Collides(const glm::vec3 &pos, float radius, CollisionResponse *response)
 {
     Check(walkmap.get());
-    return hpms::GetSideCoordsFromTriangle(&((TriangleAdaptee*) tri)->GetTriData(), &((SideAdaptee*) side)->GetSideData());
+    auto &perimeter = walkmap.get()->GetData()->GetPerimeter().GetData();
+    glm::vec2 noTranslation = glm::vec2(0, 0);
+    CollisionResponse collisionResponse;
+    hpms::CircleInteractPolygon(pos, radius, noTranslation, perimeter, INSIDE, &collisionResponse);
+    if (!collisionResponse.collided)
+    {
+        for (auto &obstacle : walkmap.get()->GetData()->GetObstacles())
+        {
+            hpms::CircleInteractPolygon(pos, radius, noTranslation, obstacle.GetData(), OUTSIDE, &collisionResponse);
+            if (collisionResponse.collided)
+            {
+                return;
+            }
+        }
+    }
+}
+std::pair<glm::vec2, glm::vec2> hpms::WalkmapAdaptee::GetSideCoordsFromTriangle(hpms::TriangleAdapter *tri, hpms::SideAdapter *side)
+{
+    Check(walkmap.get());
+    return hpms::GetSideCoordsFromTriangle(&((TriangleAdaptee *)tri)->GetTriData(), &((SideAdaptee *)side)->GetSideData());
 }
 
-hpms::WalkmapAdaptee::WalkmapAdaptee(const std::string& mapName) : AdapteeCommon(nullptr)
+hpms::WalkmapAdaptee::WalkmapAdaptee(const std::string &mapName) : AdapteeCommon(nullptr)
 {
     walkmap = hpms::WalkmapManager::GetSingleton().Create(mapName);
-    for (const auto& sector : walkmap->GetData()->GetSectors())
+    for (const auto &sector : walkmap->GetData()->GetSectors())
     {
-        for (const auto& tri : sector.GetTriangles())
+        for (const auto &tri : sector.GetTriangles())
         {
-            auto* ad = hpms::SafeNew<TriangleAdaptee>(tri);
+            auto *ad = hpms::SafeNew<TriangleAdaptee>(tri);
             triangles[tri] = ad;
         }
     }
@@ -106,9 +99,9 @@ hpms::WalkmapAdaptee::WalkmapAdaptee(const std::string& mapName) : AdapteeCommon
 
 hpms::WalkmapAdaptee::~WalkmapAdaptee()
 {
-    for (const auto& entry : triangles)
+    for (const auto &entry : triangles)
     {
-        auto* ad = entry.second;
+        auto *ad = entry.second;
         hpms::SafeDelete(ad);
     }
 }
@@ -168,31 +161,29 @@ std::string hpms::TriangleAdaptee::GetSectorId() const
     return triData.GetSectorId();
 }
 
-
-const std::vector<hpms::SideAdapter*>& hpms::TriangleAdaptee::GetPerimetralSides() const
+const std::vector<hpms::SideAdapter *> &hpms::TriangleAdaptee::GetPerimetralSides() const
 {
     return sides;
 }
 
-
-hpms::TriangleAdaptee::TriangleAdaptee(const hpms::Triangle& triData) : triData(triData)
+hpms::TriangleAdaptee::TriangleAdaptee(const hpms::Triangle &triData) : triData(triData)
 {
-    for (const auto& side : triData.GetPerimetralSides())
+    for (const auto &side : triData.GetPerimetralSides())
     {
-        auto* ad = hpms::SafeNew<SideAdaptee>(side);
+        auto *ad = hpms::SafeNew<SideAdaptee>(side);
         sides.push_back(ad);
     }
 }
 
 hpms::TriangleAdaptee::~TriangleAdaptee()
 {
-    for (auto* ad : sides)
+    for (auto *ad : sides)
     {
         hpms::SafeDelete(ad);
     }
 }
 
-const hpms::Triangle& hpms::TriangleAdaptee::GetTriData() const
+const hpms::Triangle &hpms::TriangleAdaptee::GetTriData() const
 {
     return triData;
 }
@@ -207,17 +198,15 @@ unsigned int hpms::SideAdaptee::IdX2()
     return sideData.idx2;
 }
 
-hpms::SideAdaptee::SideAdaptee(const hpms::Side& sideData) : sideData(sideData)
+hpms::SideAdaptee::SideAdaptee(const hpms::Side &sideData) : sideData(sideData)
 {
-
 }
 
 hpms::SideAdaptee::~SideAdaptee()
 {
-
 }
 
-const hpms::Side& hpms::SideAdaptee::GetSideData() const
+const hpms::Side &hpms::SideAdaptee::GetSideData() const
 {
     return sideData;
 }
