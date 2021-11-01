@@ -5,6 +5,7 @@
 #pragma once
 
 #include <common/HPMSObject.h>
+#include <common/HPMSMathUtils.h>
 #include <vector>
 #include <string>
 #include <glm/glm.hpp>

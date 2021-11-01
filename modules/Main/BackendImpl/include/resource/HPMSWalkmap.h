@@ -13,6 +13,7 @@
 #include <pods/buffers.h>
 #include <pods/binary.h>
 #include <common/HPMSCoordSystem.h>
+#include <glm/glm.hpp>
 
 #define UNDEFINED_SECTOR "__undef__"
 
@@ -235,7 +236,7 @@ namespace hpms
     public:
         PODS_SERIALIZABLE(
                 1,
-                PODS_OPT(sides)
+                PODS_OPT(data)
 
         );
 

@@ -7,6 +7,8 @@
 #include <regex>
 #include <algorithm>
 #include <sstream>
+#include <array>
+#include <functional>
 
 hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
 {
@@ -166,10 +168,12 @@ void hpms::WalkmapConverter::ParsePolygons(std::vector<Polygon> &polys, const Ra
 std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const std::vector<glm::ivec2> &lines)
 {
     std::vector<std::vector<glm::ivec2>> splittedSides;
+    std::vector<glm::ivec2> linesCopy = std::vector<glm::ivec2>(lines);
     auto sorter = [](glm::ivec2 a, glm::ivec2 b)
     { return a.x < b.x; };
-    std::sort(std::begin(lines), std::end(lines), sorter);
-    std::vector<glm::ivec2> refSides(lines);
+    std::sort(std::begin(linesCopy), std::end(linesCopy), sorter);
+    
+    std::vector<glm::ivec2> refSides(linesCopy);
     glm::ivec2 *next = nullptr;
     while (!refSides.empty())
     {
