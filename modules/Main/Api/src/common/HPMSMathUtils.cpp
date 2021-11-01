@@ -36,9 +36,35 @@ bool hpms::CircleLineIntersect(const glm::vec2 &pointA, const glm::vec2 &pointB,
     float q = c / a;
 
     float disc = pBy2 * pBy2 - q;
-    if (disc < 0) {
-            return false;
-        }
+    if (disc < 0)
+    {
+        return false;
+    }
+    float tmpSqrt = std::sqrt(disc);
+    float abScalingFactor = -pBy2 + tmpSqrt;
+    glm::vec2 pointC = glm::vec2(pointA.x - baX * abScalingFactor, pointA.y - baY * abScalingFactor);
+    return IsBetween(pointA, pointB, pointC);
+}
+
+bool hpms::IsBetween(const glm::vec2 &pt1, const glm::vec2 &pt2, const glm::vec2 &pt)
+{
+    const float epsilon = 0.001f;
+
+    if (pt.x - std::max(pt1.x, pt2.x) > epsilon ||
+        std::min(pt1.x, pt2.x) - pt.x > epsilon ||
+        pt.y - std::max(pt1.y, pt2.y) > epsilon ||
+        std::min(pt1.y, pt2.y) - pt.y > epsilon)
+        return false;
+
+    if (std::abs(pt2.x - pt1.x) < epsilon)
+        return std::abs(pt1.x - pt.x) < epsilon || std::abs(pt2.x - pt.x) < epsilon;
+    if (std::abs(pt2.y - pt1.y) < epsilon)
+        return std::abs(pt1.y - pt.y) < epsilon || std::abs(pt2.y - pt.y) < epsilon;
+
+    float x = pt1.x + (pt.y - pt1.y) * (pt2.x - pt1.x) / (pt2.y - pt1.y);
+    float y = pt1.y + (pt.x - pt1.x) * (pt2.y - pt1.y) / (pt2.x - pt1.x);
+
+    return std::abs(pt.x - x) < epsilon || std::abs(pt.y - y) < epsilon;
 }
 
 bool hpms::PointInsideCircle(const glm::vec2 &point, const glm::vec2 &t, float radius)
@@ -66,23 +92,25 @@ bool hpms::PointInsidePolygon(const glm::vec2 &point, const glm::vec2 &t, const 
     return oddNodes;
 }
 
-void hpms::CircleInteractPolygon(const glm::vec2& point, float radius, const glm::vec2& t, const std::vector<glm::vec2>& polygon, SideMode sideMode, CollisionResponse* response)
-{    
+void hpms::CircleInteractPolygon(const glm::vec2 &point, float radius, const glm::vec2 &t, const std::vector<glm::vec2> &polygon, SideMode sideMode, CollisionResponse *response)
+{
     response->collided = false;
     bool inside = PointInsidePolygon(point, t, polygon);
 
-    if ((!inside && sideMode == INSIDE) || (inside && sideMode == OUTSIDE)) 
-    {        
+    if ((!inside && sideMode == INSIDE) || (inside && sideMode == OUTSIDE))
+    {
         return;
     }
 
-    for (int i = 0; i < polygon.size() - 1; i++) {
-            if (CircleLineIntersect(polygon[i], polygon[i + 1], point, radius)) {
-                response->collided = true;
-                response->sidePointA = polygon[i];
-                response->sidePointB = polygon[i + 1];
-                return;
-            }
+    for (int i = 0; i < polygon.size() - 1; i++)
+    {
+        glm::vec2 translatedCenter = point + t;
+        if (CircleLineIntersect(polygon[i], polygon[i + 1], translatedCenter, radius))
+        {
+            response->collided = true;
+            response->sidePointA = polygon[i];
+            response->sidePointB = polygon[i + 1];
+            return;
         }
-
+    }
 }
