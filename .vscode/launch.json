@@ -1,0 +1,25 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "WalkmapConverter [Debug]",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\Debug\\bin\\ext\\HPMSWalkmapConverter.exe",
+            "args": ["C:\\hpmstest\\maps\\TestMap.walkmap.obj"],
+            "stopAtEntry": false,
+            "cwd": "${fileDirname}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:\\msys64\\mingw64\\bin\\gdb.exe",
+            "setupCommands": [
+                {
+                    "description": "Abilita la riformattazione per gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+}

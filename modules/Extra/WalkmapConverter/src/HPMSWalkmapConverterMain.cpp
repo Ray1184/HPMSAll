@@ -43,8 +43,7 @@ int main(int argc, char** argv)
     }
 
     std::stringstream ss;
-    ss << "Input path: " << inputPath << std::endl;
-    ss << "Output path: " << outputPath << std::endl;
+    ss << "Args: input path: " << inputPath << ", output path: " << outputPath << std::endl;
     LOG_INFO(ss.str().c_str());
 
     std::string fileExtension = hpms::GetFilenameExtension(inputPath);

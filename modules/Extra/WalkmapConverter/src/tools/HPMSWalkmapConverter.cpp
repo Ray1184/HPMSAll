@@ -17,6 +17,7 @@ hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
     std::vector<hpms::Polygon> obstacles;
     std::string basePath = path;
     std::string perimeterPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".perimeter.obj");
+    basePath = path;
     std::string obstaclesPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".obstacles.obj");
     ProcessSectors(sectors, path);
     ProcessPerimeter(&perimeter, perimeterPath);
