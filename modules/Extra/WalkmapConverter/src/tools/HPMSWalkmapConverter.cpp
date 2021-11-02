@@ -186,7 +186,9 @@ std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const st
             auto finder = [&](const auto &val)
             { return val.x == next->x && val.y == next->y; };
             std::vector<glm::ivec2>::iterator i = std::find_if(refSides.begin(), refSides.end(), finder);
+            refSides.erase(i);
         }
+        splittedSides.push_back(subSides);
     }
 
     return splittedSides;
