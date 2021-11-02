@@ -180,8 +180,7 @@ std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const st
     while (!refSides.empty())
     {
         std::vector<glm::ivec2> subSides;
-        next = Next(next, refSides);
-        while (next)
+        while (next = Next(next, refSides))
         {
             subSides.push_back(*next);
             pointers.push_back(next);
@@ -212,6 +211,7 @@ glm::ivec2* hpms::WalkmapConverter::Next(glm::ivec2 *current, const std::vector<
             return hpms::SafeNewRaw<glm::ivec2>(side);
         }
     }
+    return nullptr;
 }
 
 unsigned int hpms::Face::ProcessIndex(const std::string &token)
