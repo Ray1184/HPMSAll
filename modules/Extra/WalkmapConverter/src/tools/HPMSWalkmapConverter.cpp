@@ -155,11 +155,11 @@ void hpms::WalkmapConverter::ParsePolygons(std::vector<Polygon> &polys, const Ra
 
         for (int i = 1; i < sides.size(); i++)
         {
-            glm::ivec2 next;
-            Next(&lastIndex, sides, &next);
+            glm::ivec2* next = Next(&lastIndex, sides);
             glm::vec3 vert = rawPoly.vertices[lastIndex.y - 1];
             sortedData.push_back(V3_TO_V2(vert));
-            lastIndex = next;
+            lastIndex = *next;
+            hpms::SafeDeleteRaw(next);
         }
         Polygon poly(sortedData);
         polys.push_back(poly);
@@ -176,13 +176,15 @@ std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const st
     
     std::vector<glm::ivec2> refSides(linesCopy);
     glm::ivec2 *next = nullptr;
+    std::vector<glm::ivec2 *> pointers;
     while (!refSides.empty())
     {
         std::vector<glm::ivec2> subSides;
-        Next(next, refSides, next);
+        next = Next(next, refSides);
         while (next)
         {
             subSides.push_back(*next);
+            pointers.push_back(next);
             auto finder = [&](const auto &val)
             { return val.x == next->x && val.y == next->y; };
             std::vector<glm::ivec2>::iterator i = std::find_if(refSides.begin(), refSides.end(), finder);
@@ -191,22 +193,23 @@ std::vector<std::vector<glm::ivec2>> hpms::WalkmapConverter::SplitSides(const st
         splittedSides.push_back(subSides);
     }
 
+    for (auto* pointer : pointers) {
+        hpms::SafeDeleteRaw(pointer);
+    }
     return splittedSides;
 }
 
-void hpms::WalkmapConverter::Next(glm::ivec2 *current, const std::vector<glm::ivec2> &sides, glm::ivec2 *next)
+glm::ivec2* hpms::WalkmapConverter::Next(glm::ivec2 *current, const std::vector<glm::ivec2> &sides)
 {
     if (current == nullptr)
     {
-        *next = sides[0];
-        return;
+        return hpms::SafeNewRaw<glm::ivec2>(sides[0]);
     }
     for (auto &side : sides)
     {
         if (side.x == current->y)
         {
-            *next = side;
-            return;
+            return hpms::SafeNewRaw<glm::ivec2>(side);
         }
     }
 }

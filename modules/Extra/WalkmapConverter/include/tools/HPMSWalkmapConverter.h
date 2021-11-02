@@ -36,7 +36,7 @@ namespace hpms
 
         static std::vector<std::vector<glm::ivec2>> SplitSides(const std::vector<glm::ivec2> &lines);
 
-        static void Next(glm::ivec2 *current, const std::vector<glm::ivec2> &sides, glm::ivec2 *next);
+        static glm::ivec2* Next(glm::ivec2 *current, const std::vector<glm::ivec2> &sides);
 
         static void ParsePolygons(std::vector<Polygon> &polys, const RawPolygon &rawPoly);
     };
