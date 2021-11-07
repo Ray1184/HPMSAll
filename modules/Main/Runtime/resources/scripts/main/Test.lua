@@ -16,16 +16,12 @@ scene = {
     finished = false,
     next = 'undef',
     setup = function()
+        log_info("STARTING TEST STAGE")
         -- Init function callback.
         enable_debug()
         context:inst():disable_dummy()
 
         lib = backend:get()
-
-        -- World
-        boundary = lib.make_collision_entity("DM_Room.mesh")
-        boundary_node = lib.make_node("DM_RoomNode")
-        lib.set_node_entity(boundary_node, boundary)
 
         -- Actors
         player = lib.make_entity("EY_DummyAnim.mesh")
@@ -34,8 +30,8 @@ scene = {
         lib.set_node_entity(player_node, player)
 
         -- Collisions
-        --map = lib.make_walkmap("Dummy_Scene.walkmap")
-        collisor = lib.make_node_collisor(player_node, 0.3098)
+        map = lib.make_walkmap("TestMap.walkmap")
+        collisor = lib.make_node_collisor(player_node, map, 0.3098)
 
         -- Backgrounds
         back = lib.make_background("CM_01.png")
@@ -126,6 +122,7 @@ scene = {
         scn_mgr:update()
     end,
     cleanup = function()
+        log_info("ENDING TEST STAGE")
 
     end
 }

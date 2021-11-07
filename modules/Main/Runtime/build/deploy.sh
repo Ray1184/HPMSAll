@@ -4,7 +4,7 @@ PROJECT_DIR=$1
 PYTHON_EXE=$2
 
 SRC_DIR=${PROJECT_DIR}/modules/Main/Runtime
-BIN_DIR=${PROJECT_DIR}/cmake-build-debug
+BIN_DIR=${PROJECT_DIR}/Debug
 LOCAL_DIR=${PROJECT_DIR}/modules/Main/Runtime/build
 
 cd ${LOCAL_DIR} || exit

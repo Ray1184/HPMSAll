@@ -29,8 +29,8 @@ hpms::OgreContext::OgreContext(const OgreWindowSettings& settings) : root(nullpt
 }
 
 hpms::OgreContext::~OgreContext()
-{
-    root->destroySceneManager(GetSceneManager());
+{   
+    root->destroySceneManager(sceneMgr);
     hpms::LuaScriptManager::GetSingleton().unloadAll();
     hpms::SafeDeleteRaw(overlaySystem);
     hpms::SafeDeleteRaw(root);
@@ -95,7 +95,7 @@ void hpms::OgreContext::CreateViewports()
 {
     sceneMgr = root->createSceneManager();
     sceneMgr->addRenderQueueListener(overlaySystem);
-    camera = sceneMgr->createCamera(DEFAULT_CAMERA_NAME);
+    camera = sceneMgr->createCamera(DEFAULT_CAMERA_NAME);   
     Ogre::Viewport* vp = windowPair.render->addViewport(camera);
     vp->setBackgroundColour(Ogre::ColourValue(0, 0, 0));
 

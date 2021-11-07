@@ -44,6 +44,9 @@ function log_debug(msg)
         print('[LUA-DEBUG]  ' .. msg)
     end
 end
+function log_info(msg)
+    print('[LUA-INFO ]  ' .. msg)
+end
 function log_warn(msg)
     print('[LUA-WARN ]  ' .. msg)
 end

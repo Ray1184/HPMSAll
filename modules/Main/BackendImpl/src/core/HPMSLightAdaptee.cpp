@@ -18,7 +18,8 @@ void hpms::LightAdaptee::SetPosition(const glm::vec3& position)
         ogreLight->getParentSceneNode()->setPosition(position.x, position.y, position.z);
     } else
     {
-        ogreLight->setPosition(position.x, position.y, position.z);
+        LOG_ERROR("Direct light manipulation has been removed because deprecated. You need to attach light to a node.");
+        // ogreLight->setPosition(position.x, position.y, position.z);
     }
 }
 
@@ -73,12 +74,19 @@ Ogre::MovableObject* hpms::LightAdaptee::GetNative()
 hpms::LightAdaptee::LightAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(ctx)
 {
     Check();
+    auto* lightNode = ctx->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
     ogreLight = (ctx)->GetSceneManager()->createLight();
+    lightNode->attachObject(ogreLight);    
 }
 
 hpms::LightAdaptee::~LightAdaptee()
 {
     Check();
+    auto* lightNode = ogreLight->getParentSceneNode();
+    if (lightNode != nullptr) 
+    {
+        (ctx)->GetSceneManager()->destroySceneNode(lightNode);
+    }
     (ctx)->GetSceneManager()->destroyLight(ogreLight);
 }
 
