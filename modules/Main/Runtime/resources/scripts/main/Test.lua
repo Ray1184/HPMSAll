@@ -59,7 +59,7 @@ scene = {
         --text2d:set_position(0, 0)
 
         -- Debug
-        --hpms.debug_draw_walkmap(map)
+        hpms.debug_draw_walkmap(map)
 
     end,
     input = function(keys, mouse_buttons, x, y)
