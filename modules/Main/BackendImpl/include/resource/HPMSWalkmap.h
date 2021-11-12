@@ -14,6 +14,7 @@
 #include <pods/binary.h>
 #include <common/HPMSCoordSystem.h>
 #include <glm/glm.hpp>
+#include <common/HPMSSerializationUtils.h>
 
 #define UNDEFINED_SECTOR "__undef__"
 
@@ -229,6 +230,7 @@ namespace hpms
         }
     };
 
+
     class Polygon : public hpms::Object
     {
     private:
@@ -236,7 +238,7 @@ namespace hpms
     public:
         PODS_SERIALIZABLE(
                 1,
-                PODS_OPT(data)
+                PODS_OPT(hpms::SerializableOf(data))
 
         );
 
@@ -280,7 +282,9 @@ namespace hpms
         PODS_SERIALIZABLE(
                 1,
                 PODS_OPT(id),
-                PODS_OPT(sectors)
+                PODS_OPT(sectors),
+                PODS_OPT(perimeter),
+                PODS_OPT(obstacles)
 
         );
 

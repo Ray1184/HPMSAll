@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 
+message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
 message(STATUS "Ogre root path: $ENV{OGRE_ROOT}")
 

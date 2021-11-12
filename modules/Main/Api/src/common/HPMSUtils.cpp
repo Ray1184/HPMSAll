@@ -1,5 +1,5 @@
 /*!
- * File Utils.cpp
+ * File HPMSUtils.cpp
  */
 
 #include <common/HPMSUtils.h>
@@ -29,8 +29,7 @@ std::string hpms::ReadFile(const std::string& fileName)
     if (file)
     {
         std::stringstream buffer;
-        buffer << file.rdbuf();
-        file.close();
+        buffer << file.rdbuf();        
         return buffer.str();
     } else
     {
@@ -38,7 +37,16 @@ std::string hpms::ReadFile(const std::string& fileName)
         ss << "Cannot open/read file with name " << fileName;
         LOG_ERROR(ss.str().c_str());
     }
+    file.close();
     return "";
+}
+
+bool hpms::FileExists(const std::string& fileName)
+{
+    std::ifstream file(fileName);   
+    bool exists = file.good();
+    file.close();
+    return exists;
 }
 
 

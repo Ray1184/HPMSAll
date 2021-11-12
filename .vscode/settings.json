@@ -4,6 +4,9 @@
     "cmake.environment": {
         "OGRE_ROOT": "C:/Users/nicco/Desktop/Projects/ogre"
     },
+    "cmake.configureSettings": {
+        "CMAKE_BUILD_TYPE": "${buildType}"
+     },
     "files.associations": {
         "array": "cpp",
         "atomic": "cpp",

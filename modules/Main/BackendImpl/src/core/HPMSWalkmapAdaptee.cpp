@@ -31,24 +31,32 @@ void hpms::WalkmapAdaptee::ForEachTriangle(const std::function<bool(TriangleAdap
 void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2 &, const glm::vec2 &)> &visitor)
 {
     Check(walkmap.get());
-    for (const auto &sector : walkmap->GetData()->GetSectors())
+    int size = walkmap->GetData()->GetPerimeter().GetData().size();
+    for (int i = 0; i < size - 1; i++)
     {
-        for (const auto &tri : sector.GetTriangles())
+        glm::vec2 first = walkmap->GetData()->GetPerimeter().GetData()[i];
+        glm::vec2 second = walkmap->GetData()->GetPerimeter().GetData()[i + 1];
+        bool exit = visitor(first, second);
+        if (exit)
         {
-            if (tri.IsPerimetral())
+            return;
+        }
+    }
+
+    for (auto& obstacle : walkmap->GetData()->GetObstacles())
+    {
+        for (int i = 0; i < obstacle.GetData().size() - 1; i++)
+        {
+            glm::vec2 first = obstacle.GetData()[i];
+            glm::vec2 second = obstacle.GetData()[i + 1];
+            bool exit = visitor(first, second);
+            if (exit)
             {
-                for (const auto &side : tri.GetPerimetralSides())
-                {
-                    auto coords = hpms::GetSideCoordsFromTriangle(&tri, &side);
-                    bool exit = visitor(coords.first, coords.second);
-                    if (exit)
-                    {
-                        return;
-                    }
-                }
+                return;
             }
         }
     }
+    
 }
 
 hpms::TriangleAdapter *hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3 &pos, float tolerance)

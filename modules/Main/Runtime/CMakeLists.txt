@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 
 set(LUA_VERSION 5.3.2)
 set(LUABRIDGE_VERSION 2.6)
@@ -50,7 +51,13 @@ set(SOURCES
         src/states/HPMSLuaLogic.cpp
         src/states/HPMSGameState.cpp
         src/logic/gui/HPMSGuiText.cpp)
-add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp ${SOURCES})
+if (MSVC)
+    message(STATUS "Executable for MSVC")
+    add_executable(HPMSRuntime WIN32 src/HPMSRuntimeMain.cpp ${SOURCES})
+else ()
+    message(STATUS "Executable for MINGW, CLANG or UNIX like")
+    add_executable(HPMSRuntime src/HPMSRuntimeMain.cpp ${SOURCES})
+endif ()
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSBackendImpl)
 
 # Resources installation through python.
@@ -64,3 +71,10 @@ execute_process(
 
 cat(${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini ${CMAKE_BINARY_DIR}/bin/rt/data/Resources.ini)
 file(REMOVE ${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini)
+
+# Installation.
+add_custom_command(TARGET HPMSWalkmapConverter
+        POST_BUILD
+        # Copy main exe.
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ ${CMAKE_BINARY_DIR}/bin/ext/
+       

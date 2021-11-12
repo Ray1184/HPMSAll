@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}\\Debug\\bin\\ext\\HPMSWalkmapConverter.exe",
-            "args": ["C:\\hpmstest\\maps\\TestMap.walkmap.obj"],
+            "args": ["C:/Users/nicco/Desktop/Projects/HPMSAll/Debug/bin/ext/Dummy_Scene.walkmap.obj"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

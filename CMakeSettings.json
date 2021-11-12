@@ -5,11 +5,16 @@
       "generator": "Ninja",
       "configurationType": "Debug",
       "inheritEnvironments": [ "msvc_x64_x64" ],
-      "buildRoot": "${projectDir}\\${name}",
-      "installRoot": "${projectDir}\\${name}",
+      "buildRoot": "${projectDir}\\Debug",
+      "installRoot": "${projectDir}\\Debug",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "environments": [
+        {
+          "OGRE_ROOT": "C:/Users/nicco/Desktop/Projects/ogre"
+        }
+      ]
     }
   ]
 }

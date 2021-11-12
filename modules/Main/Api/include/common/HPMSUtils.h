@@ -1,5 +1,5 @@
 /*!
- * File Utils.h
+ * File HPMSUtils.h
  */
 
 #pragma once
@@ -269,6 +269,8 @@ namespace hpms
 
     std::string ReadFile(const std::string& fileName);
 
+    bool FileExists(const std::string& fileName);
+    
     inline void WriteLinesToFile(const std::string& outputFile, const std::vector<std::string>& lines)
     {
         if (lines.empty())

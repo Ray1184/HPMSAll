@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
 set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 
 set(PODS_VERSION master)
 set(GLM_VERSION 0.9.9.8)
@@ -88,10 +89,12 @@ find_library(OGRE_ZLIBSTATIC
         PATHS ${OGRE_LIB_2}
         REQUIRED)
 
-find_library(OGRE_ZZIP
-        NAMES zzip libzzip zzip.dll libzzip.dll zzipd libzzipd zzipd.dll libzzipd.dll
-        PATHS ${OGRE_LIB_2}
-        REQUIRED)
+if (MINGW)
+    find_library(OGRE_ZZIP
+            NAMES zzip libzzip zzip.dll libzzip.dll zzipd libzzipd zzipd.dll libzzipd.dll
+            PATHS ${OGRE_LIB_2}
+            REQUIRED)
+endif()
 
 message(STATUS "Ogre dependencies: ")
 
@@ -141,7 +144,7 @@ set(SOURCES
         src/core/HPMSOverlayTextAreaAdaptee.cpp
         src/core/HPMSNativeAdaptee.cpp)
 
-add_library(HPMSBackendImpl SHARED ${SOURCES})
+add_library(HPMSBackendImpl STATIC ${SOURCES})
 
 target_link_libraries(HPMSBackendImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGRE_SDL2})
 
@@ -149,7 +152,7 @@ target_link_libraries(HPMSBackendImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGR
 string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
 add_custom_command(TARGET HPMSBackendImpl
         POST_BUILD
-        # Copy Ogre dll files do build.
+        # Copy Ogre dll files.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/rt/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/rt/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN_2}/ ${CMAKE_BINARY_DIR}/bin/rt/

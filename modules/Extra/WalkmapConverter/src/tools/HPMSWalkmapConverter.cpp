@@ -29,6 +29,11 @@ hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
 
 void hpms::WalkmapConverter::ProcessSectors(std::vector<hpms::Sector> &sectors, const std::string &path)
 {
+    if (!hpms::FileExists(path)) 
+    {
+        LOG_WARN("Sector data not found");
+        return;
+    }
     std::vector<glm::vec3> vertices;
     std::vector<hpms::Face> faces;
     std::unordered_map<std::string, std::string> faceRefToSectorName;
@@ -103,6 +108,11 @@ void hpms::WalkmapConverter::ProcessPerimetralSides(std::vector<hpms::Sector> &s
 
 void hpms::WalkmapConverter::ProcessPerimeter(hpms::Polygon *polygon, const std::string &path)
 {
+    if (!hpms::FileExists(path)) 
+    {
+        LOG_WARN("Perimeter data not found");
+        return;
+    }
     std::vector<Polygon> polys;
     ProcessPolygons(polys, path);
     *polygon = polys[0];
@@ -110,6 +120,11 @@ void hpms::WalkmapConverter::ProcessPerimeter(hpms::Polygon *polygon, const std:
 
 void hpms::WalkmapConverter::ProcessObstacles(std::vector<Polygon> &obstacles, const std::string &path)
 {
+    if (!hpms::FileExists(path)) 
+    {
+        LOG_WARN("Obstacles data not found");
+        return;
+    }
     ProcessPolygons(obstacles, path);
 }
 

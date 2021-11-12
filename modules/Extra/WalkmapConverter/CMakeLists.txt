@@ -4,11 +4,13 @@ project(HPMSWalkmapConverter)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 
 set(GLM_VERSION 0.9.9.8)
 set(PODS_VERSION master)
 
 include(../../../cmake/Shared.cmake)
+
 
 if (NOT DEFINED DEP_PATH)
     set(DEP_PATH ${CMAKE_BINARY_DIR}/_deps)
@@ -43,10 +45,12 @@ target_link_libraries(HPMSWalkmapConverter HPMSBackendImpl)
 string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
 add_custom_command(TARGET HPMSWalkmapConverter
         POST_BUILD
-        # Copy Ogre dll files do build.
+        # Copy Ogre dlls.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/ext/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/ext/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN_2}/ ${CMAKE_BINARY_DIR}/bin/ext/
+        # Copy main exe.
+        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ ${CMAKE_BINARY_DIR}/bin/ext/
         # Delete folders and files.
         COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/debug
         COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/release
@@ -56,7 +60,4 @@ add_custom_command(TARGET HPMSWalkmapConverter
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/samples.cfg
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/plugins.cfg
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/tests.cfg
-
-        # Copy HPMS base dll files.
-        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_BINARY_DIR}/bin/rt/HPMSBackendImpl.dll ${CMAKE_BINARY_DIR}/bin/ext/
         )
