@@ -147,10 +147,6 @@ Ogre::MovableObject* hpms::EntityAdaptee::GetNative()
     return ogreEntity;
 }
 
-float hpms::EntityAdaptee::GetBoundingRadius()
-{
-    return boundingRadius;
-}
 
 hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx),
                                                                                       mode(hpms::EntityMode::COLOR_AND_DEPTH)
@@ -166,7 +162,6 @@ hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& na
             animMap[it.first] = animAdaptee;
         }
     }
-    boundingRadius = 0.3098;
 
 }
 

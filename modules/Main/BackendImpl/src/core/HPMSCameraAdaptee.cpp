@@ -142,9 +142,9 @@ hpms::CameraAdaptee::~CameraAdaptee()
 {
     Check();
     auto *cameraNode = ogreCamera->getParentSceneNode();
-    if (cameraNode != nullptr)
+    if (cameraNode)
     {
-        hpms::SafeDeleteRaw(cameraNode);
+        (ctx)->GetSceneManager()->destroySceneNode(cameraNode);
     }
     (ctx)->GetSceneManager()->destroyCamera(ogreCamera);
 }

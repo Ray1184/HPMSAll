@@ -44,9 +44,12 @@ void hpms::DestroyContext()
 {
     hpms::SafeDelete(gNative);
     hpms::SafeDelete(gSimulator);
-    hpms::SafeDelete(gSupplier);
-    hpms::SafeDelete(gRtt);
+    hpms::SafeDelete(gSupplier);       
+    // RTT is detached on root delete, so must be shutdown before but deleted after.
+    gRtt->Shutdown();
     hpms::SafeDelete(gContext);
+    hpms::SafeDelete(gRtt);
+    
 }
 
 

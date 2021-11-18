@@ -5,7 +5,6 @@ set(CMAKE_CXX_STANDARD 14)
 
 set(CMAKE_SHARED_LIBRARY_PREFIX)
 set(CMAKE_STATIC_LIBRARY_PREFIX)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_BUILD_TYPE})
 
 set(LUA_VERSION 5.3.2)
 set(LUABRIDGE_VERSION 2.6)
@@ -51,6 +50,9 @@ set(SOURCES
         src/states/HPMSLuaLogic.cpp
         src/states/HPMSGameState.cpp
         src/logic/gui/HPMSGuiText.cpp)
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/rt/)
+
 if (MSVC)
     message(STATUS "Executable for MSVC")
     add_executable(HPMSRuntime WIN32 src/HPMSRuntimeMain.cpp ${SOURCES})
@@ -72,10 +74,16 @@ execute_process(
 cat(${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini ${CMAKE_BINARY_DIR}/bin/rt/data/Resources.ini)
 file(REMOVE ${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini)
 
+if (WIN32)
+    set(EXECUTABLE HPMSRuntime.exe)
+else ()
+    set(EXECUTABLE HPMSRuntime)
+endif ()
+
 # Installation.
-add_custom_command(TARGET HPMSWalkmapConverter
-        POST_BUILD
-        # Copy main exe.
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/ ${CMAKE_BINARY_DIR}/bin/ext/
-        )
+#add_custom_command(TARGET HPMSRuntime
+#        POST_BUILD
+#        # Copy main exe.
+#        COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE} ${CMAKE_BINARY_DIR}/bin/rt/
+#        )
        

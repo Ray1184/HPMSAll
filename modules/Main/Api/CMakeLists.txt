@@ -22,4 +22,5 @@ set(SOURCES
         src/common/HPMSMathUtils.cpp
         src/common/HPMSLibsUtils.cpp)
 
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_library(HPMSApi STATIC ${SOURCES})

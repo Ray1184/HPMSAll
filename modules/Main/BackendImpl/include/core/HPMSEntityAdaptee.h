@@ -27,7 +27,6 @@ namespace hpms
         hpms::EntityMode mode;
         std::map<std::string, hpms::AnimationAdapter*> animMap;
         std::vector<hpms::AnimationAdapter*> animList;
-        float boundingRadius;
 
     public:
         EntityAdaptee(hpms::OgreContext* ctx, const std::string& name);
@@ -68,6 +67,5 @@ namespace hpms
 
         virtual Ogre::MovableObject* GetNative() override;
 
-        float GetBoundingRadius() override;
     };
 }

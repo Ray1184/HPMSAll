@@ -83,9 +83,9 @@ hpms::LightAdaptee::~LightAdaptee()
 {
     Check();
     auto* lightNode = ogreLight->getParentSceneNode();
-    if (lightNode != nullptr) 
+    if (lightNode) 
     {
-        (ctx)->GetSceneManager()->destroySceneNode(lightNode);
+       (ctx)->GetSceneManager()->destroySceneNode(lightNode);
     }
     (ctx)->GetSceneManager()->destroyLight(ogreLight);
 }

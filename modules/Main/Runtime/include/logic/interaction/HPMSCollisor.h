@@ -70,6 +70,16 @@ namespace hpms
             LOG_WARN("Cannot set sampled triangle inside script.");
         }
 
+        inline void SetTolerance(float tolerance)
+        {
+            Collisor::tolerance = tolerance;
+        }
+
+        inline float GetTolerance()
+        {
+            return tolerance;
+        }
+
         void Update() override;
 
     private:

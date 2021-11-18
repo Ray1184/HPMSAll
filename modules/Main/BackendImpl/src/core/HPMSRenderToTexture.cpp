@@ -11,12 +11,18 @@ hpms::RenderToTexture::RenderToTexture(hpms::OgreContext* ctx, unsigned int fbWi
                                                                                                               renderScreen(nullptr),
                                                                                                               fbNode(nullptr)
 {
+
     Initialize();
 }
 
 void hpms::RenderToTexture::Initialize()
 {
+    if (loaded)
+    {
+        return;
+    }
 
+    loaded = true;
     auto texture = Ogre::TextureManager::getSingleton().createManual(RTT_TEXTURE_NAME,
                                                                      Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME,
                                                                      Ogre::TEX_TYPE_2D, fbWidth, fbHeight,
@@ -57,11 +63,23 @@ void hpms::RenderToTexture::Initialize()
 
 
 hpms::RenderToTexture::~RenderToTexture()
-{
-    hpms::SafeDeleteRaw(renderScreen);
-    ctx->GetSceneManager()->destroySceneNode(fbNode);
+{    
+    Shutdown();
 }
 
+void hpms::RenderToTexture::Shutdown()
+{
+    if (!loaded)
+    {
+        return;
+    }
+    loaded = false;
+    hpms::SafeDeleteRaw(renderScreen);
+    if (fbNode)
+    {
+        ctx->GetSceneManager()->destroySceneNode(fbNode);
+    }
+}
 
 void hpms::RenderToTexture::preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt)
 {

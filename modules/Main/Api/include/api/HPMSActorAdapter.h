@@ -14,10 +14,7 @@ namespace hpms
     class ActorAdapter : public hpms::Object
     {
     public:
-        inline virtual float GetBoundingRadius() {
-            return 0;
-        }
-
+       
         inline virtual const std::string Name() const override
         {
             return "ActorAdapter";

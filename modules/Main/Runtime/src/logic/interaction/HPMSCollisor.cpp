@@ -21,7 +21,7 @@ void hpms::Collisor::Update()
 void hpms::Collisor::DetectByBoundingRadius()
 {
     CollisionResponse collisionResponse;
-    walkMap->Collides(nextPosition, actor->GetBoundingRadius(), &collisionResponse);
+    walkMap->Collides(nextPosition, tolerance, &collisionResponse);
     bool inPerimeter = !collisionResponse.collided;
     if (inPerimeter)
     {
@@ -31,9 +31,10 @@ void hpms::Collisor::DetectByBoundingRadius()
     {
         glm::vec3 correctPosition;
         CorrectPositionBoundingRadiusMode(collisionResponse.sidePointA, collisionResponse.sidePointB, &correctPosition);
+        UP(correctPosition) = UP(actor->GetPosition());
         // Double check is required because of correct position result.
         // Infact after slide the new position could be outside of perimeter.
-        walkMap->Collides(correctPosition, actor->GetBoundingRadius(), &collisionResponse);
+        walkMap->Collides(correctPosition, tolerance, &collisionResponse);
         bool inPerimeter = !collisionResponse.collided;
         if (inPerimeter)
         {
@@ -85,12 +86,19 @@ void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, c
 
 void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec2* correctPosition)
 {
+    /*
     glm::vec2 dir = nextPosition - actor->GetPosition();
     glm::vec2 side = sideB - sideA;
     float alpha = glm::angle(side, dir);
     float mag = glm::length(dir) * alpha;
     glm::vec2 slide = glm::normalize(side) * mag;
     *correctPosition = ADDV3_V2(actor->GetPosition(), slide);
+    */
+    glm::vec2 n = glm::normalize(Perpendicular(sideA - sideB));
+    glm::vec3 v = nextPosition - actor->GetPosition();
+    glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
+    glm::vec2 vt = glm::vec2(SD(v), FW(v)) - vn;
+    *correctPosition = ADDV3_V2(actor->GetPosition(), vt);
 }
 
 void hpms::Collisor::CorrectPositionSectorMode(const glm::vec2 &sideA, const glm::vec2 &sideB, bool resampleTriangle)

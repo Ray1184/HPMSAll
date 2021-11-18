@@ -72,14 +72,13 @@ void hpms::WalkmapAdaptee::Collides(const glm::vec3 &pos, float radius, Collisio
     Check(walkmap.get());
     auto &perimeter = walkmap.get()->GetData()->GetPerimeter().GetData();
     glm::vec2 noTranslation = glm::vec2(0, 0);
-    CollisionResponse collisionResponse;
-    hpms::CircleInteractPolygon(pos, radius, noTranslation, perimeter, INSIDE, &collisionResponse);
-    if (!collisionResponse.collided)
+    hpms::CircleInteractPolygon(pos, radius, noTranslation, perimeter, INSIDE, response);
+    if (!response->collided)
     {
         for (auto &obstacle : walkmap.get()->GetData()->GetObstacles())
         {
-            hpms::CircleInteractPolygon(pos, radius, noTranslation, obstacle.GetData(), OUTSIDE, &collisionResponse);
-            if (collisionResponse.collided)
+            hpms::CircleInteractPolygon(pos, radius, noTranslation, obstacle.GetData(), OUTSIDE, response);
+            if (response->collided)
             {
                 return;
             }

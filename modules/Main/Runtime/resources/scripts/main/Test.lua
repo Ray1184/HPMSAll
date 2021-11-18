@@ -30,7 +30,7 @@ scene = {
         lib.set_node_entity(player_node, player)
 
         -- Collisions
-        map = lib.make_walkmap("TestMap.walkmap")
+        map = lib.make_walkmap("Dummy_Scene.walkmap")
         collisor = lib.make_node_collisor(player_node, map, 0.3098)
 
         -- Backgrounds
@@ -58,8 +58,6 @@ scene = {
         --text2d = input_text_2d:new(points, 0, 0, 'Console_White.png', 100, 'DebugConsoleArea', 'Tamzen', 16, lib.vec4(1.0, 1.0, 1.0, 1.0), 5)
         --text2d:set_position(0, 0)
 
-        -- Debug
-        hpms.debug_draw_walkmap(map)
 
     end,
     input = function(keys, mouse_buttons, x, y)
@@ -116,8 +114,8 @@ scene = {
         f_move_collisor_towards_direction(collisor, speed * tpf)
         f_rotate(player, 0, 0, rotate * tpf * 10)
         hpms.debug_draw_clear()
-        --hpms.debug_draw_perimeter(map)
-        hpms.debug_draw_aabb(player)
+        hpms.debug_draw_perimeter(map)
+        hpms.debug_draw_aabb(collisor)
         --sector = collisor.sector
         scn_mgr:update()
     end,

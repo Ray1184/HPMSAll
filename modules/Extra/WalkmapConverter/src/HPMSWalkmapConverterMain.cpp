@@ -93,7 +93,7 @@ std::string GetOutputPath(const std::string& inputPath)
 
 ProcessResult Serialize(const std::string& inputPath, const std::string& outputPath)
 {
-    hpms::WalkmapData* item = hpms::WalkmapConverter::LoadWalkmap(inputPath);
+    hpms::WalkmapData* item = hpms::WalkmapConverter::LoadWalkmap(inputPath);    
     pods::ResizableOutputBuffer out;
     pods::BinarySerializer<decltype(out)> serializer(out);
     if (serializer.save(*item) != pods::Error::NoError)

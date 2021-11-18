@@ -21,6 +21,7 @@ namespace hpms
         Ogre::Rectangle2D* renderScreen;
         hpms::OgreContext* ctx;
         Ogre::SceneNode* fbNode;
+        bool loaded;
 
         void Initialize();
 
@@ -28,6 +29,8 @@ namespace hpms
         RenderToTexture(hpms::OgreContext* ctx, unsigned int fbWidth, unsigned int fbHeight);
 
         virtual ~RenderToTexture();
+
+        virtual void Shutdown();
 
         virtual void preRenderTargetUpdate(const Ogre::RenderTargetEvent& evt) override;
 

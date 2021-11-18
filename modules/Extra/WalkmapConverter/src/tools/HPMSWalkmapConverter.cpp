@@ -24,6 +24,19 @@ hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
     ProcessObstacles(obstacles, obstaclesPath);
     std::string roomName = hpms::GetFileName(path);
     auto *map = hpms::SafeNew<WalkmapData>(roomName, sectors, perimeter, obstacles);
+    
+    // Workaround for glm::vec2 serialization issue
+    auto p = map->GetPerimeter();
+    p.BeforeSerialization();
+    map->SetPerimeter(p);
+    std::vector<hpms::Polygon> obs;
+    for (auto p : map->GetObstacles())
+    {
+        p.BeforeSerialization();
+        obs.push_back(p);
+    }
+    map->SetObstacles(obs);
+    
     return map;
 }
 
@@ -171,7 +184,7 @@ void hpms::WalkmapConverter::ParsePolygons(std::vector<Polygon> &polys, const Ra
         for (int i = 1; i < sides.size(); i++)
         {
             glm::ivec2* next = Next(&lastIndex, sides);
-            glm::vec3 vert = rawPoly.vertices[lastIndex.y - 1];
+            glm::vec3 vert = rawPoly.vertices[next->y - 1];
             sortedData.push_back(V3_TO_V2(vert));
             lastIndex = *next;
             hpms::SafeDeleteRaw(next);

@@ -3,5 +3,6 @@
 Modificare l'HPMSCollisor usando il sistema di collisioni gestito nel walkmpa adapter   | DONE
 Sistemare camera agganciandola a nodo di scena (manipolazione diretta deprecata)        | DONE
 Eliminare ogni errore                                                                   | DONE
-Capire dove viene impostato il bounding circle                                          | TODO
-Far funzionare il nuovo sistema di collisioni                                           | TODO
+Capire dove viene impostato il bounding circle                                          | DONE
+Far funzionare il nuovo sistema di collisioni                                           | DONE
+Capire se al delete dei nodi c'è qualche SIGSEV                                         | DONE

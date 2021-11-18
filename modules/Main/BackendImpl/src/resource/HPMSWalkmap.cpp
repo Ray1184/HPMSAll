@@ -20,6 +20,16 @@ void hpms::Walkmap::loadImpl()
         LOG_ERROR(ss.str().c_str());
     }
 
+    auto p = data->GetPerimeter();
+    p.AfterDeSerialization();
+    data->SetPerimeter(p);
+    std::vector<hpms::Polygon> obs;
+    for (auto p : data->GetObstacles())
+    {
+        p.AfterDeSerialization();
+        obs.push_back(p);
+    }
+    data->SetObstacles(obs);
     hpms::SafeDeleteArray(buffer);
 }
 

@@ -454,7 +454,7 @@ namespace hpms
             hpms::DebugUtils::ClearAllDraws();
         }
 
-        static inline void DDebugDrawBoundingBox(hpms::EntityAdapter* entity)
+        static inline void DDebugDrawBoundingBox(hpms::Collisor* entity)
         {
             hpms::DebugUtils::DrawBoundingBox(entity);
         }
