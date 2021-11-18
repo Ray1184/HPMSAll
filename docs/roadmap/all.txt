@@ -1,0 +1,19 @@
+ TASK                                                           | STATUS		| DETAILS
+------------------------------------------------------------------------------------------
+ Testare tutti i suppliers/funzioni del backend sul runtime.    | 100%			|
+ Adattare states e logiche runtime.                             | 100%			|
+ Mappare tutti i suppliers/funzioni nella VM lua.               | 100%			|
+ Text box e bone attachment.                                    | 100%			|
+ Collisioni.                                                    | 100%			| d-collisions.txt
+ Demo tecnica minimale.                                         | 100%			|
+ Batch esportazione scena da blender in Java/Python             | 70%			|
+ Implementare console LUA in tempo reale.                       | 100%			|
+ Implementare funzioni di gestione camera e switch tra stati.   | 100%			|
+ Demo tecnica.                                                  | 100%			|
+ Light map   .                                                  | 0%			|
+ Implementare prime logiche di gioco e GUI rudimentali.         | 100%			|
+ Demo minimale.                                                 | 100%			|
+ Implementare LUA Debug.                                        | TODO			| 
+ Implementare meccaniche di gioco.                              | TODO			| d-game-mechanics.txt
+ Demo.                                                          | TODO			| d-demo.txt
+ Sviluppo gameplay.                                             | TODO			| d-gameplsay.txt
