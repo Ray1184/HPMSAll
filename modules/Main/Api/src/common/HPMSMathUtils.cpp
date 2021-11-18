@@ -104,7 +104,7 @@ void hpms::CircleInteractPolygon(const glm::vec2 &point, float radius, const glm
 
     for (int i = 0; i < polygon.size() - 1; i++)
     {
-        glm::vec2 translatedCenter = point;// +t;
+        glm::vec2 translatedCenter = point +t;
         if (CircleLineIntersect(polygon[i], polygon[i + 1], translatedCenter, radius))
         {
             response->collided = true;
