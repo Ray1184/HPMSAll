@@ -1,11 +1,12 @@
 #!/bin/bash
 
 PROJECT_DIR=$1
-PYTHON_EXE=$2
+PYTHON_DIR=$2
 
-SRC_DIR=${PROJECT_DIR}/modules/Main/Runtime
-BIN_DIR=${PROJECT_DIR}/Debug
-LOCAL_DIR=${PROJECT_DIR}/modules/Main/Runtime/build
+SRC_DIR="${PROJECT_DIR}/modules/Main/Runtime"
+BIN_DIR="${PROJECT_DIR}/Debug"
+LOCAL_DIR="${PROJECT_DIR}/modules/Main/Runtime/build"
+PYTHON_EXE="${PYTHON_DIR}/python"
 
 cd ${LOCAL_DIR} || exit
 

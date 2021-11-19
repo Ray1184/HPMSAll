@@ -1,0 +1,9 @@
+ TASK                                                                                   | STATUS
+------------------------------------------------------------------------------------------------------
+Gestione menù/inventario																| 0%
+Gestione azioni base (cerca, prendi, spingi ecc...)										| 0%
+Gestione combattimenti e armi															| 0%
+Gestione stati giocatore																| 0%
+Gestione crafting																		| 0%
+Gestione ai/pathfinding																	| 0%
+Gestione minigames																		| 0%

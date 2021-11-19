@@ -1,0 +1,10 @@
+ TASK                                                                                   | STATUS
+------------------------------------------------------------------------------------------------------
+Gestione camere/settori																	| 100%
+Gestione trigger generici																| 80%
+Cinematica																				| 20%
+Gestione stati input																	| 20%
+Gestione stati animazioni																| 20%
+Effetti speciali (fadein, out ecc...)													| 20%
+Stato scena																				| 20%
+Save game																			    | 0%
