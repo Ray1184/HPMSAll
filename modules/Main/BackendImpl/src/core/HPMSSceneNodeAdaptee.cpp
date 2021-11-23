@@ -153,7 +153,7 @@ hpms::SceneNodeAdapter* hpms::SceneNodeAdaptee::GetParent()
 
 hpms::SceneNodeAdaptee::SceneNodeAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx), parent(nullptr)
 {
-    HPMS_ASSERT(ctx->GetSceneManager(), "Scene manager cannot be null.");
+    HPMS_ASSERT(ctx->GetSceneManager(), "Scene manager cannot be null");
     ogreNode = ctx->GetSceneManager()->getRootSceneNode()->createChildSceneNode(name);
 }
 

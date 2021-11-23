@@ -44,7 +44,7 @@ def deploy():
     for res in resources:
         add_resource(res, res_entries, bin_path)
 
-    res_ini = bin_path + '/bin/rt/data/Resources.ini'
+    res_ini = bin_path + '/bin/rt/data/resources.ini'
     if os.path.exists(res_ini):
         os.remove(res_ini)
     with open(res_ini, 'w') as f:

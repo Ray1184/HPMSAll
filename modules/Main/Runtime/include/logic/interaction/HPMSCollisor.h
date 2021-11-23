@@ -67,7 +67,7 @@ namespace hpms
         inline void SetCurrentTriangle(const TriangleAdapter* currentTriangle)
         {
             // Not implemented.
-            LOG_WARN("Cannot set sampled triangle inside script.");
+            LOG_WARN("Cannot set sampled triangle inside script");
         }
 
         inline void SetTolerance(float tolerance)

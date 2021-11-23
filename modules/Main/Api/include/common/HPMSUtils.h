@@ -13,17 +13,25 @@
 #include <unordered_map>
 #include <functional>
 #include <common/HPMSDefs.h>
+#include <thirdparty/TPVariadicTable.h>
 #include <cassert>
 #include <iostream>
+#include <cstdio>
+#include <ctime>
 
 #define HPMS_ASSERT(check, msg) assert(check)
 #define LOG_ERROR(msg) hpms::ErrorHandler(__FILE__, __LINE__, msg)
-#define LOG_WARN(msg) hpms::MsgHandler("WARN ", msg)
-#define LOG_INFO(msg) hpms::MsgHandler("INFO ", msg)
+#define LOG_WARN(msg) hpms::MsgHandler("HPMS-WARN ", msg)
+#define LOG_INFO(msg) hpms::MsgHandler("HPMS-INFO ", msg)
 #define LOG_RAW(msg) hpms::MsgHandler(msg)
+#define LOG_INTERFACE(msg) hpms::MsgHandlerInterface(msg)
 
-#if !defined(_DEBUG) && !defined(NDEBUG)
-#define LOG_DEBUG(msg) hpms::MsgHandler("DEBUG", msg)
+#ifndef NDEBUG
+#define HPMS_DEBUG
+#endif
+
+#ifdef HPMS_DEBUG
+#define LOG_DEBUG(msg) hpms::MsgHandler("HPMS-DEBUG", msg)
 #else
 #define LOG_DEBUG(msg)
 #endif
@@ -41,6 +49,17 @@ namespace hpms
         static AllocCounter& Instance();
     };
 
+    struct LogBuffer
+    {
+        std::ofstream appHpms;
+        bool opened{false};
+
+        static LogBuffer& Instance();
+        void Open();
+        void Close();
+        void Print(const std::stringstream& ss);
+    };
+
 
     struct ConfigManager
     {
@@ -54,39 +73,40 @@ namespace hpms
         static ConfigManager& Instance();
     };
 
-    inline void Print(const std::stringstream& ss)
+   
+
+    inline void MsgHandler(const char* message)
     {
-        printf(ss.str().c_str());
+        std::stringstream ss;
+        ss << message << std::endl;
+        LogBuffer::Instance().Print(ss);
+    }
+
+    inline void MsgHandlerInterface(const char* message)
+    {
+        MsgHandler(message);
     }
 
     inline void ErrorHandler(const char* file, int line, const char* message)
     {
         std::stringstream ss;
-        ss << "[ERROR] - File " << file << ", at line " << std::to_string(line) << ": " << message;
-        Print(ss);
+        ss << "[HPMS-ERROR] - File " << file << ", at line " << std::to_string(line) << ": " << message;
+        MsgHandler(ss.str().c_str());
         exit(-1);
     }
 
     inline void MsgHandler(const char* desc, const char* message)
     {
         std::stringstream ss;
-        ss << "[" << desc << "] - " << message << std::endl;
-        Print(ss);
+        ss << "[" << desc << "] - " << message;
+        MsgHandler(ss.str().c_str());
     }
-
-    inline void MsgHandler(const char* message)
-    {
-        std::stringstream ss;
-        ss << message << std::endl;
-        Print(ss);
-    }
-
 
     template<typename T, typename... ARGS>
     inline T* SafeNew(ARGS... args)
     {
         T* obj = new T(args...);
-#if !defined(_DEBUG) && !defined(NDEBUG)
+#ifdef HPMS_DEBUG
 
         std::string name = obj->Name();
         if (AllocCounter::Instance().allocMap.find(name) == AllocCounter::Instance().allocMap.end())
@@ -104,7 +124,7 @@ namespace hpms
     inline T* SafeNewArray(size_t size)
     {
         T* obj = new T[size];
-#if !defined(_DEBUG) && !defined(NDEBUG)
+#ifdef HPMS_DEBUG
         std::string name = "ARRAY";
         if (AllocCounter::Instance().allocMap.find(name) == AllocCounter::Instance().allocMap.end())
         {
@@ -122,7 +142,7 @@ namespace hpms
 
         if (ptr)
         {
-#if !defined(_DEBUG) && !defined(NDEBUG)
+#ifdef HPMS_DEBUG
 
         std::string name = ptr->Name();
         AllocCounter::Instance().allocMap[name]--;
@@ -140,7 +160,7 @@ namespace hpms
     inline void SafeDeleteArray(T*& ptr)
     {
 
-#if !defined(_DEBUG) && !defined(NDEBUG)
+#ifdef HPMS_DEBUG
         std::string name = "ARRAY";
         AllocCounter::Instance().allocMap[name]--;
 #endif
@@ -179,6 +199,40 @@ namespace hpms
     {
         delete[] ptr;
         ptr = nullptr;
+    }
+
+    inline void MemoryDump()
+    {
+
+        VariadicTable<std::string, int> vt({ "OBJECT", "PENDING ALLOCATIONS" });
+
+        std::ofstream dump;
+        remove(HPMS_MEMORY_DUMP_FILE);
+        dump.open(HPMS_MEMORY_DUMP_FILE);
+        dump << "### MEMORY DUMP REPORT ###" << std::endl << std::endl;
+        int leaks = 0;
+        for (const auto& pair : hpms::AllocCounter::Instance().allocMap)
+        {
+            vt.addRow(pair.first, pair.second);
+            leaks += pair.second;
+        }
+        vt.setTotal("TOTAL", leaks);
+        
+        if (leaks == 0)
+        {
+            dump << "OK, no potential memory leaks detected!" << std::endl;
+        }
+        else if (leaks > 0)
+        {
+            dump << "WARNING, potential memory leaks detected! " << leaks << " allocations not set free." << std::endl;
+        }
+        else
+        {
+            dump << "WARNING, unnecessary memory dealloc detected! " << -leaks << " useless de-allocations." << std::endl;
+        }
+        dump << "See details below..." << std::endl << std::endl;
+        vt.print(dump);
+        dump.close();
     }
 
     inline std::string Trim(const std::string& s)

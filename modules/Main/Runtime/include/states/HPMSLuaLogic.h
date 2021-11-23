@@ -39,7 +39,7 @@ namespace hpms
 
         inline void Check()
         {
-            HPMS_ASSERT(currentState, "Current state cannot e null.");
+            HPMS_ASSERT(currentState, "Current state cannot be null");
         }
     };
 }

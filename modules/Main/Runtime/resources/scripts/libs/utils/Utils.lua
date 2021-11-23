@@ -5,6 +5,7 @@
 --- Utils functions.
 ---
 
+
 local debug_flag = false
 
 function enable_debug()
@@ -39,20 +40,23 @@ function merge_tabs(orig, new)
     end
     return orig
 end
+function log(msg)
+    _hpms.log_msg(msg) 
+end
 function log_debug(msg)
     if debug_flag then
-        print('[LUA-DEBUG]  ' .. msg)
+        log('[LLUA-DEBUG] - ' .. msg)
     end
 end
 function log_info(msg)
-    print('[LUA-INFO ]  ' .. msg)
+    log('[LLUA-INFO ] - ' .. msg)
 end
 function log_warn(msg)
-    print('[LUA-WARN ]  ' .. msg)
+    log('[LLUA-WARN ] - ' .. msg)
 end
 function log_error(msg)
-    print('[LUA-ERROR]  ' .. msg)
-    print('Exit: -2')
+    log('[LLUA-ERROR] - ' .. msg)
+    log('Exit: -2')
     os.exit(-2, true)
 
 end

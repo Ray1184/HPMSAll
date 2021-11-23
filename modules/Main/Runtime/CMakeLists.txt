@@ -71,8 +71,8 @@ execute_process(
         COMMAND ${Python_EXECUTABLE} ${BUILD_MODULE} ${PROJECT_SOURCE_DIR} ${CMAKE_BINARY_DIR}
 )
 
-cat(${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini ${CMAKE_BINARY_DIR}/bin/rt/data/Resources.ini)
-file(REMOVE ${CMAKE_BINARY_DIR}/bin/rt/data/Core.ini)
+cat(${CMAKE_BINARY_DIR}/bin/rt/data/core.ini ${CMAKE_BINARY_DIR}/bin/rt/data/resources.ini)
+file(REMOVE ${CMAKE_BINARY_DIR}/bin/rt/data/core.ini)
 
 if (WIN32)
     set(EXECUTABLE HPMSRuntime.exe)

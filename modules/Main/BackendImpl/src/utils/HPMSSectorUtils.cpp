@@ -32,7 +32,7 @@ glm::vec2 hpms::GetSideCoordFromSideIndex(const hpms::Triangle* tri, unsigned in
             return glm::vec2(tri->SD3, tri->FW3);
         default:
             std::stringstream ss;
-            ss << "Index id " << idx << " not allowed for external side" << std::endl;
+            ss << "Index id " << idx << " not allowed for external side";
             LOG_ERROR(ss.str().c_str());
             return glm::vec2();
     }

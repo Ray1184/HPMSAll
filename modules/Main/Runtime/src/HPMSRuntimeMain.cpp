@@ -9,29 +9,8 @@
 
 void Dump()
 {
-#if !defined(_DEBUG) && !defined(NDEBUG)
-    std::stringstream ss;
-    ss << "Start memory dump report.\n------------------------------" << std::endl;
-    int leaks = 0;
-    for (const auto& pair : hpms::AllocCounter::Instance().allocMap)
-    {
-        ss << pair.first << ": " << pair.second << std::endl;
-        leaks += pair.second;
-    }
-    ss << std::endl;
-    if (leaks == 0)
-    {
-        ss << "OK, no potential memory leaks detected!" << std::endl;
-    } else if (leaks > 0)
-    {
-        ss << "WARNING, potential memory leaks detected! " << leaks << " allocations not set free." << std::endl;
-    } else
-    {
-        ss << "WARNING, unnecessary memory dealloc detected! " << -leaks << " useless de-allocations." << std::endl;
-    }
-    ss << "------------------------------";
-    LOG_RAW(ss.str().c_str());
-    LOG_RAW("End memory dump report.");
+#ifdef HPMS_DEBUG
+    hpms::MemoryDump();    
 #endif
 }
 
@@ -44,7 +23,7 @@ int main(int argc, char *argv[])
 {
     try
     {
-
+        hpms::LogBuffer::Instance().Open();
         hpms::WindowSettings s;
         s.name = "HPMSDemo";
         s.width = WIDTH;
@@ -60,7 +39,7 @@ int main(int argc, char *argv[])
         hpms::SafeDelete(customLogic);
         hpms::DestroyContext();
         Dump();
-
+        hpms::LogBuffer::Instance().Close();
         return 0;
     } catch (std::exception& e)
     {

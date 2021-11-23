@@ -130,7 +130,7 @@ namespace hpms
 
         void SetSectorId(const std::string &sectorId)
         {
-            LOG_ERROR("Cannot change triangle sector id from script.");
+            LOG_ERROR("Cannot change triangle sector id from script");
         }
 
         void SetPerimetralSides(const std::vector<Side> &sides)

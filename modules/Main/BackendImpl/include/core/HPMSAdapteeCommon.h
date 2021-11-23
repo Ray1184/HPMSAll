@@ -18,13 +18,13 @@ namespace hpms
 
         inline void Check() const
         {
-            HPMS_ASSERT(ctx, "Context cannot be null.");
+            HPMS_ASSERT(ctx, "Context cannot be null");
         }
 
         template <typename T>
         inline void Check(T* ptr) const
         {
-            HPMS_ASSERT(ptr, "Adaptee cannot be null.");
+            HPMS_ASSERT(ptr, "Adaptee cannot be null");
         }
 
 

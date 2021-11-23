@@ -55,20 +55,20 @@ void hpms::DestroyContext()
 
 hpms::SupplierAdapter* hpms::GetSupplier()
 {
-    HPMS_ASSERT(gContext, "Context must be initialized.");
+    HPMS_ASSERT(gContext, "Context must be initialized");
     return gSupplier;
 }
 
 
 hpms::SimulatorAdapter* hpms::GetSimulator()
 {
-    HPMS_ASSERT(gContext, "Context must be initialized.");
+    HPMS_ASSERT(gContext, "Context must be initialized");
     return gSimulator;
 }
 
 hpms::NativeAdapter* hpms::GetNative()
 {
-    HPMS_ASSERT(gContext, "Context must be initialized.");
+    HPMS_ASSERT(gContext, "Context must be initialized");
     return gNative;
 }
 

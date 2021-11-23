@@ -442,10 +442,10 @@ namespace hpms
             overlayImage->SetAlpha(alpha);
         }
 
-        // System Logic.
-        static inline void SLSwitchState(const std::string& scriptToExec)
+        // System Logic.     
+        static inline void SLLogMessage(const std::string& logMsg)
         {
-
+            LOG_INTERFACE(logMsg.c_str());
         }
 
         // Debug Utils.

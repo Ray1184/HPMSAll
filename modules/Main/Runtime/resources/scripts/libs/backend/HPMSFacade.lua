@@ -12,7 +12,7 @@ backend = {}
 
 function backend:get()
     if context:inst():is_dummy() then
-        log_debug('Using DUMMY functions.')
+        log_debug('Using DUMMY functions')
         return {
 
             -- Asset functions.
@@ -217,7 +217,7 @@ function backend:get()
 
         }
     else
-        log_debug('Using HPMS functions.')
+        log_debug('Using HPMS functions')
         return {
             make_entity = hpms.make_entity,
             make_depth_entity = hpms.make_depth_entity,

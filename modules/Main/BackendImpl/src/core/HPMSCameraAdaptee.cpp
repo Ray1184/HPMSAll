@@ -21,7 +21,7 @@ void hpms::CameraAdaptee::SetPosition(const glm::vec3 &position)
     }
     else
     {
-        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node.");
+        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node");
         // ogreCamera->setPosition(position.x, position.y, position.z);
     }
 }
@@ -36,7 +36,7 @@ glm::vec3 hpms::CameraAdaptee::GetPosition() const
     }
     else
     {
-        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node.");
+        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node");
         // auto ogrePos = ogreCamera->getPosition();
         return glm::vec3();
     }
@@ -51,7 +51,7 @@ void hpms::CameraAdaptee::SetRotation(const glm::quat &rotation)
     }
     else
     {
-        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node.");
+        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node");
         // ogreCamera->setOrientation(Ogre::Quaternion(rotation.w, rotation.x, rotation.y, rotation.z));
     }
 }
@@ -66,7 +66,7 @@ glm::quat hpms::CameraAdaptee::GetRotation() const
     }
     else
     {
-        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node.");
+        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node");
         // auto oQuatc = ogreCamera->getOrientation();
         return glm::quat();
     }
@@ -100,7 +100,7 @@ void hpms::CameraAdaptee::LookAt(glm::vec3 position)
     }
     else
     {
-        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node.");
+        LOG_ERROR("Direct camera manipulation has been removed because deprecated. You need to attach camera to a node");
         // ogreCamera->lookAt(position.x, position.y, position.z);
     }
 }

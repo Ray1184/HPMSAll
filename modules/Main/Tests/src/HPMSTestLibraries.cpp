@@ -31,7 +31,7 @@ T1 FindClosestKey(const std::map<T1, T2>& data, T1 key)
 {
     if (data.empty())
     {
-        throw std::out_of_range("Received empty map.");
+        throw std::out_of_range("Received empty map");
     }
 
     auto lower = data.lower_bound(key);

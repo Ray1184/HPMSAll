@@ -6,14 +6,14 @@
 ---
 
 
-require('data/scripts/libs/Context')
-require('data/scripts/libs/AbstractObject')
-
-local insp = require('data/scripts/thirdparty/Inspect')
-
-local cats = require('data/scripts/libs/Categories')
-local utils = require('data/scripts/libs/Utils')
-local lib = require('data/scripts/libs/HPMSFacade')
+dependencies = { 
+    'libs/Context.lua',
+    'libs/utils/Utils.lua',
+    'libs/logic/GameItem.lua',
+    'libs/backend/HPMSFacade.lua',
+    'libs/thirdparty/Inspect.lua'
+}
+lib = backend:get()
 
 collectible_item = {}
 
@@ -21,7 +21,7 @@ function collectible_item:ret(path)
     local id = 'collectible_item/' .. path
     local this = context:inst():get(cats.OBJECTS, id,
             function()
-                utils.debug('New collectible_item object.')
+                log_debug('New collectible_item object ' .. id)
                 local ret = game_item:ret(path)
                 local new = {
                     serializable = {

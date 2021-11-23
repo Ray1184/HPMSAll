@@ -194,6 +194,48 @@ void hpms::ConfigManager::Load(const std::string& path)
 
 }
 
+void hpms::LogBuffer::Open()
+{
+    if (!opened)
+    {
+        opened = true;
+        remove(HPMS_CORE_LOG_FILE);
+        appHpms.open(HPMS_CORE_LOG_FILE, std::ios_base::app);
+    }
+}
+
+void hpms::LogBuffer::Close()
+{
+    if (opened)
+    {
+        opened = false;
+        appHpms.close();
+    }
+}
+
+void hpms::LogBuffer::Print(const std::stringstream& ss)
+{
+    
+    std::time_t rawtime;
+    std::tm* timeinfo;
+    char buffer[80];
+
+    std::time(&rawtime);
+    timeinfo = std::localtime(&rawtime);
+
+    std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S.000", timeinfo);
+    std::puts(buffer);    
+
+    appHpms << buffer << " | " << ss.str();
+   
+}
+
+hpms::LogBuffer& hpms::LogBuffer::Instance()
+{
+    static LogBuffer inst;
+    return inst;
+}
+
 hpms::ConfigManager& hpms::ConfigManager::Instance()
 {
     static ConfigManager inst;

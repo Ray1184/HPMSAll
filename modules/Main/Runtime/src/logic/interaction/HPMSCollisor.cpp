@@ -15,6 +15,7 @@ void hpms::Collisor::Update()
     }
 
     outOfDate = false;
+    currentTriangle = walkMap->SampleTriangle(nextPosition, tolerance);
     CHECK_COLLISIONS;
 }
 

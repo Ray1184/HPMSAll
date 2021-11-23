@@ -9,7 +9,7 @@ T1 hpms::FindClosestKey(const std::map<T1, T2>& data, T1 key)
 {
     if (data.empty())
     {
-        LOG_WARN("Cannot find closest key in empty map.");
+        LOG_WARN("Cannot find closest key in empty map");
     }
 
     auto lower = data.lower_bound(key);

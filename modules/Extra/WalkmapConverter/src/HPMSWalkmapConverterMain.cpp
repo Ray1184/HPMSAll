@@ -26,7 +26,7 @@ int main(int argc, char** argv)
     if (argc < 2)
     {
         LOG_ERROR("At least 1 argument required");
-        LOG_ERROR(" -input\t\tWalkmap input data to convert.");
+        LOG_ERROR(" -input\t\tWalkmap input data to convert");
         LOG_ERROR(" -output\t\tWalkmap output binary data path. (Optional)");
         return -1;
     }
@@ -43,7 +43,7 @@ int main(int argc, char** argv)
     }
 
     std::stringstream ss;
-    ss << "Args: input path: " << inputPath << ", output path: " << outputPath << std::endl;
+    ss << "Args: input path: " << inputPath << ", output path: " << outputPath;
     LOG_INFO(ss.str().c_str());
 
     std::string fileExtension = hpms::GetFilenameExtension(inputPath);
@@ -52,22 +52,22 @@ int main(int argc, char** argv)
 
     if (fileExtension == "obj")
     {
-        LOG_INFO("Processing input in STANDARD mode.");
+        LOG_INFO("Processing input in STANDARD mode");
         ret = Serialize(inputPath, outputPath);
 
     }
     else if (fileExtension == "batch")
     {
-        LOG_INFO("Processing input in BATCH mode.");
+        LOG_INFO("Processing input in BATCH mode");
         if (argc >= 3)
         {
-            LOG_WARN("Output path ignored in batch mode.");
+            LOG_WARN("Output path ignored in batch mode");
             ret =  SerializeBatch(inputPath);
         }
     }
     else {
         std::stringstream sserr;
-        sserr << "Extension ." << fileExtension << " is not a valid walkmap input format." << std::endl;
+        sserr << "Extension ." << fileExtension << " is not a valid walkmap input format";
         LOG_ERROR(sserr.str().c_str());
     }
 
@@ -99,7 +99,7 @@ ProcessResult Serialize(const std::string& inputPath, const std::string& outputP
     if (serializer.save(*item) != pods::Error::NoError)
     {
         std::stringstream ss;
-        ss << "Error serializing " << inputPath << std::endl;
+        ss << "Error serializing " << inputPath;
         hpms::SafeDelete(item);
         return ProcessResult{-1, ss.str()};
     }
@@ -115,7 +115,7 @@ ProcessResult Serialize(const std::string& inputPath, const std::string& outputP
 
     outFile.close();
     hpms::SafeDelete(item);
-    return ProcessResult{0, "Serialization completed successfully."};
+    return ProcessResult{0, "Serialization completed successfully"};
 }
 
 ProcessResult SerializeBatch(const std::string& inputPath)
@@ -162,6 +162,6 @@ ProcessResult SerializeBatch(const std::string& inputPath)
     hpms::WriteLinesToFile(outBaseFile + ".done", okFiles);
     hpms::WriteLinesToFile(outBaseFile + ".error", koFiles);
     std::stringstream ss;
-    ss << "Converted " << good << "/" << totals << " files, " << errors << " error/s." << std::endl;
+    ss << "Converted " << good << "/" << totals << " files, " << errors << " error/s";
     return ProcessResult{errors == 0 ? 0 : -1, ss.str()};
 }

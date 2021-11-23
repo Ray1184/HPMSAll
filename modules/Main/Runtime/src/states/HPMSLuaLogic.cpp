@@ -80,7 +80,7 @@ void hpms::LuaLogic::LoadState(const std::string& scriptName)
     auto* script = hpms::LoadScript(scriptName);
     vm->ExecuteStatement(script->GetContent());
     std::stringstream ss;
-    ss << "Script " << scriptName << " loaded in LUA context.";
+    ss << "Script " << scriptName << " loaded in LUA context";
     LOG_DEBUG(ss.str().c_str());
     hpms::DestroyScript(script);
     loadedDeps.clear();
@@ -104,12 +104,12 @@ void hpms::LuaLogic::SolveLuaDependencies()
             {
                 // Skip dependency if already loaded in LUA context.
                 std::stringstream ss;
-                ss << "Skipping dependency " << dep << ", already present in LUA context.";
+                ss << "Skipping dependency " << dep << ", already present in LUA context";
                 LOG_DEBUG(ss.str().c_str());
                 continue;
             }
             std::stringstream ss;
-            ss << "Dependency " << dep << " loaded in LUA context.";
+            ss << "Dependency " << dep << " loaded in LUA context";
             LOG_DEBUG(ss.str().c_str());
             auto* script = hpms::LoadScript(dep);
             vm->ExecuteStatement(script->GetContent());

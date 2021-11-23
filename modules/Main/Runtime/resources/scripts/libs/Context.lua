@@ -74,7 +74,7 @@ end
 
 function context:get_scene()
     if self.instance.scene == nil then
-        log_warn('Scene is nil in context.')
+        log_warn('Scene is nil in context')
     end
     return self.instance.scene
 end
@@ -85,7 +85,7 @@ end
 
 function context:get_camera()
     if self.instance.camera == nil then
-        log_warn('Camera is nil in context.')
+        log_warn('Camera is nil in context')
     end
     return self.instance.camera
 end
@@ -102,12 +102,12 @@ function context:get_lang()
 end
 
 function context:enable_dummy()
-    log_debug('Dummy mode ENABLED.')
+    log_debug('Dummy mode ENABLED')
     self.instance.dummy = true
 end
 
 function context:disable_dummy()
-    log_debug('Dummy mode DISABLED.')
+    log_debug('Dummy mode DISABLED')
     self.instance.dummy = false
 end
 
@@ -117,7 +117,7 @@ end
 
 function context:inst()
     if self.instance == nil then
-        log_debug('New context created.')
+        log_debug('New context created')
         self.instance = self:new()
     end
     return self.instance
@@ -125,7 +125,7 @@ end
 
 function context:put_state(key, obj)
     if key == nil then
-        log_warn('Key cannot be nil.')
+        log_warn('Key cannot be nil')
         return
     end
     self.instance[cats.STATE][key] = obj
@@ -133,20 +133,20 @@ end
 
 function context:put(cat, key, obj)
     if cat == nil then
-        log_warn('Cannot put in context object with nil category.')
+        log_warn('Cannot put in context object with nil category')
         return
     elseif self.instance[cat] == nil then
-        log_warn('Cannot put in context object: ' .. cat .. ' category unknown.')
+        log_warn('Cannot put in context object: ' .. cat .. ' category unknown')
         return
     end
 
     if key == nil then
-        log_warn('Key cannot be nil.')
+        log_warn('Key cannot be nil')
         return
     end
 
     if obj.serializable == nil then
-        log_warn('For put object in context this must have a serializable block.')
+        log_warn('For put object in context this must have a serializable block')
         return
     end
     self.instance[cat][key] = obj.serializable
@@ -154,11 +154,11 @@ end
 
 function context:get_state(key)
     if key == nil then
-        log_error('State object nil not allowed.')
+        log_error('State object nil not allowed')
         return nil
     end
     if self.instance[cats.STATE][key] == nil then
-        log_error('State object ' .. key .. ' was not initialized in context.')
+        log_error('State object ' .. key .. ' was not initialized in context')
         return nil
     end
     return self.instance[cats.STATE][key]
@@ -167,21 +167,21 @@ end
 function context:get(cat, key, supplier_callback)
     if self.instance[cat] == nil then
         if cat == nil then
-            log_warn('Cannot get object from context with nil category.')
+            log_warn('Cannot get object from context with nil category')
         else
-            log_warn('Cannot get object from context: ' .. cat .. ' category unknown.')
+            log_warn('Cannot get object from context: ' .. cat .. ' category unknown')
         end
         return nil
     end
     if self.instance[cat][key] == nil then
         if key == nil then
-            log_warn('Cannot get object from context with nil key.')
+            log_warn('Cannot get object from context with nil key')
             return nil
         else
             self.instance:put(cat, key, supplier_callback())
         end
     end
-    log_debug('Object with key ' .. key .. ' and category ' .. cat .. ' found in context.')
+    log_debug('Object with key ' .. key .. ' and category ' .. cat .. ' found in context')
     local obj = {}
     obj.serializable = self.instance[cat][key]
     return obj

@@ -9,18 +9,18 @@
 hpms::OgreContext::OgreContext(const OgreWindowSettings& settings) : root(nullptr),
                                    camera(nullptr),
                                    sceneMgr(nullptr),
-                                   resourcesCfg(HPMS_DATA_FOLDER "Resources.ini"),
-                                   pluginsCfg(HPMS_DATA_FOLDER "Plugins.ini"),
+                                   resourcesCfg(OGRE_RESOURCES_FILE),
+                                   pluginsCfg(OGRE_PLUGINS_FILE),
                                    settings(settings)
 {
     logManager = hpms::SafeNewRaw<Ogre::LogManager>();
-    logManager->createLog(HPMS_DATA_FOLDER "Ogre.log", true, false, false);
+    logManager->createLog(OGRE_LOG_FILE, true, false, false);
     fsLayer = hpms::SafeNewRaw<Ogre::FileSystemLayer>("FSData");
     root = hpms::SafeNewRaw<Ogre::Root>(pluginsCfg,
                                         fsLayer->getWritablePath(
-                                                HPMS_DATA_FOLDER "Ogre.ini"),
+                                            OGRE_CONFIG_FILE),
                                         fsLayer->getWritablePath(
-                                                HPMS_DATA_FOLDER "Ogre.log"));
+                                            OGRE_LOG_FILE));
     overlaySystem = hpms::SafeNewRaw<Ogre::OverlaySystem>();
     overlayManager = Ogre::OverlayManager::getSingletonPtr();
 
@@ -138,30 +138,30 @@ void hpms::OgreContext::CreateResourceListener()
 
 bool hpms::OgreContext::Setup()
 {
-    LOG_DEBUG("Initializing OGRE root.");
+    LOG_DEBUG("Initializing OGRE root");
     InitRoot();
 
-    LOG_DEBUG("Setting up OGRE resources.");
+    LOG_DEBUG("Setting up OGRE resources");
     SetupResources();
 
-    LOG_DEBUG("Creating OGRE window.");
+    LOG_DEBUG("Creating OGRE window");
     bool ok = CreateWindowPair(settings);
     if (!ok)
     {
-        LOG_ERROR("Error creating native window handler.");
+        LOG_ERROR("Error creating native window handler");
         return false;
     }
 
-    LOG_DEBUG("Creating OGRE viewport.");
+    LOG_DEBUG("Creating OGRE viewport");
     CreateViewports();
     Ogre::TextureManager::getSingleton().setDefaultNumMipmaps(0);
     Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::TextureFilterOptions::TFO_NONE);
     Ogre::MaterialManager::getSingleton().setDefaultTextureFiltering(Ogre::FilterOptions::FO_NONE, Ogre::FilterOptions::FO_NONE, Ogre::FilterOptions::FO_NONE);
 
-    LOG_DEBUG("Creating OGRE resource listener.");
+    LOG_DEBUG("Creating OGRE resource listener");
     CreateResourceListener();
 
-    LOG_DEBUG("Loading OGRE resources.");
+    LOG_DEBUG("Loading OGRE resources");
     LoadResources();
 
     return true;

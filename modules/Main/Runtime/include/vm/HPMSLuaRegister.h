@@ -369,8 +369,8 @@ namespace hpms
         inline static void RegisterSysLogic(lua_State* state)
         {
             getGlobalNamespace(state)
-                    .beginNamespace("hpms")
-                    .addFunction("switch_state", &hpms::LuaExtensions::SLSwitchState)
+                    .beginNamespace("_hpms")
+                    .addFunction("log_msg", &hpms::LuaExtensions::SLLogMessage)
                     .endNamespace();
         }
 
