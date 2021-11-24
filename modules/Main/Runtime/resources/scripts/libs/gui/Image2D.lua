@@ -26,7 +26,7 @@ function image_2d:new(type, data, x, y, image, order)
             set_position = ret.set_position
         }
     }
-    local this = merge_tabs(ret, new)
+    local this = merge_tables(ret, new)
     setmetatable(this, self)
     self.__index = self
 

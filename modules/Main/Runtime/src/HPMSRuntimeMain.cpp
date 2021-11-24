@@ -7,13 +7,6 @@
 #define WIDTH 320
 #define HEIGHT 200
 
-void Dump()
-{
-#ifdef HPMS_DEBUG
-    hpms::MemoryDump();    
-#endif
-}
-
 #if defined(_WIN32) || defined(WIN32)
 
 INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
@@ -38,7 +31,9 @@ int main(int argc, char *argv[])
         hpms::GetSimulator()->Run();
         hpms::SafeDelete(customLogic);
         hpms::DestroyContext();
-        Dump();
+#ifdef HPMS_DEBUG
+        hpms::MemoryDump();
+#endif
         hpms::LogBuffer::Instance().Close();
         return 0;
     } catch (std::exception& e)

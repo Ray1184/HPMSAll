@@ -357,6 +357,8 @@ setmetatable(inspect, { __call = function(_, ...)
     return inspect.inspect(...)
 end })
 
-function inspect()
+inspector = {}
+
+function inspector:get()
     return inspect
 end

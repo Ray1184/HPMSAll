@@ -107,7 +107,7 @@ function input_text_2d:new(data, x, y, image, order, id, font_name, font_size, f
             delete = ret.delete
         }
     }
-    local this = merge_tabs(ret, new)
+    local this = merge_tables(ret, new)
     setmetatable(this, self)
     self.__index = self
 

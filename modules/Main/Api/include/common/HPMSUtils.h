@@ -73,6 +73,40 @@ namespace hpms
         static ConfigManager& Instance();
     };
 
+    inline void MemoryDump()
+    {
+
+        VariadicTable<std::string, int> vt({ "OBJECT", "PENDING ALLOCATIONS" });
+
+        std::ofstream dump;
+        remove(HPMS_MEMORY_DUMP_FILE);
+        dump.open(HPMS_MEMORY_DUMP_FILE);
+        dump << "### MEMORY DUMP REPORT ###" << std::endl << std::endl;
+        int leaks = 0;
+        for (const auto& pair : hpms::AllocCounter::Instance().allocMap)
+        {
+            vt.addRow(pair.first, pair.second);
+            leaks += pair.second;
+        }
+        vt.setTotal("TOTAL", leaks);
+
+        if (leaks == 0)
+        {
+            dump << "OK, no potential memory leaks detected!" << std::endl;
+        }
+        else if (leaks > 0)
+        {
+            dump << "WARNING, potential memory leaks detected! " << leaks << " allocations not set free." << std::endl;
+        }
+        else
+        {
+            dump << "WARNING, unnecessary memory dealloc detected! " << -leaks << " useless de-allocations." << std::endl;
+        }
+        dump << "See details below..." << std::endl << std::endl;
+        vt.print(dump);
+        dump.close();
+    }
+
    
 
     inline void MsgHandler(const char* message)
@@ -92,6 +126,10 @@ namespace hpms
         std::stringstream ss;
         ss << "[HPMS-ERROR] - File " << file << ", at line " << std::to_string(line) << ": " << message;
         MsgHandler(ss.str().c_str());
+#ifdef HPMS_DEBUG
+        hpms::MemoryDump();
+#endif
+        hpms::LogBuffer::Instance().Close();
         exit(-1);
     }
 
@@ -199,40 +237,6 @@ namespace hpms
     {
         delete[] ptr;
         ptr = nullptr;
-    }
-
-    inline void MemoryDump()
-    {
-
-        VariadicTable<std::string, int> vt({ "OBJECT", "PENDING ALLOCATIONS" });
-
-        std::ofstream dump;
-        remove(HPMS_MEMORY_DUMP_FILE);
-        dump.open(HPMS_MEMORY_DUMP_FILE);
-        dump << "### MEMORY DUMP REPORT ###" << std::endl << std::endl;
-        int leaks = 0;
-        for (const auto& pair : hpms::AllocCounter::Instance().allocMap)
-        {
-            vt.addRow(pair.first, pair.second);
-            leaks += pair.second;
-        }
-        vt.setTotal("TOTAL", leaks);
-        
-        if (leaks == 0)
-        {
-            dump << "OK, no potential memory leaks detected!" << std::endl;
-        }
-        else if (leaks > 0)
-        {
-            dump << "WARNING, potential memory leaks detected! " << leaks << " allocations not set free." << std::endl;
-        }
-        else
-        {
-            dump << "WARNING, unnecessary memory dealloc detected! " << -leaks << " useless de-allocations." << std::endl;
-        }
-        dump << "See details below..." << std::endl << std::endl;
-        vt.print(dump);
-        dump.close();
     }
 
     inline std::string Trim(const std::string& s)

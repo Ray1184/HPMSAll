@@ -14,7 +14,7 @@ end
 function disable_debug()
     debug_flag = false
 end
-function merge_tabs(orig, new)
+function merge_tables(orig, new)
     local merge_task = {}
     merge_task[orig] = new
 
@@ -40,23 +40,51 @@ function merge_tabs(orig, new)
     end
     return orig
 end
-function log(msg)
+local function log(msg)
     _hpms.log_msg(msg) 
 end
 function log_debug(msg)
     if debug_flag then
-        log('[LLUA-DEBUG] - ' .. msg)
+        log('[LLUA-DEBUG] - ' .. tostring(msg))
     end
 end
 function log_info(msg)
-    log('[LLUA-INFO ] - ' .. msg)
+    log('[LLUA-INFO ] - ' .. tostring(msg))
 end
 function log_warn(msg)
-    log('[LLUA-WARN ] - ' .. msg)
+    log('[LLUA-WARN ] - ' .. tostring(msg))
 end
 function log_error(msg)
-    log('[LLUA-ERROR] - ' .. msg)
+    log('[LLUA-ERROR] - ' .. tostring(msg))
     log('Exit: -2')
     os.exit(-2, true)
 
+end
+
+--
+-- Try/catch block simulation.
+--
+-- try {
+--    function()
+--       -- Throw some errors...
+--       unsafe_function()
+--    end,
+-- 
+--    catch {
+--       function(error)
+--          -- Error management
+--          print('Got error ' .. error)
+--       end
+--    }
+-- }
+
+function try(what)
+   status, result = pcall(what[1])
+   if not status then
+      what[2](result)
+   end
+   return result
+end
+function catch(what)
+   return what[1]
 end

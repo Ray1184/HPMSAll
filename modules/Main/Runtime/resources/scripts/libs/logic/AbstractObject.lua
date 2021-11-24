@@ -18,7 +18,7 @@ function abstract_object:ret(id)
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
-        return 'abstract_object[id=' .. o.serializable.id .. ']'
+        return inspect.inspect(o)
     end
     return this
 end
