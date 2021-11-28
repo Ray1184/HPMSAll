@@ -67,6 +67,7 @@ void hpms::LuaVM::RegisterAll()
     hpms::LuaRegister::RegisterWalkMap(state);
     hpms::LuaRegister::RegisterTriangle(state);
     hpms::LuaRegister::RegisterCollisor(state);
+    hpms::LuaRegister::RegisterAnimation(state);
     hpms::LuaRegister::RegisterLogic(state);
     hpms::LuaRegister::RegisterSysLogic(state);
     hpms::LuaRegister::RegisterDebug(state);

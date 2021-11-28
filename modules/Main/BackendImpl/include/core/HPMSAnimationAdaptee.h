@@ -14,8 +14,9 @@ namespace hpms
     {
     private:
         Ogre::AnimationState* ogreAnim;
-        size_t currentFrameIndex;
+        float normalizedTime;
         float frameDuration;
+        bool cycleTerminated;
     public:
         explicit AnimationAdaptee(Ogre::AnimationState* ogreAnim);
 
@@ -25,15 +26,15 @@ namespace hpms
 
         virtual void Zero() override;
 
-        virtual bool IsPlaying() override;
+        virtual bool IsPlaying() const override;
 
         virtual void SetPlaying(bool playing) override;
 
-        virtual bool IsLoop() override;
+        virtual bool IsLoop() const override;
 
         virtual void SetLoop(bool loop) override;
 
-        virtual size_t GetCurrentFrameIndex() override;
+        virtual bool CycleTerminated() override;
 
         inline float GetFrameDuration() const
         {

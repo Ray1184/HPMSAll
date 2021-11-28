@@ -342,6 +342,17 @@ namespace hpms
                     .endNamespace();
         }
 
+        inline static void RegisterAnimation(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                    .beginNamespace("hpms")
+                    .beginClass<AnimationAdapter>("animation")
+                    .addProperty("loop", &hpms::AnimationAdapter::IsLoop, &hpms::AnimationAdapter::SetLoop)
+                    .addProperty("play", &hpms::AnimationAdapter::IsPlaying, &hpms::AnimationAdapter::SetPlaying)
+                    .endClass()
+                    .endNamespace();
+        }
+
         inline static void RegisterLogic(lua_State* state)
         {
             getGlobalNamespace(state)
@@ -359,7 +370,8 @@ namespace hpms
                     .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
                     .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
                     .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
-                    .addFunction("stop_anim", &hpms::LuaExtensions::LStopAnimation)
+                    .addFunction("stop_rewind_anim", &hpms::LuaExtensions::LStopRewindAnimation)
+                    .addFunction("anim_finished", &hpms::LuaExtensions::LAnimationFinished)
                     .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
                     .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
                     .addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)

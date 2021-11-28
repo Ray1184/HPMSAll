@@ -415,12 +415,18 @@ namespace hpms
             collisor->Move(position, direction);
         }
 
-        static inline void LStopAnimation(hpms::EntityAdapter* entity)
+        static inline void LStopRewindAnimation(hpms::EntityAdapter* entity)
         {
             for (auto* anim : entity->GetAllAnimations())
             {
                 anim->Zero();
             }
+        }
+
+        static inline bool LAnimationFinished(hpms::EntityAdapter* entity, const std::string& name)
+        {
+            auto* anim = entity->GetAnimationByName(name);
+            return anim->CycleTerminated();
         }
 
         static inline void LPlayAnimation(hpms::EntityAdapter* entity, const std::string& animName)

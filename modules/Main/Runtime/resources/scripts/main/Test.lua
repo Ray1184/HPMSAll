@@ -34,7 +34,7 @@ scene = {
         collisor = lib.make_node_collisor(player_node, map, 0.3098)
 
         -- Backgrounds
-        back = lib.make_background("CM_01.png")
+        back = lib.make_background("R_Debug_01/CM_01.png")
 
         -- Views
         lib.set_ambient(lib.vec3(0.1, 0.1, 0.1))

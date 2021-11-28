@@ -149,6 +149,14 @@ function backend:get()
                 return false
             end,
 
+            anim_finished = function(e, channel)
+                log_debug('Check anim finished for ' .. a.dummy_id .. ' channel ' .. channel)
+            end,
+
+            stop_rewind_anim = function(e)
+                log_debug('Stop anim ' .. a.dummy_id)
+            end,
+
             update_collisor = function(c)
                 log_debug('Updating collisor ' .. c.dummy_id)
             end,
@@ -254,6 +262,8 @@ function backend:get()
             set_anim = hpms.set_anim,
             rewind_anim = hpms.rewind_anim,
             anim_sequence_terminated = hpms.anim_sequence_terminated,
+            anim_finished = hpms.anim_finished,
+            stop_rewind_anim = hpms.stop_rewind_anim,
             update_collisor = hpms.update_collisor,
 
             -- Math functions.

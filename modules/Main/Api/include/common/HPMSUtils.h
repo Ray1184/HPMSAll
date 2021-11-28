@@ -66,7 +66,7 @@ namespace hpms
         std::unordered_map<std::string, std::string> stringValues;
         std::unordered_map<std::string, bool> boolValues;
         std::unordered_map<std::string, float> numberValues;
-        bool loaded;
+        bool loaded{false};
 
         void Load(const std::string& path);
 
@@ -106,9 +106,7 @@ namespace hpms
         vt.print(dump);
         dump.close();
     }
-
-   
-
+    
     inline void MsgHandler(const char* message)
     {
         std::stringstream ss;
@@ -173,7 +171,6 @@ namespace hpms
         return obj;
     }
 
-
     template<typename T>
     inline void SafeDelete(T*& ptr)
     {
@@ -192,7 +189,6 @@ namespace hpms
         }
 
     }
-
 
     template<typename T>
     inline void SafeDeleteArray(T*& ptr)

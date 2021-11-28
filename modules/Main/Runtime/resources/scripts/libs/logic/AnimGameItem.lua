@@ -17,6 +17,10 @@ lib = backend:get()
 
 anim_game_item = { }
 
+ANIM_MODE_LOOP = 0
+ANIM_MODE_ONCE = 1
+ANIM_MODE_FRAME = 2
+
 function anim_game_item:ret(path)
     lib = backend:get()
     insp = inspector:get()
@@ -33,10 +37,8 @@ function anim_game_item:ret(path)
                     anim_data =
                     {
                         channel_name = 'my_animation',
-                        current_frame = 0,
-                        frame_count = 0,
-                        loop = false,
-                        play = false,
+                        mode = ANIM_MODE_FRAME,
+                        playing = false,
                         slowdown = 1
                     }
                 },
@@ -79,26 +81,55 @@ function anim_game_item:ret(path)
     end
 
     function anim_game_item:delete_transient_data()
-        self.serializable.metainfo.override.game_item.delete_transient_data(self)        
+        self.serializable.metainfo.override.game_item.delete_transient_data(self)
     end
 
     function anim_game_item:fill_transient_data()
-        self.serializable.metainfo.override.game_item.fill_transient_data(self)        
+        self.serializable.metainfo.override.game_item.fill_transient_data(self)
     end
+       
+    function anim_game_item:update(tpf)
+        self.serializable.metainfo.override.game_item.update(self)
+        if self.serializable.data.expired then
+            return
+        end
 
-    function anim_game_item:update()
-        self.serializable.metainfo.override.game_item.update(self)        
+        if self.serializable.data.anim_data.playing then
+
+            if self.serializable.data.anim_data.mode == ANIM_MODE_ONCE then
+                local finished = lib.anim_finished(self.transient.entity, self.serializable.data.anim_data.channel_name)
+                if finished then
+                    lib.stop_rewind_anim(self.transient.entity)
+                    self.serializable.data.anim_data.playing = false
+                    return
+                end
+            end
+
+            time = tpf / self.serializable.data.anim_data.slowdown
+            lib.update_anim(self.transient.entity, self.serializable.data.anim_data.channel_name, time)
+
+            if self.serializable.data.anim_data.mode == ANIM_MODE_FRAME then
+                self.serializable.data.anim_data.playing = false
+            end
+        end
     end
 
     function anim_game_item:set_anim(name)
         if self.serializable.data.expired then
             return
         end
-        self.serializable.data.anim_data.channel_name = name
-        lib.play_anim(self.transient.entity, name)
-        
+        self.serializable.data.anim_data.channel_name = name   
     end
 
+    function anim_game_item:play(mode, slowdown)
+        if self.serializable.data.expired or self.serializable.data.anim_data.playing then
+            return
+        end
+        self.serializable.data.anim_data.mode = mode
+        self.serializable.data.anim_data.slowdown = slowdown or 1
+        self.serializable.data.anim_data.playing = true
+        lib.play_anim(self.transient.entity, self.serializable.data.anim_data.channel_name)
+    end
 
     return this
 end

@@ -8,33 +8,33 @@
 
 namespace hpms
 {
-    class AnimationAdapter : public Object
-    {
+	class AnimationAdapter : public Object
+	{
 
-    public:
+	public:
 
-        inline const std::string Name() const override
-        {
-            return "AnimationAdapter";
-        }
+		inline const std::string Name() const override
+		{
+			return "AnimationAdapter";
+		}
 
-        inline virtual ~AnimationAdapter()
-        {
+		inline virtual ~AnimationAdapter()
+		{
 
-        }
+		}
 
-        virtual void Zero() = 0;
+		virtual void Zero() = 0;
 
-        virtual void Update(float tpf) = 0;
+		virtual void Update(float tpf) = 0;
 
-        virtual bool IsPlaying()  = 0;
+		virtual bool IsPlaying() const = 0;
 
-        virtual void SetPlaying(bool playing) = 0;
+		virtual void SetPlaying(bool playing) = 0;
 
-        virtual bool IsLoop() = 0;
+		virtual bool IsLoop() const = 0;
 
-        virtual void SetLoop(bool loop) = 0;
+		virtual void SetLoop(bool loop) = 0;
 
-        virtual size_t GetCurrentFrameIndex() = 0;
-    };
+		virtual bool CycleTerminated() = 0;
+	};
 }

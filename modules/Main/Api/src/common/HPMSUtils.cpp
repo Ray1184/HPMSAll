@@ -223,7 +223,7 @@ void hpms::LogBuffer::Print(const std::stringstream& ss)
     std::time(&rawtime);
     timeinfo = std::localtime(&rawtime);
 
-    std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S.000", timeinfo);
+    std::strftime(buffer, 80, "%Y-%m-%d %H:%M:%S", timeinfo);
     std::puts(buffer);    
 
     appHpms << buffer << " | " << ss.str();

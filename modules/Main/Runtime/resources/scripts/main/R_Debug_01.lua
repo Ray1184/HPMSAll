@@ -17,8 +17,7 @@ scene = {
         enable_debug()
         context:inst():disable_dummy()
         item = anim_game_item:ret('EY_DummyAnim.mesh')
-        item:fill_transient_data()
-
+        item:fill_transient_data()        
         log_debug(item)
 
 
@@ -66,6 +65,12 @@ scene = {
             if lib.key_action_performed(keys, 'ESC', 1) then
                 scene.quit = true
             end
+
+            if lib.key_action_performed(keys, 'W', 2) then
+                playing = true
+            else
+                playing = false
+            end
         end
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [input]
 
@@ -74,7 +79,13 @@ scene = {
         -- TODOBATCH-BEGIN
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
-        log_debug('Loop test...')
+
+        if playing then
+            item:play(ANIM_MODE_ONCE, 2)
+        end
+
+        item:update(tpf)
+
         -- TODOBATCH-END
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
