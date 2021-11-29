@@ -438,6 +438,12 @@ namespace hpms
             entity->GetAnimationByName(animName)->SetPlaying(true);
         }
 
+        static inline void LSliceAnimation(hpms::EntityAdapter* entity, const std::string& name, int sliceFactor)
+        {
+            auto* anim = entity->GetAnimationByName(name);
+            anim->SetSliceFactor(sliceFactor);
+        }
+
         static inline void LUpdateAnimation(hpms::EntityAdapter* entity, const std::string& animName, float tpf)
         {
             entity->GetAnimationByName(animName)->Update(tpf);

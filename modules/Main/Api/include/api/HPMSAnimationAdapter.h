@@ -36,5 +36,9 @@ namespace hpms
 		virtual void SetLoop(bool loop) = 0;
 
 		virtual bool CycleTerminated() = 0;
+
+		virtual void SetSliceFactor(int sliceFactor) = 0;
+
+		virtual int GetSliceFactor() const = 0;
 	};
 }

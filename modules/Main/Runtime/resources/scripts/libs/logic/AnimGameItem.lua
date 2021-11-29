@@ -39,7 +39,8 @@ function anim_game_item:ret(path)
                         channel_name = 'my_animation',
                         mode = ANIM_MODE_FRAME,
                         playing = false,
-                        slowdown = 1
+                        slowdown = 1,
+                        slice = 1
                     }
                 },
                 metainfo =
@@ -121,14 +122,16 @@ function anim_game_item:ret(path)
         self.serializable.data.anim_data.channel_name = name   
     end
 
-    function anim_game_item:play(mode, slowdown)
+    function anim_game_item:play(mode, slowdown, slice)
         if self.serializable.data.expired or self.serializable.data.anim_data.playing then
             return
         end
         self.serializable.data.anim_data.mode = mode
         self.serializable.data.anim_data.slowdown = slowdown or 1
-        self.serializable.data.anim_data.playing = true
-        lib.play_anim(self.transient.entity, self.serializable.data.anim_data.channel_name)
+        self.serializable.data.anim_data.slice = slice or 1
+        self.serializable.data.anim_data.playing = true        
+        lib.slice_anim(self.transient.entity, self.serializable.data.anim_data.channel_name, self.serializable.data.anim_data.slice)
+        lib.play_anim(self.transient.entity, self.serializable.data.anim_data.channel_name)        
     end
 
     return this

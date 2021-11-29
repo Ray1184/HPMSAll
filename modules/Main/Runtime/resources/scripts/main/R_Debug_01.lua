@@ -81,7 +81,7 @@ scene = {
         -- current_sector = collisor_ey_dummyanim.sector
 
         if playing then
-            item:play(ANIM_MODE_ONCE, 2)
+            item:play(ANIM_MODE_ONCE, 3, 2)
         end
 
         item:update(tpf)

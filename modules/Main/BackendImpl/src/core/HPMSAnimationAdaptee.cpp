@@ -8,25 +8,33 @@
 void hpms::AnimationAdaptee::Update(float tpf)
 {
     Check(ogreAnim);
+    cycleTerminated = false;
+    animTerminated = false;
     ogreAnim->addTime(tpf);
     normalizedTime += tpf;
-    float length = ogreAnim->getLength();
+    float realLength = ogreAnim->getLength();
+    float length = realLength / sliceFactor;
     if (normalizedTime >= length) {
         normalizedTime = 0.0f;
         cycleTerminated = true;
+        if (normalizedTime >= realLength) {
+            animTerminated = true;
+        }
     }
-    else
-    {
-        cycleTerminated = false;
-    }
+
 }
 
 void hpms::AnimationAdaptee::Zero()
 {
     Check(ogreAnim);
-    ogreAnim->setTimePosition(0);
+    if (animTerminated)
+    {
+        ogreAnim->setTimePosition(0);
+    }
     cycleTerminated = false;
+    animTerminated = false;
 }
+
 
 bool hpms::AnimationAdaptee::IsPlaying() const
 {
@@ -55,6 +63,8 @@ void hpms::AnimationAdaptee::SetLoop(bool loop)
 hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : AdapteeCommon(nullptr),
                                                                            normalizedTime(0.0f),
                                                                            cycleTerminated(false),
+                                                                           animTerminated(false),
+                                                                           sliceFactor(1),
                                                                            ogreAnim(ogreAnim)
 {
 
@@ -63,6 +73,16 @@ hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : Adapt
 hpms::AnimationAdaptee::~AnimationAdaptee()
 {
 
+}
+
+void hpms::AnimationAdaptee::SetSliceFactor(int sliceFactor)
+{
+    AnimationAdaptee::sliceFactor = sliceFactor;
+}
+
+int hpms::AnimationAdaptee::GetSliceFactor() const
+{
+    return sliceFactor;
 }
 
 bool hpms::AnimationAdaptee::CycleTerminated()

@@ -17,6 +17,8 @@ namespace hpms
         float normalizedTime;
         float frameDuration;
         bool cycleTerminated;
+        bool animTerminated;
+        int sliceFactor;
     public:
         explicit AnimationAdaptee(Ogre::AnimationState* ogreAnim);
 
@@ -36,15 +38,10 @@ namespace hpms
 
         virtual bool CycleTerminated() override;
 
-        inline float GetFrameDuration() const
-        {
-            return frameDuration;
-        }
+        virtual void SetSliceFactor(int sliceFactor) override;
 
-        inline void SetFrameDuration(float frameDuration)
-        {
-            AnimationAdaptee::frameDuration = frameDuration;
-        }
+        virtual int GetSliceFactor() const override;
+
     };
 }
 

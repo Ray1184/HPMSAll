@@ -347,8 +347,7 @@ namespace hpms
             getGlobalNamespace(state)
                     .beginNamespace("hpms")
                     .beginClass<AnimationAdapter>("animation")
-                    .addProperty("loop", &hpms::AnimationAdapter::IsLoop, &hpms::AnimationAdapter::SetLoop)
-                    .addProperty("play", &hpms::AnimationAdapter::IsPlaying, &hpms::AnimationAdapter::SetPlaying)
+                    .addProperty("slice", &hpms::AnimationAdapter::GetSliceFactor, &hpms::AnimationAdapter::SetSliceFactor)
                     .endClass()
                     .endNamespace();
         }
@@ -370,6 +369,7 @@ namespace hpms
                     .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
                     .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
                     .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
+                    .addFunction("slice_anim", &hpms::LuaExtensions::LSliceAnimation)
                     .addFunction("stop_rewind_anim", &hpms::LuaExtensions::LStopRewindAnimation)
                     .addFunction("anim_finished", &hpms::LuaExtensions::LAnimationFinished)
                     .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)

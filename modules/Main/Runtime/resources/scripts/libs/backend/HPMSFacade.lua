@@ -149,6 +149,10 @@ function backend:get()
                 return false
             end,
 
+            slice_anim = function(e, channel, slice)
+                log_debug('Slicing anim for ' .. a.dummy_id .. ' channel ' .. channel .. ' slice factor ' .. slice)
+            end,
+
             anim_finished = function(e, channel)
                 log_debug('Check anim finished for ' .. a.dummy_id .. ' channel ' .. channel)
             end,
@@ -256,6 +260,7 @@ function backend:get()
             set_ambient = hpms.set_ambient,
             move_collisor_dir = hpms.move_collisor_dir,
             rotate = hpms.rotate,
+            slice_anim = hpms.slice_anim,
             play_anim = hpms.play_anim,
             update_anim = hpms.update_anim,
             add_anim = hpms.add_anim,
