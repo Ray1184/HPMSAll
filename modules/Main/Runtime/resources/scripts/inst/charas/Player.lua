@@ -97,19 +97,19 @@ function player:ret(walkmap)
     end
 
     function player:move_dir(ratio)
-        self.serializable.override_collision_game_item.move_dir(ratio)
+        self.serializable.metainfo.override_collision_game_item.move_dir(ratio)
     end
 
     function player:delete_transient_data()
-        self.serializable.override_collision_game_item.delete_transient_data(self)
+        self.serializable.metainfo.override_collision_game_item.delete_transient_data(self)
     end
 
     function player:fill_transient_data()
-        self.serializable.override_collision_game_item.fill_transient_data(self)
+        self.serializable.metainfo.override_collision_game_item.fill_transient_data(self)
     end
 
     function anim_game_item:update()
-        self.serializable.override_collision_game_item.update(self)
+        self.serializable.metainfo.override_collision_game_item.update(self)
     end
 
     if walkmap ~= nil then

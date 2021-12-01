@@ -10,6 +10,8 @@ dependencies = {
     'libs/utils/Utils.lua',
     'libs/logic/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
+    'libs/logic/CollisionGameItem.lua',
+    'libs/logic/AnimGameItem.lua',
     'thirdparty/Inspect.lua'
 }
 
@@ -18,10 +20,11 @@ anim_collision_game_item = { }
 function anim_collision_game_item:ret(path, bounding_radius)
     lib = backend:get()
     insp = inspector:get()
+
     local id = 'anim_collision_game_item/' .. path
     local this = context:inst():get(cats.OBJECTS, id,
     function()
-        utils.debug('New anim_collision_game_item object.')
+        log_debug('New anim_collision_game_item object ' .. id)
         local ret = anim_game_item:ret(path)
         local ret2 = collision_game_item:ret(path, bounding_radius)
         local new = {
@@ -51,15 +54,15 @@ function anim_collision_game_item:ret(path, bounding_radius)
                             delete_transient_data = ret2.delete_transient_data,
                             fill_transient_data = ret2.fill_transient_data,
                             update = ret2.update,
-                            kill_instance = ret.kill_instance
+                            kill_instance = ret2.kill_instance
                         }
                     }
                 }
             }
         }
 
-        ret = merge_tables(ret, ret2)
         ret = merge_tables(ret, new)
+        ret = merge_tables(ret2, new)
 
         return ret
     end )
@@ -71,27 +74,42 @@ function anim_collision_game_item:ret(path, bounding_radius)
     end
 
     function anim_collision_game_item:move_dir(ratio)
-        self.serializable.override.collision_game_item:move_dir(ratio)
+        -- Manage collisor only
+        self.serializable.metainfo.override.collision_game_item.move_dir(self, ratio)
     end
 
     function anim_collision_game_item:rotate(rx, ry, rz)
-        self.serializable.override.collision_game_item:rotate(rx, ry, rz)
+        -- Manage collisor only
+        self.serializable.metainfo.override.collision_game_item.rotate(self, rx, ry, rz)
     end
 
     function anim_collision_game_item:delete_transient_data()
-        self.serializable.override.anim_game_item.delete_transient_data(self)
-        self.serializable.override.collision_game_item.delete_transient_data(self)
+        -- Manage collisor only
+        self.serializable.metainfo.override.collision_game_item.delete_transient_data(self)
     end
 
     function anim_collision_game_item:fill_transient_data(walkmap)
-        self.serializable.override.anim_game_item.fill_transient_data(self)
-        self.serializable.override.collision_game_item.delete_transient_data(self, walkmap)
+        -- Manage collisor only
+        self.serializable.metainfo.override.collision_game_item.fill_transient_data(self, walkmap)
     end
 
-    function anim_collision_game_item:update()
-        self.serializable.override.anim_game_item.update(self)
-        self.serializable.override.collision_game_item.update(self)
+    function anim_collision_game_item:update(tpf)
+        self.serializable.metainfo.override.anim_game_item.update(self, tpf)
+        self.serializable.metainfo.override.collision_game_item.update(self)
 
+    end
+
+    function anim_collision_game_item:set_anim(name)
+        self.serializable.metainfo.override.anim_game_item.set_anim(self, name)
+    end
+
+    function anim_collision_game_item:play(mode, slowdown, slice)
+        self.serializable.metainfo.override.anim_game_item.play(self, mode, slowdown, slice)
+    end
+
+    function anim_collision_game_item:kill_instance()
+        self.serializable.metainfo.override.anim_game_item.kill_instance(self)
+        self.serializable.metainfo.override.collision_game_item.kill_instance(self)
     end
 
     return this

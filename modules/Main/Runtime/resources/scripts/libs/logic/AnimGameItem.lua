@@ -122,7 +122,7 @@ function anim_game_item:ret(path)
         self.serializable.data.anim_data.channel_name = name
     end
 
-    function anim_game_item:play(mode, slowdown, slice)
+    function anim_game_item:play(mode, slowdown, slice)        
         if self.serializable.data.expired or self.serializable.data.anim_data.playing then
             return
         end
@@ -134,7 +134,7 @@ function anim_game_item:ret(path)
         lib.play_anim(self.transient.entity, self.serializable.data.anim_data.channel_name)
     end
 
-    function game_item:kill_instance()
+    function anim_game_item:kill_instance()
         self.serializable.metainfo.override.game_item.kill_instance(self)
     end
 

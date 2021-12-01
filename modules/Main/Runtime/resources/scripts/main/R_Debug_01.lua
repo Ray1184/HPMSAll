@@ -3,7 +3,8 @@
 
 dependencies = {
     'Framework.lua',
-    'libs/logic/AnimGameItem.lua'
+    'libs/logic/AnimCollisionGameItem.lua',
+    'libs/backend/HPMSFacade.lua',
 }
 
 scene = {
@@ -18,9 +19,13 @@ scene = {
         rotate = 0
         enable_debug()
         context:inst():disable_dummy()
-        item = anim_game_item:ret('EY_DummyAnim.mesh')
-        item:fill_transient_data()
+        lib = backend:get()                                  -- > gestirlo via scene_manager
+        walkmap = lib.make_walkmap("Dummy_Scene.walkmap")    -- > gestirlo via scene_manager        
+        item = anim_collision_game_item:ret('EY_DummyAnim.mesh', 0.3098)      
         log_debug(item)
+        item:fill_transient_data(walkmap)
+        log_debug(item)
+       
 
 
 
@@ -40,7 +45,7 @@ scene = {
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
 
         -- View CM_01 setup
-        --background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
+        -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
         -- scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'SG_01' else return false end end, background_cm_01, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         log_debug(scn_mgr)
@@ -68,6 +73,10 @@ scene = {
                 scene.quit = true
             end
 
+            if lib.key_action_performed(keys, 'E', 1) then
+                debug_console_exec()
+            end
+
             if lib.key_action_performed(keys, 'UP', 2) then
                 speed = 1
             elseif lib.key_action_performed(keys, 'DOWN', 2) then
@@ -91,21 +100,23 @@ scene = {
         -- TODOBATCH-BEGIN
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
+        hpms.debug_draw_clear()
         playing = speed ~= 0 or rotate ~= 0
         if playing then
             item:play(ANIM_MODE_ONCE, 2, 2)
         end
-        
         item:rotate(0, 0, 50 * tpf * rotate)
         item:move_dir(tpf * speed * 0.7)
         item:update(tpf)
 
-        
+
 
         -- TODOBATCH-END
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
-        -- TODO
+        
+        hpms.debug_draw_perimeter(walkmap)
+        
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
 
         scn_mgr:update()
@@ -114,6 +125,7 @@ scene = {
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [cleanup]
         -- TODO
+        lib.delete_walkmap(walkmap)
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [cleanup]
 
         item:delete_transient_data()

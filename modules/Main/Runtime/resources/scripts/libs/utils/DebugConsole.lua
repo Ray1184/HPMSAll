@@ -7,7 +7,7 @@
 
 dependencies = { 'libs/utils/Utils.lua' }
 
-local console_path = 'Console.lua'
+local console_path = 'data/debug/Console.lua'
 
 function debug_console_exec()
     local f = io.open(console_path, 'r')
@@ -17,7 +17,7 @@ function debug_console_exec()
         dofile(console_path)
         f:close()
     else
-        log_debug('Console disabled, create Console.lua to enabled it')
+        log_debug('Console disabled, create data/debug/Console.lua to enabled it')
     end
 end
 
