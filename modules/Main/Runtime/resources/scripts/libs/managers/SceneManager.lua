@@ -1,31 +1,65 @@
----
+-- -
 --- Created by Ray1184.
 --- DateTime: 04/10/2021 17:04
----
+-- -
 --- Scene management functions.
----
+-- -
 
-dependencies = { 'libs/utils/Utils.lua' }
+dependencies = {
+    'libs/utils/Utils.lua',
+    'libs/backend/HPMSFacade.lua'
+}
 
-scene_manager = {}
+scene_manager = { }
 
 function scene_manager:new(scene_name, camera)
+    lib = backend:get()
+    insp = inspector:get()
     local this = {
+        module_name = 'scene_manager',
+
+        -- Room info
         scene_name = scene_name,
         camera = camera,
-        views_map = {}
-    }
+        views_map = { },
+        current_walkmap = nil,
 
+        -- Backend data ref
+        loaded_images = { },
+        walkmaps = { }
+    }
+    log_debug('Creating scene module for room ' .. scene_name)
     setmetatable(this, self)
     self.__index = self
+    self.__tostring = function(o)
+        return insp.inspect(o)
+    end
 
+    function scene_manager:delete_all()
+        for k, background in pairs(self.loaded_images) do
+            lib.delete_background(background)
+        end
+        for k, walkmap in pairs(self.walkmaps) do
+            lib.delete_walkmap(walkmap)
+        end
+    end
 
+    function scene_manager:set_walkmap(walkmap)
+        if self.walkmaps[walkmap] == nil then
+            self.walkmaps[walkmap] = lib.lib.make_walkmap(walkmap)
+        end
+        current_walkmap = self.walkmaps[walkmap]
+    end
 
     function scene_manager:sample_view_by_callback(condition, background, position, rotation)
+        if self.loaded_images[background] == nil then
+            self.loaded_images[background] = lib.make_background(background)
+        end
         local sample = {
             condition = condition,
-            settings = {
-                background = background,
+            settings =
+            {
+                background = self.loaded_images[background],
                 position = position,
                 rotation = rotation
             }

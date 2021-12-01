@@ -202,6 +202,10 @@ function backend:get()
                 return {}
             end,
 
+            to_degrees = function(a)
+                return {}
+            end,
+
             point_inside_circle = function(x, y, cx, cy, radius)
                 return true
             end,
@@ -281,6 +285,7 @@ function backend:get()
             quat_mul = hpms.quat_mul,
             get_direction = hpms.get_direction,
             to_radians = hpms.to_radians,
+            to_degrees = hpms.to_degrees,
             point_inside_circle = hpms.point_inside_circle,
             point_inside_polygon = hpms.point_inside_polygon,
             circle_inside_polygon = hpms.circle_inside_polygon,

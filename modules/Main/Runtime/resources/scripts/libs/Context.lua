@@ -181,7 +181,7 @@ function context:get(cat, key, supplier_callback)
             self.instance:put(cat, key, supplier_callback())
         end
     end
-    log_debug('Object with key ' .. key .. ' and category ' .. cat .. ' found in context')
+    log_debug('Object with key ' .. key .. ' and category ' .. cat .. ' found/created in context')
     local obj = {}
     obj.serializable = self.instance[cat][key]
     return obj

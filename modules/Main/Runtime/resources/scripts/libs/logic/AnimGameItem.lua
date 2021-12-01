@@ -13,7 +13,6 @@ dependencies = {
     'libs/backend/HPMSFacade.lua',
     'thirdparty/Inspect.lua'
 }
-lib = backend:get()
 
 anim_game_item = { }
 
@@ -55,7 +54,8 @@ function anim_game_item:ret(path)
                             rotate = ret.rotate,
                             delete_transient_data = ret.delete_transient_data,
                             fill_transient_data = ret.fill_transient_data,
-                            update = ret.update
+                            update = ret.update,
+                            kill_instance = ret.kill_instance
                         }
                     }
                 }
@@ -74,11 +74,11 @@ function anim_game_item:ret(path)
     end
 
     function anim_game_item:move_dir(ratio)
-        self.serializable.metainfo.override.game_item:move_dir(ratio)
+        self.serializable.metainfo.override.game_item.move_dir(self, ratio)
     end
 
     function anim_game_item:rotate(rx, ry, rz)
-        self.serializable.metainfo.override.game_item:rotate(rx, ry, rz)
+        self.serializable.metainfo.override.game_item.rotate(self, rx, ry, rz)
     end
 
     function anim_game_item:delete_transient_data()
@@ -88,7 +88,7 @@ function anim_game_item:ret(path)
     function anim_game_item:fill_transient_data()
         self.serializable.metainfo.override.game_item.fill_transient_data(self)
     end
-       
+
     function anim_game_item:update(tpf)
         self.serializable.metainfo.override.game_item.update(self)
         if self.serializable.data.expired then
@@ -119,7 +119,7 @@ function anim_game_item:ret(path)
         if self.serializable.data.expired then
             return
         end
-        self.serializable.data.anim_data.channel_name = name   
+        self.serializable.data.anim_data.channel_name = name
     end
 
     function anim_game_item:play(mode, slowdown, slice)
@@ -129,9 +129,13 @@ function anim_game_item:ret(path)
         self.serializable.data.anim_data.mode = mode
         self.serializable.data.anim_data.slowdown = slowdown or 1
         self.serializable.data.anim_data.slice = slice or 1
-        self.serializable.data.anim_data.playing = true        
+        self.serializable.data.anim_data.playing = true
         lib.slice_anim(self.transient.entity, self.serializable.data.anim_data.channel_name, self.serializable.data.anim_data.slice)
-        lib.play_anim(self.transient.entity, self.serializable.data.anim_data.channel_name)        
+        lib.play_anim(self.transient.entity, self.serializable.data.anim_data.channel_name)
+    end
+
+    function game_item:kill_instance()
+        self.serializable.metainfo.override.game_item.kill_instance(self)
     end
 
     return this

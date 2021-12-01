@@ -65,7 +65,8 @@ function game_item:ret(path)
             return
         end
         local node = self.transient.node
-        trx.move_towards_direction(node, ratio)
+        local dir = lib.get_direction(node.rotation, lib.vec3(0, -1, 0))
+        node.position = lib.vec3_add(node.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
         self.serializable.data.visual_info.position = node.position
     end
 
@@ -119,7 +120,10 @@ function game_item:ret(path)
             return
         end
         self.transient.entity.visible = self.serializable.data.visual_info.visible
+    end
 
+    function game_item:kill_instance()
+        self.serializable.data.expired = true
     end
 
     return this
