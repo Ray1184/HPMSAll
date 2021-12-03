@@ -5,6 +5,8 @@
 --- Collidable stateful game object.
 -- -
 
+scriptname = 'CollisionGameItem.lua'
+
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
@@ -22,36 +24,19 @@ function collision_game_item:ret(path, bounding_radius)
     insp = inspector:get()
 
     local id = 'collision_game_item/' .. path
+    local ret = game_item:ret(path)
+
     local this = context:inst():get(cats.OBJECTS, id,
     function()
         log_debug('New collision_game_item object ' .. id)
-        local ret = game_item:ret(path)
+
         local new = {
             serializable =
             {
-                data =
+                id = id,
+                collision_info =
                 {
-                    collision_info =
-                    {
-                        bounding_radius = bounding_radius or 0
-                    }
-                },
-                metainfo =
-                {
-                    object_type = 'collision_game_object',
-                    parent_type = 'game_object',
-                    override =
-                    {
-                        game_item =
-                        {
-                            move_dir = ret.move_dir,
-                            rotate = ret.rotate,
-                            delete_transient_data = ret.delete_transient_data,
-                            fill_transient_data = ret.fill_transient_data,
-                            update = ret.update,
-                            kill_instance = ret.kill_instance
-                        }
-                    }
+                    bounding_radius = bounding_radius or 0
                 }
             }
         }
@@ -61,6 +46,29 @@ function collision_game_item:ret(path, bounding_radius)
         return ret
     end )
 
+    local metainf =
+    {
+        metainfo =
+        {
+            object_type = 'collision_game_object',
+            parent_type = 'game_object',
+            override =
+            {
+                game_item =
+                {
+                    move_dir = ret.move_dir,
+                    rotate = ret.rotate,
+                    delete_transient_data = ret.delete_transient_data,
+                    fill_transient_data = ret.fill_transient_data,
+                    update = ret.update,
+                    kill_instance = ret.kill_instance
+                }
+            }
+        }
+    }
+
+    this = merge_tables(this, metainf)
+
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
@@ -68,39 +76,40 @@ function collision_game_item:ret(path, bounding_radius)
     end
 
     function collision_game_item:move_dir(ratio)
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         local collisor = self.transient.collisor
         local dir = lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
         local nextPos = lib.vec3_add(collisor.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
         lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
-        self.serializable.data.visual_info.position = collisor.position
+        self.serializable.visual_info.position = collisor.position
     end
 
     function collision_game_item:rotate(rx, ry, rz)
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         local collisor = self.transient.collisor
         trx.rotate(collisor, rx, ry, rz)
-        self.serializable.data.visual_info.rotation = collisor.rotation
+        self.serializable.visual_info.rotation = collisor.rotation
     end
 
     function collision_game_item:delete_transient_data()
-        self.serializable.metainfo.override.game_item.delete_transient_data(self)
-        if not self.serializable.data.expired then
+        self.metainfo.override.game_item.delete_transient_data(self)
+        if not self.serializable.expired then
             lib.delete_collisor(self.transient.collisor)
         end
     end
 
     function collision_game_item:fill_transient_data(walkmap)
-        self.serializable.metainfo.override.game_item.fill_transient_data(self)
-        if not self.serializable.data.expired then
+        self.metainfo.override.game_item.fill_transient_data(self)
+        if not self.serializable.expired then
+            local scaledRad = self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale.x + self.serializable.visual_info.scale.y) / 2)
             local tra = {
                 transient =
                 {
-                    collisor = lib.make_node_collisor(self.transient.node,walkmap,self.serializable.data.collision_info.bounding_radius)
+                    collisor = lib.make_node_collisor(self.transient.node,walkmap,scaledRad)
                 }
             }
             self = merge_tables(self, tra)
@@ -108,8 +117,8 @@ function collision_game_item:ret(path, bounding_radius)
     end
 
     function collision_game_item:update()
-        self.serializable.metainfo.override.game_item.update(self)
-        if self.serializable.data.expired then
+        self.metainfo.override.game_item.update(self)
+        if self.serializable.expired then
             return
         end
         lib.update_collisor(self.transient.collisor)
@@ -117,7 +126,7 @@ function collision_game_item:ret(path, bounding_radius)
     end
 
     function collision_game_item:kill_instance()
-        self.serializable.metainfo.override.game_item.kill_instance(self)
+        self.metainfo.override.game_item.kill_instance(self)
     end
 
     return this

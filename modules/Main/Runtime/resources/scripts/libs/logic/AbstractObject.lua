@@ -4,7 +4,20 @@
 -- -
 --- Abstract game object. Used as template for all object that need to keep their state
 --- within game cycle (after save games etc...)
+--- Each child has usually the following structure
+--- this = {
+---     serializable = { ... },
+---     metainfo =
+---     {
+---         object_type = 'my_object',
+---         parent_type = 'parent_object',
+---         override = { ... }
+---     },
+---     transient = { ... }
+--- }
 -- -
+
+scriptname = 'AbstractObject.lua'
 
 abstract_object = { }
 
@@ -12,34 +25,26 @@ function abstract_object:ret(id)
     local this = {
         serializable =
         {
-            data =
-            {
-                id = 'object/' ..(id or 'UNDEF')
-            },
-            metainfo =
-            {
-                object_type = 'abstract_object',
-                parent_type = nil,
-                override = { }
-            }
-        },
-        transient = { }
+            id = 'object/' ..(id or 'UNDEF')
+        }
     }
+
+    local metainf = {
+        metainfo =
+        {
+            object_type = 'abstract_object',
+            parent_type = nil,
+            override = { }
+        }
+    }
+
+    this = merge_tables(this, metainf)
+
     setmetatable(this, self)
-
     self.__index = self
-
     self.__tostring = function(o)
         return inspect.inspect(o)
     end
-
-    local function set_metainfo(obj)
-        obj.object_type = 'abstract_object'
-        obj.parent_type = 'nil'
-        obj.override = { }
-    end
-
-    set_metainfo(this)
 
     return this
 end

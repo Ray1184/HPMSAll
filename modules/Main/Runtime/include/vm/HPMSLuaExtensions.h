@@ -5,6 +5,7 @@
 #pragma once
 
 #include <glm/glm.hpp>
+#include <glm/gtc/quaternion.hpp>
 #include <cmath>
 #include <algorithm>
 #include <api/HPMSInputUtils.h>
@@ -35,17 +36,20 @@ namespace hpms
             return glm::quat(glm::vec3(xAngle, yAngle, zAngle));
         }
 
+        static inline glm::vec3 ToEuler(const glm::quat& quat)
+        {
+            return glm::eulerAngles(quat);
+        }
+
         static inline glm::quat FromAxisQuat(float angle, float xAxis, float yAxis, float zAxis)
         {
             return glm::angleAxis(angle, glm::vec3(xAxis, yAxis, zAxis));
         }
 
-
         static inline glm::vec3 GetDirection(const glm::quat& rot, const glm::vec3& forward)
         {
             return hpms::CalcDirection(rot, forward);
         }
-
 
         static inline glm::vec3 SumVec3(const glm::vec3& v1, const glm::vec3& v2)
         {

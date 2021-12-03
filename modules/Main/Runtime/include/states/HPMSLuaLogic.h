@@ -37,6 +37,11 @@ namespace hpms
 
         void LoadState(const std::string& scriptName);
 
+        inline LuaVM* GetVM() const
+        {
+            return vm;
+        }
+
         inline void Check()
         {
             HPMS_ASSERT(currentState, "Current state cannot be null");

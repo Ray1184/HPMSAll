@@ -54,23 +54,23 @@ function collectible_item:ret(path)
     end
 
     function collectible_item:move_dir(ratio)
-        self.serializable.metainfo.override_game_item.move_dir(ratio)
+        self.metainfo.override_game_item.move_dir(ratio)
     end
 
     function collectible_item:rotate(rx, ry, rz)
-        self.serializable.metainfo.override_game_item.rotate(rx, ry, rz)
+        self.metainfo.override_game_item.rotate(rx, ry, rz)
     end
 
     function collectible_item:delete_transient_data()
-        self.serializable.metainfo.override_game_item.delete_transient_data(self)
+        self.metainfo.override_game_item.delete_transient_data(self)
     end
 
     function collectible_item:fill_transient_data()
-        self.serializable.metainfo.override_game_item.fill_transient_data(self)
+        self.metainfo.override_game_item.fill_transient_data(self)
     end
 
     function collectible_item:update()
-        self.serializable.metainfo.override_game_item.update(self)
+        self.metainfo.override_game_item.update(self)
         if context:inst():is_mode_r25d() or context:inst():is_mode_3d() then
             self.transient.node.position = self.serializable.visual_info.position
         else

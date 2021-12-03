@@ -5,6 +5,8 @@
 --- Standard stateful game object.
 -- -
 
+scriptname = 'GameItem.lua'
+
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
@@ -21,31 +23,27 @@ function game_item:ret(path)
     trx = transform:get()
     insp = inspector:get()
 
+    
     local id = 'game_item/' .. path
+    local ret = abstract_object:ret(id)
+
     local this = context:inst():get(cats.OBJECTS, id,
     function()
         log_debug('New game_item object ' .. id)
-        local ret = abstract_object:ret(id)
+
         local new = {
             serializable =
             {
-                data =
+                id = id,
+                path = path or '',
+                expired = false,
+                visual_info =
                 {
-                    path = path or '',
-                    expired = false,
-                    visual_info =
-                    {
-                        position = lib.vec3(0,0,0),
-                        rotation = lib.from_euler(0,0,0),
-                        scale = lib.vec3(1,1,1),
-                        visible = true
-                    }
-                },
-                metainfo =
-                {
-                    object_type = 'game_object',
-                    parent_type = 'abstract_object',
-                    override = { }
+                    position = { 0, 0, 0 },
+                    rotation = { 0, 0, 0 },
+                    scale = { 1, 1, 1 },
+                    visible = true
+
                 }
             }
         }
@@ -53,6 +51,18 @@ function game_item:ret(path)
         ret = merge_tables(ret, new)
         return ret
     end )
+       
+    local metainf =
+    {
+        metainfo =
+        {
+            object_type = 'game_object',
+            parent_type = 'abstract_object',
+            override = { }
+        }
+    }
+
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
@@ -61,35 +71,36 @@ function game_item:ret(path)
     end
 
     function game_item:move_dir(ratio)
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         local node = self.transient.node
         local dir = lib.get_direction(node.rotation, lib.vec3(0, -1, 0))
         node.position = lib.vec3_add(node.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
-        self.serializable.data.visual_info.position = node.position
+        self.serializable.visual_info.position = { node.position.x, node.position.y, node.position.z }
     end
 
     function game_item:rotate(rx, ry, rz)
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         local node = self.transient.node
         trx.rotate(node, rx, ry, rz)
-        self.serializable.data.visual_info.rotation = node.rotation
+        local rot = lib.to_euler(node.rotation)
+        self.serializable.visual_info.rotation = { rot.x, rot.y, rot.z }
     end
 
     function game_item:scale(sx, sy, sz)
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         local node = self.transient.node
         node.scale = lib.vec3(sx, sy, sz)
-        self.serializable.data.visual_info.scale = node.scale
+        self.serializable.visual_info.scale = { node.scale.x, node.scale.y, node.scale.z }
     end
 
     function game_item:delete_transient_data()
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         lib.delete_node(self.transient.node)
@@ -98,32 +109,38 @@ function game_item:ret(path)
     end
 
     function game_item:fill_transient_data()
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
         local tra = {
             transient =
             {
-                entity = lib.make_entity(self.serializable.data.path),
-                node = lib.make_node('NODE_' .. self.serializable.data.path)
+                entity = lib.make_entity(self.serializable.path),
+                node = lib.make_node('NODE_' .. self.serializable.path)
             }
         }
         self = merge_tables(self, tra)
         local node = self.transient.node
-        node.scale = lib.vec3(1, 1, 1)
+        local visualInfo = self.serializable.visual_info
+        local pos = visualInfo.position
+        local rot = visualInfo.rotation
+        local sca = visualInfo.scale
+        node.scale = lib.vec3(pos[1], pos[2], pos[3])
+        node.rotation = lib.from_euler(rot[1], rot[2], rot[3])
+        node.scale = lib.vec3(sca[1], sca[2], sca[3])
         lib.set_node_entity(node, self.transient.entity)
 
     end
 
     function game_item:update()
-        if self.serializable.data.expired then
+        if self.serializable.expired then
             return
         end
-        self.transient.entity.visible = self.serializable.data.visual_info.visible
+        self.transient.entity.visible = self.serializable.visual_info.visible
     end
 
     function game_item:kill_instance()
-        self.serializable.data.expired = true
+        self.serializable.expired = true
     end
 
     return this

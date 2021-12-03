@@ -161,6 +161,7 @@ namespace hpms
                     .addFunction("from_axis", &hpms::LuaExtensions::FromAxisQuat)
                     .addFunction("get_direction", &hpms::LuaExtensions::GetDirection)
                     .addFunction("from_euler", &hpms::LuaExtensions::FromEuler)
+                    .addFunction("to_euler", &hpms::LuaExtensions::ToEuler)
                     .endNamespace();
 
         }

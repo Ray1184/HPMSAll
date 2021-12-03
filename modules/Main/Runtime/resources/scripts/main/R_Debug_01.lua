@@ -1,10 +1,12 @@
 -- R_Debug_01
 -- Generated with Blend2HPMS batch on date 2021/09/12
-
+scriptname = 'R_Debug_01.lua'
 dependencies = {
     'Framework.lua',
     'libs/logic/AnimCollisionGameItem.lua',
     'libs/backend/HPMSFacade.lua',
+    'libs/utils/Utils.lua',
+    'thirdparty/JsonHelper.lua'
 }
 
 scene = {
@@ -15,19 +17,26 @@ scene = {
     next = 'TBD',
     setup = function()
         -- TODOBATCH-BEGIN
+
+
         speed = 0
         rotate = 0
         enable_debug()
         context:inst():disable_dummy()
-        lib = backend:get()                                  -- > gestirlo via scene_manager
-        walkmap = lib.make_walkmap("Dummy_Scene.walkmap")    -- > gestirlo via scene_manager        
-        item = anim_collision_game_item:ret('EY_DummyAnim.mesh', 0.3098)      
+        lib = backend:get()
+        -- > gestirlo via scene_manager
+        walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
+        -- > gestirlo via scene_manager
+        item = anim_collision_game_item:ret('EY_DummyAnim.mesh', 0.3098)
         log_debug(item)
         item:fill_transient_data(walkmap)
         log_debug(item)
-       
 
 
+        json = json_helper:get()
+        insp = inspector:get()
+        -- local serialized = serializer.serialize_nocompress(item)
+        log_debug('JSON ---> ' .. json.encode(item.serializable.collision_info))
 
 
         -- TODOBATCH-END
@@ -114,9 +123,9 @@ scene = {
         -- TODOBATCH-END
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
-        
+
         hpms.debug_draw_perimeter(walkmap)
-        
+
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
 
         scn_mgr:update()

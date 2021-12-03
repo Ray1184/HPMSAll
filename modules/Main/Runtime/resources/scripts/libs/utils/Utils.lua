@@ -62,6 +62,14 @@ function log_error(msg)
 end
 
 --
+-- Get current script name.
+--
+filename = function()
+  local str = debug.getinfo(2, "S").source:sub(2)
+  return str:match("^.*/(.*).lua$") or str
+end
+
+--
 -- Try/catch block simulation.
 --
 -- try {

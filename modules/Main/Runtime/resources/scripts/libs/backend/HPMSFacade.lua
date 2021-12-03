@@ -1,14 +1,16 @@
----
+-- -
 --- Created by Ray1184.
 --- DateTime: 04/10/2020 17:04
----
+-- -
 --- C++ backend facade.
----
+-- -
 
-dependencies = { 'libs/Context.lua',
-                 'libs/utils/Utils.lua' }
+dependencies = {
+    'libs/Context.lua',
+    'libs/utils/Utils.lua'
+}
 
-backend = {}
+backend = { }
 
 function backend:get()
     if context:inst():is_dummy() then
@@ -110,15 +112,15 @@ function backend:get()
 
             -- Logic.
             get_camera = function()
-                return {}
+                return { }
             end,
 
             set_ambient = function(color)
-                return {}
+                return { }
             end,
 
             move_collisor_dir = function(c, v3, v2)
-                return {}
+                return { }
             end,
 
             rotate = function(a, rx, ry, rz)
@@ -167,43 +169,47 @@ function backend:get()
 
             -- Math functions.
             vec3 = function(x, y, z)
-                return {}
+                return { }
             end,
 
             vec4 = function(w, x, y, z)
-                return {}
+                return { }
             end,
 
             vec2 = function(x, y)
-                return {}
+                return { }
             end,
 
             quat = function(w, x, y, z)
-                return {}
+                return { }
             end,
 
             from_euler = function(a, b, g)
-                return {}
+                return { }
+            end,
+
+            to_euler = function(q)
+                return { }
             end,
 
             vec3_add = function(v1, v2)
-                return {}
+                return { }
             end,
 
             quat_mul = function(q1, q2)
-                return {}
+                return { }
             end,
 
             get_direction = function(q, v)
-                return {}
+                return { }
             end,
 
             to_radians = function(a)
-                return {}
+                return { }
             end,
 
             to_degrees = function(a)
-                return {}
+                return { }
             end,
 
             point_inside_circle = function(x, y, cx, cy, radius)
@@ -220,15 +226,15 @@ function backend:get()
 
             -- Input.
             current_key_code = function(keys)
-                return {}
+                return { }
             end,
 
             mbutton_action_performed = function(mouse_buttons, code, type)
-                return {}
+                return { }
             end,
 
             key_action_performed = function(keys, code, type)
-                return {}
+                return { }
             end
 
         }
@@ -281,6 +287,7 @@ function backend:get()
             vec2 = hpms.vec2,
             quat = hpms.quat,
             from_euler = hpms.from_euler,
+            to_euler = hpms.to_euler,
             vec3_add = hpms.vec3_add,
             quat_mul = hpms.quat_mul,
             get_direction = hpms.get_direction,

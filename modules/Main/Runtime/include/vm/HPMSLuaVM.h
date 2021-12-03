@@ -20,30 +20,57 @@ extern "C" {
 
 namespace hpms
 {
-    class LuaVM : Object
-    {
+	class LuaVM : Object
+	{
 
-    public:
-        LuaVM();
+	public:
+		LuaVM();
 
-        virtual ~LuaVM();
+		virtual ~LuaVM();
 
-        void ExecuteScript(const std::string& path);
+		void ExecuteScript(const std::string& path);
 
-        void ExecuteStatement(const std::string& stat);
+		void ExecuteStatement(const std::string& stat);
 
-        LuaRef GetGlobal(const std::string& name);
+		LuaRef GetGlobal(const std::string& name);
 
-        void ClearState();
+		void ClearState();
 
-        void RegisterAll();
+		void RegisterAll();
 
-        void Close();
+		void Close();
 
-        const std::string Name() const override;
+		const std::string Name() const override;
 
-    private:
-        lua_State* state;
-        bool closed;
-    };
+		inline std::string BuildStackTrace()
+		{
+			std::stringstream ss;
+			int top = lua_gettop(state);
+			for (int i = 1; i <= top; i++) {
+				ss << std::to_string(i) << "\t" << luaL_typename(state, i) << "\t";
+				switch (lua_type(state, i)) {
+				case LUA_TNUMBER:
+					ss << std::to_string(lua_tonumber(state, i));
+					break;
+				case LUA_TSTRING:
+					ss << lua_tostring(state, i);
+					break;
+				case LUA_TBOOLEAN:
+					ss << (lua_toboolean(state, i) ? "true" : "false");
+					break;
+				case LUA_TNIL:
+					ss << "nil";
+					break;
+				default:
+					ss << lua_topointer(state, i);
+					break;
+				}
+			}
+			return ss.str();
+		}
+
+	private:
+		lua_State* state;
+		bool closed;
+	};
 }
