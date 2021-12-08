@@ -12,7 +12,20 @@ function consts:get()
     return {
         items_names =
         {
-            DUMMY_WEAPON = 'DUMMY WEAPON'
+            -- Weapons.
+            DUMMY_WEAPON = 'DUMMY WEAPON',
+
+            -- Supplies.
+            DUMMY_FOOD = 'DUMMY_FOOD',
+
+            -- Key items.
+            DUMMY_KEY = 'DUMMY KEY',
+
+            -- Readings items.
+            DUMMY_BOOK = 'DUMMY BOOK',
+
+            -- Misc items.
+            DUMMY_TRESAURE = 'DUMMY TRESAURE'
         },
         res_refs =
         {

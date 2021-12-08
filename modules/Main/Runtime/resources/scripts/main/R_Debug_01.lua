@@ -3,7 +3,7 @@
 
 dependencies = {
     'Framework.lua',
-    'libs/logic/AnimCollisionGameItem.lua',
+    'inst/charas/Player.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/Utils.lua',
     'thirdparty/JsonHelper.lua'
@@ -27,12 +27,11 @@ scene = {
         -- > gestirlo via scene_manager
         walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
         -- > gestirlo via scene_manager
-        item = anim_collision_game_item:ret('EY_DummyAnim.mesh', 0.3098)
+        item = player:ret('EY_DummyAnim.mesh', 0.3098)
 
-
+        --log_debug(item)
         item:fill_transient_data(walkmap)
-        log_debug(item)
-
+        
         json = json_helper:get()
         -- log_debug(item)
 

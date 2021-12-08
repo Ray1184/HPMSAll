@@ -54,7 +54,7 @@ function anim_game_item:ret(path)
     {
         metainfo =
         {
-            object_type = 'anim_game_object',
+            object_type = 'anim_game_item',
             parent_type = 'game_object',
             override =
             {

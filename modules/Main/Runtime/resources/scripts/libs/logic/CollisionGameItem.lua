@@ -48,7 +48,7 @@ function collision_game_item:ret(path, bounding_radius)
     {
         metainfo =
         {
-            object_type = 'collision_game_object',
+            object_type = 'collision_game_item',
             parent_type = 'game_object',
             override =
             {

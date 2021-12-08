@@ -46,8 +46,8 @@ function anim_collision_game_item:ret(path, bounding_radius)
     local metainf = {
         metainfo =
         {
-            object_type = 'anim_collision_game_object',
-            parent_type = { 'anim_game_object', 'collision_game_object' },
+            object_type = 'anim_collision_game_item',
+            parent_type = { 'anim_game_item', 'collision_game_item' },
             override =
             {
                 anim_game_item =
