@@ -20,16 +20,16 @@ hpms::LuaVM::~LuaVM()
 
 void hpms::LuaVM::ExecuteScript(const std::string& path)
 {
-    luaL_dofile(state, path.c_str());
+    luaL_dofile(state, path.c_str());    
     lua_pcall(state, 0, 0, 0);
 
 }
 
-void hpms::LuaVM::ExecuteStatement(const std::string& stat)
+void hpms::LuaVM::ExecuteStatement(const std::string& stat, const std::string& name)
 {
-    luaL_dostring(state, stat.c_str());
+    std::string desc("@" + name);
+    luaL_loadbuffer(state, stat.c_str(), stat.length(), desc.c_str());
     lua_pcall(state, 0, 0, 0);
-
 }
 
 LuaRef hpms::LuaVM::GetGlobal(const std::string& name)

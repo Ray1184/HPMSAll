@@ -5,8 +5,6 @@
 --- Animated stateful game object.
 -- -
 
-scriptname = 'AnimGameItem.lua'
-
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',

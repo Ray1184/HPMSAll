@@ -30,7 +30,7 @@ namespace hpms
 
 		void ExecuteScript(const std::string& path);
 
-		void ExecuteStatement(const std::string& stat);
+		void ExecuteStatement(const std::string& stat, const std::string& name = "Default");
 
 		LuaRef GetGlobal(const std::string& name);
 

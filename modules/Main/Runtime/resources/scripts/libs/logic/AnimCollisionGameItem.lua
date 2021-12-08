@@ -5,8 +5,6 @@
 --- Animated and collidable stateful game object.
 -- -
 
-scriptname = 'AnimCollisionGameItem.lua'
-
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
@@ -22,10 +20,11 @@ anim_collision_game_item = { }
 function anim_collision_game_item:ret(path, bounding_radius)
     lib = backend:get()
     insp = inspector:get()
+
     local id = 'anim_collision_game_item/' .. path
     local ret = anim_game_item:ret(path)
     local ret2 = collision_game_item:ret(path, bounding_radius)
-
+    
     local this = context:inst():get(cats.OBJECTS, id,
     function()
         log_debug('New anim_collision_game_item object ' .. id)
@@ -37,9 +36,12 @@ function anim_collision_game_item:ret(path, bounding_radius)
             }
         }
 
-        ret = merge_tables(ret, new)
-        return merge_tables(ret, ret2)
+        ret3 = merge_tables(ret, ret2)
+        ret4 = merge_tables(ret3, new)
+        return ret4
+        
     end )
+
 
     local metainf = {
         metainfo =
@@ -72,6 +74,9 @@ function anim_collision_game_item:ret(path, bounding_radius)
         }
     }
 
+    metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
+    metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret2.metainfo.override)
+
     this = merge_tables(this, metainf)
 
     setmetatable(this, self)
@@ -79,6 +84,7 @@ function anim_collision_game_item:ret(path, bounding_radius)
     self.__tostring = function(o)
         return insp.inspect(o)
     end
+
 
     function anim_collision_game_item:move_dir(ratio)
         -- Manage collisor only
@@ -111,7 +117,6 @@ function anim_collision_game_item:ret(path, bounding_radius)
     end
 
     function anim_collision_game_item:play(mode, slowdown, slice)
-        log_debug('fwefewfFWWFWFE')
         self.metainfo.override.anim_game_item.play(self, mode, slowdown, slice)
     end
 

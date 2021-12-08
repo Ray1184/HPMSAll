@@ -5,8 +5,6 @@
 --- Collidable stateful game object.
 -- -
 
-scriptname = 'CollisionGameItem.lua'
-
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
@@ -83,7 +81,8 @@ function collision_game_item:ret(path, bounding_radius)
         local dir = lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
         local nextPos = lib.vec3_add(collisor.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
         lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
-        self.serializable.visual_info.position = collisor.position
+        local collPos = collisor.position
+        self.serializable.visual_info.position = { collPos.x, collPos.y, collPos.z }
     end
 
     function collision_game_item:rotate(rx, ry, rz)
@@ -92,28 +91,33 @@ function collision_game_item:ret(path, bounding_radius)
         end
         local collisor = self.transient.collisor
         trx.rotate(collisor, rx, ry, rz)
-        self.serializable.visual_info.rotation = collisor.rotation
+        local collRot = lib.to_euler(collisor.rotation)
+        self.serializable.visual_info.rotation = { collRot.x, collRot.y, collRot.z }
     end
 
     function collision_game_item:delete_transient_data()
         self.metainfo.override.game_item.delete_transient_data(self)
-        if not self.serializable.expired then
-            lib.delete_collisor(self.transient.collisor)
+        if self.serializable.expired then
+            return
         end
+        lib.delete_collisor(self.transient.collisor)
+
     end
 
     function collision_game_item:fill_transient_data(walkmap)
         self.metainfo.override.game_item.fill_transient_data(self)
-        if not self.serializable.expired then
-            local scaledRad = self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale.x + self.serializable.visual_info.scale.y) / 2)
-            local tra = {
-                transient =
-                {
-                    collisor = lib.make_node_collisor(self.transient.node,walkmap,scaledRad)
-                }
-            }
-            self = merge_tables(self, tra)
+        if self.serializable.expired then
+            return
         end
+        local scaledRad = self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale[1] + self.serializable.visual_info.scale[2]) / 2)
+        local tra = {
+            transient =
+            {
+                collisor = lib.make_node_collisor(self.transient.node,walkmap,scaledRad)
+            }
+        }
+        self = merge_tables(self, tra)
+
     end
 
     function collision_game_item:update()

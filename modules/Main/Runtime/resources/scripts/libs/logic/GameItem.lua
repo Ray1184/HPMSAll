@@ -5,8 +5,6 @@
 --- Standard stateful game object.
 -- -
 
-scriptname = 'GameItem.lua'
-
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',

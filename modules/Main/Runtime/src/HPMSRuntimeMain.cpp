@@ -40,7 +40,6 @@ int main(int argc, char* argv[])
 	}
 	catch (std::exception& e)
 	{
-		std::string stacktrace = customLogic->GetVM()->BuildStackTrace();
 		std::stringstream ss;
 		ss << "Runtime stopped with error: " << e.what() << std::endl;
 		LOG_ERROR(ss.str().c_str());

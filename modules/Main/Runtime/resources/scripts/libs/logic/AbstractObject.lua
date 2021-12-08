@@ -17,8 +17,6 @@
 --- }
 -- -
 
-scriptname = 'AbstractObject.lua'
-
 abstract_object = { }
 
 function abstract_object:ret(id)

@@ -21,7 +21,7 @@ void hpms::LuaLogic::OnCreate()
 {
     vm->RegisterAll();
     auto* script = hpms::LoadScript(ENTRY_POINT);
-    vm->ExecuteStatement(script->GetContent());
+    vm->ExecuteStatement(script->GetContent(), ENTRY_POINT);
     hpms::DestroyScript(script);
     LuaRef config = vm->GetGlobal("config");
     std::string firstScript = config["first_script"];
@@ -78,7 +78,7 @@ void hpms::LuaLogic::LoadState(const std::string& scriptName)
 {
     vm->ClearState();
     auto* script = hpms::LoadScript(scriptName);
-    vm->ExecuteStatement(script->GetContent());
+    vm->ExecuteStatement(script->GetContent(), scriptName);
     std::stringstream ss;
     ss << "Script " << scriptName << " loaded in LUA context";
     LOG_DEBUG(ss.str().c_str());
@@ -112,7 +112,7 @@ void hpms::LuaLogic::SolveLuaDependencies()
             ss << "Dependency " << dep << " loaded in LUA context";
             LOG_DEBUG(ss.str().c_str());
             auto* script = hpms::LoadScript(dep);
-            vm->ExecuteStatement(script->GetContent());
+            vm->ExecuteStatement(script->GetContent(), dep);
             hpms::DestroyScript(script);
             loadedDeps.push_back(dep);
             SolveLuaDependencies();

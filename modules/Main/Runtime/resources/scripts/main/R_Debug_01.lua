@@ -1,6 +1,6 @@
 -- R_Debug_01
 -- Generated with Blend2HPMS batch on date 2021/09/12
-scriptname = 'R_Debug_01.lua'
+
 dependencies = {
     'Framework.lua',
     'libs/logic/AnimCollisionGameItem.lua',
@@ -28,15 +28,13 @@ scene = {
         walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
         -- > gestirlo via scene_manager
         item = anim_collision_game_item:ret('EY_DummyAnim.mesh', 0.3098)
-        log_debug(item)
+
+
         item:fill_transient_data(walkmap)
         log_debug(item)
 
-
         json = json_helper:get()
-        insp = inspector:get()
-        -- local serialized = serializer.serialize_nocompress(item)
-        log_debug('JSON ---> ' .. json.encode(item.serializable.collision_info))
+        -- log_debug(item)
 
 
         -- TODOBATCH-END
@@ -84,6 +82,10 @@ scene = {
 
             if lib.key_action_performed(keys, 'E', 1) then
                 debug_console_exec()
+            end
+
+            if lib.key_action_performed(keys, 'P', 1) then
+                log_debug('JSON ---> ' .. json.encode(item.serializable))
             end
 
             if lib.key_action_performed(keys, 'UP', 2) then
