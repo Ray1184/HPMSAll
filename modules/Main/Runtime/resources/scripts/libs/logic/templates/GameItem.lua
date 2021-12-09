@@ -9,20 +9,20 @@ dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
     'libs/utils/TransformsCommon.lua',
-    'libs/logic/AbstractObject.lua',
+    'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
     'thirdparty/Inspect.lua'
 }
 
 game_item = { }
 
-function game_item:ret(path)
+function game_item:ret(path, id)
     lib = backend:get()
     trx = transform:get()
     insp = inspector:get()
 
-    
-    local id = 'game_item/' .. path
+
+    local id = 'game_item/' .. id
     local ret = abstract_object:ret(id)
 
     local this = context:inst():get(cats.OBJECTS, id,
@@ -49,7 +49,7 @@ function game_item:ret(path)
         ret = merge_tables(ret, new)
         return ret
     end )
-       
+
     local metainf =
     {
         metainfo =
@@ -114,7 +114,7 @@ function game_item:ret(path)
             transient =
             {
                 entity = lib.make_entity(self.serializable.path),
-                node = lib.make_node('NODE_' .. self.serializable.path)
+                node = lib.make_node('node_' .. self.serializable.id)
             }
         }
         self = merge_tables(self, tra)
@@ -123,7 +123,7 @@ function game_item:ret(path)
         local pos = visualInfo.position
         local rot = visualInfo.rotation
         local sca = visualInfo.scale
-        node.scale = lib.vec3(pos[1], pos[2], pos[3])
+        node.position = lib.vec3(pos[1], pos[2], pos[3])
         node.rotation = lib.from_euler(rot[1], rot[2], rot[3])
         node.scale = lib.vec3(sca[1], sca[2], sca[3])
         lib.set_node_entity(node, self.transient.entity)

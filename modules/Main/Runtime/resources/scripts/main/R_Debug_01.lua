@@ -3,7 +3,7 @@
 
 dependencies = {
     'Framework.lua',
-    'inst/charas/Player.lua',
+    'libs/logic/models/Player.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/Utils.lua',
     'thirdparty/JsonHelper.lua'
@@ -27,10 +27,12 @@ scene = {
         -- > gestirlo via scene_manager
         walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
         -- > gestirlo via scene_manager
-        item = player:ret('EY_DummyAnim.mesh', 0.3098)
+        item = player:ret('EY_DummyAnim.mesh', 'main_player', 0.3098)
+        item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
 
         --log_debug(item)
         item:fill_transient_data(walkmap)
+        item2:fill_transient_data(walkmap)
         
         json = json_helper:get()
         -- log_debug(item)
@@ -84,6 +86,9 @@ scene = {
             end
 
             if lib.key_action_performed(keys, 'P', 1) then
+                item:delete_transient_data()
+                item = player:ret('EY_DummyAnim.mesh', 'main_player', 0.3098)
+                item:fill_transient_data(walkmap)
                 log_debug('JSON ---> ' .. json.encode(item.serializable))
             end
 
@@ -139,6 +144,7 @@ scene = {
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [cleanup]
 
         item:delete_transient_data()
+        item2:delete_transient_data()
 
         -- Collisor EY_DummyAnim delete
         -- lib.delete_collisor(collisor_ey_dummyanim)

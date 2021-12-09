@@ -8,7 +8,7 @@
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
-    'libs/logic/GameItem.lua',
+    'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/TransformsCommon.lua',
     'thirdparty/Inspect.lua'
@@ -16,13 +16,13 @@ dependencies = {
 
 collision_game_item = { }
 
-function collision_game_item:ret(path, bounding_radius)
+function collision_game_item:ret(path, id, bounding_radius)
     lib = backend:get()
     trx = transform:get()
     insp = inspector:get()
 
-    local id = 'collision_game_item/' .. path
-    local ret = game_item:ret(path)
+    local id = 'collision_game_item/' .. id
+    local ret = game_item:ret(path, id)
 
     local this = context:inst():get(cats.OBJECTS, id,
     function()

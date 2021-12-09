@@ -8,23 +8,22 @@
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
-    'libs/logic/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/logic/CollisionGameItem.lua',
-    'libs/logic/AnimGameItem.lua',
+    'libs/logic/templates/CollisionGameItem.lua',
+    'libs/logic/templates/AnimGameItem.lua',
     'thirdparty/Inspect.lua'
 }
 
 anim_collision_game_item = { }
 
-function anim_collision_game_item:ret(path, bounding_radius)
+function anim_collision_game_item:ret(path, id, bounding_radius)
     lib = backend:get()
     insp = inspector:get()
 
-    local id = 'anim_collision_game_item/' .. path
-    local ret = anim_game_item:ret(path)
-    local ret2 = collision_game_item:ret(path, bounding_radius)
-    
+    local id = 'anim_collision_game_item/' .. id
+    local ret = anim_game_item:ret(path, id)
+    local ret2 = collision_game_item:ret(path, id, bounding_radius)
+
     local this = context:inst():get(cats.OBJECTS, id,
     function()
         log_debug('New anim_collision_game_item object ' .. id)
@@ -39,7 +38,7 @@ function anim_collision_game_item:ret(path, bounding_radius)
         ret3 = merge_tables(ret, ret2)
         ret4 = merge_tables(ret3, new)
         return ret4
-        
+
     end )
 
 

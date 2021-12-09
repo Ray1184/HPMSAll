@@ -1,9 +1,9 @@
----
+-- -
 --- Created by Ray1184.
 --- DateTime: 04/10/2020 17:04
----
+-- -
 --- Utils functions.
----
+-- -
 
 
 local debug_flag = false
@@ -15,7 +15,7 @@ function disable_debug()
     debug_flag = false
 end
 function merge_tables(orig, new)
-    local merge_task = {}
+    local merge_task = { }
     merge_task[orig] = new
 
     local left = orig
@@ -40,8 +40,18 @@ function merge_tables(orig, new)
     end
     return orig
 end
+
+function table_contains(table, val)
+    for i = 1, #table do
+        if table[i] == val then
+            return true
+        end
+    end
+    return false
+end
+
 local function log(msg)
-    _hpms.log_msg(msg) 
+    _hpms.log_msg(msg)
 end
 function log_debug(msg)
     if debug_flag then
@@ -61,12 +71,9 @@ function log_error(msg)
 
 end
 
---
--- Get current script name.
---
-filename = function()
-  local str = debug.getinfo(2, "S").source:sub(2)
-  return str:match("^.*/(.*).lua$") or str
+function filename()
+    local str = debug.getinfo(2, "S").source:sub(2)
+    return str:match("^.*/(.*).lua$") or str
 end
 
 --
@@ -77,7 +84,7 @@ end
 --       -- Throw some errors...
 --       unsafe_function()
 --    end,
--- 
+--
 --    catch {
 --       function(error)
 --          -- Error management
@@ -87,12 +94,12 @@ end
 -- }
 
 function try(what)
-   status, result = pcall(what[1])
-   if not status then
-      what[2](result)
-   end
-   return result
+    status, result = pcall(what[1])
+    if not status then
+        what[2](result)
+    end
+    return result
 end
 function catch(what)
-   return what[1]
+    return what[1]
 end

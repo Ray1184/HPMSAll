@@ -8,7 +8,7 @@
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
-    'libs/logic/GameItem.lua',
+    'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'thirdparty/Inspect.lua'
 }
@@ -19,12 +19,12 @@ ANIM_MODE_LOOP = 0
 ANIM_MODE_ONCE = 1
 ANIM_MODE_FRAME = 2
 
-function anim_game_item:ret(path)
+function anim_game_item:ret(path, id)
     lib = backend:get()
     insp = inspector:get()
 
-    local ret = game_item:ret(path)
-    local id = 'anim_game_item/' .. path
+    local id = 'anim_game_item/' .. id
+    local ret = game_item:ret(path, id)
 
     local this = context:inst():get(cats.OBJECTS, id,
     function()

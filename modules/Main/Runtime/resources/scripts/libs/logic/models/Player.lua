@@ -9,24 +9,22 @@
 dependencies = {
     'libs/Context.lua',
     'libs/utils/Utils.lua',
-    'libs/logic/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/logic/AnimCollisionGameItem.lua',
-    'libs/logic/AnimGameItem.lua',
-    'inst/GameConst.lua'
+    'libs/logic/templates/AnimCollisionGameItem.lua',
+    'libs/logic/GameMechanicsConsts.lua'
 }
 
 player = { }
 
-function player:ret(path, rad, anagr)
-    k = consts:get()
+function player:ret(path, id, rad, anagr)
+    k = game_mechanics_consts:get()
     insp = inspector:get()
     local name = 'Joe Dummy'
     if anagr == nil then
         anagr = { }
     end
-    local id = 'player/' .. path .. '/' ..(anagr.name or 'Joe Dummy')
-    local ret = anim_collision_game_item:ret(path, rad)
+    local id = 'player/' .. id
+    local ret = anim_collision_game_item:ret(path, id, rad)
 
     local this = context:inst():get(cats.OBJECTS, id,
     function()
@@ -37,6 +35,7 @@ function player:ret(path, rad, anagr)
             {
                 id = id,
                 mode = k.player_modes.SEARCH,
+                run = false,
                 stats =
                 {
                     anagr =
@@ -114,11 +113,12 @@ function player:ret(path, rad, anagr)
                 equip = nil,
                 inventory =
                 {
-                    weapons = { id = k.items_names.DUMMY_WEAPON, amount = 1 },
-                    supplies = { id = k.items_names.DUMMY_FOOD, amount = 3 },
-                    key_items = { id = k.items_names.DUMMY_KEY, amount = 1 },
-                    reading_items = { id = k.items_names.DUMMY_BOOK, amount = 1 },
-                    misc_items = { id = k.items_names.DUMMY_TRESAURE, amount = 1 }
+                    size = 10,
+                    weapons = { },
+                    supplies = { },
+                    key_items = { },
+                    reading_items = { },
+                    misc_items = { }
                 }
 
             }
@@ -159,8 +159,23 @@ function player:ret(path, rad, anagr)
         return insp.inspect(o)
     end
 
+    function player:set_run(flag)
+        self.serializable.run = flag
+    end
+
+    function player:set_mode(mode)
+        if not table_contains(k.player_modes, mode) then
+            log_error('Player mode ' .. mode .. ' not defined. Check managed player modes inside libs/logic/GameMechanicsConsts.lua or extend them')
+        end
+        self.serializable.mode = mode
+    end
+
     function player:move_dir(ratio)
-        self.metainfo.override.anim_collision_game_item.move_dir(self, ratio)
+        local moveRatio = ratio
+        if self.serializable.run then
+            moveRatio = moveRatio * 2
+        end
+        self.metainfo.override.anim_collision_game_item.move_dir(self, moveRatio)
     end
 
     function player:rotate(rx, ry, rz)
@@ -172,8 +187,6 @@ function player:ret(path, rad, anagr)
     end
 
     function player:fill_transient_data(walkmap)
-        log_debug('WALKMAP')
-        log_debug(walkmap)
         self.metainfo.override.anim_collision_game_item.fill_transient_data(self, walkmap)
     end
 
