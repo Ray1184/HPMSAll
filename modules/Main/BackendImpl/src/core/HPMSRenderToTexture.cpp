@@ -9,7 +9,8 @@ hpms::RenderToTexture::RenderToTexture(hpms::OgreContext* ctx, unsigned int fbWi
                                                                                                               fbWidth(fbWidth),
                                                                                                               fbHeight(fbHeight),
                                                                                                               renderScreen(nullptr),
-                                                                                                              fbNode(nullptr)
+                                                                                                              fbNode(nullptr),
+                                                                                                              loaded(false)
 {
 
     Initialize();

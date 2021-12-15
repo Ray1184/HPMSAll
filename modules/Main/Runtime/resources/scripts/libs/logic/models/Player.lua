@@ -19,10 +19,7 @@ player = { }
 function player:ret(path, id, rad, anagr)
     k = game_mechanics_consts:get()
     insp = inspector:get()
-    local name = 'Joe Dummy'
-    if anagr == nil then
-        anagr = { }
-    end
+
     local id = 'player/' .. id
     local ret = anim_collision_game_item:ret(path, id, rad)
 
@@ -34,22 +31,11 @@ function player:ret(path, id, rad, anagr)
             serializable =
             {
                 id = id,
-                mode = k.player_modes.SEARCH,
-                run = false,
+                action_mode = k.player_action_mode.SEARCH,
+                walk_mode = k.player_walk_mode.IDLE,
                 stats =
                 {
-                    anagr =
-                    {
-                        name = anagr.name or 'Joe Dummy',
-                        birth_date = anagr.birth_date or '1900-01-01',
-                        birth_place = anagr.birth_place or 'Nowhere',
-                        country = anagr.country or 'Outworld',
-                        job = anagr.job or 'Test Dummy',
-                        height = anagr.height or 180,
-                        weight = anagr.weight or 80,
-                        info = anagr.info or 'I\'m just a dummy for tests...',
-                        photo = anagr.photo or 'gui/photos/Dummy.png'
-                    },
+                    anagr = anagr,
 
                     standard_params =
                     {
@@ -61,7 +47,8 @@ function player:ret(path, id, rad, anagr)
                         max_vp = 20,
                         lv = 1,
                         ap = 0,
-                        money = 0
+                        money = 0,
+                        armor = 0
                     },
                     support_params =
                     {
@@ -101,12 +88,22 @@ function player:ret(path, id, rad, anagr)
                     positive_status_params =
                     {
                         regen = false,
-                        rad = false
+                        rad = false,
+                        invinciblity = false
                     },
-                    other_params =
+                    phobies =
                     {
-                        armor = 0,
-                        invincible = false
+                        arachnophobia = false,
+                        hemophobia = false,
+                        anthropophobia = false,
+                        aquaphobia = false,
+                        pyrophobia = false,
+                        acrophobia = false,
+                        necrophobia = false,
+                        aerophobia = false,
+                        aviophobia = false,
+                        photophobia = false,
+                        nyctophobia = false
                     }
 
                 },
@@ -159,15 +156,18 @@ function player:ret(path, id, rad, anagr)
         return insp.inspect(o)
     end
 
-    function player:set_run(flag)
-        self.serializable.run = flag
+    function player:set_walk_mode(walk_mode)
+        if not table_contains(k.player_walk_mode, walk_mode) then
+            log_error('Player walk mode ' .. walk_mode .. ' not defined. Check managed player walk modes inside libs/logic/GameMechanicsConsts.lua or extend them')
+        end
+        self.serializable.walk_mode = walk_mode
     end
 
-    function player:set_mode(mode)
-        if not table_contains(k.player_modes, mode) then
-            log_error('Player mode ' .. mode .. ' not defined. Check managed player modes inside libs/logic/GameMechanicsConsts.lua or extend them')
+    function player:set_action_mode(action_mode)
+        if not table_contains(k.player_action_mode, action_mode) then
+            log_error('Player action mode ' .. action_mode .. ' not defined. Check managed player action modes inside libs/logic/GameMechanicsConsts.lua or extend them')
         end
-        self.serializable.mode = mode
+        self.serializable.action_mode = action_mode
     end
 
     function player:move_dir(ratio)

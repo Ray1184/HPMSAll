@@ -10,7 +10,8 @@ dependencies = {
     'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'thirdparty/Inspect.lua'
+    'thirdparty/Inspect.lua',
+    'libs/logic/GameMechanicsConsts.lua'
 }
 
 anim_game_item = { }
@@ -21,6 +22,7 @@ ANIM_MODE_FRAME = 2
 
 function anim_game_item:ret(path, id)
     lib = backend:get()
+    k = game_mechanics_consts:get()
     insp = inspector:get()
 
     local id = 'anim_game_item/' .. id
@@ -36,9 +38,10 @@ function anim_game_item:ret(path, id)
                 id = id,
                 anim_data =
                 {
-                    channel_name = 'my_animation',
+                    channel_name = k.default_animations.IDLE,
                     mode = ANIM_MODE_FRAME,
                     playing = false,
+                    changed = true,
                     slowdown = 1,
                     slice = 1
                 }
@@ -113,7 +116,7 @@ function anim_game_item:ret(path, id)
             end
 
             time = tpf / self.serializable.anim_data.slowdown
-            lib.update_anim(self.transient.entity, self.serializable.anim_data.channel_name, time)
+            lib.update_anim(self.transient.entity, time, true, 0.2)
 
             if self.serializable.anim_data.mode == ANIM_MODE_FRAME then
                 self.serializable.anim_data.playing = false
@@ -122,16 +125,18 @@ function anim_game_item:ret(path, id)
     end
 
     function anim_game_item:set_anim(name)
-        if self.serializable.expired then
+        if self.serializable.expired or self.serializable.anim_data.channel_name == name then
             return
         end
         self.serializable.anim_data.channel_name = name
+        self.serializable.anim_data.changed = true
     end
 
     function anim_game_item:play(mode, slowdown, slice)
-        if self.serializable.expired or self.serializable.anim_data.playing then
+        if self.serializable.expired or not self.serializable.anim_data.changed then
             return
         end
+        self.serializable.anim_data.changed = false
         self.serializable.anim_data.mode = mode
         self.serializable.anim_data.slowdown = slowdown or 1
         self.serializable.anim_data.slice = slice or 1

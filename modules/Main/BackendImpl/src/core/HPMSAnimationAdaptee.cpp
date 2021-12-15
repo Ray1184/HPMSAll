@@ -60,6 +60,34 @@ void hpms::AnimationAdaptee::SetLoop(bool loop)
     ogreAnim->setLoop(loop);
 }
 
+int hpms::AnimationAdaptee::GetSliceFactor() const
+{
+    return sliceFactor;
+}
+
+void hpms::AnimationAdaptee::SetSliceFactor(int sliceFactor)
+{
+    AnimationAdaptee::sliceFactor = sliceFactor;
+}
+
+bool hpms::AnimationAdaptee::CycleTerminated()
+{
+    return cycleTerminated;
+}
+
+float hpms::AnimationAdaptee::GetWeight() const
+{
+    Check(ogreAnim);
+    return ogreAnim->getWeight();
+}
+
+void hpms::AnimationAdaptee::SetWeight(float weight)
+{
+    Check(ogreAnim);
+    ogreAnim->setWeight(weight);
+}
+
+
 hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : AdapteeCommon(nullptr),
                                                                            normalizedTime(0.0f),
                                                                            cycleTerminated(false),
@@ -75,17 +103,3 @@ hpms::AnimationAdaptee::~AnimationAdaptee()
 
 }
 
-void hpms::AnimationAdaptee::SetSliceFactor(int sliceFactor)
-{
-    AnimationAdaptee::sliceFactor = sliceFactor;
-}
-
-int hpms::AnimationAdaptee::GetSliceFactor() const
-{
-    return sliceFactor;
-}
-
-bool hpms::AnimationAdaptee::CycleTerminated()
-{
-    return cycleTerminated;
-}

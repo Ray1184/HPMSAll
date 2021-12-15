@@ -141,7 +141,8 @@ set(SOURCES
         src/core/HPMSScriptAdaptee.cpp
         src/facade/HPMSEngineFacade.cpp
         src/core/HPMSOverlayTextAreaAdaptee.cpp
-        src/core/HPMSNativeAdaptee.cpp)
+        src/core/HPMSNativeAdaptee.cpp
+        )
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR})
 add_library(HPMSBackendImpl STATIC ${SOURCES})

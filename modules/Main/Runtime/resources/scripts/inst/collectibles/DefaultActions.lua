@@ -38,42 +38,42 @@ function default_actions:get(unique_id)
                                     label = bundle[lang].search,
                                     enabled = true,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_modes.SEARCH
+                                        player:ret().serializable.mode = res.player_action_mode.SEARCH
                                     end
                                 },
                                 combat = {
                                     label = bundle[lang].combat,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_modes.COMBAT
+                                        player:ret().serializable.mode = res.player_action_mode.COMBAT
                                     end
                                 },
                                 push = {
                                     label = bundle[lang].push,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_modes.PUSH
+                                        player:ret().serializable.mode = res.player_action_mode.PUSH
                                     end
                                 },
                                 stealth = {
                                     label = bundle[lang].stealth,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_modes.STEALTH
+                                        player:ret().serializable.mode = res.player_action_mode.STEALTH
                                     end
                                 },
                                 swim = {
                                     label = bundle[lang].swim,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_modes.SWIM
+                                        player:ret().serializable.mode = res.player_action_mode.SWIM
                                     end
                                 },
                                 jump = {
                                     label = bundle[lang].jump,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_modes.JUMP
+                                        player:ret().serializable.mode = res.player_action_mode.JUMP
                                     end
                                 },
                             }

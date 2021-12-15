@@ -10,38 +10,43 @@
 
 namespace hpms
 {
-    class AnimationAdaptee : public hpms::AnimationAdapter, public AdapteeCommon
-    {
-    private:
-        Ogre::AnimationState* ogreAnim;
-        float normalizedTime;
-        float frameDuration;
-        bool cycleTerminated;
-        bool animTerminated;
-        int sliceFactor;
-    public:
-        explicit AnimationAdaptee(Ogre::AnimationState* ogreAnim);
+	class AnimationAdaptee : public hpms::AnimationAdapter, public AdapteeCommon
+	{
+	private:
+		Ogre::AnimationState* ogreAnim;
+		float normalizedTime;
+		float frameDuration;
+		bool cycleTerminated;
+		bool animTerminated;
+		int sliceFactor;
 
-        virtual ~AnimationAdaptee();
+	public:
+		explicit AnimationAdaptee(Ogre::AnimationState* ogreAnim);
 
-        virtual void Update(float tpf) override;
+		virtual ~AnimationAdaptee();
 
-        virtual void Zero() override;
+		virtual void Update(float tpf) override;
 
-        virtual bool IsPlaying() const override;
+		virtual void Zero() override;
 
-        virtual void SetPlaying(bool playing) override;
+		virtual bool IsPlaying() const override;
 
-        virtual bool IsLoop() const override;
+		virtual void SetPlaying(bool playing) override;
 
-        virtual void SetLoop(bool loop) override;
+		virtual bool IsLoop() const override;
 
-        virtual bool CycleTerminated() override;
+		virtual void SetLoop(bool loop) override;
 
-        virtual void SetSliceFactor(int sliceFactor) override;
+		virtual bool CycleTerminated() override;
 
-        virtual int GetSliceFactor() const override;
+		virtual void SetSliceFactor(int sliceFactor) override;
 
-    };
+		virtual int GetSliceFactor() const override;
+
+		virtual float GetWeight() const override;
+
+		virtual void SetWeight(float weight) override;
+
+	};
 }
 

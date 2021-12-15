@@ -10,7 +10,7 @@
 std::string hpms::EntityAdaptee::GetName()
 {
     Check(ogreEntity);
-    return ogreEntity->getName();
+    return ogreEntity->getMesh()->getName() + "/" + ogreEntity->getName();
 }
 
 void hpms::EntityAdaptee::SetPosition(const glm::vec3& position)
@@ -118,7 +118,14 @@ std::vector<hpms::AnimationAdapter*>& hpms::EntityAdaptee::GetAllAnimations()
 
 hpms::AnimationAdapter* hpms::EntityAdaptee::GetAnimationByName(const std::string& animName)
 {
-    return animMap[animName];
+    auto* anim = animMap[animName];
+    if (anim == nullptr)
+    {
+        std::stringstream ss;
+        ss << "No animation state with name '" << animName << "' found for entity " << GetName();
+        LOG_ERROR(ss.str().c_str());
+    }
+    return anim;
 }
 
 void hpms::EntityAdaptee::AttachObjectToBone(const std::string& boneName, hpms::ActorAdapter* object,
@@ -147,9 +154,27 @@ Ogre::MovableObject* hpms::EntityAdaptee::GetNative()
     return ogreEntity;
 }
 
+std::string hpms::EntityAdaptee::GetActiveAnimation() const
+{
+    return activeAnimation;
+}
+
+std::string hpms::EntityAdaptee::GetLastAnimation() const
+{
+    return lastAnimation;
+}
+
+void hpms::EntityAdaptee::SetActiveAnimation(const std::string& activeAnimation)
+{
+    hpms::EntityAdaptee::lastAnimation = hpms::EntityAdaptee::activeAnimation;
+    hpms::EntityAdaptee::activeAnimation = activeAnimation;
+}
+
 
 hpms::EntityAdaptee::EntityAdaptee(hpms::OgreContext* ctx, const std::string& name) : AdapteeCommon(ctx),
-                                                                                      mode(hpms::EntityMode::COLOR_AND_DEPTH)
+                                                                                      mode(hpms::EntityMode::COLOR_AND_DEPTH),
+                                                                                      activeAnimation(NO_ANIM),
+                                                                                      lastAnimation(NO_ANIM)
 {
     Check();
     ogreEntity = ctx->GetSceneManager()->createEntity(name);

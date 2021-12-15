@@ -17,7 +17,7 @@ scene = {
     next = 'TBD',
     setup = function()
         -- TODOBATCH-BEGIN
-
+        changed = true
 
         speed = 0
         rotate = 0
@@ -27,12 +27,14 @@ scene = {
         -- > gestirlo via scene_manager
         walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
         -- > gestirlo via scene_manager
-        item = player:ret('EY_DummyAnim.mesh', 'main_player', 0.3098)
-        item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
+        item = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
+        
+        --item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
 
         --log_debug(item)
         item:fill_transient_data(walkmap)
-        item2:fill_transient_data(walkmap)
+        item:play(ANIM_MODE_LOOP, 2, 1)
+        --item2:fill_transient_data(walkmap)
         
         json = json_helper:get()
         -- log_debug(item)
@@ -116,9 +118,17 @@ scene = {
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
-        playing = speed ~= 0 or rotate ~= 0
-        if playing then
-            item:play(ANIM_MODE_ONCE, 2, 2)
+        walkF = speed > 0 or rotate ~= 0
+        walkB = speed < 0
+        if walkF then
+            item:set_anim('Walk_Forward')            
+            item:play(ANIM_MODE_LOOP, 2, 2)
+        elseif walkB then
+            item:set_anim('Walk_Back')            
+            item:play(ANIM_MODE_LOOP, 2, 2)
+        else
+            item:set_anim('Idle')
+            item:play(ANIM_MODE_LOOP, 2, 1)
         end
         item:rotate(0, 0, 50 * tpf * rotate)
         item:move_dir(tpf * speed * 0.7)
@@ -144,7 +154,7 @@ scene = {
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [cleanup]
 
         item:delete_transient_data()
-        item2:delete_transient_data()
+        --item2:delete_transient_data()
 
         -- Collisor EY_DummyAnim delete
         -- lib.delete_collisor(collisor_ey_dummyanim)

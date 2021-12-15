@@ -9,7 +9,7 @@
 
 #if defined(_WIN32) || defined(WIN32)
 
-INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
+int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 #else
 int main(int argc, char* argv[])
 #endif

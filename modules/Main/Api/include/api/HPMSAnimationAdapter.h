@@ -40,5 +40,9 @@ namespace hpms
 		virtual void SetSliceFactor(int sliceFactor) = 0;
 
 		virtual int GetSliceFactor() const = 0;
+
+		virtual float GetWeight() const = 0;
+
+		virtual void SetWeight(float weight) = 0;
 	};
 }

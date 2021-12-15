@@ -15,28 +15,28 @@ function disable_debug()
     debug_flag = false
 end
 function merge_tables(orig, new)
-    local merge_task = { }
-    merge_task[orig] = new
+    local mergeTask = { }
+    mergeTask[orig] = new
 
     local left = orig
     while left ~= nil do
-        local right = merge_task[left]
-        for new_key, new_val in pairs(right) do
-            local old_val = left[new_key]
-            if old_val == nil then
-                left[new_key] = new_val
+        local right = mergeTask[left]
+        for newKey, newVal in pairs(right) do
+            local oldVal = left[newKey]
+            if oldVal == nil then
+                left[newKey] = newVal
             else
-                local old_type = type(old_val)
-                local new_type = type(new_val)
-                if (old_type == 'table' and new_type == 'table') then
-                    merge_task[old_val] = new_val
+                local oldType = type(oldVal)
+                local newType = type(newVal)
+                if (oldType == 'table' and newType == 'table') then
+                    mergeTask[oldVal] = newVal
                 else
-                    left[new_key] = new_val
+                    left[newKey] = newVal
                 end
             end
         end
-        merge_task[left] = nil
-        left = next(merge_task)
+        mergeTask[left] = nil
+        left = next(mergeTask)
     end
     return orig
 end

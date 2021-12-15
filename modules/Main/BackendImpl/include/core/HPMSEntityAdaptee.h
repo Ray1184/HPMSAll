@@ -27,6 +27,8 @@ namespace hpms
         hpms::EntityMode mode;
         std::map<std::string, hpms::AnimationAdapter*> animMap;
         std::vector<hpms::AnimationAdapter*> animList;
+        std::string lastAnimation;
+        std::string activeAnimation;
 
     public:
         EntityAdaptee(hpms::OgreContext* ctx, const std::string& name);
@@ -66,6 +68,12 @@ namespace hpms
 
 
         virtual Ogre::MovableObject* GetNative() override;
+
+        virtual std::string GetActiveAnimation() const override;
+
+        virtual std::string GetLastAnimation() const override;
+
+        virtual void SetActiveAnimation(const std::string& activeAnimation) override;
 
     };
 }

@@ -11,7 +11,15 @@ function game_mechanics_consts:get()
 
     return {
 
-        player_modes =
+        player_walk_mode = 
+        {
+            IDLE = 0,
+            WALK_FORWARD = 1,
+            WALK_BACK = 2,
+            RUN = 3
+        },
+
+        player_action_mode =
         {
             SEARCH = 0,
             COMBAT = 1,
@@ -28,16 +36,25 @@ function game_mechanics_consts:get()
         item_types =
         {
             WEAPON = 0,
-            CONSUMABLE = 1,
-            READABLE = 2,
-            SUPPORT = 3,
-            ACTIONS = 4
+            SUPPLIES = 1,
+            KEYS = 2,
+            READABLE = 3,
+            MISC = 4,
+            ACTIONS = 5
         },
         item_license =
         {
             NONE = 0,
             NEEDED = 1,
             FORBIDDEN = 2
+        },
+        default_animations =
+        {
+            IDLE = 'Idle',
+            WALK_FORWARD = 'Walk_Forward',
+            WALK_BACK = 'Walk_Back',
+            RUN = 'Run',
+            DIE = 'Die'
         }
     }
 end

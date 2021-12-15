@@ -5,6 +5,8 @@
 
 #pragma once
 
+#define NO_ANIM "__NO_ANIM_DATA__"
+
 #include <common/HPMSObject.h>
 #include <api/HPMSActorAdapter.h>
 #include <api/HPMSAnimationAdapter.h>
@@ -46,6 +48,12 @@ namespace hpms
 
         virtual hpms::AnimationAdapter* GetAnimationByName(const std::string& animName) = 0;
 
+        virtual std::string GetActiveAnimation() const = 0;
+
+        virtual std::string GetLastAnimation() const = 0;
+
+        virtual void SetActiveAnimation(const std::string& activeAnimation) = 0;
+
         virtual std::string GetName() = 0;
 
         virtual void SetPosition(const glm::vec3& position) override = 0;
@@ -63,8 +71,6 @@ namespace hpms
         virtual void SetVisible(bool visible) override = 0;
 
         virtual bool IsVisible() const override = 0;
-
-
 
 
     };

@@ -78,7 +78,7 @@ function backend:get()
                 log_debug('Deleting ' .. o.dummy_id)
             end,
 
-            make_textarea = function(id, font_name, font_size, x, y, w, h, order, font_color)
+            make_textarea = function(id, fontName, fontSize, x, y, w, h, order, fontColor)
                 return { dummy_id = 'TextArea[' .. id .. ']' }
             end,
 
@@ -127,12 +127,12 @@ function backend:get()
                 log_debug('Rotating actor ' .. a.dummy_id)
             end,
 
-            play_anim = function(player, anim_name)
+            play_anim = function(player, animName)
                 log_debug('Playing animation ' .. anim_name .. ' for actor ' .. player)
             end,
 
-            update_anim = function(player, anim_name, tpf)
-                log_debug('Updating animation ' .. anim_name .. ' for actor ' .. player)
+            update_anim = function(player, tpf, blend, transitionTime)
+                log_debug('Updating active animation for actor ' .. player)
             end,
 
             add_anim = function(a, name, from, to)

@@ -13,10 +13,22 @@ function player_dummy:ret()
     k = game_mechanics_consts:get()
     g = gameplay_consts:get()
     insp = inspector:get()
-    
+
     local path = g.res_refs.PLAYER_DUMMY
-    local id = 'player/' .. path .. '/' ..(anagr.name or 'Joe Dummy')
-    local ret = anim_collision_game_item:ret(path, rad)
+    local id = 'player/Player_Dummy'
+    anagr = {
+        name = anagr.name or 'Joe Dummy',
+        birth_date = anagr.birth_date or '1900-01-01',
+        birth_place = anagr.birth_place or 'Nowhere',
+        country = anagr.country or 'Outworld',
+        job = anagr.job or 'Test Dummy',
+        height = anagr.height or 180,
+        weight = anagr.weight or 80,
+        info = anagr.info or 'I\'m just a dummy for tests...',
+        photo = anagr.photo or 'gui/photos/Dummy.png'
+    }
+
+    local ret = player:ret(path, id, rad, anagr)
 
     local this = context:inst():get(cats.OBJECTS, id,
     function()
