@@ -19,7 +19,8 @@ scene = {
         -- TODOBATCH-BEGIN
         changed = true
 
-        speed = 0
+        walkSpeed = 0
+        walk = 0
         rotate = 0
         enable_debug()
         context:inst():disable_dummy()
@@ -28,14 +29,14 @@ scene = {
         walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
         -- > gestirlo via scene_manager
         item = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
-        
-        --item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
 
-        --log_debug(item)
+        -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
+
+        -- log_debug(item)
         item:fill_transient_data(walkmap)
         item:play(ANIM_MODE_LOOP, 2, 1)
-        --item2:fill_transient_data(walkmap)
-        
+        -- item2:fill_transient_data(walkmap)
+
         json = json_helper:get()
         -- log_debug(item)
 
@@ -95,11 +96,11 @@ scene = {
             end
 
             if lib.key_action_performed(keys, 'UP', 2) then
-                speed = 1
+                walk = 1
             elseif lib.key_action_performed(keys, 'DOWN', 2) then
-                speed = -1
+                walk = -1
             else
-                speed = 0
+                walk = 0
             end
 
             if lib.key_action_performed(keys, 'RIGHT', 2) then
@@ -118,20 +119,48 @@ scene = {
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
-        walkF = speed > 0 or rotate ~= 0
-        walkB = speed < 0
-        if walkF then
-            item:set_anim('Walk_Forward')            
+        if walk == 1 then
+            walkSpeed = walkSpeed + tpf * tpf * 30
+            if walkSpeed > 1 then
+                walkSpeed = 1
+            end
+        elseif walk == -1 then
+            walkSpeed = walkSpeed - tpf * tpf * 30
+            if walkSpeed < -1 then
+                walkSpeed = -1
+            end
+        else
+            if walkSpeed > 0 then
+                walkSpeed = walkSpeed - tpf * tpf * 30
+                if walkSpeed < 0 then
+                    walkSpeed = 0
+                end
+            else
+                walkSpeed = walkSpeed + tpf * tpf * 30
+                if walkSpeed > 0 then
+                    walkSpeed = 0
+                end
+            end
+
+        end
+        turn = rotate ~= 0
+        walkF = walk > 0
+        walkB = walk < 0
+        if walkF or (walkF and rotate) then
+            item:set_anim('Walk_Forward')
             item:play(ANIM_MODE_LOOP, 2, 2)
-        elseif walkB then
-            item:set_anim('Walk_Back')            
+        elseif walkB or (walkB and rotate) then
+            item:set_anim('Walk_Back')
+            item:play(ANIM_MODE_LOOP, 2, 2)
+        elseif turn then
+            item:set_anim('Walk_Forward')
             item:play(ANIM_MODE_LOOP, 2, 2)
         else
             item:set_anim('Idle')
             item:play(ANIM_MODE_LOOP, 2, 1)
         end
         item:rotate(0, 0, 50 * tpf * rotate)
-        item:move_dir(tpf * speed * 0.7)
+        item:move_dir(tpf * walkSpeed * 0.7)
         item:update(tpf)
 
 
@@ -154,7 +183,7 @@ scene = {
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [cleanup]
 
         item:delete_transient_data()
-        --item2:delete_transient_data()
+        -- item2:delete_transient_data()
 
         -- Collisor EY_DummyAnim delete
         -- lib.delete_collisor(collisor_ey_dummyanim)

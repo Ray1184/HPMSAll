@@ -4,11 +4,10 @@
 #include <facade/HPMSEngineFacade.h>
 #include <states/HPMSLuaLogic.h>
 
-#define WIDTH 320
-#define HEIGHT 200
+#define WIDTH 1280
+#define HEIGHT 800
 
 #if defined(_WIN32) || defined(WIN32)
-
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 #else
 int main(int argc, char* argv[])

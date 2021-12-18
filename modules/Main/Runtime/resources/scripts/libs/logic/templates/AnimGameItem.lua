@@ -116,7 +116,7 @@ function anim_game_item:ret(path, id)
             end
 
             time = tpf / self.serializable.anim_data.slowdown
-            lib.update_anim(self.transient.entity, time, true, 0.2)
+            lib.update_anim(self.transient.entity, time, true, 0.5)
 
             if self.serializable.anim_data.mode == ANIM_MODE_FRAME then
                 self.serializable.anim_data.playing = false

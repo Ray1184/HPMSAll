@@ -13,6 +13,7 @@
 #include <facade/HPMSApiFacade.h>
 #include <logic/interaction/HPMSCollisor.h>
 #include <logic/gui/HPMSGuiText.h>
+#include <logic/anim/HPMSAnimationHelper.h>
 #include <debug/HPMSDebugUtils.h>
 #include <LuaBridge/Vector.h>
 
@@ -436,7 +437,6 @@ namespace hpms
 		static inline void LPlayAnimation(hpms::EntityAdapter* entity, const std::string& animName)
 		{
 			entity->SetActiveAnimation(animName);
-			auto* activeAnimation = entity->GetAnimationByName(animName);
 		}
 
 		static inline void LSliceAnimation(hpms::EntityAdapter* entity, const std::string& name, int sliceFactor)
@@ -447,53 +447,8 @@ namespace hpms
 
 		static inline void LUpdateAnimation(hpms::EntityAdapter* entity, float tpf, bool blend, float transitionTimeRatio)
 		{
-			// TODO move this logic in a dedicated helper.
-			std::string activeAnimationName = entity->GetActiveAnimation();
-			std::string lastAnimationName = entity->GetLastAnimation();
-			auto* activeAnimation = entity->GetAnimationByName(activeAnimationName);
-
-			if (!activeAnimation->IsPlaying())
-			{
-				activeAnimation->SetPlaying(true);
-
-			}
-
-			if (blend && activeAnimationName != lastAnimationName && lastAnimationName != NO_ANIM)
-			{
-				auto* lastAnimation = entity->GetAnimationByName(lastAnimationName);
-				float draw = tpf / transitionTimeRatio;
-				if (lastAnimation->GetWeight() > 0.0) {
-					
-					float lastAnimWeight = lastAnimation->GetWeight() - draw;
-					if (lastAnimWeight < 0) {
-						lastAnimWeight = 0.0f;
-					}
-					lastAnimation->SetWeight(lastAnimWeight);
-				}
-				if (activeAnimation->GetWeight() < 1.0) {					
-					float activeAnimWeight = activeAnimation->GetWeight() + draw;
-					if (activeAnimWeight > 1) {
-						activeAnimWeight = 1.0f;
-					}
-					activeAnimation->SetWeight(activeAnimWeight);
-				}				
-				lastAnimation->Update(tpf);
-				activeAnimation->Update(tpf);
-				return;
-			}
-
-			if (lastAnimationName != NO_ANIM) 
-			{
-				auto* lastAnimation = entity->GetAnimationByName(lastAnimationName);
-				if (!lastAnimation->IsPlaying())
-				{
-					lastAnimation->SetPlaying(true);
-
-				}
-			}
+			hpms::AnimationHelper::UpdateInterpolate(entity, tpf, blend, transitionTimeRatio);
 			
-			activeAnimation->Update(tpf);
-
 		}
 
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)
