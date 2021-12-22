@@ -1,0 +1,14 @@
+{
+  "default": {
+    "UP": "UP",
+    "DOWN": "DOWN",
+    "LEFT": "LEFT",
+    "RIGHT": "RIGHT",
+    "INVENTORY": "ENTER",
+    "EXIT": "ESC",
+    "ACTION_1": "LSHIFT",
+    "ACTION_2": "LCTRL",
+    "ACTION_3": "SPACE",
+    "PAUSE": "P"
+  }
+}

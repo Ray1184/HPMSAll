@@ -13,8 +13,7 @@
  Light map.                                                     | 0%			|
  Implementare prime logiche di gioco e GUI rudimentali.         | 100%			|
  Demo minimale.                                                 | 100%			|
- Implementare LUA Debug.                                        | 0%			| 
- Implementare meccaniche di gioco.                              | 20%			| d-game-mechanics.txt
+ Implementare meccaniche di gioco.                              | 40%			| d-game-mechanics.txt
  Implementare logiche di gioco.									| 0%			| d-game-logics.txt
  Demo.                                                          | 0%			| d-demo.txt
  Sviluppo gameplay.                                             | 0%			| d-gameplay.txt

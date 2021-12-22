@@ -9,8 +9,7 @@ game_mechanics_consts = { }
 
 function game_mechanics_consts:get()
 
-    return {
-
+    return {        
         player_walk_mode = 
         {
             IDLE = 0,

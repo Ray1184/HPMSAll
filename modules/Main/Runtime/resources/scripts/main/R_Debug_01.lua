@@ -4,9 +4,11 @@
 dependencies = {
     'Framework.lua',
     'libs/logic/models/Player.lua',
+    'inst/charas/players/Player_Dummy.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/Utils.lua',
-    'thirdparty/JsonHelper.lua'
+    'thirdparty/JsonHelper.lua',
+    'thirdparty/Inspect.lua'
 }
 
 scene = {
@@ -25,14 +27,16 @@ scene = {
         enable_debug()
         context:inst():disable_dummy()
         lib = backend:get()
+        insp = inspector:get()
         -- > gestirlo via scene_manager
         walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
         -- > gestirlo via scene_manager
-        item = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
-
+        --item = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
+        item = player_dummy:ret()
+        --log_warn(insp.inspect(item))
         -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
 
-        -- log_debug(item)
+        log_debug(insp.inspect(item.serializable.stats.anagr))
         item:fill_transient_data(walkmap)
         item:play(ANIM_MODE_LOOP, 2, 1)
         -- item2:fill_transient_data(walkmap)

@@ -46,7 +46,7 @@ function scene_manager:new(scene_name, camera)
 
     function scene_manager:set_walkmap(walkmap)
         if self.walkmaps[walkmap] == nil then
-            self.walkmaps[walkmap] = lib.lib.make_walkmap(walkmap)
+            self.walkmaps[walkmap] = lib.make_walkmap(walkmap)
         end
         current_walkmap = self.walkmaps[walkmap]
     end

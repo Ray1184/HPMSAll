@@ -30,7 +30,7 @@ function game_consts:get()
         res_refs =
         {
             -- Entities paths.
-            PLAYER_DUMMY = { PATH = 'actors/EY_DummyAnim.mesh', B_RAD = 0.3098 },
+            PLAYER_DUMMY = { PATH = 'DummyAnim.mesh', B_RAD = 0.3098 },
 
 
 

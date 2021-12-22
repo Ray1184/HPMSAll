@@ -447,8 +447,7 @@ namespace hpms
 
 		static inline void LUpdateAnimation(hpms::EntityAdapter* entity, float tpf, bool blend, float transitionTimeRatio)
 		{
-			hpms::AnimationHelper::UpdateInterpolate(entity, tpf, blend, transitionTimeRatio);
-			
+			hpms::AnimationHelper::UpdateInterpolate(entity, tpf, blend, transitionTimeRatio);			
 		}
 
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)

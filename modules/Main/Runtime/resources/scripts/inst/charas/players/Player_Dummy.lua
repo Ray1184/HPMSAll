@@ -9,12 +9,17 @@ dependencies = {
 
 player_dummy = { }
 
-function player_dummy:ret()
+function player_dummy:ret(anagr)
     k = game_mechanics_consts:get()
-    g = gameplay_consts:get()
+    g = game_consts:get()
     insp = inspector:get()
 
-    local path = g.res_refs.PLAYER_DUMMY
+    if anagr == nil then
+        anagr = { }
+    end
+
+    local path = g.res_refs.PLAYER_DUMMY.PATH
+    local rad = g.res_refs.PLAYER_DUMMY.B_RAD
     local id = 'player/Player_Dummy'
     anagr = {
         name = anagr.name or 'Joe Dummy',
@@ -28,13 +33,12 @@ function player_dummy:ret()
         photo = anagr.photo or 'gui/photos/Dummy.png'
     }
 
-    local ret = player:ret(path, id, rad, anagr)
 
-    local this = context:inst():get(cats.OBJECTS, id,
-    function()
-        log_debug('New player object ' .. id)
-        local ret = { }
-        return ret
-    end )
+    this = player:ret(path, id, rad, anagr)
+    
+    self.__tostring = function(o)
+        return insp.inspect(o)
+    end
+
     return this
 end
