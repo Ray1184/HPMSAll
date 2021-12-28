@@ -35,8 +35,18 @@ function player:ret(path, id, rad, anagr)
                 walk_mode = k.player_walk_mode.IDLE,
                 stats =
                 {
-                    anagr = anagr,
-
+                    anagr =
+                    {
+                        name = 'Player',
+                        birth_date = '0000-01-01',
+                        birth_place = 'Nowhere',
+                        country = 'Outworld',
+                        job = 'Nothing',
+                        height = 0,
+                        weight = 0,
+                        info = 'N/A',
+                        photo = 'N/A'
+                    },
                     standard_params =
                     {
                         hp = 50,
@@ -120,8 +130,7 @@ function player:ret(path, id, rad, anagr)
 
             }
         }
-        ret = merge_tables(ret, new)
-        return ret
+        return merge_tables(ret, new)
     end )
 
     local metainf = {
@@ -148,12 +157,16 @@ function player:ret(path, id, rad, anagr)
 
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
 
-    this = merge_tables(this, metainf)
+    local this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
+    end
+
+    function player:set_stat(stat_type, stat_value)
+        self.serializable.stats[stat_type] = stat_value
     end
 
     function player:set_walk_mode(walk_mode)

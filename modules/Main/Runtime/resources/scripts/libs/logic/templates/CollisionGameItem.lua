@@ -39,9 +39,7 @@ function collision_game_item:ret(path, id, bounding_radius)
             }
         }
 
-        ret = merge_tables(ret, new)
-
-        return ret
+        return merge_tables(ret, new)
     end )
 
     local metainf =
@@ -65,7 +63,7 @@ function collision_game_item:ret(path, id, bounding_radius)
         }
     }
 
-    this = merge_tables(this, metainf)
+    local this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self

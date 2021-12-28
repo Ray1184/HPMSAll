@@ -9,8 +9,8 @@ game_mechanics_consts = { }
 
 function game_mechanics_consts:get()
 
-    return {        
-        player_walk_mode = 
+    return {
+        player_walk_mode =
         {
             IDLE = 0,
             WALK_FORWARD = 1,
@@ -54,6 +54,27 @@ function game_mechanics_consts:get()
             WALK_BACK = 'Walk_Back',
             RUN = 'Run',
             DIE = 'Die'
+        },
+        stat_types =
+        {
+            ANAGR = 'anagr',
+            STANDARD_PARAMS = 'standard_params',
+            SUPPORT_PARAMS = 'support_params',
+            NEGATIVE_STATUS_PARAMS = 'negative_status_params',
+            NEGATIVE_STATUS_AFFECTION = 'negative_status_affection',
+            POSITIVE_STATUS_PARAMS = 'positive_status_params',
+            PHOBIES = 'phobies'
+        },
+        item_actions =
+        {
+            USE = 0,
+            CHECK = 1,
+            DROP = 2,
+            EQUIP = 3,
+            EAT_DRINK = 4,
+            RELOAD = 5,
+            READ = 6
         }
+
     }
 end

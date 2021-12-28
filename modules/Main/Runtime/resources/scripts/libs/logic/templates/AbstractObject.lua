@@ -36,7 +36,7 @@ function abstract_object:ret(id)
         }
     }
 
-    this = merge_tables(this, metainf)
+    local this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self

@@ -46,8 +46,7 @@ function game_item:ret(path, id)
             }
         }
 
-        ret = merge_tables(ret, new)
-        return ret
+        return merge_tables(ret, new)
     end )
 
     local metainf =
@@ -60,7 +59,7 @@ function game_item:ret(path, id)
         }
     }
 
-    this = merge_tables(this, metainf)
+    local this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self

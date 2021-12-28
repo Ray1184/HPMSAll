@@ -35,9 +35,8 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
             }
         }
 
-        ret3 = merge_tables(ret, ret2)
-        ret4 = merge_tables(ret3, new)
-        return ret4
+        local ret3 = merge_tables(ret, ret2)
+        return merge_tables(ret3, new)
 
     end )
 
@@ -76,7 +75,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret2.metainfo.override)
 
-    this = merge_tables(this, metainf)
+    local this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
