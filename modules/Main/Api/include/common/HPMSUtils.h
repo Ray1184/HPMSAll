@@ -18,13 +18,17 @@
 #include <iostream>
 #include <cstdio>
 #include <ctime>
-
-#define HPMS_ASSERT(check, msg) assert(check)
+            
 #define LOG_ERROR(msg) hpms::ErrorHandler(__FILE__, __LINE__, msg)
 #define LOG_WARN(msg) hpms::MsgHandler("HPMS-WARN ", msg)
 #define LOG_INFO(msg) hpms::MsgHandler("HPMS-INFO ", msg)
 #define LOG_RAW(msg) hpms::MsgHandler(msg)
 #define LOG_INTERFACE(msg) hpms::MsgHandlerInterface(msg)
+
+#define HPMS_ASSERT(check, msg) \
+if (!(check)) {                 \
+    LOG_ERROR(msg);             \
+}                               \
 
 #ifndef NDEBUG
 #define HPMS_DEBUG
@@ -124,6 +128,7 @@ namespace hpms
         std::stringstream ss;
         ss << "[HPMS-ERROR] - File " << file << ", at line " << std::to_string(line) << ": " << message;
         MsgHandler(ss.str().c_str());
+
 #ifdef HPMS_DEBUG
         hpms::MemoryDump();
 #endif

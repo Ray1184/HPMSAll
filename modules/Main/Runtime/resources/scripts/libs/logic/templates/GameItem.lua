@@ -11,7 +11,7 @@ dependencies = {
     'libs/utils/TransformsCommon.lua',
     'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
-    'thirdparty/Inspect.lua'
+    'libs/thirdparty/Inspect.lua'
 }
 
 game_item = { }
@@ -25,7 +25,7 @@ function game_item:ret(path, id)
     local id = 'game_item/' .. id
     local ret = abstract_object:ret(id)
 
-    local this = context:inst():get(cats.OBJECTS, id,
+    local this = context:inst():get_object(id,
     function()
         log_debug('New game_item object ' .. id)
 
@@ -65,6 +65,19 @@ function game_item:ret(path, id)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
+    end
+
+    function game_item:set_position(x, y, z)
+        if self.serializable.expired then
+            return
+        end
+        local node = self.transient.node
+        node.position = lib.vec3(x, y, z)
+        self.serializable.visual_info.position = { x, y, node.position.z }
+    end
+
+     function game_item:get_position()
+        return self.serializable.visual_info.position
     end
 
     function game_item:move_dir(ratio)
@@ -138,6 +151,16 @@ function game_item:ret(path, id)
 
     function game_item:kill_instance()
         self.serializable.expired = true
+    end
+
+    function game_item:set_event_callback(evt_callback)
+        self.metainfo.evt_callback = evt_callback
+    end
+
+    function game_item:event(evt_info)
+        if self.metainfo.instance ~= nil then
+            self.metainfo.instance:event(evt_info)
+        end
     end
 
     return this

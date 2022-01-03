@@ -11,7 +11,7 @@ dependencies = {
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/TransformsCommon.lua',
-    'thirdparty/Inspect.lua'
+    'libs/thirdparty/Inspect.lua'
 }
 
 collision_game_item = { }
@@ -24,7 +24,7 @@ function collision_game_item:ret(path, id, bounding_radius)
     local id = 'collision_game_item/' .. id
     local ret = game_item:ret(path, id)
 
-    local this = context:inst():get(cats.OBJECTS, id,
+    local this = context:inst():get_object(id,
     function()
         log_debug('New collision_game_item object ' .. id)
 
@@ -53,6 +53,8 @@ function collision_game_item:ret(path, id, bounding_radius)
                 game_item =
                 {
                     move_dir = ret.move_dir,
+                    set_position = ret.set_position,
+                    get_position = ret.get_position,
                     rotate = ret.rotate,
                     delete_transient_data = ret.delete_transient_data,
                     fill_transient_data = ret.fill_transient_data,
@@ -71,26 +73,20 @@ function collision_game_item:ret(path, id, bounding_radius)
         return insp.inspect(o)
     end
 
+    function collision_game_item:set_position(x, y, z)
+        self.metainfo.override.game_item.set_position(self, x, y, z)
+    end
+
+    function collision_game_item:get_position()
+        return self.metainfo.override.game_item.get_position(self)
+    end
+
     function collision_game_item:move_dir(ratio)
-        if self.serializable.expired then
-            return
-        end
-        local collisor = self.transient.collisor
-        local dir = lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
-        local nextPos = lib.vec3_add(collisor.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
-        lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
-        local collPos = collisor.position
-        self.serializable.visual_info.position = { collPos.x, collPos.y, collPos.z }
+        self.metainfo.override.game_item.move_dir(self, ratio)
     end
 
     function collision_game_item:rotate(rx, ry, rz)
-        if self.serializable.expired then
-            return
-        end
-        local collisor = self.transient.collisor
-        trx.rotate(collisor, rx, ry, rz)
-        local collRot = lib.to_euler(collisor.rotation)
-        self.serializable.visual_info.rotation = { collRot.x, collRot.y, collRot.z }
+        self.metainfo.override.game_item.rotate(self, rx, ry, rz)
     end
 
     function collision_game_item:delete_transient_data()
@@ -124,7 +120,6 @@ function collision_game_item:ret(path, id, bounding_radius)
             return
         end
         lib.update_collisor(self.transient.collisor)
-        hpms.debug_draw_aabb(self.transient.collisor)
     end
 
     function collision_game_item:kill_instance()

@@ -57,15 +57,75 @@ function game_mechanics_consts:get()
         },
         stat_types =
         {
-            ANAGR = 'anagr',
             STANDARD_PARAMS = 'standard_params',
             SUPPORT_PARAMS = 'support_params',
             NEGATIVE_STATUS_PARAMS = 'negative_status_params',
-            NEGATIVE_STATUS_AFFECTION = 'negative_status_affection',
             POSITIVE_STATUS_PARAMS = 'positive_status_params',
             PHOBIES = 'phobies'
         },
-        item_actions =
+        stats =
+        {
+            standard_params =
+            {
+                HP = 'hp',
+                MAX_HP = 'max_hp',
+                SP = 'sp',
+                MAX_SP = 'max_sp',
+                VP = 'vp',
+                MAX_VP = 'max_vp',
+                LV = 'lv',
+                AP = 'ap',
+                MONEY = 'money',
+                ARMOR = 'armor'
+            },
+            support_params =
+            {
+                STRENGTH = 'strength',
+                STAMINA = 'stamina',
+                INTELLIGENCE = 'intelligence',
+                SCIENCE = 'science',
+                HANDYMAN = 'handyman',
+                DEXTERITY = 'dexterity',
+                OCCULT = 'occult',
+                CHARISMA = 'charisma',
+                FORTUNE = 'fortune'
+            },
+            negative_status_params =
+            {
+
+                SLEEP = 'sleep',
+                POISON = 'poison',
+                TOXIN = 'toxin',
+                BURN = 'burn',
+                FREEZE = 'freeze',
+                BLIND = 'blind',
+                PARALYSIS = 'paralysis',
+                SHOCK = 'shock'
+            },
+            positive_status_params =
+            {
+                REGEN = 'regen',
+                RAD = 'rad',
+                INVINCIBLITY = 'invinciblity'
+            },
+            phobies =
+            {
+
+                ARACHNOPHOBIA = 'arachnophobia',
+                HEMOPHOBIA = 'hemophobia',
+                ANTHROPOPHOBIA = 'anthropophobia',
+                AQUAPHOBIA = 'aquaphobia',
+                PYROPHOBIA = 'pyrophobia',
+                ACROPHOBIA = 'acrophobia',
+                NECROPHOBIA = 'necrophobia',
+                AEROPHOBIA = 'aerophobia',
+                AVIOPHOBIA = 'aviophobia',
+                PHOTOPHOBIA = 'photophobia',
+                NYCTOPHOBIA = 'nyctophobia',
+                CRYOPHOBIA = 'cryophobia',
+            }
+        },
+        coll_actions =
         {
             USE = 0,
             CHECK = 1,
@@ -74,6 +134,25 @@ function game_mechanics_consts:get()
             EAT_DRINK = 4,
             RELOAD = 5,
             READ = 6
+        },
+        coll_events =
+        {
+            PICK = 0,
+            COLLISION = 1,
+            DROP = 2
+        },
+        actor_events =
+        {
+            COLLISION = 1,
+            PUSH = 2,
+            HIT = 3
+        },
+        inst_cat =
+        {
+            PLAYERS = 'players',
+            NPCS = 'npcs',
+            ACTORS = 'actors',
+            COLLECTIBLES = 'collectibles'
         }
 
     }

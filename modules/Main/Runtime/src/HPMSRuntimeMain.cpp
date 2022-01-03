@@ -41,6 +41,7 @@ int main(int argc, char* argv[])
 	{
 		std::stringstream ss;
 		ss << "Runtime stopped with error: " << e.what() << std::endl;
+		ss << "Traceback: " << customLogic->GetVM()->BuildStackTrace();
 		LOG_ERROR(ss.str().c_str());
 	}
 }

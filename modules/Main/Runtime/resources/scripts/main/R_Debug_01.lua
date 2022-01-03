@@ -4,11 +4,12 @@
 dependencies = {
     'Framework.lua',
     'libs/logic/models/Player.lua',
-    'inst/charas/players/Player_Dummy.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/Utils.lua',
-    'thirdparty/JsonHelper.lua',
-    'thirdparty/Inspect.lua'
+    'libs/thirdparty/JsonHelper.lua',
+    'libs/thirdparty/Inspect.lua',
+    'inst/Instances.lua',
+    'inst/GameplayConsts.lua'
 }
 
 scene = {
@@ -19,30 +20,7 @@ scene = {
     next = 'TBD',
     setup = function()
         -- TODOBATCH-BEGIN
-        changed = true
 
-        walkSpeed = 0
-        walk = 0
-        rotate = 0
-        enable_debug()
-        context:inst():disable_dummy()
-        lib = backend:get()
-        insp = inspector:get()
-        -- > gestirlo via scene_manager
-        walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
-        -- > gestirlo via scene_manager
-        --item = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
-        item = player_dummy:ret()
-        --log_warn(insp.inspect(item))
-        -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
-
-        log_debug(insp.inspect(item.serializable.stats.anagr))
-        item:fill_transient_data(walkmap)
-        item:play(ANIM_MODE_LOOP, 2, 1)
-        -- item2:fill_transient_data(walkmap)
-
-        json = json_helper:get()
-        -- log_debug(item)
 
 
         -- TODOBATCH-END
@@ -54,10 +32,51 @@ scene = {
         cam.far = 50
         cam.fovy = lib.to_radians(40)
         light = lib.make_light(lib.vec3(0, 0, 0))
+        light.position = lib.vec3(0.0, -4.699999809265137, 1.5)
         scn_mgr = scene_manager:new(scene.name, cam)
+        actors_mgr = actors_manager:new(scn_mgr)
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
+
+
+        changed = true
+        register_all_instances()
+        walkSpeed = 0
+        walk = 0
+        rotate = 0
+        enable_debug()
+        context:inst():disable_dummy()
+        lib = backend:get()
+        insp = inspector:get()
+        -- > gestirlo via scene_manager
+        -- walkmap = lib.make_walkmap("Dummy_Scene.walkmap")
+        -- > gestirlo via scene_manager
+        -- player = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
+        -- player = dummy_player:ret()
+        scn_mgr:create_walkmap('Dummy_Scene.walkmap')
+        player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
+        chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
+        chest:set_position(2, 1, 0)
+
+        chest2 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
+        chest2:set_position(-2, -1, 0)
+
+        chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
+        chest3:set_position(-1, 2, 0)
+
+       
+        -- log_warn(insp.inspect(player))
+        -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
+
+        --log_debug(player)
+        --log_debug(chest)
+        -- player:fill_transient_data(walkmap)
+        player:play(ANIM_MODE_LOOP, 2, 1)
+        -- item2:fill_transient_data(walkmap)
+
+        json = json_helper:get()
+        -- log_debug(player)
 
         -- View CM_01 setup
         -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
@@ -93,10 +112,10 @@ scene = {
             end
 
             if lib.key_action_performed(keys, 'P', 1) then
-                item:delete_transient_data()
-                item = player:ret('EY_DummyAnim.mesh', 'main_player', 0.3098)
-                item:fill_transient_data(walkmap)
-                log_debug('JSON ---> ' .. json.encode(item.serializable))
+                -- player:delete_transient_data()
+                -- player = player:ret('EY_DummyAnim.mesh', 'main_player', 0.3098)
+                -- player:fill_transient_data(walkmap)
+                -- log_debug('JSON ---> ' .. json.encode(player.serializable))
             end
 
             if lib.key_action_performed(keys, 'UP', 2) then
@@ -150,22 +169,22 @@ scene = {
         turn = rotate ~= 0
         walkF = walk > 0
         walkB = walk < 0
-        if walkF or (walkF and rotate) then
-            item:set_anim('Walk_Forward')
-            item:play(ANIM_MODE_LOOP, 2, 2)
-        elseif walkB or (walkB and rotate) then
-            item:set_anim('Walk_Back')
-            item:play(ANIM_MODE_LOOP, 2, 2)
+        if walkF or(walkF and rotate) then
+            player:set_anim('Walk_Forward')
+            player:play(ANIM_MODE_LOOP, 2, 2)
+        elseif walkB or(walkB and rotate) then
+            player:set_anim('Walk_Back')
+            player:play(ANIM_MODE_LOOP, 2, 2)
         elseif turn then
-            item:set_anim('Walk_Forward')
-            item:play(ANIM_MODE_LOOP, 2, 2)
+            player:set_anim('Walk_Forward')
+            player:play(ANIM_MODE_LOOP, 2, 2)
         else
-            item:set_anim('Idle')
-            item:play(ANIM_MODE_LOOP, 2, 1)
+            player:set_anim('Idle')
+            player:play(ANIM_MODE_LOOP, 2, 1)
         end
-        item:rotate(0, 0, 50 * tpf * rotate)
-        item:move_dir(tpf * walkSpeed * 0.7)
-        item:update(tpf)
+        player:rotate(0, 0, 50 * tpf * rotate)
+        player:move_dir(tpf * walkSpeed * 0.7)
+        player:update(tpf)
 
 
 
@@ -173,20 +192,23 @@ scene = {
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
 
-        hpms.debug_draw_perimeter(walkmap)
+        hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
+        hpms.debug_draw_aabb(player.transient.collisor)
+        hpms.debug_draw_aabb(chest.transient.collisor)
 
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
 
-        scn_mgr:update()
+        scn_mgr:poll_events(tpf)
+        actors_mgr:poll_events(tpf)
     end,
     cleanup = function()
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [cleanup]
         -- TODO
-        lib.delete_walkmap(walkmap)
+        --lib.delete_walkmap(walkmap)
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [cleanup]
 
-        item:delete_transient_data()
+        -- player:delete_transient_data()
         -- item2:delete_transient_data()
 
         -- Collisor EY_DummyAnim delete
@@ -197,6 +219,7 @@ scene = {
         -- lib.delete_entity(entity_ey_dummyanim)
 
         -- View CM_01 delete
+        actors_mgr:delete_all()
         scn_mgr:delete_all()
 
         -- Collision map R_Debug_01 delete

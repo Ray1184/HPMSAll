@@ -8,7 +8,7 @@
 
 dependencies = {
     'libs/utils/MathUtils.lua',
-    'thirdparty/JsonHelper.lua'
+    'libs/thirdparty/JsonHelper.lua'
 }
 
 local actions_path = 'data/input/KeyProfiles.json'

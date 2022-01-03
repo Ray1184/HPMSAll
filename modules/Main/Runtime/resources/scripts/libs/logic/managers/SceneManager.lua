@@ -22,11 +22,8 @@ function scene_manager:new(scene_name, camera)
         scene_name = scene_name,
         camera = camera,
         views_map = { },
-        current_walkmap = nil,
-
-        -- Backend data ref
-        loaded_images = { },
-        walkmaps = { }
+        loaded_walkmap = nil,
+        loaded_images = { }
     }
     log_debug('Creating scene module for room ' .. scene_name)
     setmetatable(this, self)
@@ -36,19 +33,31 @@ function scene_manager:new(scene_name, camera)
     end
 
     function scene_manager:delete_all()
-        for k, background in pairs(self.loaded_images) do
+        for kb, background in pairs(self.loaded_images) do
             lib.delete_background(background)
         end
-        for k, walkmap in pairs(self.walkmaps) do
-            lib.delete_walkmap(walkmap)
+        if self.loaded_walkmap ~= nil then
+            lib.delete_walkmap(self.loaded_walkmap)
+        end
+
+        self.views_map = { }
+        self.loaded_walkmap = nil
+        self.loaded_images = { }
+
+    end
+
+    function scene_manager:create_walkmap(walkmap_name)
+        if self.loaded_walkmap == nil then
+            self.loaded_walkmap = lib.make_walkmap(walkmap_name)
         end
     end
 
-    function scene_manager:set_walkmap(walkmap)
-        if self.walkmaps[walkmap] == nil then
-            self.walkmaps[walkmap] = lib.make_walkmap(walkmap)
-        end
-        current_walkmap = self.walkmaps[walkmap]
+    function scene_manager:get_walkmap()
+        return self.loaded_walkmap
+    end
+
+    function scene_manager:get_scene_name()
+        return self.scene_name
     end
 
     function scene_manager:sample_view_by_callback(condition, background, position, rotation)
@@ -67,7 +76,7 @@ function scene_manager:new(scene_name, camera)
         table.insert(self.views_map, sample)
     end
 
-    function scene_manager:update()
+    function scene_manager:poll_events()
         local settings_to_apply
         for i = 1, #self.views_map do
             if self.views_map[i].condition() then

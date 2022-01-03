@@ -11,7 +11,7 @@ dependencies = {
     'libs/backend/HPMSFacade.lua',
     'libs/logic/templates/CollisionGameItem.lua',
     'libs/logic/templates/AnimGameItem.lua',
-    'thirdparty/Inspect.lua'
+    'libs/thirdparty/Inspect.lua'
 }
 
 anim_collision_game_item = { }
@@ -24,7 +24,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
     local ret = anim_game_item:ret(path, id)
     local ret2 = collision_game_item:ret(path, id, bounding_radius)
 
-    local this = context:inst():get(cats.OBJECTS, id,
+    local this = context:inst():get_object(id,
     function()
         log_debug('New anim_collision_game_item object ' .. id)
 
@@ -52,6 +52,8 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
                 {
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    set_position = ret.set_position,
+                    get_position = ret.get_position,
                     delete_transient_data = ret.delete_transient_data,
                     fill_transient_data = ret.fill_transient_data,
                     update = ret.update,
@@ -63,6 +65,8 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
                 {
                     move_dir = ret2.move_dir,
                     rotate = ret2.rotate,
+                    set_position = ret2.set_position,
+                    get_position = ret2.get_position,
                     delete_transient_data = ret2.delete_transient_data,
                     fill_transient_data = ret2.fill_transient_data,
                     update = ret2.update,
@@ -81,6 +85,16 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
+    end
+
+    function anim_collision_game_item:set_position(x, y, z)
+        -- Manage collisor only
+        self.metainfo.override.collision_game_item.set_position(self, x, y, z)
+    end
+
+    function anim_collision_game_item:get_position()
+        -- Manage collisor only
+        return self.metainfo.override.collision_game_item.get_position(self)
     end
 
 

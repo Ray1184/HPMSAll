@@ -25,13 +25,13 @@ public class CollisionTest extends PApplet {
 
     public void setup() {
 
-        bc = new BoundingCircle(new PVector(0, 0), 30, this);
-        String objData = new String(PApplet.loadBytes(getClass().getClassLoader().getResourceAsStream("collision/perimeter.obj")));
-        String objData2 = new String(PApplet.loadBytes(getClass().getClassLoader().getResourceAsStream("collision/obstacles_joined.obj")));
-        perimeter = Polygon.load(objData, 40, 500, 100, this).get(0);
-        obstacles = Polygon.load(objData2, 40, 500, 100, this);
+        bc = new BoundingCircle(new PVector(0, 0), 20, this);
+        String objData = new String(PApplet.loadBytes(getClass().getClassLoader().getResourceAsStream("collision/Dummy_Scene.perimeter.obj")));
+        String objData2 = new String(PApplet.loadBytes(getClass().getClassLoader().getResourceAsStream("collision/Dummy_Scene.obstacles.obj")));
+        perimeter = Polygon.load(objData, 40, 500, 200, this).get(0);
+        obstacles = Polygon.load(objData2, 40, 500, 200, this);
         collisor = new Collisor(new Actor(this), perimeter, obstacles, bc, this);
-        collisor.setPosition(new PVector(300, 200));
+        collisor.setPosition(new PVector(500, 300));
         noFill();
     }
 

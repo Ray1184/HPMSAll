@@ -31,7 +31,6 @@ namespace hpms
 			return q1 * q2;
 		}
 
-
 		static inline glm::quat FromEuler(float xAngle, float yAngle, float zAngle)
 		{
 			return glm::quat(glm::vec3(xAngle, yAngle, zAngle));
@@ -71,7 +70,6 @@ namespace hpms
 		{
 			return v1 / v2;
 		}
-
 
 		static inline glm::vec3 NormVec3(const glm::vec3& v)
 		{
@@ -154,6 +152,7 @@ namespace hpms
 			return (float)sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 		}
 
+
 		static inline float DotVec2(const glm::vec2& v1, const glm::vec2& v2)
 		{
 			return glm::dot(v1, v2);
@@ -184,6 +183,7 @@ namespace hpms
 		{
 			return v[i][j];
 		}
+
 
 		// Math calc utils.
 		static inline float MCToRadians(float degrees)

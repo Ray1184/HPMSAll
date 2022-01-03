@@ -204,6 +204,11 @@ function backend:get()
                 return { }
             end,
 
+            vec2_dist = function(v1, v2)
+                return { }
+            end,
+
+            -- Calcs.
             to_radians = function(a)
                 return { }
             end,
@@ -291,6 +296,9 @@ function backend:get()
             vec3_add = hpms.vec3_add,
             quat_mul = hpms.quat_mul,
             get_direction = hpms.get_direction,
+            vec2_dist = hpms.vec2_dist,
+
+            -- Calc functions.
             to_radians = hpms.to_radians,
             to_degrees = hpms.to_degrees,
             point_inside_circle = hpms.point_inside_circle,

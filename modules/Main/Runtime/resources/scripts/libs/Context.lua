@@ -1,16 +1,17 @@
----
+-- -
 --- Created by Ray1184.
 --- DateTime: 04/10/2020 17:04
----
+-- -
 --- Wrapper for cached context.
----
+-- -
 dependencies = { 'libs/utils/Utils.lua' }
 
-context = {}
+context = { }
 
 cats = {
     STATE = 'state',
     OBJECTS = 'objects',
+    INSTANCES = 'instances',
     EVENTS = 'events',
     LANG = 'lang',
     MISC = 'misc'
@@ -19,8 +20,8 @@ cats = {
 function context:new()
     local ctx = { dummy = false }
     log_debug('Creating context with categories:')
-    for k, v in pairs(cats) do
-        ctx[v] = {}
+    for kc, v in pairs(cats) do
+        ctx[v] = { }
         log_debug('- ' .. v)
     end
     setmetatable(ctx, self)
@@ -131,6 +132,35 @@ function context:put_state(key, obj)
     self.instance[cats.STATE][key] = obj
 end
 
+function context:get_state(key)
+    if key == nil then
+        log_error('State object nil not allowed')
+        return nil
+    end
+    if self.instance[cats.STATE][key] == nil then
+        log_error('State object ' .. key .. ' was not initialized in context')
+        return nil
+    end
+    return self.instance[cats.STATE][key]
+end
+
+function context:get_object(key, supplier_callback)
+    return self.instance:get(cats.OBJECTS, key, supplier_callback)
+end
+
+function context:register_instance(subcat, id, retrieve_callback)
+    self.instance[cats.INSTANCES][subcat .. '/' .. id] = retrieve_callback
+end
+
+function context:get_instance(subcat, id, ...)
+    local inst = self.instance[cats.INSTANCES][subcat .. '/' .. id]
+    if inst ~= nil then
+        return inst(...)
+    end
+    log_warn('No instances availables with id ' .. subcat .. '/' .. id)
+    return nil
+end
+
 function context:put(cat, key, obj)
     if cat == nil then
         log_warn('Cannot put in context object with nil category')
@@ -152,18 +182,6 @@ function context:put(cat, key, obj)
     self.instance[cat][key] = obj.serializable
 end
 
-function context:get_state(key)
-    if key == nil then
-        log_error('State object nil not allowed')
-        return nil
-    end
-    if self.instance[cats.STATE][key] == nil then
-        log_error('State object ' .. key .. ' was not initialized in context')
-        return nil
-    end
-    return self.instance[cats.STATE][key]
-end
-
 function context:get(cat, key, supplier_callback)
     if self.instance[cat] == nil then
         if cat == nil then
@@ -182,7 +200,7 @@ function context:get(cat, key, supplier_callback)
         end
     end
     log_debug('Object with key ' .. key .. ' and category ' .. cat .. ' found/created in context')
-    local obj = {}
+    local obj = { }
     obj.serializable = self.instance[cat][key]
     return obj
 end

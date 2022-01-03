@@ -23,7 +23,7 @@ function player:ret(path, id, rad, anagr)
     local id = 'player/' .. id
     local ret = anim_collision_game_item:ret(path, id, rad)
 
-    local this = context:inst():get(cats.OBJECTS, id,
+    local this = context:inst():get_object(id,
     function()
         log_debug('New player object ' .. id)
 
@@ -33,88 +33,69 @@ function player:ret(path, id, rad, anagr)
                 id = id,
                 action_mode = k.player_action_mode.SEARCH,
                 walk_mode = k.player_walk_mode.IDLE,
+                anagr =
+                {
+                    name = 'Player',
+                    birth_date = '0000-01-01',
+                    birth_place = 'Nowhere',
+                    country = 'Outworld',
+                    job = 'Nothing',
+                    height = 0,
+                    weight = 0,
+                    info = 'N/A',
+                    photo = 'N/A'
+                },
                 stats =
                 {
-                    anagr =
-                    {
-                        name = 'Player',
-                        birth_date = '0000-01-01',
-                        birth_place = 'Nowhere',
-                        country = 'Outworld',
-                        job = 'Nothing',
-                        height = 0,
-                        weight = 0,
-                        info = 'N/A',
-                        photo = 'N/A'
-                    },
-                    standard_params =
-                    {
-                        hp = 50,
-                        max_hp = 50,
-                        sp = 30,
-                        max_sp = 30,
-                        vp = 20,
-                        max_vp = 20,
-                        lv = 1,
-                        ap = 0,
-                        money = 0,
-                        armor = 0
-                    },
-                    support_params =
-                    {
-                        strength = 0,
-                        stamina = 0,
-                        intelligence = 0,
-                        science = 0,
-                        handyman = 0,
-                        dexterity = 0,
-                        occult = 0,
-                        charisma = 0,
-                        fortune = 0
-                    },
-                    negative_status_params =
-                    {
-                        sleep = false,
-                        poison = false,
-                        toxin = false,
-                        burn = false,
-                        freeze = false,
-                        blind = false,
-                        paralysis = false,
-                        shock = false
 
-                    },
-                    negative_status_affection =
-                    {
-                        sleep = 1,
-                        poison = 1,
-                        toxin = 1,
-                        burn = 1,
-                        freeze = 1,
-                        blind = 1,
-                        paralysis = 1,
-                        shock = 1
-                    },
-                    positive_status_params =
-                    {
-                        regen = false,
-                        rad = false,
-                        invinciblity = false
-                    },
-                    phobies =
-                    {
-                        arachnophobia = false,
-                        hemophobia = false,
-                        anthropophobia = false,
-                        aquaphobia = false,
-                        pyrophobia = false,
-                        acrophobia = false,
-                        necrophobia = false,
-                        aerophobia = false,
-                        aviophobia = false,
-                        photophobia = false,
-                        nyctophobia = false
-                    }
+                    -- Amount
+                    { k.stats.standard_params.HP, 0 },
+                    { k.stats.standard_params.MAX_HP, 0 },
+                    { k.stats.standard_params.SP, 0 },
+                    { k.stats.standard_params.MAX_SP, 0 },
+                    { k.stats.standard_params.VP, 0 },
+                    { k.stats.standard_params.MAX_VP, 0 },
+                    { k.stats.standard_params.LV, 0 },
+                    { k.stats.standard_params.AP, 0 },
+                    { k.stats.standard_params.MONEY, 0 },
+                    { k.stats.standard_params.ARMOR, 0 },
+
+                    { k.stats.support_params.STRENGTH, 0 },
+                    { k.stats.support_params.STAMINA, 0 },
+                    { k.stats.support_params.INTELLIGENCE, 0 },
+                    { k.stats.support_params.SCIENCE, 0 },
+                    { k.stats.support_params.HANDYMAN, 0 },
+                    { k.stats.support_params.DEXTERITY, 0 },
+                    { k.stats.support_params.OCCULT, 0 },
+                    { k.stats.support_params.CHARISMA, 0 },
+                    { k.stats.support_params.FORTUNE, 0 },
+
+                    -- Affection flag, affection ratio (1: 100%, 0: 0%)
+                    { k.stats.negative_status_params.SLEEP, false, 1 },
+                    { k.stats.negative_status_params.POISON, false, 1 },
+                    { k.stats.negative_status_params.TOXIN, false, 1 },
+                    { k.stats.negative_status_params.BURN, false, 1 },
+                    { k.stats.negative_status_params.FREEZE, false, 1 },
+                    { k.stats.negative_status_params.BLIND, false, 1 },
+                    { k.stats.negative_status_params.PARALYSIS, false, 1 },
+                    { k.stats.negative_status_params.SHOCK, false, 1 },
+
+                    { k.stats.positive_status_params.REGEN, false, 1 },
+                    { k.stats.positive_status_params.RAD, false, 1 },
+                    { k.stats.positive_status_params.INVINCIBLITY, false },
+
+                    { k.stats.phobies.ARACHNOPHOBIA, false, 1 },
+                    { k.stats.phobies.HEMOPHOBIA, false, 1 },
+                    { k.stats.phobies.ANTHROPOPHOBIA, false, 1 },
+                    { k.stats.phobies.AQUAPHOBIA, false, 1 },
+                    { k.stats.phobies.PYROPHOBIA, false, 1 },
+                    { k.stats.phobies.ACROPHOBIA, false, 1 },
+                    { k.stats.phobies.NECROPHOBIA, false, 1 },
+                    { k.stats.phobies.AEROPHOBIA, false, 1 },
+                    { k.stats.phobies.AVIOPHOBIA, false, 1 },
+                    { k.stats.phobies.PHOTOPHOBIA, false, 1 },
+                    { k.stats.phobies.NYCTOPHOBIA, false, 1 },
+                    { k.stats.phobies.CRYOPHOBIA, false, 1 }
 
                 },
                 equip = nil,
@@ -142,6 +123,8 @@ function player:ret(path, id, rad, anagr)
             {
                 anim_collision_game_item =
                 {
+                    set_position = ret.set_position,
+                    get_position = ret.get_position,
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
                     delete_transient_data = ret.delete_transient_data,
@@ -165,8 +148,29 @@ function player:ret(path, id, rad, anagr)
         return insp.inspect(o)
     end
 
-    function player:set_stat(stat_type, stat_value)
-        self.serializable.stats[stat_type] = stat_value
+    function player:set_anagr(anagr)
+        self.serializable.anagr = anagr
+    end
+
+    function player:set_stats(stats)
+        self.serializable.stats = stats
+    end
+
+    function player:modify_stat(stat_type, stat_name, stat_value, stat_affection)
+        for i = 1, #self.serializable.stats[stat_type] do
+            if self.serializable.stats[stat_type][i][1] == stat_name then
+                self.serializable.stats[stat_type][i][2] = stat_value
+                if stat_affection ~= nil then
+                    if #self.serializable.stats[stat_type][i] == 3 then
+                        self.serializable.stats[stat_type][i][3] = stat_affection
+                    else
+                        log_warn('State affection ratio not available for ' .. stat_name)
+                    end
+                end
+                return
+            end
+        end
+        log_warn('State with name ' .. stat_name .. ' not available')
     end
 
     function player:set_walk_mode(walk_mode)
@@ -181,6 +185,14 @@ function player:ret(path, id, rad, anagr)
             log_error('Player action mode ' .. action_mode .. ' not defined. Check managed player action modes inside libs/logic/GameMechanicsConsts.lua or extend them')
         end
         self.serializable.action_mode = action_mode
+    end
+
+    function player:set_position(x, y, z)
+        self.metainfo.override.anim_collision_game_item.set_position(self, x, y, z)
+    end
+
+    function player:get_position()
+        return self.metainfo.override.anim_collision_game_item.get_position(self)
     end
 
     function player:move_dir(ratio)
@@ -213,6 +225,16 @@ function player:ret(path, id, rad, anagr)
 
     function player:play(mode, slowdown, slice)
         self.metainfo.override.anim_collision_game_item.play(self, mode, slowdown, slice)
+    end
+
+    function player:set_event_callback(evt_callback)
+        self.metainfo.evt_callback = evt_callback
+    end
+
+    function player:event(tpf, evt_info)
+        if self.metainfo.evt_callback ~= nil then
+            self.metainfo.evt_callback(tpf, evt_info)
+        end
     end
 
     function player:kill_instance()

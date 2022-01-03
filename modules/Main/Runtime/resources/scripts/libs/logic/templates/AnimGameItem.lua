@@ -10,7 +10,7 @@ dependencies = {
     'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'thirdparty/Inspect.lua',
+    'libs/thirdparty/Inspect.lua',
     'libs/logic/GameMechanicsConsts.lua'
 }
 
@@ -28,7 +28,7 @@ function anim_game_item:ret(path, id)
     local id = 'anim_game_item/' .. id
     local ret = game_item:ret(path, id)
 
-    local this = context:inst():get(cats.OBJECTS, id,
+    local this = context:inst():get_object(id,
     function()
         log_debug('New anim_game_item object ' .. id)
 
@@ -63,6 +63,8 @@ function anim_game_item:ret(path, id)
                 {
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    set_position = ret.set_position,
+                    get_position = ret.get_position,
                     delete_transient_data = ret.delete_transient_data,
                     fill_transient_data = ret.fill_transient_data,
                     update = ret.update,
@@ -78,6 +80,14 @@ function anim_game_item:ret(path, id)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
+    end
+
+    function anim_game_item:set_position(x, y, z)
+        self.metainfo.override.game_item.set_position(self, x, y, z)
+    end
+
+    function anim_game_item:get_position()
+        return self.metainfo.override.game_item.get_position(self)
     end
 
     function anim_game_item:move_dir(ratio)

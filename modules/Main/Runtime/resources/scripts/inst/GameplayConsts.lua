@@ -30,13 +30,17 @@ function game_consts:get()
         res_refs =
         {
             -- Entities paths.
-            PLAYER_DUMMY = { PATH = 'DummyAnim.mesh', B_RAD = 0.3098 },
+            players =
+            {
+                DUMMY_PLAYER = { ID = 'dummy_player', PATH = 'DummyAnim.mesh', B_RAD = 0.3098 }
+            },
+            actors =
+            {
+                DUMMY_CHEST = { ID = 'dummy_chest', PATH = 'DummyChest.mesh', B_RAD = 0.6410 }
+            }
 
 
 
-            -- Objects paths.
-            DUMMY_WEAPON = 'data/models/DummyWeapon.hmdat',
-            DEFAULT_ACTIONS = 'gen/models/Player.hmdat'
 
         },
         ammo_names =
