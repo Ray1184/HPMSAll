@@ -64,7 +64,7 @@ scene = {
 
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest3:set_position(-1, 2, 0)
-
+        chest3:scale(0.5, 0.5, 0.5)
        
         -- log_warn(insp.inspect(player))
         -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
@@ -195,6 +195,8 @@ scene = {
         hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
         hpms.debug_draw_aabb(player.transient.collisor)
         hpms.debug_draw_aabb(chest.transient.collisor)
+        hpms.debug_draw_aabb(chest2.transient.collisor)
+        hpms.debug_draw_aabb(chest3.transient.collisor)
 
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
 

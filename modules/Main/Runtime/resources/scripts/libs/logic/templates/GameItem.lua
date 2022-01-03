@@ -40,6 +40,9 @@ function game_item:ret(path, id)
                     position = { 0, 0, 0 },
                     rotation = { 0, 0, 0 },
                     scale = { 1, 1, 1 },
+                    last_position = { 0, 0, 0 },
+                    last_rotation = { 0, 0, 0 },
+                    last_scale = { 1, 1, 1 },
                     visible = true
 
                 }
@@ -73,10 +76,11 @@ function game_item:ret(path, id)
         end
         local node = self.transient.node
         node.position = lib.vec3(x, y, z)
+        self.serializable.visual_info.last_position = self:get_position()        
         self.serializable.visual_info.position = { x, y, node.position.z }
     end
 
-     function game_item:get_position()
+    function game_item:get_position()
         return self.serializable.visual_info.position
     end
 
@@ -87,6 +91,7 @@ function game_item:ret(path, id)
         local node = self.transient.node
         local dir = lib.get_direction(node.rotation, lib.vec3(0, -1, 0))
         node.position = lib.vec3_add(node.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
+        self.serializable.visual_info.last_position = self:get_position()        
         self.serializable.visual_info.position = { node.position.x, node.position.y, node.position.z }
     end
 

@@ -23,6 +23,7 @@ function player:ret(path, id, rad, anagr)
     local id = 'player/' .. id
     local ret = anim_collision_game_item:ret(path, id, rad)
 
+
     local this = context:inst():get_object(id,
     function()
         log_debug('New player object ' .. id)
@@ -127,6 +128,8 @@ function player:ret(path, id, rad, anagr)
                     get_position = ret.get_position,
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    scale = ret.scale,
+                    get_scaled_rad = ret.get_scaled_rad,
                     delete_transient_data = ret.delete_transient_data,
                     fill_transient_data = ret.fill_transient_data,
                     update = ret.update,
@@ -199,12 +202,20 @@ function player:ret(path, id, rad, anagr)
         local moveRatio = ratio
         if self.serializable.run then
             moveRatio = moveRatio * 2
-        end
+        end        
         self.metainfo.override.anim_collision_game_item.move_dir(self, moveRatio)
     end
 
     function player:rotate(rx, ry, rz)
         self.metainfo.override.anim_collision_game_item.rotate(self, rx, ry, rz)
+    end
+
+    function player:scale(sx, sy, sz)
+        self.metainfo.override.anim_collision_game_item.scale(self, sx, sy, sz)
+    end
+
+    function player:get_scaled_rad()
+        return self.metainfo.override.anim_collision_game_item.get_scaled_rad(self)
     end
 
     function player:delete_transient_data()

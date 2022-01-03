@@ -123,6 +123,7 @@ function collectible:ret(path, id)
                     get_position = ret.get_position,
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    scale = ret.scale,
                     delete_transient_data = ret.delete_transient_data,
                     fill_transient_data = ret.fill_transient_data,
                     update = ret.update,
@@ -149,11 +150,15 @@ function collectible:ret(path, id)
     end
 
     function collectible:move_dir(ratio)
-        self.metainfo.override.game_item.move_dir(ratio)
+        self.metainfo.override.game_item.move_dir(self, ratio)
     end
 
     function collectible:rotate(rx, ry, rz)
-        self.metainfo.override.game_item.rotate(rx, ry, rz)
+        self.metainfo.override.game_item.rotate(self, rx, ry, rz)
+    end
+
+    function collectible:scale(sx, sy, sz)
+        self.metainfo.override.anim_collision_game_item.scale(self, sx, sy, sz)
     end
 
     function collectible:delete_transient_data()

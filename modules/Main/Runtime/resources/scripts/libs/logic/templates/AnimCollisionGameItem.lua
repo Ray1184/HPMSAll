@@ -52,6 +52,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
                 {
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    scale = ret.scale,
                     set_position = ret.set_position,
                     get_position = ret.get_position,
                     delete_transient_data = ret.delete_transient_data,
@@ -65,6 +66,8 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
                 {
                     move_dir = ret2.move_dir,
                     rotate = ret2.rotate,
+                    scale = ret2.scale,
+                    get_scaled_rad = ret2.get_scaled_rad,
                     set_position = ret2.set_position,
                     get_position = ret2.get_position,
                     delete_transient_data = ret2.delete_transient_data,
@@ -106,6 +109,16 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
     function anim_collision_game_item:rotate(rx, ry, rz)
         -- Manage collisor only
         self.metainfo.override.collision_game_item.rotate(self, rx, ry, rz)
+    end
+
+    function anim_collision_game_item:scale(sx, sy, sz)
+        -- Manage collisor only
+        self.metainfo.override.collision_game_item.scale(self, sx, sy, sz)
+    end
+
+    function anim_collision_game_item:get_scaled_rad()
+        -- Manage collisor only
+        return self.metainfo.override.collision_game_item.get_scaled_rad(self)
     end
 
     function anim_collision_game_item:delete_transient_data()

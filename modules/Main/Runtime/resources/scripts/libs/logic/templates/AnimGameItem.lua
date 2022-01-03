@@ -63,6 +63,7 @@ function anim_game_item:ret(path, id)
                 {
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    scale = ret.scale,
                     set_position = ret.set_position,
                     get_position = ret.get_position,
                     delete_transient_data = ret.delete_transient_data,
@@ -96,6 +97,10 @@ function anim_game_item:ret(path, id)
 
     function anim_game_item:rotate(rx, ry, rz)
         self.metainfo.override.game_item.rotate(self, rx, ry, rz)
+    end
+
+    function anim_game_item:scale(sx, sy, sz)
+        self.metainfo.override.game_item.scale(self, sx, sy, sz)
     end
 
     function anim_game_item:delete_transient_data()

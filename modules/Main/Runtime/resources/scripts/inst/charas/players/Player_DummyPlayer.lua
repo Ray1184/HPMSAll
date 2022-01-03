@@ -87,6 +87,11 @@ function dummy_player:ret()
     self.__tostring = function(o)
         return insp.inspect(o)
     end
+
+    this:set_event_callback( function(tpf, evt_info)      
+        local lastPos = this.serializable.visual_info.last_position
+        this:set_position(lastPos[1], lastPos[2], lastPos[3])
+    end )
         
     return this
 end

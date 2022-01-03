@@ -132,6 +132,8 @@ function scene_object:ret(path, id, rad)
                     get_position = ret.get_position,
                     move_dir = ret.move_dir,
                     rotate = ret.rotate,
+                    scale = ret.scale,
+                    get_scaled_rad = ret.get_scaled_rad,
                     delete_transient_data = ret.delete_transient_data,
                     fill_transient_data = ret.fill_transient_data,
                     update = ret.update,
@@ -161,16 +163,20 @@ function scene_object:ret(path, id, rad)
         return self.metainfo.override.anim_collision_game_item.get_position(self)
     end
 
-    function scene_object:move_dir(ratio)
-        local moveRatio = ratio
-        if self.serializable.run then
-            moveRatio = moveRatio * 2
-        end
+    function scene_object:move_dir(ratio)        
         self.metainfo.override.anim_collision_game_item.move_dir(self, moveRatio)
     end
 
     function scene_object:rotate(rx, ry, rz)
         self.metainfo.override.anim_collision_game_item.rotate(self, rx, ry, rz)
+    end
+
+    function scene_object:scale(sx, sy, sz)
+        self.metainfo.override.anim_collision_game_item.scale(self, sx, sy, sz)
+    end
+
+    function scene_object:get_scaled_rad()
+        return self.metainfo.override.anim_collision_game_item.get_scaled_rad(self)
     end
 
     function scene_object:delete_transient_data()
