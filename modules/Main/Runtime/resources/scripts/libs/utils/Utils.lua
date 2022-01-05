@@ -41,9 +41,18 @@ function merge_tables(orig, new)
     return orig
 end
 
+function array_contains(array, val)
+    for i = 1, #array do
+        if array[i] == val then
+            return true
+        end
+    end
+    return false
+end
+
 function table_contains(table, val)
-    for i = 1, #table do
-        if table[i] == val then
+    for k, v in pairs(table) do
+        if table[k] == val then
             return true
         end
     end

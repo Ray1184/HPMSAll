@@ -16,7 +16,7 @@ dependencies = {
 
 collision_game_item = { }
 
-function collision_game_item:ret(path, id, bounding_radius)
+function collision_game_item:ret(path, id, bounding_radius, ghost)
     lib = backend:get()
     trx = transform:get()
     insp = inspector:get()
@@ -34,7 +34,8 @@ function collision_game_item:ret(path, id, bounding_radius)
                 id = id,
                 collision_info =
                 {
-                    bounding_radius = bounding_radius or 0
+                    bounding_radius = bounding_radius or 0,
+                    ghost = ghost or false
                 }
             }
         }
@@ -82,17 +83,18 @@ function collision_game_item:ret(path, id, bounding_radius)
         return self.metainfo.override.game_item.get_position(self)
     end
 
-    function collision_game_item:move_dir(ratio)
+    function collision_game_item:move_dir(ratio, dir)
         if self.serializable.expired then
             return
-        end
+        end       
         local collisor = self.transient.collisor
-        local dir = lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
+        local dir = dir or lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
         local nextPos = lib.vec3_add(collisor.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
         lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
         local collPos = collisor.position
+
         self.serializable.visual_info.last_position = self:get_position()
-        self.serializable.visual_info.position = { collPos.x, collPos.y, collPos.z }
+        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }
     end
 
     function collision_game_item:rotate(rx, ry, rz)
@@ -102,7 +104,7 @@ function collision_game_item:ret(path, id, bounding_radius)
         local collisor = self.transient.collisor
         trx.rotate(collisor, rx, ry, rz)
         local collRot = lib.to_euler(collisor.rotation)
-        self.serializable.visual_info.rotation = { collRot.x, collRot.y, collRot.z }
+        self.serializable.visual_info.rotation = { x = collRot.x, y = collRot.y, z = collRot.z }
     end
 
     function collision_game_item:scale(sx, sy, sz)
@@ -110,7 +112,11 @@ function collision_game_item:ret(path, id, bounding_radius)
     end
 
     function collision_game_item:get_scaled_rad()
-        return self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale[1] + self.serializable.visual_info.scale[2]) / 2)
+        return self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale.x + self.serializable.visual_info.scale.y) / 2)
+    end
+
+    function collision_game_item:ghost()
+        return self.serializable.collision_info.ghost
     end
 
     function collision_game_item:delete_transient_data()
@@ -128,7 +134,6 @@ function collision_game_item:ret(path, id, bounding_radius)
             return
         end
         local scaledRad = self.get_scaled_rad(self)
-        -- self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale[1] + self.serializable.visual_info.scale[2]) / 2)
         local tra = {
             transient =
             {

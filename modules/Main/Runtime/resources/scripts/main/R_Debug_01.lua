@@ -42,6 +42,7 @@ scene = {
 
         changed = true
         register_all_instances()
+        action = false
         walkSpeed = 0
         walk = 0
         rotate = 0
@@ -56,6 +57,8 @@ scene = {
         -- player = dummy_player:ret()
         scn_mgr:create_walkmap('Dummy_Scene.walkmap')
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
+        player:set_action_mode(7)
+        -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest:set_position(2, 1, 0)
 
@@ -65,12 +68,12 @@ scene = {
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest3:set_position(-1, 2, 0)
         chest3:scale(0.5, 0.5, 0.5)
-       
+
         -- log_warn(insp.inspect(player))
         -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
 
-        --log_debug(player)
-        --log_debug(chest)
+        -- log_debug(player)
+        -- log_debug(chest)
         -- player:fill_transient_data(walkmap)
         player:play(ANIM_MODE_LOOP, 2, 1)
         -- item2:fill_transient_data(walkmap)
@@ -126,6 +129,12 @@ scene = {
                 walk = 0
             end
 
+            if lib.key_action_performed(keys, 'SPACE', 2) then
+                action = true
+            else
+                action = false
+            end
+
             if lib.key_action_performed(keys, 'RIGHT', 2) then
                 rotate = -1
             elseif lib.key_action_performed(keys, 'LEFT', 2) then
@@ -169,7 +178,12 @@ scene = {
         turn = rotate ~= 0
         walkF = walk > 0
         walkB = walk < 0
-        if walkF or(walkF and rotate) then
+        player.serializable.performing_action = false
+        if action then
+            player:set_anim('Push')
+            player:play(ANIM_MODE_LOOP, 2, 2)
+            player.serializable.performing_action = true
+        elseif walkF or(walkF and rotate) then
             player:set_anim('Walk_Forward')
             player:play(ANIM_MODE_LOOP, 2, 2)
         elseif walkB or(walkB and rotate) then
@@ -207,7 +221,7 @@ scene = {
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [cleanup]
         -- TODO
-        --lib.delete_walkmap(walkmap)
+        -- lib.delete_walkmap(walkmap)
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [cleanup]
 
         -- player:delete_transient_data()

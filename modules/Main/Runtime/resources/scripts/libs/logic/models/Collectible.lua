@@ -149,8 +149,8 @@ function collectible:ret(path, id)
         return self.metainfo.override.anim_collision_game_item.get_position(self)
     end
 
-    function collectible:move_dir(ratio)
-        self.metainfo.override.game_item.move_dir(self, ratio)
+    function collectible:move_dir(ratio, dir)
+        self.metainfo.override.game_item.move_dir(self, ratio, dir)
     end
 
     function collectible:rotate(rx, ry, rz)
@@ -185,6 +185,15 @@ function collectible:ret(path, id)
         self.metainfo.override.game_item.update(self)
     end
 
+     function collectible:set_action_callback(action_callback)
+        self.metainfo.action_callback = action_callback
+    end
+
+    function collectible:action(action_info)
+        if self.metainfo.action_callback ~= nil then
+            self.metainfo.action_callback(action_info)
+        end
+    end
 
     return this
 end

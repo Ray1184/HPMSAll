@@ -16,13 +16,13 @@ dependencies = {
 
 anim_collision_game_item = { }
 
-function anim_collision_game_item:ret(path, id, bounding_radius)
+function anim_collision_game_item:ret(path, id, bounding_radius, ghost)
     lib = backend:get()
     insp = inspector:get()
 
     local id = 'anim_collision_game_item/' .. id
     local ret = anim_game_item:ret(path, id)
-    local ret2 = collision_game_item:ret(path, id, bounding_radius)
+    local ret2 = collision_game_item:ret(path, id, bounding_radius, ghost)
 
     local this = context:inst():get_object(id,
     function()
@@ -68,6 +68,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
                     rotate = ret2.rotate,
                     scale = ret2.scale,
                     get_scaled_rad = ret2.get_scaled_rad,
+                    ghost = ret2.ghost,
                     set_position = ret2.set_position,
                     get_position = ret2.get_position,
                     delete_transient_data = ret2.delete_transient_data,
@@ -101,9 +102,9 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
     end
 
 
-    function anim_collision_game_item:move_dir(ratio)
+    function anim_collision_game_item:move_dir(ratio, dir)
         -- Manage collisor only
-        self.metainfo.override.collision_game_item.move_dir(self, ratio)
+        self.metainfo.override.collision_game_item.move_dir(self, ratio, dir)
     end
 
     function anim_collision_game_item:rotate(rx, ry, rz)
@@ -119,6 +120,11 @@ function anim_collision_game_item:ret(path, id, bounding_radius)
     function anim_collision_game_item:get_scaled_rad()
         -- Manage collisor only
         return self.metainfo.override.collision_game_item.get_scaled_rad(self)
+    end
+
+    function anim_collision_game_item:ghost()
+        -- Manage collisor only
+        return self.metainfo.override.collision_game_item.ghost(self)
     end
 
     function anim_collision_game_item:delete_transient_data()

@@ -12,7 +12,7 @@ dependencies = {
     'libs/logic/GameMechanicsConsts.lua',
     'inst/GameplayConsts.lua',
     'inst/charas/players/Player_DummyPlayer.lua',
-    'inst/actors/scene_objects/SceneObject_DummyChest.lua'
+    'inst/actors/scene_actors/SceneActor_DummyChest.lua'
 }
 
 function register_all_instances()

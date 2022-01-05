@@ -10,7 +10,7 @@ game_mechanics_consts = { }
 function game_mechanics_consts:get()
 
     return {
-        player_walk_mode =
+        actor_move_mode =
         {
             IDLE = 0,
             WALK_FORWARD = 1,
@@ -18,7 +18,7 @@ function game_mechanics_consts:get()
             RUN = 3
         },
 
-        player_action_mode =
+        actor_action_mode =
         {
             SEARCH = 0,
             COMBAT = 1,
@@ -53,6 +53,8 @@ function game_mechanics_consts:get()
             WALK_FORWARD = 'Walk_Forward',
             WALK_BACK = 'Walk_Back',
             RUN = 'Run',
+            PUSH = 'Push',
+            FIGHT = 'Fight',
             DIE = 'Die'
         },
         stat_types =
@@ -139,7 +141,8 @@ function game_mechanics_consts:get()
         {
             PICK = 0,
             COLLISION = 1,
-            DROP = 2
+            DROP = 2,
+            PUSH = 3
         },
         actor_events =
         {

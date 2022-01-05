@@ -91,8 +91,8 @@ function anim_game_item:ret(path, id)
         return self.metainfo.override.game_item.get_position(self)
     end
 
-    function anim_game_item:move_dir(ratio)
-        self.metainfo.override.game_item.move_dir(self, ratio)
+    function anim_game_item:move_dir(ratio, dir)
+        self.metainfo.override.game_item.move_dir(self, ratio, dir)
     end
 
     function anim_game_item:rotate(rx, ry, rz)

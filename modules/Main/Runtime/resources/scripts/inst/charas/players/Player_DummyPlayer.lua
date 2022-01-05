@@ -16,6 +16,7 @@ function dummy_player:ret()
 
     local path = g.res_refs.players.DUMMY_PLAYER.PATH
     local rad = g.res_refs.players.DUMMY_PLAYER.B_RAD
+    local ghost = g.res_refs.players.DUMMY_PLAYER.GHOST
     local id = g.res_refs.players.DUMMY_PLAYER.ID
     local anagr = {
         name = 'Joe Dummy',
@@ -79,7 +80,7 @@ function dummy_player:ret()
 
     }
 
-    local this = player:ret(path, id, rad)
+    local this = player:ret(path, id, rad, ghost)
 
     this:set_anagr(anagr)
     this:set_stats(stats)
@@ -88,10 +89,9 @@ function dummy_player:ret()
         return insp.inspect(o)
     end
 
-    this:set_event_callback( function(tpf, evt_info)      
-        local lastPos = this.serializable.visual_info.last_position
-        this:set_position(lastPos[1], lastPos[2], lastPos[3])
+    this:set_event_callback( function(tpf, evt_info)
+        -- TODO
     end )
-        
+
     return this
 end

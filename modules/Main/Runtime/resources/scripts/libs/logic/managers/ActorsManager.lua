@@ -9,7 +9,9 @@ dependencies = {
     'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/Context.lua',
-    'libs/logic/GameMechanicsConsts.lua'
+    'libs/logic/GameMechanicsConsts.lua',
+    'libs/logic/managers/ActorsHelper.lua',
+    'libs/logic/managers/ActorsEventsHelper.lua'
 }
 
 actors_manager = { }
@@ -88,7 +90,23 @@ function actors_manager:new(scene_manager)
 
     function actors_manager:poll_events(tpf)
         if self.loaded_player ~= nil then
+            self:manage_pushes(tpf)
             self:manage_collisions(tpf)
+        end
+    end
+
+    function actors_manager:manage_pushes(tpf)
+        -- Push between player and pushables
+        for ka, actor in pairs(self.loaded_actors) do
+            local pushing = actor.serializable.pushable
+            pushing = pushing and self.loaded_player.serializable.action_mode == k.actor_action_mode.PUSH
+            pushing = pushing and self.loaded_player.serializable.performing_action
+            local pushThreshold = self.loaded_player:get_scaled_rad() / 2
+            if pushing and collision_actor_actor(actor, self.loaded_player, lib, pushThreshold) then
+                local evts_info = get_push_events(self.loaded_player, actor)               
+                actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
+                actor_event(tpf, actor, evts_info.evt_info_1, lib)            
+            end
         end
     end
 
@@ -96,19 +114,9 @@ function actors_manager:new(scene_manager)
         -- Collision between player and actors
         for ka, actor in pairs(self.loaded_actors) do
             if collision_actor_actor(actor, self.loaded_player, lib) then
-                first_flag = first_collision(self.collisions_states, ka)
-                local evt_info_player = {
-                    name = k.actor_events.COLLISION,
-                    entity = self.loaded_player,
-                    first = first_flag
-                }
-                local evt_info_actor = {
-                    name = k.actor_events.COLLISION,
-                    entity = actor,
-                    first = first_flag
-                }
-                self.loaded_player:event(tpf, evt_info_actor)
-                actor:event(tpf, evt_info_player)
+                local evts_info = get_collision_events(self.collisions_states, ka, self.loaded_player, actor)               
+                actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
+                actor_event(tpf, actor, evts_info.evt_info_1, lib)
             else
                 reset_collision_counter(self.collisions_states, ka)
             end
@@ -118,23 +126,3 @@ function actors_manager:new(scene_manager)
     return this
 end
 
-function reset_collision_counter(collisions_states, id)
-    collisions_states[id] = 0
-end
-
-function first_collision(collisions_states, id)
-    if collisions_states[id] == 0 or collisions_states[id] == nil then
-        collisions_states[id] = 1
-        return true
-    end
-    return false
-end
-
-function collision_actor_actor(i1, i2, lib)
-    local p1 = i1:get_position()
-    local p2 = i2:get_position()
-    local minDist = i1:get_scaled_rad() + i2:get_scaled_rad()
-    local v1 = lib.vec2(p1[1], p1[2])
-    local v2 = lib.vec2(p2[1], p2[2])
-    return lib.vec2_dist(v1, v2) < minDist
-end

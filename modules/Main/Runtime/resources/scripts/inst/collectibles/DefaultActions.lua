@@ -38,42 +38,42 @@ function default_actions:get(unique_id)
                                     label = bundle[lang].search,
                                     enabled = true,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_action_mode.SEARCH
+                                        player:ret().serializable.mode = res.actor_action_mode.SEARCH
                                     end
                                 },
                                 combat = {
                                     label = bundle[lang].combat,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_action_mode.COMBAT
+                                        player:ret().serializable.mode = res.actor_action_mode.COMBAT
                                     end
                                 },
                                 push = {
                                     label = bundle[lang].push,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_action_mode.PUSH
+                                        player:ret().serializable.mode = res.actor_action_mode.PUSH
                                     end
                                 },
                                 stealth = {
                                     label = bundle[lang].stealth,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_action_mode.STEALTH
+                                        player:ret().serializable.mode = res.actor_action_mode.STEALTH
                                     end
                                 },
                                 swim = {
                                     label = bundle[lang].swim,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_action_mode.SWIM
+                                        player:ret().serializable.mode = res.actor_action_mode.SWIM
                                     end
                                 },
                                 jump = {
                                     label = bundle[lang].jump,
                                     enabled = false,
                                     on_press = function()
-                                        player:ret().serializable.mode = res.player_action_mode.JUMP
+                                        player:ret().serializable.mode = res.actor_action_mode.JUMP
                                     end
                                 },
                             }
@@ -100,7 +100,7 @@ function default_actions:get(unique_id)
     end
 
 
-    function default_actions:move_dir(ratio)
+    function default_actions:move_dir(ratio, dir)
         self.serializable.collectible_item.move_dir(ratio)
     end
 
