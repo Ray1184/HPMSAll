@@ -14,6 +14,7 @@ dependencies = {
 }
 
 function actor_event(tpf, actor, event, lib)
+    local k = game_mechanics_consts:get()
     if event.name == k.actor_events.COLLISION then
         actor_default_collision_event(tpf, actor, event, lib)
     elseif event.name == k.actor_events.PUSH then
@@ -23,9 +24,10 @@ function actor_event(tpf, actor, event, lib)
 end
 
 function actor_default_push_event(tpf, actor, event, lib)
+    local k = game_mechanics_consts:get()
     if event.pusher then
         local pusherDir = lib.get_direction(actor.transient.node.rotation, lib.vec3(0, -1, 0))        
-        event.actor:move_dir(0.5, pusherDir)
+        event.actor:move_dir(tpf * k.actor_move_ratio.SLOWER, pusherDir)
     end
 end
 

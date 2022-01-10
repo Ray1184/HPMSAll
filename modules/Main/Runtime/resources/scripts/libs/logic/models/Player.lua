@@ -201,21 +201,21 @@ function player:ret(path, id, rad, ghost)
         moveRatioByAction[k.actor_action_mode.EQUIP_MG] = 0
         moveRatioByAction[k.actor_action_mode.EQUIP_RIFLE] = 0
         moveRatioByAction[k.actor_action_mode.EQUIP_THROWABLE] = 0
-        moveRatioByAction[k.actor_action_mode.PUSH] = 0.5
-        moveRatioByAction[k.actor_action_mode.STEALTH] = 0.5
-        moveRatioByAction[k.actor_action_mode.SWIM] = 1
+        moveRatioByAction[k.actor_action_mode.PUSH] = k.actor_move_ratio.SLOWER
+        moveRatioByAction[k.actor_action_mode.STEALTH] = k.actor_move_ratio.SLOWER
+        moveRatioByAction[k.actor_action_mode.SWIM] = k.actor_move_ratio.SLOW
         moveRatioByAction[k.actor_action_mode.JUMP] = 0
 
-        local moveRatio = ratio
+        local moveRatio = ratio * k.actor_move_ratio.NORMAL
 
         if self.serializable.performing_action then
             moveRatio = ratio * moveRatioByAction[self.serializable.action_mode]
         else
             if self.serializable.move_mode == k.actor_move_mode.RUN then
-                moveRatio = ratio * 2
+                moveRatio = ratio * k.actor_move_ratio.FASTER
             end
         end
-        self.metainfo.override.scene_actor.move_dir(self, ratio, dir)
+        self.metainfo.override.scene_actor.move_dir(self, moveRatio, dir)
     end
 
     function player:rotate(rx, ry, rz)

@@ -76,11 +76,21 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
     end
 
     function collision_game_item:set_position(x, y, z)
-        self.metainfo.override.game_item.set_position(self, x, y, z)
+        if self.serializable.expired then
+            return
+        end
+        local collisor = self.transient.collisor
+        collisor.position = lib.vec3(x, y, z)
+        lib.update_collisor(self.transient.collisor)
+        self.serializable.visual_info.last_position = self.get_position(self)
+        self.serializable.visual_info.position = { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
     end
 
     function collision_game_item:get_position()
         return self.metainfo.override.game_item.get_position(self)
+        --return self.serializable.visual_info.position
+        --local collisor = self.transient.collisor
+        --return { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
     end
 
     function collision_game_item:move_dir(ratio, dir)
@@ -93,8 +103,8 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
         local collPos = collisor.position
 
-        self.serializable.visual_info.last_position = self:get_position()
-        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }
+        self.serializable.visual_info.last_position = self.get_position(self)
+        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }        
     end
 
     function collision_game_item:rotate(rx, ry, rz)

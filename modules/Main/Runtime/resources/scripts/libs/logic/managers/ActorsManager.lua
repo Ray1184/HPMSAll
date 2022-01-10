@@ -89,10 +89,13 @@ function actors_manager:new(scene_manager)
     end
 
     function actors_manager:poll_events(tpf)
+        self:update_actors(tpf)
         if self.loaded_player ~= nil then
             self:manage_pushes(tpf)
             self:manage_collisions(tpf)
         end
+        
+        
     end
 
     function actors_manager:manage_pushes(tpf)
@@ -101,11 +104,11 @@ function actors_manager:new(scene_manager)
             local pushing = actor.serializable.pushable
             pushing = pushing and self.loaded_player.serializable.action_mode == k.actor_action_mode.PUSH
             pushing = pushing and self.loaded_player.serializable.performing_action
-            local pushThreshold = self.loaded_player:get_scaled_rad() / 2
+            local pushThreshold = self.loaded_player:get_scaled_rad() / 10
             if pushing and collision_actor_actor(actor, self.loaded_player, lib, pushThreshold) then
-                local evts_info = get_push_events(self.loaded_player, actor)               
+                local evts_info = get_push_events(self.loaded_player, actor)
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
-                actor_event(tpf, actor, evts_info.evt_info_1, lib)            
+                actor_event(tpf, actor, evts_info.evt_info_1, lib)
             end
         end
     end
@@ -114,12 +117,30 @@ function actors_manager:new(scene_manager)
         -- Collision between player and actors
         for ka, actor in pairs(self.loaded_actors) do
             if collision_actor_actor(actor, self.loaded_player, lib) then
-                local evts_info = get_collision_events(self.collisions_states, ka, self.loaded_player, actor)               
+                local evts_info = get_collision_events(self.collisions_states, ka, self.loaded_player, actor)
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
                 actor_event(tpf, actor, evts_info.evt_info_1, lib)
             else
                 reset_collision_counter(self.collisions_states, ka)
             end
+        end
+    end
+
+    function actors_manager:update_actors(tpf)
+        for ka, actor in pairs(self.loaded_actors) do
+            actor:update(tpf)
+
+        end
+        for kn, npc in pairs(self.loaded_npcs) do
+            npc:update(tpf)
+
+        end
+        for kc, collectible in pairs(self.loaded_collectibles) do
+            collectible:update(tpf)
+
+        end
+        if self.loaded_player ~= nil then
+            self.loaded_player:update(tpf)
         end
     end
 

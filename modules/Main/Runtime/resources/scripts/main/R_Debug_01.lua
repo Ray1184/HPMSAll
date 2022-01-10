@@ -42,8 +42,9 @@ scene = {
 
         changed = true
         register_all_instances()
-        action = false
-        walkSpeed = 0
+        action = true
+
+        walkRatio = 0
         walk = 0
         rotate = 0
         enable_debug()
@@ -58,6 +59,7 @@ scene = {
         scn_mgr:create_walkmap('Dummy_Scene.walkmap')
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
         player:set_action_mode(7)
+        player.serializable.performing_action = true
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest:set_position(2, 1, 0)
@@ -152,25 +154,25 @@ scene = {
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
         if walk == 1 then
-            walkSpeed = walkSpeed + tpf * tpf * 30
-            if walkSpeed > 1 then
-                walkSpeed = 1
+            walkRatio = walkRatio + tpf * tpf * 30
+            if walkRatio > 1 then
+                walkRatio = 1
             end
         elseif walk == -1 then
-            walkSpeed = walkSpeed - tpf * tpf * 30
-            if walkSpeed < -1 then
-                walkSpeed = -1
+            walkRatio = walkRatio - tpf * tpf * 30
+            if walkRatio < -1 then
+                walkRatio = -1
             end
         else
-            if walkSpeed > 0 then
-                walkSpeed = walkSpeed - tpf * tpf * 30
-                if walkSpeed < 0 then
-                    walkSpeed = 0
+            if walkRatio > 0 then
+                walkRatio = walkRatio - tpf * tpf * 30
+                if walkRatio < 0 then
+                    walkRatio = 0
                 end
             else
-                walkSpeed = walkSpeed + tpf * tpf * 30
-                if walkSpeed > 0 then
-                    walkSpeed = 0
+                walkRatio = walkRatio + tpf * tpf * 30
+                if walkRatio > 0 then
+                    walkRatio = 0
                 end
             end
 
@@ -179,26 +181,29 @@ scene = {
         walkF = walk > 0
         walkB = walk < 0
         player.serializable.performing_action = false
-        if action then
+        if action or(action and rotate) or(action and walkF) then
             player:set_anim('Push')
-            player:play(ANIM_MODE_LOOP, 2, 2)
+            player:play(ANIM_MODE_LOOP, 2)
             player.serializable.performing_action = true
         elseif walkF or(walkF and rotate) then
             player:set_anim('Walk_Forward')
-            player:play(ANIM_MODE_LOOP, 2, 2)
+            player:play(ANIM_MODE_LOOP, 2)
         elseif walkB or(walkB and rotate) then
             player:set_anim('Walk_Back')
-            player:play(ANIM_MODE_LOOP, 2, 2)
+            player:play(ANIM_MODE_LOOP, 2)
         elseif turn then
-            player:set_anim('Walk_Forward')
-            player:play(ANIM_MODE_LOOP, 2, 2)
+            player:set_anim('Idle')
+            player:play(ANIM_MODE_LOOP, 2)
+
+            -- player.serializable.performing_action = true
         else
+            -- player.serializable.performing_action = false
             player:set_anim('Idle')
             player:play(ANIM_MODE_LOOP, 2, 1)
         end
         player:rotate(0, 0, 50 * tpf * rotate)
-        player:move_dir(tpf * walkSpeed * 0.7)
-        player:update(tpf)
+        player:move_dir(tpf * walkRatio)
+        -- player:update(tpf)
 
 
 
