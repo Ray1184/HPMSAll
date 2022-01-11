@@ -4,15 +4,6 @@
 
 #include <utils/HPMSCalcUtils.h>
 
-float hpms::CalcHeightOf2DPointInside3DSector(const hpms::Triangle& sec, const glm::vec2& pos)
-{
-    float det = (sec.FW2 - sec.FW3) * (sec.SD1 - sec.SD3) + (sec.SD3 - sec.SD2) * (sec.FW1 - sec.FW3);
-    float l1 = ((sec.FW2 - sec.FW3) * (pos.x - sec.SD3) + (sec.SD3 - sec.SD2) * (pos.y - sec.FW3)) / det;
-    float l2 = ((sec.FW3 - sec.FW1) * (pos.x - sec.SD3) + (sec.SD1 - sec.SD3) * (pos.y - sec.FW3)) / det;
-    float l3 = 1.0f - l1 - l2;
-    return l1 * sec.UP1 + l2 * sec.UP2 + l3 * sec.UP3;
-}
-
 bool hpms::Is2DPointInside3DSector(const hpms::Triangle& sec, const glm::vec2& pos, float tolerance)
 {
     float dX = pos.x - sec.SD3;

@@ -8,9 +8,7 @@
 #include <resource/HPMSWalkmap.h>
 
 namespace hpms
-{
-
-    float CalcHeightOf2DPointInside3DSector(const Triangle& sec, const glm::vec2& pos);
+{    
 
     bool Is2DPointInside3DSector(const Triangle& sec, const glm::vec2& pos, float tolerance = 0);
 

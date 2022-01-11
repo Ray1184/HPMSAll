@@ -60,6 +60,7 @@ scene = {
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
         player:set_action_mode(7)
         player.serializable.performing_action = true
+        player:set_position(0, 0, 0.0)
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest:set_position(2, 1, 0)

@@ -74,4 +74,7 @@ namespace hpms
 
     bool IsBetween(const glm::vec2 &pt1, const glm::vec2 &pt2, const glm::vec2 &pt);
 
+    float CalcHeightOf2DPointInside3DSector(float fw1, float fw2, float fw3, float sd1, float sd2,
+        float sd3, float up1, float up2, float up3, const glm::vec2& pos);
+
 }

@@ -26,7 +26,6 @@ void hpms::NativeAdaptee::DrawLine(const glm::vec3& p1, const glm::vec3& p2)
 {
 
     manualObject->position(p1.x, p1.y, p1.z);
-    manualObject->position(p2.x, p2.y, p2.z);
 
 }
 
@@ -42,11 +41,7 @@ void hpms::NativeAdaptee::DrawCircle(const glm::vec3& center, float radius)
     unsigned point_index = 0;
     for (float theta = 0; theta <= 2 * Ogre::Math::PI; theta += Ogre::Math::PI / ACCURACY)
     {
-#ifdef COORD_SYSTEM_BLENDER
-        manualObject->position(radius * cos(theta) + center.x, radius * sin(theta) + center.y, 0);
-#else
-        manualObject->position(radius * cos(theta) + center.x, 0, radius * sin(theta) + center.z);
-#endif
+        manualObject->position(radius * cos(theta) + center.x, radius * sin(theta) + center.y, center.z);
         manualObject->index(point_index++);
     }
     manualObject->index(0);

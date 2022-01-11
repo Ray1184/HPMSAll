@@ -22,6 +22,8 @@ namespace hpms
         hpms::WalkmapAdapter* walkMap;
         float tolerance;
         bool ignore;
+        float baseHeight;
+        bool baseHeightDefined;
         glm::vec3 nextPosition{};
         glm::vec2 direction{};
         bool outOfDate;
@@ -88,5 +90,7 @@ namespace hpms
         void CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec3* correctPosition);
         void CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec2* correctPosition);
         void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
+        void FixHeight();
+        float GetHeightInMap();
     };
 }

@@ -112,5 +112,15 @@ void hpms::CircleInteractPolygon(const glm::vec2 &point, float radius, const glm
             response->sidePointB = polygon[i + 1];
             return;
         }
-    }
+    }    
+}
+
+float hpms::CalcHeightOf2DPointInside3DSector(float fw1, float fw2, float fw3, float sd1, float sd2,
+    float sd3, float up1, float up2, float up3, const glm::vec2& pos)
+{
+    float det = (fw2 - fw3) * (sd1 - sd3) + (sd3 - sd2) * (fw1 - fw3);
+    float l1 = ((fw2 - fw3) * (SD(pos) - sd3) + (sd3 - sd2) * (FW(pos) - fw3)) / det;
+    float l2 = ((fw3 - fw1) * (SD(pos) - sd3) + (sd1 - sd3) * (FW(pos) - fw3)) / det;
+    float l3 = 1.0f - l1 - l2;
+    return l1 * up1 + l2 * up2 + l3 * up3;
 }
