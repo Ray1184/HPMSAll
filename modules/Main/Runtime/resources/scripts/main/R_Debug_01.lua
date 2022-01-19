@@ -29,10 +29,9 @@ scene = {
         lib = backend:get()
         cam = lib.get_camera()
         cam.near = 0.05
-        cam.far = 50
+        cam.far = 100
         cam.fovy = lib.to_radians(40)
-        light = lib.make_light(lib.vec3(0, 0, 0))
-        light.position = lib.vec3(0.0, -4.699999809265137, 1.5)
+        
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
 
@@ -57,6 +56,11 @@ scene = {
         -- player = player:ret('DummyAnim.mesh', 'main_player', 0.3098)
         -- player = dummy_player:ret()
         scn_mgr:create_walkmap('Dummy_Scene.walkmap')
+
+        mask = lib.make_depth_entity('DummyMask.mesh')
+        mask_node = lib.make_node("DummyMaskNode")
+        lib.set_node_entity(mask_node, mask)
+
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
         player:set_action_mode(7)
         player.serializable.performing_action = true
@@ -84,10 +88,46 @@ scene = {
         json = json_helper:get()
         -- log_debug(player)
 
+        scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'S_01' else return false end end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
+
+
+        scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'S_02' else return false end end, 'R_Debug_01/CM_02.png', lib.vec3(0.0, 5.838781833648682, 1.5), lib.quat(-3.467857823125087e-08, -2.6609807690647358e-08, 0.6087614297866821, 0.7933533191680908))
+
+
+        scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'S_03' else return false end end, 'R_Debug_01/CM_03.png', lib.vec3(0.0, 12.0, 3.5), lib.quat(8.921578142917497e-08, -4.213227988714152e-09, -0.5735764503479004, -0.8191520571708679))
+
+
+        scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
+
+
+        scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
+
+
+
+
+        lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
+        lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
+
+
+        lamp_01 = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
+        lamp_01.position = lib.vec3(1.57603919506073, 13.489124298095703, 3.434197425842285)
+
+
+        lamp_02 = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
+        lamp_02.position = lib.vec3(5.0, 6.813676357269287, 3.434197425842285)
+
+
+        lamp_03 = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
+        lamp_03.position = lib.vec3(-1.6572145223617554, 13.457348823547363, 2.8559913635253906)
+
+
+        lamp_04 = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
+lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.5122439861297607)
+
         -- View CM_01 setup
         -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
         -- scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'SG_01' else return false end end, background_cm_01, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
-        scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
+        --scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         log_debug(scn_mgr)
         -- Entity EY_DummyAnim setup
         -- entity_ey_dummyanim = lib.make_entity('EY_DummyAnim.mesh')
@@ -219,7 +259,8 @@ scene = {
         hpms.debug_draw_aabb(chest3.transient.collisor)
 
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
-
+        current_sector = player.transient.collisor.sector
+        --log_warn(current_sector.id)
         scn_mgr:poll_events(tpf)
         actors_mgr:poll_events(tpf)
     end,
@@ -248,7 +289,13 @@ scene = {
         -- lib.delete_walkmap(walkmap_r_debug_01)
 
         -- Base scene delete
-        lib.delete_light(light)
+        lib.delete_light(lamp_04)
+        lib.delete_light(lamp_03)
+        lib.delete_light(lamp_02)
+        lib.delete_light(lamp_01)
+        lib.delete_light(lamp)
+        lib.delete_entity(mask)
+        
     end
 }
 

@@ -22,9 +22,8 @@ void hpms::Collisor::Update()
 
 void hpms::Collisor::DetectByBoundingRadius()
 {
-	CollisionResponse collisionResponse;
-	walkMap->Collides(nextPosition, tolerance, &collisionResponse);
-	bool inPerimeter = !collisionResponse.collided;
+	walkMap->Collides(nextPosition, tolerance, collisionResponse);
+	bool inPerimeter = !collisionResponse->collided;
 	if (inPerimeter)
 	{
 		actor->SetPosition(nextPosition);
@@ -33,12 +32,12 @@ void hpms::Collisor::DetectByBoundingRadius()
 	else
 	{
 		glm::vec3 correctPosition;
-		CorrectPositionBoundingRadiusMode(collisionResponse.sidePointA, collisionResponse.sidePointB, &correctPosition);
+		CorrectPositionBoundingRadiusMode(collisionResponse->sidePointA, collisionResponse->sidePointB, &correctPosition);
 		UP(correctPosition) = UP(actor->GetPosition());
 		// Double check is required because of correct position result.
 		// Infact after slide the new position could be outside of perimeter.
-		walkMap->Collides(correctPosition, tolerance, &collisionResponse);
-		bool inPerimeter = !collisionResponse.collided;
+		walkMap->Collides(correctPosition, tolerance, collisionResponse);
+		bool inPerimeter = !collisionResponse->collided;
 		if (inPerimeter)
 		{
 			actor->SetPosition(correctPosition);
@@ -74,8 +73,8 @@ float hpms::Collisor::GetHeightInMap()
 		return 0.0f;
 	}
 	return hpms::CalcHeightOf2DPointInside3DSector(currentTriangle->TO_FW1(), currentTriangle->TO_FW2(), currentTriangle->TO_FW3(),
-												   currentTriangle->TO_SD1(), currentTriangle->TO_SD2(), currentTriangle->TO_SD3(),
-												   currentTriangle->TO_UP1(), currentTriangle->TO_UP2(), currentTriangle->TO_UP3(), actor->GetPosition());
+		currentTriangle->TO_SD1(), currentTriangle->TO_SD2(), currentTriangle->TO_SD3(),
+		currentTriangle->TO_UP1(), currentTriangle->TO_UP2(), currentTriangle->TO_UP3(), actor->GetPosition());
 }
 
 void hpms::Collisor::DetectBySector()
@@ -239,4 +238,10 @@ baseHeightDefined(false)
 		return false;
 	};
 	walkMap->ForEachSide(checkPerimeter);
+	collisionResponse = hpms::SafeNewRaw<CollisionResponse>();
+}
+
+hpms::Collisor::~Collisor()
+{
+	hpms::SafeDeleteRaw(collisionResponse);
 }

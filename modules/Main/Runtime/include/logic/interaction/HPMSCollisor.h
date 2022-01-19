@@ -20,6 +20,7 @@ namespace hpms
     private:
         hpms::ActorAdapter* actor;
         hpms::WalkmapAdapter* walkMap;
+        hpms::CollisionResponse* collisionResponse;
         float tolerance;
         bool ignore;
         float baseHeight;
@@ -27,7 +28,7 @@ namespace hpms
         glm::vec3 nextPosition{};
         glm::vec2 direction{};
         bool outOfDate;
-        hpms::TriangleAdapter* currentTriangle{nullptr};
+        hpms::TriangleAdapter* currentTriangle{ nullptr };
         std::vector<glm::vec2> perimeter;
     public:
 
@@ -35,6 +36,8 @@ namespace hpms
 
         Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance);
 
+        virtual ~Collisor();
+    
 
         void SetPosition(const glm::vec3& position) override;
 

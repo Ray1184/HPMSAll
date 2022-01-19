@@ -4,6 +4,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 import processing.core.PVector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,12 +25,12 @@ public class CollisionTest extends PApplet {
 
 
     public void setup() {
-
+        CollisionMath.papplet = this;
         bc = new BoundingCircle(new PVector(0, 0), 20, this);
         String objData = new String(PApplet.loadBytes(getClass().getClassLoader().getResourceAsStream("collision/Dummy_Scene.perimeter.obj")));
         String objData2 = new String(PApplet.loadBytes(getClass().getClassLoader().getResourceAsStream("collision/Dummy_Scene.obstacles.obj")));
         perimeter = Polygon.load(objData, 40, 500, 200, this).get(0);
-        obstacles = Polygon.load(objData2, 40, 500, 200, this);
+        obstacles = new ArrayList<>(); // Polygon.load(objData2, 40, 500, 200, this);
         collisor = new Collisor(new Actor(this), perimeter, obstacles, bc, this);
         collisor.setPosition(new PVector(500, 300));
         noFill();
@@ -88,6 +89,6 @@ public class CollisionTest extends PApplet {
 
 
     public static void main(final String[] passedArgs) {
-        PApplet.main(new String[]{"--present", CollisionTest.class.getName()});
+        PApplet.main(new String[]{CollisionTest.class.getName()});
     }
 }

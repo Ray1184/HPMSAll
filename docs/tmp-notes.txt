@@ -3,20 +3,37 @@ import bpy
 
 
 all_cams = [obj for obj in bpy.data.objects if obj.type == 'CAMERA']
+all_lights = [obj for obj in bpy.data.objects if obj.type == 'LIGHT']
 print('\n\n\n\n\n\n\n\n')
 for cam in all_cams:
     name = cam.name
     num = name.split('_')[1]
-    print('if sampled == \'S_' + num + '\' then ')
+    sector_id = 'S_' + num
     x = cam.location.x
     y = cam.location.y
     z = cam.location.z
-    print('  cam.position = hpms.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')
-    print('  light.position = hpms.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + ')')
     r = cam.rotation_euler.to_quaternion()
-    print('  cam.rotation = hpms.quat(' + str(r.w) + ', ' + str(r.x) + ', ' + str(r.y) + ', ' + str(r.z) + ')')
-    print('  back' + str(num) + '.visible = true')
-    print('end')
+    
+    stat = 'scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == \'' + str(sector_id) + '\' else return false end end, \'R_Debug_01/' + name + '.png\', lib.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + '), lib.quat(' + str(r.w) + ', ' + str(r.x) + ', ' + str(r.y) + ', ' + str(r.z) + '))'
+    
+    
+    print(stat)
+    print('\n')
+
+print('\n')
+for light in all_lights:
+    name = light.name
+    x = light.location.x
+    y = light.location.y
+    z = light.location.z
+    
+    
+    stat1 = name + ' = lib.make_light(lib.vec3(0.5, 0.5, 0.5))'
+    stat2 = name + '.position = lib.vec3(' + str(x) + ', ' + str(y) + ', ' + str(z) + ')'
+    
+    print(stat1)
+    print(stat2)
+    print('\n')
 
 # STAMPA TUTTI I TRIGGER
 import bpy

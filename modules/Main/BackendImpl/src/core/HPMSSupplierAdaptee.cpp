@@ -33,7 +33,9 @@ hpms::CameraAdapter* hpms::SupplierAdaptee::GetCamera()
 hpms::LightAdapter* hpms::SupplierAdaptee::CreateLight(float r, float g, float b)
 {
     Check();
-    return hpms::SafeNew<hpms::LightAdaptee>(ctx);
+    auto* light = hpms::SafeNew<hpms::LightAdaptee>(ctx);
+    light->SetColor(glm::vec3(r, g, b));
+    return light;
 }
 
 hpms::BackgroundImageAdapter*

@@ -37,14 +37,18 @@ public class Collisor {
             boolean inside = !cResp.collided;
             if (inside) {
                 actor.setPosition(nextPos);
-            } else {
+            }
+            else {
                 PVector correctPosition = CollisionMath.correctPosition(actor.getPosition(), nextPos, cResp);
                 bc.set(new PVector(correctPosition.x - actor.getSize().x / 2, correctPosition.y - actor.getSize().x / 2), bc.radius);
                 // SAFE CHECK FOR CORNERS - se dopo la correzione si finisce nuovamente fuori perimetro o contro un ostacolo interno, si ripristina la posizione originale senza correzione
-                if (calcAnyCollision().collided) {
+                CollisionResponse cResp2 = calcAnyCollision();
+                if (cResp2.collided) {
                     bc.set(new PVector(actor.getPosition().x - actor.getSize().x / 2, actor.getPosition().y - actor.getSize().x / 2), bc.radius);
+                    System.out.println("Last was WRONG");
                 } else {
-                    actor.setPosition(correctPosition);
+                    System.out.println("Last was good");
+                  actor.setPosition(correctPosition);
                 }
             }
         }
