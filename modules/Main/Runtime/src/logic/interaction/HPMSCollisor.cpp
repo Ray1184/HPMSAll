@@ -26,8 +26,7 @@ void hpms::Collisor::DetectByBoundingRadius()
 	bool inPerimeter = !collisionResponse->collided;
 	if (inPerimeter)
 	{
-		actor->SetPosition(nextPosition);
-		FixHeight();
+		FixPosition(nextPosition);
 	}
 	else
 	{
@@ -40,18 +39,19 @@ void hpms::Collisor::DetectByBoundingRadius()
 		bool inPerimeter = !collisionResponse->collided;
 		if (inPerimeter)
 		{
-			actor->SetPosition(correctPosition);
-			FixHeight();
+			FixPosition(correctPosition);
 		}
 	}
 }
 
-void hpms::Collisor::FixHeight()
+void hpms::Collisor::FixPosition(const glm::vec3& nextPos)
 {
+
 	if (!baseHeightDefined)
 	{
 		baseHeightDefined = true;
 		baseHeight = GetHeightInMap() - UP(actor->GetPosition());
+		actor->SetPosition(nextPos);
 	}
 	else
 	{
@@ -60,9 +60,29 @@ void hpms::Collisor::FixHeight()
 			return;
 		}
 		float fixedHeight = baseHeight + GetHeightInMap();
-		glm::vec3 fixedPosition = actor->GetPosition();
+		glm::vec3 fixedPosition = nextPos;
 		UP(fixedPosition) = fixedHeight;
-		actor->SetPosition(fixedPosition);
+		if (UP(fixedPosition) - UP(nextPos) < config.maxStepHeight) 
+		{
+			actor->SetPosition(fixedPosition);
+		}
+		// FIXME
+		if (UP(nextPos) - UP(fixedPosition) > config.maxStepHeight)
+		{
+			currentGravity += config.gravityAffection;
+			float posWithFallDown = UP(nextPos) - currentGravity;
+			if (UP(fixedPosition) < posWithFallDown)
+			{
+				UP(fixedPosition) = posWithFallDown;
+			}
+			actor->SetPosition(fixedPosition);
+
+		}
+		else
+		{
+			currentGravity = 0;
+		}
+		
 	}
 }
 
@@ -120,14 +140,6 @@ void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, c
 
 void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec2* correctPosition)
 {
-	/*
-	glm::vec2 dir = nextPosition - actor->GetPosition();
-	glm::vec2 side = sideB - sideA;
-	float alpha = glm::angle(side, dir);
-	float mag = glm::length(dir) * alpha;
-	glm::vec2 slide = glm::normalize(side) * mag;
-	*correctPosition = ADDV3_V2(actor->GetPosition(), slide);
-	*/
 	glm::vec2 n = glm::normalize(Perpendicular(sideA - sideB));
 	glm::vec3 v = nextPosition - actor->GetPosition();
 	glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
@@ -224,12 +236,14 @@ void hpms::Collisor::SetPosition(const glm::vec3& position)
 	Move(position, dir2);
 }
 
-hpms::Collisor::Collisor(hpms::ActorAdapter* actor, hpms::WalkmapAdapter* walkMap, float tolerance) : actor(actor),
+hpms::Collisor::Collisor(hpms::ActorAdapter* actor, hpms::WalkmapAdapter* walkMap, float tolerance, const CollisorConfig& config) : actor(actor),
 walkMap(walkMap),
 tolerance(tolerance),
+config(config),
 ignore(false),
 outOfDate(true),
-baseHeightDefined(false)
+baseHeightDefined(false),
+currentGravity(0.0f)
 {
 
 	auto checkPerimeter = [&](const glm::vec2& sideAPos, const glm::vec2& sideBPos)

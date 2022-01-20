@@ -6,6 +6,14 @@
 #include <core/HPMSEntityHelper.h>
 #include <core/HPMSAnimationAdaptee.h>
 
+#define FIRST_BUCKET 0
+#define SECOND_BUCKET 1
+#define THIRD_BUCKET 2
+#define FOURTH_BUCKET 3
+#define FIFTH_BUCKET 4
+#define SIXTH_BUCKET 5
+#define LAST_BUCKET 100
+
 
 std::string hpms::EntityAdaptee::GetName()
 {
@@ -96,15 +104,19 @@ void hpms::EntityAdaptee::SetMode(hpms::EntityMode mode)
     {
         case hpms::EntityMode::DEPTH_ONLY:
             hpms::EntityHelper::SetWriteDepthOnly(ogreEntity);
+            ogreEntity->setRenderQueueGroup(FIRST_BUCKET);
             break;
         case hpms::EntityMode::COLOR_ONLY:
             hpms::EntityHelper::SetWriteColorOnly(ogreEntity);
+            ogreEntity->setRenderQueueGroup(LAST_BUCKET);
             break;
         case hpms::EntityMode::HIDDEN:
             hpms::EntityHelper::SetWriteNothing(ogreEntity);
+            ogreEntity->setRenderQueueGroup(LAST_BUCKET);
             break;
         default:
             hpms::EntityHelper::SetWriteDepthAndColor(ogreEntity);
+            ogreEntity->setRenderQueueGroup(SECOND_BUCKET);
             break;
     }
     hpms::EntityAdaptee::mode = mode;

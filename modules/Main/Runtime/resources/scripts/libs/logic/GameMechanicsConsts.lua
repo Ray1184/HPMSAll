@@ -10,6 +10,9 @@ game_mechanics_consts = { }
 function game_mechanics_consts:get()
 
     return {
+
+        DEFAULT_ANIM_TRANSITION_TIME = 4,
+
         actor_move_mode =
         {
             IDLE = 0,

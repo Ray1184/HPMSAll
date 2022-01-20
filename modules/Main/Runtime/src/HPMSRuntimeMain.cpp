@@ -16,20 +16,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _I
 int main(int argc, char* argv[])
 #endif
 {
-	/*
-	hpms::LogBuffer::Instance().Open();
-	glm::vec2 pa(5.5, 2.2);
-	glm::vec2 pb(12, 3.5);
-	glm::vec2 center(7, 2.8f);
-	float rad = 0.24f;	
-	LOG_INFO("----------------- COLLISION RESPONSE --------------------");
-	std::stringstream ss;
-	ss << hpms::CircleLineIntersect(pa, pb, center, rad) << std::endl;
-	LOG_INFO(ss.str().c_str());
-	LOG_INFO("---------------------------------------------------------");	
-	hpms::LogBuffer::Instance().Close();
-
-	*/
+	
 	hpms::LogBuffer::Instance().Open();
 	hpms::WindowSettings s;
 	s.name = "HPMSDemo";

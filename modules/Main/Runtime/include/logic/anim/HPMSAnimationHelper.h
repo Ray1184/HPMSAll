@@ -27,7 +27,7 @@ namespace hpms
 			if (blend && activeAnimationName != lastAnimationName && lastAnimationName != NO_ANIM)
 			{
 				auto* lastAnimation = entity->GetAnimationByName(lastAnimationName);
-				float draw = tpf / transitionTimeRatio;
+				float draw = transitionTimeRatio * tpf;
 				if (lastAnimation->GetWeight() > 0.0) {
 
 					float lastAnimWeight = lastAnimation->GetWeight() - draw;

@@ -195,23 +195,23 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
         if walk == 1 then
-            walkRatio = walkRatio + tpf * tpf * 30
+            walkRatio = walkRatio + tpf * tpf * 100
             if walkRatio > 1 then
                 walkRatio = 1
             end
         elseif walk == -1 then
-            walkRatio = walkRatio - tpf * tpf * 30
+            walkRatio = walkRatio - tpf * tpf * 100
             if walkRatio < -1 then
                 walkRatio = -1
             end
         else
             if walkRatio > 0 then
-                walkRatio = walkRatio - tpf * tpf * 30
+                walkRatio = walkRatio - tpf * tpf * 100
                 if walkRatio < 0 then
                     walkRatio = 0
                 end
             else
-                walkRatio = walkRatio + tpf * tpf * 30
+                walkRatio = walkRatio + tpf * tpf * 100
                 if walkRatio > 0 then
                     walkRatio = 0
                 end
@@ -252,17 +252,18 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
 
-        hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
-        hpms.debug_draw_aabb(player.transient.collisor)
-        hpms.debug_draw_aabb(chest.transient.collisor)
-        hpms.debug_draw_aabb(chest2.transient.collisor)
-        hpms.debug_draw_aabb(chest3.transient.collisor)
+        --hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
+        --hpms.debug_draw_aabb(player.transient.collisor)
+        --hpms.debug_draw_aabb(chest.transient.collisor)
+        --hpms.debug_draw_aabb(chest2.transient.collisor)
+        --hpms.debug_draw_aabb(chest3.transient.collisor)
 
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
         current_sector = player.transient.collisor.sector
         --log_warn(current_sector.id)
         scn_mgr:poll_events(tpf)
         actors_mgr:poll_events(tpf)
+        log_debug(tostring(1 / tpf))
     end,
     cleanup = function()
 
