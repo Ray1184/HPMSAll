@@ -163,7 +163,7 @@ function backend:get()
                 log_debug('Stop anim ' .. a.dummy_id)
             end,
 
-            update_collisor = function(c)
+            update_collisor = function(c, tpf)
                 log_debug('Updating collisor ' .. c.dummy_id)
             end,
 

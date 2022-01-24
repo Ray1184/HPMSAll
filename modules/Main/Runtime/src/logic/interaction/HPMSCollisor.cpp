@@ -5,9 +5,8 @@
 #include <logic/interaction/HPMSCollisor.h>
 #include <glm/gtx/vector_angle.hpp>
 
-#define CHECK_COLLISIONS DetectByBoundingRadius()
 
-void hpms::Collisor::Update()
+void hpms::Collisor::Update(float tpf)
 {
 	if (!active || !outOfDate)
 	{
@@ -17,16 +16,16 @@ void hpms::Collisor::Update()
 	outOfDate = false;
 	currentTriangle = walkMap->SampleTriangle(nextPosition, tolerance);
 
-	CHECK_COLLISIONS;
+	DetectByBoundingRadius(tpf);
 }
 
-void hpms::Collisor::DetectByBoundingRadius()
+void hpms::Collisor::DetectByBoundingRadius(float tpf)
 {
 	walkMap->Collides(nextPosition, tolerance, collisionResponse);
 	bool inPerimeter = !collisionResponse->collided;
 	if (inPerimeter)
 	{
-		FixPosition(nextPosition);
+		ApplyGravity(nextPosition, tpf);
 	}
 	else
 	{
@@ -39,12 +38,12 @@ void hpms::Collisor::DetectByBoundingRadius()
 		bool inPerimeter = !collisionResponse->collided;
 		if (inPerimeter)
 		{
-			FixPosition(correctPosition);
+			ApplyGravity(correctPosition, tpf);
 		}
 	}
 }
 
-void hpms::Collisor::FixPosition(const glm::vec3& nextPos)
+void hpms::Collisor::ApplyGravity(const glm::vec3& nextPos, float tpf)
 {
 
 	if (!baseHeightDefined)
@@ -65,12 +64,11 @@ void hpms::Collisor::FixPosition(const glm::vec3& nextPos)
 		if (UP(fixedPosition) - UP(nextPos) < config.maxStepHeight) 
 		{
 			actor->SetPosition(fixedPosition);
-		}
-		// FIXME
+		}	
 		if (UP(nextPos) - UP(fixedPosition) > config.maxStepHeight)
 		{
-			currentGravity += config.gravityAffection;
-			float posWithFallDown = UP(nextPos) - currentGravity;
+			currentVerticalSpeed += config.gravityAffection * tpf;
+			float posWithFallDown = UP(nextPos) - currentVerticalSpeed;
 			if (UP(fixedPosition) < posWithFallDown)
 			{
 				UP(fixedPosition) = posWithFallDown;
@@ -80,7 +78,7 @@ void hpms::Collisor::FixPosition(const glm::vec3& nextPos)
 		}
 		else
 		{
-			currentGravity = 0;
+			currentVerticalSpeed = 0;
 		}
 		
 	}
@@ -97,6 +95,7 @@ float hpms::Collisor::GetHeightInMap()
 		currentTriangle->TO_UP1(), currentTriangle->TO_UP2(), currentTriangle->TO_UP3(), actor->GetPosition());
 }
 
+// UNUSED
 void hpms::Collisor::DetectBySector()
 {
 	auto* nextTriangle = walkMap->SampleTriangle(nextPosition, tolerance);
@@ -243,7 +242,7 @@ config(config),
 ignore(false),
 outOfDate(true),
 baseHeightDefined(false),
-currentGravity(0.0f)
+currentVerticalSpeed(0.0f)
 {
 
 	auto checkPerimeter = [&](const glm::vec2& sideAPos, const glm::vec2& sideBPos)

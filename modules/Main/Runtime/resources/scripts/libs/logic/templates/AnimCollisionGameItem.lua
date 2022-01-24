@@ -139,7 +139,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius, ghost)
 
     function anim_collision_game_item:update(tpf)
         self.metainfo.override.anim_game_item.update(self, tpf)
-        self.metainfo.override.collision_game_item.update(self)
+        self.metainfo.override.collision_game_item.update(self, tpf)
 
     end
 

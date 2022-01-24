@@ -14,7 +14,7 @@ namespace hpms
     protected:
         bool active{true};
     public:
-        virtual void Update() = 0;
+        virtual void Update(float tpf) = 0;
 
         inline void SetActive(bool active)
         {

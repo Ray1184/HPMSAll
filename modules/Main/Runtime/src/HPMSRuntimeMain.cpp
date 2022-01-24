@@ -7,8 +7,8 @@
 #include <glm/glm.hpp>
 #include <common/HPMSMathUtils.h>
 
-#define WIDTH 320
-#define HEIGHT 200
+#define WIDTH 320 * 3
+#define HEIGHT 200 * 3
 
 #if defined(_WIN32) || defined(WIN32)
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
 	s.name = "HPMSDemo";
 	s.width = WIDTH;
 	s.height = HEIGHT;
-	s.pixelRatio = WIDTH / 320;
+	s.pixelRatio = HEIGHT / 200;
 	s.fullScreen = false;
 	auto* customLogic = hpms::SafeNew<hpms::LuaLogic>();
 	hpms::InitContext(s, customLogic);

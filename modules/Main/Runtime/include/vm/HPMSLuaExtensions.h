@@ -338,15 +338,17 @@ namespace hpms
 			hpms::SafeDelete(walkMap);
 		}
 
-		static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, float tolerance)
+		static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, float tolerance, float gravityAffection = 0.098f, float maxStepHeight = 0.1f)
 		{
-			auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, tolerance);
+			hpms::CollisorConfig conf{ gravityAffection , maxStepHeight };
+			auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, tolerance, conf);
 			return c;
 		}
 
-		static inline hpms::Collisor* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, float tolerance)
+		static inline hpms::Collisor* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, float tolerance, float gravityAffection = 0.098f, float maxStepHeight = 0.1f)
 		{
-			auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, tolerance);
+			hpms::CollisorConfig conf{ gravityAffection , maxStepHeight };
+			auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, tolerance, conf);
 			return c;
 		}
 
@@ -410,9 +412,9 @@ namespace hpms
 		}
 
 
-		static inline void LUpdateCollisor(hpms::Collisor* coll)
+		static inline void LUpdateCollisor(hpms::Collisor* coll, float tpf)
 		{
-			coll->Update();
+			coll->Update(tpf);
 		}
 
 		static inline void LMoveCollisor(hpms::Collisor* collisor, glm::vec3 position, glm::vec2 direction)
@@ -447,7 +449,7 @@ namespace hpms
 
 		static inline void LUpdateAnimation(hpms::EntityAdapter* entity, float tpf, bool blend, float transitionTimeRatio)
 		{
-			hpms::AnimationHelper::UpdateInterpolate(entity, tpf, blend, transitionTimeRatio);			
+			hpms::AnimationHelper::UpdateInterpolate(entity, tpf, blend, transitionTimeRatio);
 		}
 
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)

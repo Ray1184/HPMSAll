@@ -11,13 +11,15 @@ dependencies = {
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/TransformsCommon.lua',
-    'libs/thirdparty/Inspect.lua'
+    'libs/thirdparty/Inspect.lua',
+    'libs/logic/GameMechanicsConsts.lua'
 }
 
 collision_game_item = { }
 
 function collision_game_item:ret(path, id, bounding_radius, ghost)
     lib = backend:get()
+    k = game_mechanics_consts:get()
     trx = transform:get()
     insp = inspector:get()
 
@@ -81,16 +83,13 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         end
         local collisor = self.transient.collisor
         collisor.position = lib.vec3(x, y, z)
-        lib.update_collisor(self.transient.collisor)
+        lib.update_collisor(self.transient.collisor, 0)
         self.serializable.visual_info.last_position = self.get_position(self)
         self.serializable.visual_info.position = { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
     end
 
     function collision_game_item:get_position()
         return self.metainfo.override.game_item.get_position(self)
-        --return self.serializable.visual_info.position
-        --local collisor = self.transient.collisor
-        --return { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
     end
 
     function collision_game_item:move_dir(ratio, dir)
@@ -147,19 +146,19 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         local tra = {
             transient =
             {
-                collisor = lib.make_node_collisor(self.transient.node,walkmap,scaledRad)
+                collisor = lib.make_node_collisor(self.transient.node,walkmap,scaledRad,k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT)
             }
         }
         self = merge_tables(self, tra)
 
     end
 
-    function collision_game_item:update()
+    function collision_game_item:update(tpf)
         self.metainfo.override.game_item.update(self)
         if self.serializable.expired then
             return
         end
-        lib.update_collisor(self.transient.collisor)
+        lib.update_collisor(self.transient.collisor, tpf)
     end
 
     function collision_game_item:kill_instance()

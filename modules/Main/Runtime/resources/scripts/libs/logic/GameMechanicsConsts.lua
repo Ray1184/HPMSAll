@@ -13,6 +13,10 @@ function game_mechanics_consts:get()
 
         DEFAULT_ANIM_TRANSITION_TIME = 4,
 
+        DEFAULT_GAVITY = 0.98,
+
+        DEFAULT_MAX_STEP_HEIGHT = 0.1,
+
         actor_move_mode =
         {
             IDLE = 0,

@@ -11,13 +11,11 @@
 #include <logic/HPMSController.h>
 #include <common/HPMSUtils.h>
 
-#define VEC_FORWARD glm::vec3(0, 1, 0)
-
 namespace hpms
 {
     struct CollisorConfig
     {
-        float gravityAffection{0.0098f};
+        float gravityAffection{9.81f};
         float maxStepHeight{0.1f};
     };
 
@@ -37,7 +35,7 @@ namespace hpms
         hpms::TriangleAdapter* currentTriangle{ nullptr };
         std::vector<glm::vec2> perimeter;
         CollisorConfig config;
-        float currentGravity;
+        float currentVerticalSpeed;
     public:
 
 
@@ -93,15 +91,26 @@ namespace hpms
             return tolerance;
         }
 
-        void Update() override;
+        inline void SetVerticalSpeed(float verticalSpeed)
+        {
+            // Not implemented.
+            LOG_WARN("Cannot change collisor vertical speed from script");
+        }
+
+        inline float GetVerticalSpeed() const
+        {
+            return currentVerticalSpeed;
+        }
+
+        void Update(float tpf) override;
 
     private:
         void DetectBySector();
-        void DetectByBoundingRadius();
+        void DetectByBoundingRadius(float tpf);
         void CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec3* correctPosition);
         void CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec2* correctPosition);
         void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
-        void FixPosition(const glm::vec3& nextPosition);
+        void ApplyGravity(const glm::vec3& nextPosition, float tpf);
         float GetHeightInMap();
     };
 }

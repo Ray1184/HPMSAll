@@ -53,7 +53,7 @@ bool hpms::CircleLineIntersect(const glm::vec2& p1, const glm::vec2& p2, const g
 	
 }
 
-// Not used yet
+// UNUSED
 bool hpms::IsBetween(const glm::vec2& pt1, const glm::vec2& pt2, const glm::vec2& pt)
 {
 	const float epsilon = 0.001f;

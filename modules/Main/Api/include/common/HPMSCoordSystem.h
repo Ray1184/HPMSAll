@@ -31,6 +31,7 @@
 #define ADDV3_V2(v3, v2) glm::vec3(v3.x + v2.x, v3.y + v2.y, v3.z)
 #define V2_TO_V3(v2) glm::vec3(v2.x, v2.y, 1)
 #define V3_TO_V2(v3) glm::vec2(v3.x, v3.y)
+#define VEC_FORWARD glm::vec3(0, 1, 0)
 #else
 #define SD1 x1
 #define SD2 x2
@@ -56,4 +57,5 @@
 #define ADDV3_V2(v3, v2) glm::vec3(v3.x + v2.x, v3.y, v3.z + v2.y)
 #define V2_TO_V3(v2) glm::vec3(v2.x, 1, v2.y)
 #define V3_TO_V2(v3) glm::vec2(v3.x, v3.z)
+#define VEC_FORWARD glm::vec3(1, 0, 0)
 #endif
