@@ -8,9 +8,9 @@
 void hpms::AnimationAdaptee::Update(float tpf)
 {
     Check(ogreAnim);
-    cycleTerminated = false;
-    animTerminated = false;
     ogreAnim->addTime(tpf);
+    cycleTerminated = false;
+    animTerminated = false;    
     normalizedTime += tpf;
     float realLength = ogreAnim->getLength();
     float length = realLength / sliceFactor;

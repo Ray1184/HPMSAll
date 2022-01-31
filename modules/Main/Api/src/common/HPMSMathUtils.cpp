@@ -102,49 +102,20 @@ bool hpms::PointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const 
 }
 
 void hpms::CircleInteractPolygon(const glm::vec2& point, float radius, const glm::vec2& t, const std::vector<glm::vec2>& polygon, SideMode sideMode, CollisionResponse* response)
-{
-	response->collided = false;
-	bool inside = PointInsidePolygon(point, t, polygon);
-
-	if ((!inside && sideMode == INSIDE) || (inside && sideMode == OUTSIDE))
-	{
-		return;
-	}
-
-	std::vector<hpms::CollisionResponse> responses;
+{	
 	for (int i = 0; i < polygon.size() - 1; i++)
 	{
 		glm::vec2 translatedCenter = point + t;
 		if (CircleLineIntersect(polygon[i], polygon[i + 1], translatedCenter, radius))
 		{
-			CollisionResponse cr{ true, polygon[i], polygon[i + 1] };
-			responses.push_back(cr);
-			if (responses.size() >= 2)
+			SingleCollisionResponse cr{ true, polygon[i], polygon[i + 1] };
+			response->collisions.push_back(cr);
+			if (response->collisions.size() >= 2)
 			{
 				break;
 			}
 		}
-	}
-	if (responses.size() == 1)
-	{
-		response->CopyFrom(responses[0]);
-		return;
-	}
-
-	if (responses.size() >= 2)
-	{
-		
-		if (!response->Equals(responses[0]))
-		{
-			response->CopyFrom(responses[1]);
-		}	
-		if (!response->Equals(responses[1]))
-		{
-			response->CopyFrom(responses[0]);
-		}
-	}
-
-	
+	}	
 }
 
 float hpms::CalcHeightOf2DPointInside3DSector(float fw1, float fw2, float fw3, float sd1, float sd2,

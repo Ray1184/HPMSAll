@@ -13,104 +13,121 @@
 
 namespace hpms
 {
-    struct CollisorConfig
-    {
-        float gravityAffection{9.81f};
-        float maxStepHeight{0.1f};
-    };
+	enum CollisionType
+	{	
+		ZERO_COLLISION = 0,
+		VS_WALKMAP = 1,
+		VS_COLLISOR = 2
+	};
+	struct CollisorConfig
+	{
+		float gravityAffection{ 9.81f };
+		float maxStepHeight{ 0.1f };
+		bool active{ true };
+		float radius{ 1.0f };
+		glm::vec2 rect{ 1.0f, 1.0f };
+	};
 
-    class Collisor : public ActorAdapter, public Controller
-    {
-    private:
-        hpms::ActorAdapter* actor;
-        hpms::WalkmapAdapter* walkMap;
-        hpms::CollisionResponse* collisionResponse;
-        float tolerance;
-        bool ignore;
-        float baseHeight;
-        bool baseHeightDefined;
-        glm::vec3 nextPosition{};
-        glm::vec2 direction{};
-        bool outOfDate;
-        hpms::TriangleAdapter* currentTriangle{ nullptr };
-        std::vector<glm::vec2> perimeter;
-        CollisorConfig config;
-        float currentVerticalSpeed;
-    public:
+	struct CollisionInfo
+	{
+		bool collision{ false };
+		CollisionType type{ ZERO_COLLISION };
+		void* other { nullptr };
+	};
 
-
-
-        Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance, const CollisorConfig& config = CollisorConfig{});
-
-        virtual ~Collisor();
-    
-
-        void SetPosition(const glm::vec3& position) override;
-
-        virtual std::string GetName() override;
-
-        virtual glm::vec3 GetPosition() const override;
-
-        virtual glm::quat GetRotation() const override;
-
-        virtual glm::vec3 GetScale() const override;
-
-        virtual void SetVisible(bool visible) override;
-
-        virtual bool IsVisible() const override;
+	class Collisor : public ActorAdapter, public Controller
+	{
+	private:
+		hpms::ActorAdapter* actor;
+		hpms::WalkmapAdapter* walkMap;
+		float tolerance;
+		bool ignore;
+		float baseHeight;
+		bool baseHeightDefined;
+		glm::vec3 nextPosition{};
+		glm::vec2 direction{};
+		bool outOfDate;
+		hpms::TriangleAdapter* currentTriangle{ nullptr };
+		std::vector<glm::vec2> perimeter;
+		CollisorConfig config;
+		CollisionInfo collisionState;
+		float currentVerticalSpeed;
+	public:
 
 
-        void SetRotation(const glm::quat& rotation) override;
+
+		Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance, const CollisorConfig& config = CollisorConfig{});
+
+		virtual ~Collisor();
 
 
-        void SetScale(const glm::vec3& scale) override;
+		void SetPosition(const glm::vec3& position) override;
+
+		virtual std::string GetName() override;
+
+		virtual glm::vec3 GetPosition() const override;
+
+		virtual glm::quat GetRotation() const override;
+
+		virtual glm::vec3 GetScale() const override;
+
+		virtual void SetVisible(bool visible) override;
+
+		virtual bool IsVisible() const override;
 
 
-        const std::string Name() const override;
+		void SetRotation(const glm::quat& rotation) override;
 
-        void Move(const glm::vec3& nextPosition, const glm::vec2 direction);
 
-        inline TriangleAdapter* GetCurrentTriangle() const
-        {
-            return currentTriangle;
-        }
+		void SetScale(const glm::vec3& scale) override;
 
-        inline void SetCurrentTriangle(const TriangleAdapter* currentTriangle)
-        {
-            // Not implemented.
-            LOG_WARN("Cannot set sampled triangle inside script");
-        }
 
-        inline void SetTolerance(float tolerance)
-        {
-            Collisor::tolerance = tolerance;
-        }
+		const std::string Name() const override;
 
-        inline float GetTolerance()
-        {
-            return tolerance;
-        }
+		void Move(const glm::vec3& nextPosition, const glm::vec2 direction);
 
-        inline void SetVerticalSpeed(float verticalSpeed)
-        {
-            // Not implemented.
-            LOG_WARN("Cannot change collisor vertical speed from script");
-        }
+		inline TriangleAdapter* GetCurrentTriangle() const
+		{
+			return currentTriangle;
+		}
 
-        inline float GetVerticalSpeed() const
-        {
-            return currentVerticalSpeed;
-        }
+		inline void SetCurrentTriangle(const TriangleAdapter* currentTriangle)
+		{
+			// Not implemented.
+			LOG_WARN("Cannot set sampled triangle inside script");
+		}
 
-        void Update(float tpf) override;
+		inline void SetTolerance(float tolerance)
+		{
+			Collisor::tolerance = tolerance;
+		}
 
-    private:
-        void DetectBySector();
-        void DetectByBoundingRadius(float tpf);
-        void CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec3* correctPosition);
-        void CorrectPositionBoundingRadiusMode(const glm::vec2 &sideA, const glm::vec2 &sideB, glm::vec2* correctPosition);
-        void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
-        void ApplyGravity(const glm::vec3& nextPosition, float tpf);
-        float GetHeightInMap();
-    };
+		inline float GetTolerance()
+		{
+			return tolerance;
+		}
+
+		inline void SetVerticalSpeed(float verticalSpeed)
+		{
+			// Not implemented.
+			LOG_WARN("Cannot change collisor vertical speed from script");
+		}
+
+		inline float GetVerticalSpeed() const
+		{
+			return currentVerticalSpeed;
+		}
+
+		void Update(float tpf) override;
+
+	private:
+		void DetectBySector();
+		CollisionInfo DetectByBoundingRadius(float tpf);
+		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec3* correctPosition);
+		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec2* correctPosition);
+		void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
+		bool CorrectAndRetry(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, float tpf);
+		void ApplyGravity(const glm::vec3& nextPosition, float tpf);
+		float GetHeightInMap();
+	};
 }

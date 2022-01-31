@@ -10,7 +10,7 @@ public class CollisionCalcTest {
         PVector center = new PVector(7, 2.8f);
         float rad = 0.24f;
         System.out.println("----------------- COLLISION RESPONSE --------------------");
-        System.out.println(CollisionMath.intersection(pa, pb, center, rad, true));
+        System.out.println(CollisionMath.intersections(pa, pb, center, rad, true));
         System.out.println("---------------------------------------------------------");
     }
 

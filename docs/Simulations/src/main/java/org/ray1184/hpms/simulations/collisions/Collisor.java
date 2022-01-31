@@ -33,37 +33,55 @@ public class Collisor {
             PVector dir = actor.getDir();
             nextPos.add(ratio * dir.x, ratio * dir.y);
             bc.set(new PVector(nextPos.x - actor.getSize().x / 2, nextPos.y - actor.getSize().x / 2), bc.radius);
-            CollisionResponse cResp = calcAnyCollision();
-            boolean inside = !cResp.collided;
+            List<CollisionResponse> cResp = calcAnyCollision();
+            boolean inside = !anyCollision(cResp);
             if (inside) {
                 actor.setPosition(nextPos);
             }
             else {
-                PVector correctPosition = CollisionMath.correctPosition(actor.getPosition(), nextPos, cResp);
-                bc.set(new PVector(correctPosition.x - actor.getSize().x / 2, correctPosition.y - actor.getSize().x / 2), bc.radius);
-                // SAFE CHECK FOR CORNERS - se dopo la correzione si finisce nuovamente fuori perimetro o contro un ostacolo interno, si ripristina la posizione originale senza correzione
-                CollisionResponse cResp2 = calcAnyCollision();
-                if (cResp2.collided) {
-                    bc.set(new PVector(actor.getPosition().x - actor.getSize().x / 2, actor.getPosition().y - actor.getSize().x / 2), bc.radius);
-                    System.out.println("Last was WRONG");
-                } else {
-                    System.out.println("Last was good");
-                  actor.setPosition(correctPosition);
+                if (!correctAndRetest(cResp.get(0), nextPos) && cResp.size() >= 2) {
+                    System.out.println("----> SECOND HIT");
+                    if (!correctAndRetest(cResp.get(1), nextPos)) {
+                        System.out.println("------------------> STROKEEEE!");
+                    }
                 }
             }
         }
 
-        public CollisionResponse calcAnyCollision() {
-            CollisionResponse cResp = perimeter.bcInside(bc);
-            if (!cResp.collided) {
+        public boolean correctAndRetest(CollisionResponse cResp0, PVector nextPos) {
+            PVector correctPosition = CollisionMath.correctPosition(actor.getPosition(), nextPos, cResp0);
+            bc.set(new PVector(correctPosition.x - actor.getSize().x / 2, correctPosition.y - actor.getSize().x / 2), bc.radius);
+            // SAFE CHECK FOR CORNERS - se dopo la correzione si finisce nuovamente fuori perimetro o contro un ostacolo interno, si ripristina la posizione originale senza correzione
+            List<CollisionResponse> cResp2 = calcAnyCollision();
+            if (!cResp2.isEmpty()) {
+                bc.set(new PVector(actor.getPosition().x - actor.getSize().x / 2, actor.getPosition().y - actor.getSize().x / 2), bc.radius);
+                return false;
+            } else {
+                actor.setPosition(correctPosition);
+                return true;
+            }
+        }
+
+        public List<CollisionResponse> calcAnyCollision() {
+            List<CollisionResponse> cResp = perimeter.bcInside(bc);
+            if (!anyCollision(cResp)) {
                 for (Polygon obstacle : obstacles) {
                     cResp = obstacle.bcOutside(bc);
-                    if (cResp.collided) {
+                    if (anyCollision(cResp)) {
                         return cResp;
                     }
                 }
             }
             return cResp;
+        }
+
+        public boolean anyCollision(List<CollisionResponse> cResp) {
+            for (CollisionResponse col : cResp) {
+                if (col.collided) {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public BoundingCircle getBc() {

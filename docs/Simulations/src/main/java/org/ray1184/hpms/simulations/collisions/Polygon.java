@@ -18,11 +18,11 @@ public class Polygon {
     }
 
 
-    public CollisionResponse bcOutside(BoundingCircle bc) {
+    public List<CollisionResponse> bcOutside(BoundingCircle bc) {
         return CollisionMath.circleOutsidePolygon(bc, perimeter, new PVector(0, 0));
     }
 
-    public CollisionResponse bcInside(BoundingCircle bc) {
+    public List<CollisionResponse> bcInside(BoundingCircle bc) {
         return CollisionMath.circleInsidePolygon(bc, perimeter, new PVector(0, 0));
     }
 

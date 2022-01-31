@@ -48,7 +48,7 @@ namespace hpms
 					activeAnimation->SetWeight(activeAnimWeight);
 				}
 				lastAnimation->Update(tpf);
-			}
+			}/**/
 			activeAnimation->Update(tpf);
 		}
 	};

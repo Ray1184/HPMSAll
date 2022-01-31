@@ -179,9 +179,9 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
             end
 
             if lib.key_action_performed(keys, 'RIGHT', 2) then
-                rotate = -1
+                rotate = -2
             elseif lib.key_action_performed(keys, 'LEFT', 2) then
-                rotate = 1
+                rotate = 2
             else
                 rotate = 0
             end
@@ -224,17 +224,17 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
         player.serializable.performing_action = false
         if action or(action and rotate) or(action and walkF) then
             player:set_anim('Push')
-            player:play(ANIM_MODE_LOOP, 2)
+            player:play(ANIM_MODE_LOOP, 1)
             player.serializable.performing_action = true
         elseif walkF or(walkF and rotate) then
             player:set_anim('Walk_Forward')
-            player:play(ANIM_MODE_LOOP, 2)
+            player:play(ANIM_MODE_LOOP, 1)
         elseif walkB or(walkB and rotate) then
             player:set_anim('Walk_Back')
-            player:play(ANIM_MODE_LOOP, 2)
+            player:play(ANIM_MODE_LOOP, 1)
         elseif turn then
             player:set_anim('Idle')
-            player:play(ANIM_MODE_LOOP, 2)
+            player:play(ANIM_MODE_LOOP, 1)
 
             -- player.serializable.performing_action = true
         else
@@ -263,7 +263,7 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
         --log_warn(current_sector.id)
         scn_mgr:poll_events(tpf)
         actors_mgr:poll_events(tpf)
-        log_debug(tostring(1 / tpf))
+        log_debug('CURR TPF: ' .. tostring(1 / tpf))
     end,
     cleanup = function()
 

@@ -40,13 +40,12 @@ bool hpms::SimulatorAdaptee::frameRenderingQueued(const Ogre::FrameEvent& evt)
         return false;
     }
 
-    logic->OnUpdate(evt.timeSinceLastFrame);
     inputHandler.Update();
     inputHandler.HandleKeyboardEvent(keyStates);
     inputHandler.HandleMouseEvent(mouseButtonStates, &x, &y);
     unsigned int pixelation = ctx->GetSettings().pixelRatio;
     logic->OnInput(keyStates, mouseButtonStates, x / pixelation, y / pixelation);
     logic->OnUpdate(evt.timeSinceLastFrame);
-
+    
     return true;
 }

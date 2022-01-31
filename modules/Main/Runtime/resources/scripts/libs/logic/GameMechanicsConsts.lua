@@ -27,13 +27,13 @@ function game_mechanics_consts:get()
 
         actor_move_ratio =
         {
-            FASTEST = 2,
-            FASTER = 1.5,
-            FAST = 1,
-            NORMAL = 0.75,
-            SLOW = 0.5,
-            SLOWER = 0.25,
-            SLOWEST = 0.1
+            FASTEST = 4,
+            FASTER = 3,
+            FAST = 2,
+            NORMAL = 1.5,
+            SLOW = 1,
+            SLOWER = 0.5,
+            SLOWEST = 0.25
         },
 
         actor_action_mode =
