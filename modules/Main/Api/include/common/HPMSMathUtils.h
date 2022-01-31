@@ -21,25 +21,41 @@ namespace hpms
 		return std::fabs(f1 - f2) < HPMS_EPSILON;
 	}
 
-	struct CollisionResponse
+	struct SingleCollisionResponse
 	{
 		bool collided;
 		glm::vec2 sidePointA;
 		glm::vec2 sidePointB;
 
-		inline void CopyFrom(const CollisionResponse& copy)
+		inline void CopyFrom(const SingleCollisionResponse& copy)
 		{
-			CollisionResponse::collided = copy.collided;
-			CollisionResponse::sidePointA = copy.sidePointA;
-			CollisionResponse::sidePointB = copy.sidePointB;
+			SingleCollisionResponse::collided = copy.collided;
+			SingleCollisionResponse::sidePointA = copy.sidePointA;
+			SingleCollisionResponse::sidePointB = copy.sidePointB;
 		}
 
-		inline bool Equals(const CollisionResponse& copy)
+		inline bool Equals(const SingleCollisionResponse& copy)
 		{
-			return FloatEquals(CollisionResponse::sidePointA.x, copy.sidePointA.x) && 
-				FloatEquals(CollisionResponse::sidePointA.y, copy.sidePointA.y) &&
-				FloatEquals(CollisionResponse::sidePointB.x, copy.sidePointB.x) &&
-				FloatEquals(CollisionResponse::sidePointB.y, copy.sidePointB.y);
+			return FloatEquals(SingleCollisionResponse::sidePointA.x, copy.sidePointA.x) &&
+				FloatEquals(SingleCollisionResponse::sidePointA.y, copy.sidePointA.y) &&
+				FloatEquals(SingleCollisionResponse::sidePointB.x, copy.sidePointB.x) &&
+				FloatEquals(SingleCollisionResponse::sidePointB.y, copy.sidePointB.y);
+		}
+	};
+
+	struct CollisionResponse
+	{
+		std::vector<SingleCollisionResponse> collisions;
+		inline bool AnyCollision()
+		{
+			for (const auto& coll : collisions)
+			{
+				if (coll.collided)
+				{
+					return true;
+				}
+			}
+			return false;
 		}
 	};
 
