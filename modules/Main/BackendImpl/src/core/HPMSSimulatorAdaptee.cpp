@@ -46,6 +46,7 @@ bool hpms::SimulatorAdaptee::frameRenderingQueued(const Ogre::FrameEvent& evt)
     unsigned int pixelation = ctx->GetSettings().pixelRatio;
     logic->OnInput(keyStates, mouseButtonStates, x / pixelation, y / pixelation);
     logic->OnUpdate(evt.timeSinceLastFrame);
-    
+    //std::string framerate = "FPS: " + std::to_string(ctx->GetRenderWindow()->getStatistics().lastFPS);
+    //LOG_WARN(framerate.c_str());
     return true;
 }

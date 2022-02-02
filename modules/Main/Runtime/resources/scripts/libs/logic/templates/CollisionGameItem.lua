@@ -83,9 +83,10 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         end
         local collisor = self.transient.collisor
         collisor.position = lib.vec3(x, y, z)
-        lib.update_collisor(self.transient.collisor, 0)
+        --lib.update_collisor(self.transient.collisor, 0)
         self.serializable.visual_info.last_position = self.get_position(self)
-        self.serializable.visual_info.position = { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
+        self.serializable.visual_info.position = { x = x, y = y, z = z }
+        --self.serializable.visual_info.position = { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
     end
 
     function collision_game_item:get_position()
@@ -143,10 +144,16 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
             return
         end
         local scaledRad = self.get_scaled_rad(self)
+        local conf = lib.collisor_config()
+        conf.gravity_affection = k.DEFAULT_GAVITY
+        conf.active = not self.serializable.collision_info.ghost
+        conf.max_step_height = k.DEFAULT_MAX_STEP_HEIGHT
+        conf.bounding_radius = scaledRad
+        --conf.bounding_rect = TODO
         local tra = {
             transient =
             {
-                collisor = lib.make_node_collisor(self.transient.node,walkmap,scaledRad,k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT)
+                collisor = lib.make_node_collisor(self.transient.node,walkmap,conf)
             }
         }
         self = merge_tables(self, tra)
@@ -158,7 +165,7 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         if self.serializable.expired then
             return
         end
-        lib.update_collisor(self.transient.collisor, tpf)
+        --lib.update_collisor(self.transient.collisor, tpf)
     end
 
     function collision_game_item:kill_instance()

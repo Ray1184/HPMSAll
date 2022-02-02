@@ -23,6 +23,7 @@ function scene_manager:new(scene_name, camera)
         camera = camera,
         views_map = { },
         loaded_walkmap = nil,
+        loaded_env = lib.make_collision_env(),
         loaded_images = { }
     }
     log_debug('Creating scene module for room ' .. scene_name)
@@ -39,9 +40,13 @@ function scene_manager:new(scene_name, camera)
         if self.loaded_walkmap ~= nil then
             lib.delete_walkmap(self.loaded_walkmap)
         end
+         if self.loaded_env ~= nil then
+            lib.delete_collision_env(self.loaded_env)
+        end
 
         self.views_map = { }
         self.loaded_walkmap = nil
+        self.loaded_env = nil
         self.loaded_images = { }
 
     end
@@ -49,7 +54,12 @@ function scene_manager:new(scene_name, camera)
     function scene_manager:create_walkmap(walkmap_name)
         if self.loaded_walkmap == nil then
             self.loaded_walkmap = lib.make_walkmap(walkmap_name)
+            lib.set_walkmap_to_env(self.loaded_env, self.loaded_walkmap)
         end
+    end
+
+    function scene_manager:get_collision_env()
+        return self.loaded_env
     end
 
     function scene_manager:get_walkmap()

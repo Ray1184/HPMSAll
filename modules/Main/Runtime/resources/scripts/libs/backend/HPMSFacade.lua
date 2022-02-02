@@ -163,8 +163,24 @@ function backend:get()
                 log_debug('Stop anim ' .. a.dummy_id)
             end,
 
-            update_collisor = function(c, tpf)
-                log_debug('Updating collisor ' .. c.dummy_id)
+            update_collision_env = function(e, tpf)
+                log_debug('Updating collision environment')
+            end,
+
+            add_collisor_to_env = function(e, n, c)
+                log_debug('Adding collision ' .. c.dummy_id .. ' to environment')
+            end,
+
+            set_walkmap_to_env = function(e, w)
+                log_debug('Setting walkmap ' .. w.dummy_id .. ' to environment')
+            end,
+
+            get_collision_state_by_name = function(e, n)
+                return { }
+            end,
+
+            get_collision_state_by_collisor = function(e, n)
+                return { }
             end,
 
             -- Math functions.
@@ -284,7 +300,11 @@ function backend:get()
             anim_sequence_terminated = hpms.anim_sequence_terminated,
             anim_finished = hpms.anim_finished,
             stop_rewind_anim = hpms.stop_rewind_anim,
-            update_collisor = hpms.update_collisor,
+            update_collision_env = hpms.update_collision_env,
+            add_collisor_to_env = hpms.add_collisor_to_env,
+            set_walkmap_to_env = hpms.set_walkmap_to_env,
+            get_collision_state_by_name = hpms.get_collision_state_by_name,
+            get_collision_state_by_collisor = hpms.get_collision_state_by_collisor,
 
             -- Math functions.
             vec4 = hpms.vec4,

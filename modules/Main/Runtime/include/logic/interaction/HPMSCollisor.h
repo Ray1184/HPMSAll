@@ -8,7 +8,6 @@
 #include <api/HPMSActorAdapter.h>
 #include <common/HPMSMathUtils.h>
 #include <glm/gtx/perpendicular.hpp>
-#include <logic/HPMSController.h>
 #include <common/HPMSUtils.h>
 
 namespace hpms
@@ -32,15 +31,14 @@ namespace hpms
 	{
 		bool collision{ false };
 		CollisionType type{ ZERO_COLLISION };
-		void* other { nullptr };
+		std::string other;
 	};
 
-	class Collisor : public ActorAdapter, public Controller
+	class Collisor : public ActorAdapter
 	{
 	private:
 		hpms::ActorAdapter* actor;
 		hpms::WalkmapAdapter* walkMap;
-		float tolerance;
 		bool ignore;
 		float baseHeight;
 		bool baseHeightDefined;
@@ -56,7 +54,7 @@ namespace hpms
 
 
 
-		Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, float tolerance, const CollisorConfig& config = CollisorConfig{});
+		Collisor(ActorAdapter* actor, WalkmapAdapter* walkMap, const CollisorConfig& config = CollisorConfig{});
 
 		virtual ~Collisor();
 
@@ -96,16 +94,7 @@ namespace hpms
 			// Not implemented.
 			LOG_WARN("Cannot set sampled triangle inside script");
 		}
-
-		inline void SetTolerance(float tolerance)
-		{
-			Collisor::tolerance = tolerance;
-		}
-
-		inline float GetTolerance()
-		{
-			return tolerance;
-		}
+				
 
 		inline void SetVerticalSpeed(float verticalSpeed)
 		{
@@ -118,7 +107,14 @@ namespace hpms
 			return currentVerticalSpeed;
 		}
 
-		void Update(float tpf) override;
+		inline CollisionInfo GetCollisionState() const
+		{
+			return collisionState;
+		}
+
+		void CollidesWalkmap(float tpf);
+
+		void CollidesCollisor(float tpf, hpms::Collisor* other);
 
 	private:
 		void DetectBySector();

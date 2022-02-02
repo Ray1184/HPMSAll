@@ -50,8 +50,10 @@ namespace hpms
                     .addFunction("make_walkmap", &hpms::LuaExtensions::AMCreateWalkMap)
                     .addFunction("delete_walkmap", &hpms::LuaExtensions::AMDeleteWalkMap)
                     .addFunction("make_node_collisor", &hpms::LuaExtensions::AMCreateNodeCollisor)
-                    .addFunction("make_entity_collisor", &hpms::LuaExtensions::AMCreateEntityCollisor)
+                    .addFunction("make_entity_collisor", &hpms::LuaExtensions::AMCreateEntityCollisor)                    
                     .addFunction("delete_collisor", &hpms::LuaExtensions::AMDeleteCollisor)
+                    .addFunction("make_collision_env", &hpms::LuaExtensions::AMCreateCollisionEnv)
+                    .addFunction("delete_collision_env", &hpms::LuaExtensions::AMDeleteCollisionEnv)
                     .endNamespace();
         }
 
@@ -344,6 +346,41 @@ namespace hpms
                     .endNamespace();
         }
 
+        inline static void RegisterCollisionEnv(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                .beginNamespace("hpms")
+                .beginClass<CollisionEnv>("collision_env")               
+                .endClass()
+                .endNamespace();
+        }
+
+        inline static void RegisterCollisionState(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                .beginNamespace("hpms")
+                .beginClass<CollisionInfo>("collision_state")
+                .addData("collision", &hpms::CollisionInfo::collision)
+                .addData("type", &hpms::CollisionInfo::type)
+                .addData("other", &hpms::CollisionInfo::other)
+                .endClass()
+                .endNamespace();
+        }
+
+        inline static void RegisterCollisorConfig(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                .beginNamespace("hpms")
+                .beginClass<CollisorConfig>("collisor_config")
+                .addData("gravity_affection", &hpms::CollisorConfig::gravityAffection)
+                .addData("active", &hpms::CollisorConfig::active)
+                .addData("max_step_height", &hpms::CollisorConfig::maxStepHeight)
+                .addData("bounding_radius", &hpms::CollisorConfig::radius)
+                .addData("bounding_rect", &hpms::CollisorConfig::rect)
+                .endClass()
+                .endNamespace();
+        }
+
         inline static void RegisterAnimation(lua_State* state)
         {
             getGlobalNamespace(state)
@@ -365,10 +402,12 @@ namespace hpms
                     .addFunction("get_camera", &hpms::LuaExtensions::LGetCamera)
                     .addFunction("camera_lookat", &hpms::LuaExtensions::LCameraLookAt)
                     .addFunction("camera_fovy", &hpms::LuaExtensions::LCameraFovY)
-                    .addFunction("get_animator", &hpms::LuaExtensions::LGetAnimator)
-                    .addFunction("enable_controller", &hpms::LuaExtensions::LEnableController)
-                    .addFunction("disable_controller", &hpms::LuaExtensions::LDisableController)
-                    .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
+                    .addFunction("get_animator", &hpms::LuaExtensions::LGetAnimator)               
+                    .addFunction("update_collision_env", &hpms::LuaExtensions::LUpdateCollisionEnv)
+                    .addFunction("add_collisor_to_env", &hpms::LuaExtensions::LAddCollisorToEnv)
+                    .addFunction("set_walkmap_to_env", &hpms::LuaExtensions::LSetWalkmapToEnv)
+                    .addFunction("get_collision_state_by_name", &hpms::LuaExtensions::LGetCollisionStateByName)
+                    .addFunction("get_collision_state_by_collisor", &hpms::LuaExtensions::LGetCollisionStateByCollisor)
                     .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
                     .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
                     .addFunction("slice_anim", &hpms::LuaExtensions::LSliceAnimation)

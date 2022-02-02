@@ -49,7 +49,8 @@ set(SOURCES
         src/logic/interaction/HPMSCollisor.cpp
         src/states/HPMSLuaLogic.cpp
         src/states/HPMSGameState.cpp
-        src/logic/gui/HPMSGuiText.cpp)
+        src/logic/gui/HPMSGuiText.cpp 
+        src/logic/interaction/HPMSCollisionEnv.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/rt/)
 

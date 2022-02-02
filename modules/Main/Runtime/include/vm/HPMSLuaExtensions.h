@@ -12,6 +12,7 @@
 #include <common/HPMSMathUtils.h>
 #include <facade/HPMSApiFacade.h>
 #include <logic/interaction/HPMSCollisor.h>
+#include <logic/interaction/HPMSCollisionEnv.h>
 #include <logic/gui/HPMSGuiText.h>
 #include <logic/anim/HPMSAnimationHelper.h>
 #include <debug/HPMSDebugUtils.h>
@@ -338,24 +339,33 @@ namespace hpms
 			hpms::SafeDelete(walkMap);
 		}
 
-		static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, float tolerance, float gravityAffection = 0.098f, float maxStepHeight = 0.1f)
-		{
-			hpms::CollisorConfig conf{ gravityAffection , maxStepHeight };
-			auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, tolerance, conf);
+		static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, const hpms::CollisorConfig& config)
+		{			
+			auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, config);
 			return c;
 		}
 
-		static inline hpms::Collisor* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, float tolerance, float gravityAffection = 0.098f, float maxStepHeight = 0.1f)
+		static inline hpms::Collisor* AMCreateNodeCollisor(SceneNodeAdapter* node, WalkmapAdapter* walkMap, const hpms::CollisorConfig& config)
 		{
-			hpms::CollisorConfig conf{ gravityAffection , maxStepHeight };
-			auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, tolerance, conf);
+			auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, config);
 			return c;
 		}
-
+				
 
 		static inline void AMDeleteCollisor(Collisor* collisor)
 		{
 			hpms::SafeDelete(collisor);
+		}
+
+		static inline hpms::CollisionEnv* AMCreateCollisionEnv()
+		{
+			auto* c = hpms::SafeNew<hpms::CollisionEnv>();
+			return c;
+		}
+
+		static inline void AMDeleteCollisionEnv(hpms::CollisionEnv* env)
+		{
+			hpms::SafeDelete(env);
 		}
 
 		static inline hpms::LightAdapter* AMCreateLight(const glm::vec3& color)
@@ -379,8 +389,6 @@ namespace hpms
 			cam->LookAt(at);
 		}
 
-
-
 		static inline void LCameraFovY(CameraAdapter* cam, float fov)
 		{
 			cam->SetFovY(fov);
@@ -400,21 +408,30 @@ namespace hpms
 		{
 			return textArea->DrawTextStream(text, maxLines);
 		}
-
-		static inline void LEnableController(hpms::Controller* controller)
+				
+		static inline void LUpdateCollisionEnv(hpms::CollisionEnv* env, float tpf)
 		{
-			controller->SetActive(true);
+			env->Update(tpf);
 		}
 
-		static inline void LDisableController(hpms::Controller* controller)
+		static inline void LAddCollisorToEnv(hpms::CollisionEnv* env, const std::string& collisorName, hpms::Collisor* coll)
 		{
-			controller->SetActive(false);
+			env->AddCollisor(collisorName, coll);
 		}
 
-
-		static inline void LUpdateCollisor(hpms::Collisor* coll, float tpf)
+		static inline void LSetWalkmapToEnv(hpms::CollisionEnv* env, hpms::WalkmapAdapter* walkmap)
 		{
-			coll->Update(tpf);
+			env->SetWalkmap(walkmap);
+		}
+
+		static inline hpms::CollisionInfo LGetCollisionStateByName(hpms::CollisionEnv* env, const std::string& collisorName)
+		{
+			return env->GetCollisionState(collisorName);
+		}
+
+		static inline hpms::CollisionInfo LGetCollisionStateByCollisor(hpms::Collisor* coll)
+		{
+			return coll->GetCollisionState();
 		}
 
 		static inline void LMoveCollisor(hpms::Collisor* collisor, glm::vec3 position, glm::vec2 direction)

@@ -81,7 +81,9 @@ bool hpms::OgreContext::CreateWindowPair(const OgreWindowSettings& settings)
         assert(wmInfo.subsystem == SDL_SYSWM_COCOA);
         p.miscParams["externalWindowHandle"] = Ogre::StringConverter::toString(size_t(wmInfo.info.cocoa.window));
 #endif
-
+        //p.miscParams["VSync"] = "No";
+        //std::string usingVSync = "Using VSYNC: " + p.miscParams["vsync"];
+        //LOG_WARN(usingVSync.c_str());
         windowPair.render = root->createRenderWindow(p);
     } catch (std::exception& e)
     {
@@ -104,8 +106,11 @@ void hpms::OgreContext::CreateViewports()
 
 void hpms::OgreContext::InitRoot()
 {
-    root->setRenderSystem(root->getRenderSystemByName("OpenGL Rendering Subsystem"));
+    auto* renderSystem = root->getRenderSystemByName("OpenGL Rendering Subsystem");
+    //renderSystem->setConfigOption("VSync", "No");
+    root->setRenderSystem(renderSystem);
     root->initialise(false);
+    //renderSystem->setConfigOption("VSync", "No");
 }
 
 void hpms::OgreContext::SetupResources()

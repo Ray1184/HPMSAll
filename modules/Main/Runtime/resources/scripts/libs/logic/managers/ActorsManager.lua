@@ -75,21 +75,24 @@ function actors_manager:new(scene_manager)
         if self.loaded_player == nil then
             self.loaded_player = context:get_instance(k.inst_cat.PLAYERS, player_id)
             self.loaded_player:fill_transient_data(self.scene_manager:get_walkmap())
+            lib.add_collisor_to_env(self.scene_manager:get_collision_env(), player_id, self.loaded_player.transient.collisor)
         end
         return self.loaded_player
     end
 
     function actors_manager:create_actor(actor_id)
         local id_suffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.actors)
-        local actor = context:get_instance(k.inst_cat.ACTORS, actor_id, id_suffix)
+        local actor = context:get_instance(k.inst_cat.ACTORS, actor_id, id_suffix)        
         self.loaded_actors[actor.serializable.id] = actor
         self.loaded_actors[actor.serializable.id]:fill_transient_data(self.scene_manager:get_walkmap())
+        lib.add_collisor_to_env(self.scene_manager:get_collision_env(), actor_id, self.loaded_actors[actor.serializable.id].transient.collisor)
         self.actors = self.actors + 1
         return self.loaded_actors[actor.serializable.id]
     end
 
     function actors_manager:poll_events(tpf)
         self:update_actors(tpf)
+        lib.update_collision_env(self.scene_manager:get_collision_env(), tpf)
         if self.loaded_player ~= nil then
             self:manage_pushes(tpf)
             self:manage_collisions(tpf)

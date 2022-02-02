@@ -9,24 +9,28 @@
 #define WALKMAP_COLLISION hpms::CollisionInfo{ true, hpms::VS_WALKMAP, nullptr };
 #define COLLISOR_COLLISION(coll) hpms::CollisionInfo{ true, hpms::VS_COLLISOR, coll };
 
-void hpms::Collisor::Update(float tpf)
+void hpms::Collisor::CollidesWalkmap(float tpf)
 {
-	if (!active || !outOfDate)
+	if (!outOfDate)
 	{
 		collisionState = NO_COLLISION;
 		return;
 	}
 
 	outOfDate = false;
-	currentTriangle = walkMap->SampleTriangle(nextPosition, tolerance);
+	currentTriangle = walkMap->SampleTriangle(nextPosition, config.radius);
 
 	collisionState = DetectByBoundingRadius(tpf);
+}
+
+void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
+{
 }
 
 hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 {
 	CollisionResponse collisionResponse;
-	walkMap->Collides(nextPosition, tolerance, &collisionResponse);
+	walkMap->Collides(nextPosition, config.radius, &collisionResponse);
 	bool inPerimeter = !collisionResponse.AnyCollision();
 	if (inPerimeter)
 	{
@@ -51,7 +55,7 @@ bool hpms::Collisor::CorrectAndRetry(const hpms::SingleCollisionResponse& single
 	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, &correctPosition);
 	UP(correctPosition) = UP(actor->GetPosition());	
 	hpms::CollisionResponse collisionResponse;
-	walkMap->Collides(correctPosition, tolerance, &collisionResponse);
+	walkMap->Collides(correctPosition, config.radius, &collisionResponse);
 	float inPerimeter = !collisionResponse.AnyCollision();
 	if (inPerimeter)
 	{
@@ -118,7 +122,7 @@ float hpms::Collisor::GetHeightInMap()
 // UNUSED
 void hpms::Collisor::DetectBySector()
 {
-	auto* nextTriangle = walkMap->SampleTriangle(nextPosition, tolerance);
+	auto* nextTriangle = walkMap->SampleTriangle(nextPosition, config.radius);
 
 	if (nextTriangle)
 	{
@@ -177,7 +181,7 @@ void hpms::Collisor::CorrectPositionSectorMode(const glm::vec2& sideA, const glm
 	if (resampleTriangle)
 	{
 
-		auto* correctTriangle = walkMap->SampleTriangle(correctPosition, tolerance);
+		auto* correctTriangle = walkMap->SampleTriangle(correctPosition, config.radius);
 
 		if (correctTriangle != nullptr)
 		{
@@ -255,9 +259,8 @@ void hpms::Collisor::SetPosition(const glm::vec3& position)
 	Move(position, dir2);
 }
 
-hpms::Collisor::Collisor(hpms::ActorAdapter* actor, hpms::WalkmapAdapter* walkMap, float tolerance, const CollisorConfig& config) : actor(actor),
+hpms::Collisor::Collisor(hpms::ActorAdapter* actor, hpms::WalkmapAdapter* walkMap, const CollisorConfig& config) : actor(actor),
 walkMap(walkMap),
-tolerance(tolerance),
 config(config),
 ignore(false),
 outOfDate(true),
