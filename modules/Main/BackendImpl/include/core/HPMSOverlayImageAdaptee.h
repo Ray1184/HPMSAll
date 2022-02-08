@@ -28,7 +28,7 @@ namespace hpms
 
         virtual ~OverlayImageAdaptee();
 
-        virtual std::string GetName() override;
+        virtual std::string GetName() const override;
 
         virtual void SetAlpha(float alpha) override;
 

@@ -16,7 +16,7 @@ namespace hpms
     public:
         inline const std::string Name() const override
         {
-            return "OverlayImageAdapter";
+            return "OverlayImageAdapter/" + GetName();
         }
 
         inline virtual ~OverlayImageAdapter()

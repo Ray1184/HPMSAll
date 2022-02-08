@@ -81,7 +81,7 @@ bool hpms::OgreContext::CreateWindowPair(const OgreWindowSettings& settings)
         assert(wmInfo.subsystem == SDL_SYSWM_COCOA);
         p.miscParams["externalWindowHandle"] = Ogre::StringConverter::toString(size_t(wmInfo.info.cocoa.window));
 #endif
-        //p.miscParams["VSync"] = "No";
+        p.miscParams["VSync"] = "No";
         //std::string usingVSync = "Using VSYNC: " + p.miscParams["vsync"];
         //LOG_WARN(usingVSync.c_str());
         windowPair.render = root->createRenderWindow(p);

@@ -29,7 +29,7 @@ namespace hpms
 
         virtual  glm::quat GetRotation() const override;
 
-        virtual std::string GetName() override;
+        virtual std::string GetName() const override;
 
         virtual void SetScale(const glm::vec3& scale) override;
 

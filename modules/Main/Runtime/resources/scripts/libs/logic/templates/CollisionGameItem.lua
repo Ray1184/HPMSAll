@@ -83,10 +83,6 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         end
         local collisor = self.transient.collisor
         collisor.position = lib.vec3(x, y, z)
-        --lib.update_collisor(self.transient.collisor, 0)
-        self.serializable.visual_info.last_position = self.get_position(self)
-        self.serializable.visual_info.position = { x = x, y = y, z = z }
-        --self.serializable.visual_info.position = { x = collisor.position.x, y = collisor.position.y, z = collisor.position.z }
     end
 
     function collision_game_item:get_position()
@@ -101,20 +97,10 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         local dir = dir or lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
         local nextPos = lib.vec3_add(collisor.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
         lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
-        local collPos = collisor.position
-
-        self.serializable.visual_info.last_position = self.get_position(self)
-        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }        
     end
 
-    function collision_game_item:rotate(rx, ry, rz)
-        if self.serializable.expired then
-            return
-        end
-        local collisor = self.transient.collisor
-        trx.rotate(collisor, rx, ry, rz)
-        local collRot = lib.to_euler(collisor.rotation)
-        self.serializable.visual_info.rotation = { x = collRot.x, y = collRot.y, z = collRot.z }
+    function collision_game_item:rotate(rx, ry, rz)     
+        self.metainfo.override.game_item.rotate(self, rx, ry, rz)
     end
 
     function collision_game_item:scale(sx, sy, sz)
@@ -130,12 +116,11 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
     end
 
     function collision_game_item:delete_transient_data()
-        self.metainfo.override.game_item.delete_transient_data(self)
         if self.serializable.expired then
             return
         end
         lib.delete_collisor(self.transient.collisor)
-
+        self.metainfo.override.game_item.delete_transient_data(self)
     end
 
     function collision_game_item:fill_transient_data(walkmap)
@@ -144,12 +129,9 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
             return
         end
         local scaledRad = self.get_scaled_rad(self)
-        local conf = lib.collisor_config()
-        conf.gravity_affection = k.DEFAULT_GAVITY
-        conf.active = not self.serializable.collision_info.ghost
-        conf.max_step_height = k.DEFAULT_MAX_STEP_HEIGHT
-        conf.bounding_radius = scaledRad
-        --conf.bounding_rect = TODO
+        -- TODO bounding rect.
+        local conf = lib.get_collisor_config(not self.serializable.collision_info.ghost, k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT, scaledRad, lib.vec2(0, 0))
+ 
         local tra = {
             transient =
             {
@@ -164,8 +146,10 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         self.metainfo.override.game_item.update(self)
         if self.serializable.expired then
             return
-        end
-        --lib.update_collisor(self.transient.collisor, tpf)
+        end      
+        local collisor = self.transient.collisor
+        local collPos = collisor.position
+        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }        
     end
 
     function collision_game_item:kill_instance()

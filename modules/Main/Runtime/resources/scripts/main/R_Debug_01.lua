@@ -75,6 +75,7 @@ scene = {
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest3:set_position(-1, 2, 0)
         chest3:scale(0.5, 0.5, 0.5)
+        actors_mgr:poll_events(0)
 
         -- log_warn(insp.inspect(player))
         -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
@@ -122,7 +123,7 @@ scene = {
 
 
         lamp_04 = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
-lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.5122439861297607)
+        lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.5122439861297607)
 
         -- View CM_01 setup
         -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
@@ -263,7 +264,7 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
         --log_warn(current_sector.id)
         scn_mgr:poll_events(tpf)
         actors_mgr:poll_events(tpf)
-        log_debug('CURR TPF: ' .. tostring(1 / tpf))
+        --log_debug('CURR TPF: ' .. tostring(1 / tpf))
     end,
     cleanup = function()
 
@@ -278,8 +279,7 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
         -- Collisor EY_DummyAnim delete
         -- lib.delete_collisor(collisor_ey_dummyanim)
 
-        ---- Entity EY_DummyAnim cleanup
-        -- lib.delete_node(entity_node_ey_dummyanim)
+        ---- Entity EY_DummyAnim cleanup        
         -- lib.delete_entity(entity_ey_dummyanim)
 
         -- View CM_01 delete
@@ -295,7 +295,9 @@ lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.512243986
         lib.delete_light(lamp_02)
         lib.delete_light(lamp_01)
         lib.delete_light(lamp)
+        lib.delete_node(mask_node)
         lib.delete_entity(mask)
+        
         
     end
 }

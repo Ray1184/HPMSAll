@@ -5,7 +5,7 @@
 #include <core/HPMSBackgroundImageAdaptee.h>
 #include <common/HPMSUtils.h>
 
-std::string hpms::BackgroundImageAdaptee::GetName()
+std::string hpms::BackgroundImageAdaptee::GetName() const
 {
     return name;
 }

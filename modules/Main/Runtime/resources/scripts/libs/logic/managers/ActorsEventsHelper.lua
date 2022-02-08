@@ -35,9 +35,10 @@ function actor_default_collision_event(tpf, actor, event, lib)
     if not actor.serializable.movable then
         return
     end
-    local ghost = actor:ghost() or event.actor:ghost()
-    if not ghost then
-        local lastPos = actor.serializable.visual_info.last_position
-        actor:set_position(lastPos.x, lastPos.y, lastPos.z)
-    end
+    -- TODO Backend management.
+    --local ghost = actor:ghost() or event.actor:ghost()
+    --if not ghost then
+    --    local lastPos = actor.serializable.visual_info.last_position
+    --    actor:set_position(lastPos.x, lastPos.y, lastPos.z)
+    --end
 end

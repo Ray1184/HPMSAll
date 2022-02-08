@@ -17,7 +17,7 @@ namespace hpms
     public:
         inline const std::string Name() const override
         {
-            return "SceneNodeAdapter";
+            return "SceneNodeAdapter/" + GetName();
         }
 
         inline virtual ~SceneNodeAdapter()

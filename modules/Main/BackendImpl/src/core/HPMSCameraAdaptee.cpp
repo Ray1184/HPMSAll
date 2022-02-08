@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 
-std::string hpms::CameraAdaptee::GetName()
+std::string hpms::CameraAdaptee::GetName() const
 {
     Check(ogreCamera);
     return ogreCamera->getName();

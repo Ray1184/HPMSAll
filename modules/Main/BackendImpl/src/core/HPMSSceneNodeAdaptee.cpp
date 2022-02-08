@@ -6,7 +6,7 @@
 #include <core/HPMSEntityAdaptee.h>
 #include <core/HPMSBackgroundImageAdaptee.h>
 
-std::string hpms::SceneNodeAdaptee::GetName()
+std::string hpms::SceneNodeAdaptee::GetName() const
 {
     Check(ogreNode);
     return ogreNode->getName();

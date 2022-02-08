@@ -4,7 +4,7 @@
 
 #include <core/HPMSLightAdaptee.h>
 
-std::string hpms::LightAdaptee::GetName()
+std::string hpms::LightAdaptee::GetName() const
 {
     Check();
     return ogreLight->getName();

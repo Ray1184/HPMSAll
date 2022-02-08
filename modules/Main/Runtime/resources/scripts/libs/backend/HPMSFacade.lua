@@ -110,6 +110,14 @@ function backend:get()
                 log_debug('Deleting ' .. w.dummy_id)
             end,
 
+            make_collision_env = function()
+                log_debug('Creating collision env')
+            end,
+
+            delete_collision_env = function()
+                log_debug('Deleting collision env')
+            end,
+
             -- Logic.
             get_camera = function()
                 return { }
@@ -167,6 +175,10 @@ function backend:get()
                 log_debug('Updating collision environment')
             end,
 
+            update_collision_env_no_collisions = function(e, tpf)
+                log_debug('Updating collision environment (no collisions)')
+            end,
+
             add_collisor_to_env = function(e, n, c)
                 log_debug('Adding collision ' .. c.dummy_id .. ' to environment')
             end,
@@ -180,6 +192,10 @@ function backend:get()
             end,
 
             get_collision_state_by_collisor = function(e, n)
+                return { }
+            end,
+
+            get_collisor_config = function(a, g, m, r, re)
                 return { }
             end,
 
@@ -285,6 +301,9 @@ function backend:get()
             delete_background = hpms.delete_background,
             make_walkmap = hpms.make_walkmap,
             delete_walkmap = hpms.delete_walkmap,
+            make_collision_env = hpms.make_collision_env,
+            delete_collision_env = hpms.delete_collision_env,
+            get_collisor_config = hpms.get_collisor_config,
 
             -- Logic.
             get_camera = hpms.get_camera,
@@ -301,6 +320,7 @@ function backend:get()
             anim_finished = hpms.anim_finished,
             stop_rewind_anim = hpms.stop_rewind_anim,
             update_collision_env = hpms.update_collision_env,
+            update_collision_env_no_collisions = hpms.update_collision_env_no_collisions,
             add_collisor_to_env = hpms.add_collisor_to_env,
             set_walkmap_to_env = hpms.set_walkmap_to_env,
             get_collision_state_by_name = hpms.get_collision_state_by_name,

@@ -15,7 +15,7 @@
 #define LAST_BUCKET 100
 
 
-std::string hpms::EntityAdaptee::GetName()
+std::string hpms::EntityAdaptee::GetName() const
 {
     Check(ogreEntity);
     return ogreEntity->getMesh()->getName() + "/" + ogreEntity->getName();

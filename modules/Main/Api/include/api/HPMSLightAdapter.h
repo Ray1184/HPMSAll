@@ -15,7 +15,7 @@ namespace hpms
     public:
         inline const std::string Name() const override
         {
-            return "LightAdapter";
+            return "LightAdapter/" + GetName();
         }
 
         inline virtual ~LightAdapter()

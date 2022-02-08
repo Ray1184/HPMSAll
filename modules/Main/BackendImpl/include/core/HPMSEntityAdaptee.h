@@ -35,7 +35,7 @@ namespace hpms
 
         virtual ~EntityAdaptee();
 
-        std::string GetName() override;
+        std::string GetName() const override;
 
         void SetPosition(const glm::vec3& position) override;
 

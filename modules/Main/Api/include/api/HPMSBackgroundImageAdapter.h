@@ -16,8 +16,8 @@ namespace hpms
     {
     public:
         inline const std::string Name() const override
-        {
-            return "BackgroundImageAdapter";
+        {            
+            return "BackgroundImageAdapter/" + GetName();
         }
 
         inline virtual ~BackgroundImageAdapter()

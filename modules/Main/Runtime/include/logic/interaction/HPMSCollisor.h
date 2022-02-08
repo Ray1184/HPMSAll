@@ -32,6 +32,7 @@ namespace hpms
 		bool collision{ false };
 		CollisionType type{ ZERO_COLLISION };
 		std::string other;
+		glm::vec3 nextPosition;
 	};
 
 	class Collisor : public ActorAdapter
@@ -43,6 +44,7 @@ namespace hpms
 		float baseHeight;
 		bool baseHeightDefined;
 		glm::vec3 nextPosition{};
+		glm::vec3 lastPosition{};
 		glm::vec2 direction{};
 		bool outOfDate;
 		hpms::TriangleAdapter* currentTriangle{ nullptr };
@@ -61,8 +63,6 @@ namespace hpms
 
 		void SetPosition(const glm::vec3& position) override;
 
-		virtual std::string GetName() override;
-
 		virtual glm::vec3 GetPosition() const override;
 
 		virtual glm::quat GetRotation() const override;
@@ -73,16 +73,18 @@ namespace hpms
 
 		virtual bool IsVisible() const override;
 
-
 		void SetRotation(const glm::quat& rotation) override;
-
 
 		void SetScale(const glm::vec3& scale) override;
 
-
-		const std::string Name() const override;
-
 		void Move(const glm::vec3& nextPosition, const glm::vec2 direction);
+
+		virtual std::string GetName() const override;
+
+		inline const std::string Name() const override
+		{
+			return "Collisor/" + GetName();
+		}
 
 		inline TriangleAdapter* GetCurrentTriangle() const
 		{
@@ -107,10 +109,27 @@ namespace hpms
 			return currentVerticalSpeed;
 		}
 
-		inline CollisionInfo GetCollisionState() const
+		inline const CollisionInfo& GetCollisionState() const
 		{
 			return collisionState;
 		}
+
+		inline const CollisorConfig& GetConfig() const
+		{
+			return config;
+		}
+
+		inline const glm::vec3 GetNextStep() const
+		{
+			return nextPosition;
+		}
+
+		inline ActorAdapter* GetActor()
+		{
+			return actor;
+		}
+
+		void Sample(float tpf);
 
 		void CollidesWalkmap(float tpf);
 
@@ -122,8 +141,8 @@ namespace hpms
 		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec3* correctPosition);
 		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec2* correctPosition);
 		void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
-		bool CorrectAndRetry(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, float tpf);
-		void ApplyGravity(const glm::vec3& nextPosition, float tpf);
+		bool CorrectAndRetry(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf);
+		void ApplyGravity(glm::vec3* correctPosition, float tpf);
 		float GetHeightInMap();
 	};
 }

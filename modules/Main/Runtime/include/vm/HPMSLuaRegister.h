@@ -54,6 +54,7 @@ namespace hpms
                     .addFunction("delete_collisor", &hpms::LuaExtensions::AMDeleteCollisor)
                     .addFunction("make_collision_env", &hpms::LuaExtensions::AMCreateCollisionEnv)
                     .addFunction("delete_collision_env", &hpms::LuaExtensions::AMDeleteCollisionEnv)
+                    .addFunction("get_collisor_config", &hpms::LuaExtensions::AMGetCollisorConfig)
                     .endNamespace();
         }
 
@@ -404,6 +405,8 @@ namespace hpms
                     .addFunction("camera_fovy", &hpms::LuaExtensions::LCameraFovY)
                     .addFunction("get_animator", &hpms::LuaExtensions::LGetAnimator)               
                     .addFunction("update_collision_env", &hpms::LuaExtensions::LUpdateCollisionEnv)
+                    .addFunction("update_collision_env_no_collisions", &hpms::LuaExtensions::LUpdateCollisionEnvNoColls)
+                    .addFunction("update_collisor", &hpms::LuaExtensions::LUpdateCollisor)
                     .addFunction("add_collisor_to_env", &hpms::LuaExtensions::LAddCollisorToEnv)
                     .addFunction("set_walkmap_to_env", &hpms::LuaExtensions::LSetWalkmapToEnv)
                     .addFunction("get_collision_state_by_name", &hpms::LuaExtensions::LGetCollisionStateByName)

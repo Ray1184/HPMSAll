@@ -9,7 +9,7 @@
 #define CODE_FINISHED 0
 #define CODE_WORKING 1
 
-std::string hpms::OverlayTextAreaAdaptee::GetName()
+std::string hpms::OverlayTextAreaAdaptee::GetName() const
 {
     return name;
 }

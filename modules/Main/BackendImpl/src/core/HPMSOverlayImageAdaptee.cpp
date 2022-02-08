@@ -6,7 +6,7 @@
 #include <OgreColourValue.h>
 
 
-std::string hpms::OverlayImageAdaptee::GetName()
+std::string hpms::OverlayImageAdaptee::GetName() const
 {
     return name;
 }

@@ -5,26 +5,54 @@
 #include <logic/interaction/HPMSCollisor.h>
 #include <glm/gtx/vector_angle.hpp>
 
-#define NO_COLLISION hpms::CollisionInfo{ false, hpms::ZERO_COLLISION, nullptr };
-#define WALKMAP_COLLISION hpms::CollisionInfo{ true, hpms::VS_WALKMAP, nullptr };
-#define COLLISOR_COLLISION(coll) hpms::CollisionInfo{ true, hpms::VS_COLLISOR, coll };
+#define NO_COLLISION(pos) hpms::CollisionInfo{ false, hpms::ZERO_COLLISION, "", pos };
+#define WALKMAP_COLLISION(pos) hpms::CollisionInfo{ true, hpms::VS_WALKMAP, "", pos };
+#define COLLISOR_COLLISION(pos, coll) hpms::CollisionInfo{ true, hpms::VS_COLLISOR, coll, pos };
+
+void hpms::Collisor::Sample(float tpf)
+{
+	currentTriangle = walkMap->SampleTriangle(nextPosition, config.radius);
+}
 
 void hpms::Collisor::CollidesWalkmap(float tpf)
 {
-	if (!outOfDate)
-	{
-		collisionState = NO_COLLISION;
-		return;
-	}
+	//lastPosition = GetPosition();
+	//if (!outOfDate)
+	//{
+	//	collisionState = NO_COLLISION(nextPosition);
+	//	return;
+	//}
 
-	outOfDate = false;
-	currentTriangle = walkMap->SampleTriangle(nextPosition, config.radius);
+	//outOfDate = false;
+	
 
 	collisionState = DetectByBoundingRadius(tpf);
 }
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
+	if (!outOfDate)
+	{
+		collisionState = NO_COLLISION(nextPosition);
+		return;
+	}
+
+	outOfDate = false;
+
+	if (config.rect.x == 0 || config.rect.y == 0) {
+		// Manage target as bounding radius.
+		float dist = glm::distance(nextPosition, other->nextPosition);
+		if (dist <= config.radius + other->GetConfig().radius)
+		{
+			//SetPosition(lastPosition);
+			collisionState = COLLISOR_COLLISION(GetPosition(), other->GetName());
+		}
+	}
+	else
+	{
+		// Manage target as bounding rect.
+		// TODO
+	}
 }
 
 hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
@@ -34,28 +62,29 @@ hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 	bool inPerimeter = !collisionResponse.AnyCollision();
 	if (inPerimeter)
 	{
-		ApplyGravity(nextPosition, tpf);
-		return NO_COLLISION;
+		ApplyGravity(&nextPosition, tpf);
+		return NO_COLLISION(nextPosition);
 	}
 	// Double check is required because of correct position result.
 	// Infact after slide the new position could be outside of perimeter.
 	glm::vec3 correctPosition;
-	bool insideAgain = CorrectAndRetry(collisionResponse.collisions[0], nextPosition, tpf);
+	bool insideAgain = CorrectAndRetry(collisionResponse.collisions[0], nextPosition, &correctPosition, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
 	{
-		CorrectAndRetry(collisionResponse.collisions[1], nextPosition, tpf);
+		CorrectAndRetry(collisionResponse.collisions[1], nextPosition, &correctPosition, tpf);
 	}
 	
-	return WALKMAP_COLLISION;
+	return WALKMAP_COLLISION(correctPosition);
 }
 
-bool hpms::Collisor::CorrectAndRetry(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, float tpf)
-{
-	glm::vec3 correctPosition;
-	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, &correctPosition);
-	UP(correctPosition) = UP(actor->GetPosition());	
+bool hpms::Collisor::CorrectAndRetry(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf)
+{	
+	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, correctPosition);
+	glm::vec3 correctPosition2 = *correctPosition;
+	UP(correctPosition2) = UP(actor->GetPosition());
+	*correctPosition = correctPosition2;
 	hpms::CollisionResponse collisionResponse;
-	walkMap->Collides(correctPosition, config.radius, &collisionResponse);
+	walkMap->Collides(*correctPosition, config.radius, &collisionResponse);
 	float inPerimeter = !collisionResponse.AnyCollision();
 	if (inPerimeter)
 	{
@@ -65,14 +94,14 @@ bool hpms::Collisor::CorrectAndRetry(const hpms::SingleCollisionResponse& single
 	return false;
 }
 
-void hpms::Collisor::ApplyGravity(const glm::vec3& nextPos, float tpf)
+void hpms::Collisor::ApplyGravity(glm::vec3* nextPos, float tpf)
 {
 
 	if (!baseHeightDefined)
 	{
 		baseHeightDefined = true;
 		baseHeight = GetHeightInMap() - UP(actor->GetPosition());
-		actor->SetPosition(nextPos);
+		//actor->SetPosition(nextPos);
 	}
 	else
 	{
@@ -81,21 +110,24 @@ void hpms::Collisor::ApplyGravity(const glm::vec3& nextPos, float tpf)
 			return;
 		}
 		float fixedHeight = baseHeight + GetHeightInMap();
-		glm::vec3 fixedPosition = nextPos;
+		glm::vec3 fixedPosition = *nextPos;
 		UP(fixedPosition) = fixedHeight;
-		if (UP(fixedPosition) - UP(nextPos) < config.maxStepHeight)
+		glm::vec3 correctPosition2 = *nextPos;
+		if (UP(fixedPosition) - UP(correctPosition2) < config.maxStepHeight)
 		{
-			actor->SetPosition(fixedPosition);
+			//actor->SetPosition(fixedPosition);
+			*nextPos = fixedPosition;
 		}
-		if (UP(nextPos) - UP(fixedPosition) > config.maxStepHeight)
+		else if (UP(correctPosition2) - UP(fixedPosition) > config.maxStepHeight)
 		{
 			currentVerticalSpeed += config.gravityAffection * tpf;
-			float posWithFallDown = UP(nextPos) - currentVerticalSpeed;
+			float posWithFallDown = UP(correctPosition2) - currentVerticalSpeed;
 			if (UP(fixedPosition) < posWithFallDown)
 			{
 				UP(fixedPosition) = posWithFallDown;
 			}
-			actor->SetPosition(fixedPosition);
+			//actor->SetPosition(fixedPosition);
+			*nextPos = fixedPosition;
 
 		}
 		else
@@ -208,7 +240,7 @@ void hpms::Collisor::Move(const glm::vec3& nextPosition, const glm::vec2 directi
 	Collisor::direction = direction;
 }
 
-std::string hpms::Collisor::GetName()
+std::string hpms::Collisor::GetName() const
 {
 	return actor->GetName();
 }
@@ -235,11 +267,6 @@ void hpms::Collisor::SetVisible(bool visible)
 bool hpms::Collisor::IsVisible() const
 {
 	return false;
-}
-
-const std::string hpms::Collisor::Name() const
-{
-	return "Collisor";
 }
 
 void hpms::Collisor::SetScale(const glm::vec3& scale)

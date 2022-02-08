@@ -82,23 +82,23 @@ function actors_manager:new(scene_manager)
 
     function actors_manager:create_actor(actor_id)
         local id_suffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.actors)
-        local actor = context:get_instance(k.inst_cat.ACTORS, actor_id, id_suffix)        
+        local actor = context:get_instance(k.inst_cat.ACTORS, actor_id, id_suffix)
         self.loaded_actors[actor.serializable.id] = actor
         self.loaded_actors[actor.serializable.id]:fill_transient_data(self.scene_manager:get_walkmap())
-        lib.add_collisor_to_env(self.scene_manager:get_collision_env(), actor_id, self.loaded_actors[actor.serializable.id].transient.collisor)
+        lib.add_collisor_to_env(self.scene_manager:get_collision_env(), actor.serializable.id, self.loaded_actors[actor.serializable.id].transient.collisor)
         self.actors = self.actors + 1
         return self.loaded_actors[actor.serializable.id]
     end
 
     function actors_manager:poll_events(tpf)
-        self:update_actors(tpf)
+        -- Note: update_collision_env must be done for first, as the collision engine updates all collisors new positions.
+        -- After that we can manage the behavior based on new positions.
         lib.update_collision_env(self.scene_manager:get_collision_env(), tpf)
+        self:update_actors(tpf)  
         if self.loaded_player ~= nil then
             self:manage_pushes(tpf)
             self:manage_collisions(tpf)
-        end
-        
-        
+        end  
     end
 
     function actors_manager:manage_pushes(tpf)

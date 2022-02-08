@@ -340,7 +340,7 @@ namespace hpms
 		}
 
 		static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, const hpms::CollisorConfig& config)
-		{			
+		{
 			auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, config);
 			return c;
 		}
@@ -350,7 +350,7 @@ namespace hpms
 			auto* c = hpms::SafeNew<hpms::Collisor>(node, walkMap, config);
 			return c;
 		}
-				
+
 
 		static inline void AMDeleteCollisor(Collisor* collisor)
 		{
@@ -366,6 +366,10 @@ namespace hpms
 		static inline void AMDeleteCollisionEnv(hpms::CollisionEnv* env)
 		{
 			hpms::SafeDelete(env);
+		}
+
+		static inline hpms::CollisorConfig AMGetCollisorConfig(bool active, float gravityAffection, float maxStepHeight, float boundingRadius, const glm::vec2& boundingRect) {
+			return hpms::CollisorConfig{ gravityAffection, maxStepHeight, active, boundingRadius, boundingRect };
 		}
 
 		static inline hpms::LightAdapter* AMCreateLight(const glm::vec3& color)
@@ -408,10 +412,20 @@ namespace hpms
 		{
 			return textArea->DrawTextStream(text, maxLines);
 		}
-				
+
 		static inline void LUpdateCollisionEnv(hpms::CollisionEnv* env, float tpf)
 		{
 			env->Update(tpf);
+		}
+
+		static inline void LUpdateCollisionEnvNoColls(hpms::CollisionEnv* env, float tpf)
+		{
+			env->Update(tpf, true);
+		}
+
+		static inline void LUpdateCollisor(hpms::Collisor* coll, float tpf)
+		{
+			coll->CollidesWalkmap(tpf);
 		}
 
 		static inline void LAddCollisorToEnv(hpms::CollisionEnv* env, const std::string& collisorName, hpms::Collisor* coll)

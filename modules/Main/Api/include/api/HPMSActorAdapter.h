@@ -13,19 +13,14 @@ namespace hpms
 {
     class ActorAdapter : public hpms::Object
     {
-    public:
-       
-        inline virtual const std::string Name() const override
-        {
-            return "ActorAdapter";
-        }
-
+    public:       
+        
         inline virtual ~ActorAdapter()
         {
 
         }
 
-        virtual std::string GetName() = 0;
+        virtual std::string GetName() const = 0;
 
         virtual void SetPosition(const glm::vec3& position) = 0;
 
@@ -42,5 +37,10 @@ namespace hpms
         virtual void SetVisible(bool visible) = 0;
 
         virtual bool IsVisible() const = 0;
+
+        inline virtual const std::string Name() const override
+        {
+            return "ActorAdapter/" + GetName();
+        }
     };
 }

@@ -15,7 +15,7 @@ namespace hpms
     public:
         inline const std::string Name() const override
         {
-            return "CameraAdapter";
+            return "CameraAdapter/" + GetName();
         }
 
         inline virtual ~CameraAdapter()

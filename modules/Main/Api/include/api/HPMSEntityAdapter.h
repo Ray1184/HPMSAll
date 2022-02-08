@@ -28,7 +28,7 @@ namespace hpms
     public:
         inline const std::string Name() const override
         {
-            return "EntityAdapter";
+            return "EntityAdapter/" + GetName();
         }
 
         inline virtual ~EntityAdapter()
@@ -53,8 +53,6 @@ namespace hpms
         virtual std::string GetLastAnimation() const = 0;
 
         virtual void SetActiveAnimation(const std::string& activeAnimation) = 0;
-
-        virtual std::string GetName() = 0;
 
         virtual void SetPosition(const glm::vec3& position) override = 0;
 

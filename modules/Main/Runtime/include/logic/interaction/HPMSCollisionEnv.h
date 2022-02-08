@@ -8,6 +8,7 @@
 #include <common/HPMSUtils.h>
 #include <vector>
 #include <unordered_map>
+#include <api/HPMSWalkmapAdapter.h>
 
 namespace hpms
 {
@@ -20,9 +21,11 @@ namespace hpms
 
 		hpms::CollisionInfo GetCollisionState(const std::string& collisorName);
 
-		void Update(float tpf);
+		void Update(float tpf, bool ignoreCollisions = false);
 
 		virtual const std::string Name() const override;
+
+	
 	private:
 		std::unordered_map<std::string, hpms::Collisor*> allCollisors;
 		hpms::WalkmapAdapter* currentWalkmap;

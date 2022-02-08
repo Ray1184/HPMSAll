@@ -37,7 +37,7 @@ namespace hpms
 
         virtual ~OverlayTextAreaAdaptee();
 
-        virtual std::string GetName() override;
+        virtual std::string GetName() const override;
 
         virtual void SetPosition(const glm::vec3& position) override;
 
