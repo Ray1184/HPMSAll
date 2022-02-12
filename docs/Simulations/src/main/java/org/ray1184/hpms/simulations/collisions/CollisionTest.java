@@ -50,8 +50,8 @@ public class CollisionTest extends PApplet {
     public void keyPressed() {
         if (key == PConstants.CODED) {
             switch (keyCode) {
-                case PConstants.UP -> moveRatio = 3;
-                case PConstants.DOWN -> moveRatio = -3;
+                case PConstants.UP -> moveRatio = 8;
+                case PConstants.DOWN -> moveRatio = -8;
                 case PConstants.LEFT -> rotRatio = -0.1f;
                 case PConstants.RIGHT -> rotRatio = 0.1f;
             }

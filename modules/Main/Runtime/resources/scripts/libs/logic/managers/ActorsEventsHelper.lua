@@ -27,7 +27,7 @@ function actor_default_push_event(tpf, actor, event, lib)
     local k = game_mechanics_consts:get()
     if event.pusher then
         local pusherDir = lib.get_direction(actor.transient.node.rotation, lib.vec3(0, -1, 0))        
-        event.actor:move_dir(tpf * k.actor_move_ratio.SLOWER, pusherDir)
+        event.actor:move_dir(tpf * k.actor_move_ratio.SLOW, pusherDir)
     end
 end
 

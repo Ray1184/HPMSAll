@@ -57,12 +57,14 @@ function get_collision_events(collisions_states, id, actor1, actor2)
     }
 end
 
-function collision_actor_actor(i1, i2, lib, threshold)
-    local p1 = i1:get_position()
-    local p2 = i2:get_position()
-    local minDist = i1:get_scaled_rad() + i2:get_scaled_rad()
-    local v1 = lib.vec2(p1.x, p1.y)
-    local v2 = lib.vec2(p2.x, p2.y)
-    return lib.vec2_dist(v1, v2) <(minDist +(threshold or 0))
+function collision_actor_actor(i1, i2, lib)
+    local collState = lib.get_collision_state_by_collisor(i2.transient.collisor)
+    if collState ~= nil then
+        log_info(i1.serializable.id)
+        log_info(collState.second)
+        log_info('.................')
+        return collState.second == i1.serializable.id
+    end
+    return false
 end
 

@@ -227,6 +227,7 @@ void hpms::LogBuffer::Print(const std::stringstream& ss)
     std::puts(buffer);    
 
     appHpms << buffer << " | " << ss.str();
+    appHpms.flush();
    
 }
 

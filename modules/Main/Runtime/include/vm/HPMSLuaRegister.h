@@ -341,7 +341,6 @@ namespace hpms
                     .beginClass<Collisor>("collisor")
                     .addProperty("position", &hpms::Collisor::GetPosition, &hpms::Collisor::SetPosition)
                     .addProperty("rotation", &hpms::Collisor::GetRotation, &hpms::Collisor::SetRotation)
-                    .addProperty("vertical_speed", &hpms::Collisor::GetVerticalSpeed, &hpms::Collisor::SetVerticalSpeed)
                     .addProperty("sector", &hpms::Collisor::GetCurrentTriangle, &hpms::Collisor::SetCurrentTriangle)
                     .endClass()
                     .endNamespace();
@@ -363,7 +362,8 @@ namespace hpms
                 .beginClass<CollisionInfo>("collision_state")
                 .addData("collision", &hpms::CollisionInfo::collision)
                 .addData("type", &hpms::CollisionInfo::type)
-                .addData("other", &hpms::CollisionInfo::other)
+                .addData("first", &hpms::CollisionInfo::first)
+                .addData("second", &hpms::CollisionInfo::second)
                 .endClass()
                 .endNamespace();
         }

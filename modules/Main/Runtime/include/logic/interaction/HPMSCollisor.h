@@ -10,6 +10,10 @@
 #include <glm/gtx/perpendicular.hpp>
 #include <common/HPMSUtils.h>
 
+#define NO_COLLISION(pos, coll1) hpms::CollisionInfo{ false, false, hpms::ZERO_COLLISION, coll1, "ND", pos };
+#define WALKMAP_COLLISION(pos, coll1, skipCorrection) hpms::CollisionInfo{ true, skipCorrection, hpms::VS_WALKMAP, coll1, "ND", pos };
+#define COLLISOR_COLLISION(pos, coll1, coll2, skipCorrection) hpms::CollisionInfo{ true, skipCorrection, hpms::VS_COLLISOR, coll1, coll2, pos };
+
 namespace hpms
 {
 	enum CollisionType
@@ -30,8 +34,10 @@ namespace hpms
 	struct CollisionInfo
 	{
 		bool collision{ false };
+		bool skipCorrection{ false };
 		CollisionType type{ ZERO_COLLISION };
-		std::string other;
+		std::string first;
+		std::string second;
 		glm::vec3 nextPosition;
 	};
 
@@ -51,7 +57,6 @@ namespace hpms
 		std::vector<glm::vec2> perimeter;
 		CollisorConfig config;
 		CollisionInfo collisionState;
-		float currentVerticalSpeed;
 	public:
 
 
@@ -95,23 +100,16 @@ namespace hpms
 		{
 			// Not implemented.
 			LOG_WARN("Cannot set sampled triangle inside script");
-		}
-				
-
-		inline void SetVerticalSpeed(float verticalSpeed)
-		{
-			// Not implemented.
-			LOG_WARN("Cannot change collisor vertical speed from script");
-		}
-
-		inline float GetVerticalSpeed() const
-		{
-			return currentVerticalSpeed;
-		}
+		}				
 
 		inline const CollisionInfo& GetCollisionState() const
 		{
 			return collisionState;
+		}
+
+		inline void ResetCollisionState()
+		{
+			collisionState = NO_COLLISION(glm::vec3(0, 0, 0), GetName());
 		}
 
 		inline const CollisorConfig& GetConfig() const
@@ -142,7 +140,7 @@ namespace hpms
 		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec2* correctPosition);
 		void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
 		bool CorrectAndRetry(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf);
-		void ApplyGravity(glm::vec3* correctPosition, float tpf);
+		void ApplyHeight(glm::vec3* correctPosition, float tpf);
 		float GetHeightInMap();
 	};
 }

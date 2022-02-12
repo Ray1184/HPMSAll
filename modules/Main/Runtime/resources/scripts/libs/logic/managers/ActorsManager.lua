@@ -103,13 +103,12 @@ function actors_manager:new(scene_manager)
 
     function actors_manager:manage_pushes(tpf)
         -- Push between player and pushables
-        for ka, actor in pairs(self.loaded_actors) do
+        for ka, actor in pairs(self.loaded_actors) do            
             local pushing = actor.serializable.pushable
             pushing = pushing and self.loaded_player.serializable.action_mode == k.actor_action_mode.PUSH
             pushing = pushing and self.loaded_player.serializable.performing_action
-            local pushThreshold = self.loaded_player:get_scaled_rad() / 10
-            if pushing and collision_actor_actor(actor, self.loaded_player, lib, pushThreshold) then
-                local evts_info = get_push_events(self.loaded_player, actor)
+            if pushing and collision_actor_actor(actor, self.loaded_player, lib) then
+                local evts_info = get_push_events(self.loaded_player, actor)               
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
                 actor_event(tpf, actor, evts_info.evt_info_1, lib)
             end

@@ -196,23 +196,23 @@ scene = {
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
         if walk == 1 then
-            walkRatio = walkRatio + tpf * tpf * 100
+            walkRatio = walkRatio + tpf * 10
             if walkRatio > 1 then
                 walkRatio = 1
             end
         elseif walk == -1 then
-            walkRatio = walkRatio - tpf * tpf * 100
+            walkRatio = walkRatio - tpf * 10
             if walkRatio < -1 then
                 walkRatio = -1
             end
         else
             if walkRatio > 0 then
-                walkRatio = walkRatio - tpf * tpf * 100
+                walkRatio = walkRatio - tpf * 10
                 if walkRatio < 0 then
                     walkRatio = 0
                 end
             else
-                walkRatio = walkRatio + tpf * tpf * 100
+                walkRatio = walkRatio + tpf * 10
                 if walkRatio > 0 then
                     walkRatio = 0
                 end
@@ -244,7 +244,7 @@ scene = {
             player:play(ANIM_MODE_LOOP, 2, 1)
         end
         player:rotate(0, 0, 50 * tpf * rotate)
-        player:move_dir(tpf * walkRatio)
+        player:move_dir(tpf * walkRatio * 1)
         -- player:update(tpf)
 
 
