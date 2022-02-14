@@ -90,15 +90,19 @@ function actors_manager:new(scene_manager)
         return self.loaded_actors[actor.serializable.id]
     end
 
+    function actors_manager:init_events()
+        lib.update_collision_env_no_collisions(self.scene_manager:get_collision_env(), 0)
+    end
+
     function actors_manager:poll_events(tpf)
         -- Note: update_collision_env must be done for first, as the collision engine updates all collisors new positions.
-        -- After that we can manage the behavior based on new positions.
-        lib.update_collision_env(self.scene_manager:get_collision_env(), tpf)
+        -- After that we can manage the behavior based on new positions.        
         self:update_actors(tpf)  
         if self.loaded_player ~= nil then
             self:manage_pushes(tpf)
             self:manage_collisions(tpf)
         end  
+        lib.update_collision_env(self.scene_manager:get_collision_env(), tpf)
     end
 
     function actors_manager:manage_pushes(tpf)

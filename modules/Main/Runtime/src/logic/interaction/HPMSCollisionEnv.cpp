@@ -21,9 +21,7 @@ hpms::CollisionInfo hpms::CollisionEnv::GetCollisionState(const std::string& col
 	}
 	else 
 	{
-		auto state = collisor->GetCollisionState();
-		collisor->ResetCollisionState();
-		return state;
+		return collisor->GetCollisionState();
 	}
 }
 
@@ -84,7 +82,10 @@ void hpms::CollisionEnv::Update(float tpf, bool ignoreCollisions)
 			currentCollisor->GetActor()->SetPosition(currentCollisor->GetNextStep());
 		}
 
+		currentCollisor->UpdateBounding();
+
 	}
+	
 }
 
 const std::string hpms::CollisionEnv::Name() const

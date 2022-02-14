@@ -75,7 +75,7 @@ scene = {
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest3:set_position(-1, 2, 0)
         chest3:scale(0.5, 0.5, 0.5)
-        actors_mgr:poll_events(0)
+        actors_mgr:init_events()
 
         -- log_warn(insp.inspect(player))
         -- item2 = player:ret('EY_DummyAnim.mesh', 'main_player_dopplelanger', 0.3098)
@@ -223,14 +223,14 @@ scene = {
         walkF = walk > 0
         walkB = walk < 0
         player.serializable.performing_action = false
-        if action or(action and rotate) or(action and walkF) then
+        if action then
             player:set_anim('Push')
             player:play(ANIM_MODE_LOOP, 1)
             player.serializable.performing_action = true
-        elseif walkF or(walkF and rotate) then
+        elseif walkF or(walkF and turn) then
             player:set_anim('Walk_Forward')
             player:play(ANIM_MODE_LOOP, 1)
-        elseif walkB or(walkB and rotate) then
+        elseif walkB or(walkB and turn) then
             player:set_anim('Walk_Back')
             player:play(ANIM_MODE_LOOP, 1)
         elseif turn then
@@ -243,7 +243,9 @@ scene = {
             player:set_anim('Idle')
             player:play(ANIM_MODE_LOOP, 2, 1)
         end
-        player:rotate(0, 0, 50 * tpf * rotate)
+        if not action then
+            player:rotate(0, 0, 50 * tpf * rotate)
+        end
         player:move_dir(tpf * walkRatio * 1)
         -- player:update(tpf)
 
@@ -253,11 +255,11 @@ scene = {
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
 
-        --hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
-        --hpms.debug_draw_aabb(player.transient.collisor)
-        --hpms.debug_draw_aabb(chest.transient.collisor)
-        --hpms.debug_draw_aabb(chest2.transient.collisor)
-        --hpms.debug_draw_aabb(chest3.transient.collisor)
+        hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
+        hpms.debug_draw_aabb(player.transient.collisor)
+        hpms.debug_draw_aabb(chest.transient.collisor)
+        hpms.debug_draw_aabb(chest2.transient.collisor)
+        hpms.debug_draw_aabb(chest3.transient.collisor)
 
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
         current_sector = player.transient.collisor.sector

@@ -16,10 +16,11 @@ function dummy_chest:ret(id_suffix)
 
     local path = g.res_refs.actors.DUMMY_CHEST.PATH
     local rad = g.res_refs.actors.DUMMY_CHEST.B_RAD
+    local rect = g.res_refs.actors.DUMMY_CHEST.B_RECT
     local ghost = g.res_refs.actors.DUMMY_CHEST.GHOST
     local id = g.res_refs.actors.DUMMY_CHEST.ID .. '/' .. id_suffix
 
-    local this = scene_actor:ret(path, id, rad, ghost)
+    local this = scene_actor:ret(path, id, rad, rect, ghost)
     this.serializable.pushable = true
 
     self.__tostring = function(o)

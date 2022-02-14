@@ -16,12 +16,12 @@ dependencies = {
 
 player = { }
 
-function player:ret(path, id, rad, ghost)
+function player:ret(path, id, rad, rect, ghost)
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
     local id = 'player/' .. id
-    local ret = scene_actor:ret(path, id, rad, ghost)
+    local ret = scene_actor:ret(path, id, rad, rect, ghost)
 
 
     local this = context:inst():get_object(id,
@@ -201,7 +201,7 @@ function player:ret(path, id, rad, ghost)
         moveRatioByAction[k.actor_action_mode.EQUIP_MG] = 0
         moveRatioByAction[k.actor_action_mode.EQUIP_RIFLE] = 0
         moveRatioByAction[k.actor_action_mode.EQUIP_THROWABLE] = 0
-        moveRatioByAction[k.actor_action_mode.PUSH] = k.actor_move_ratio.SLOWER
+        moveRatioByAction[k.actor_action_mode.PUSH] = k.actor_move_ratio.SLOW
         moveRatioByAction[k.actor_action_mode.STEALTH] = k.actor_move_ratio.SLOWER
         moveRatioByAction[k.actor_action_mode.SWIM] = k.actor_move_ratio.SLOW
         moveRatioByAction[k.actor_action_mode.JUMP] = 0

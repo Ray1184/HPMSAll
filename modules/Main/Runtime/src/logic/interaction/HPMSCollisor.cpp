@@ -17,21 +17,50 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
-	if (config.rect.x == 0 || config.rect.y == 0) {
-		// Manage target as bounding radius.
-		float dist = glm::distance(nextPosition, other->nextPosition);
-		if (dist <= config.radius + other->GetConfig().radius)
-		{
-			//SetPosition(lastPosition);
-			collisionState = COLLISOR_COLLISION(GetPosition(), GetName(), other->GetName(), true);
-		}
-	}
-	else
+	CollisionResponse collisionResponse;
+	glm::vec2 noTranslation(0, 0);
+	hpms::CircleInteractPolygon(GetPosition(), GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
+	bool noCollision = !collisionResponse.AnyCollision();
+	if (noCollision)
 	{
-		// Manage target as bounding rect.
-		// TODO
+		//ApplyHeight(&nextPosition, tpf);
 		collisionState = NO_COLLISION(nextPosition, GetName());
+		return;
 	}
+
+	// Double check is required because of correct position result.
+	// Infact after slide the new position could be outside of perimeter.
+	//bool skipCorrection = false;
+	//glm::vec3 correctPosition;
+	//bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], nextPosition, &correctPosition, other, tpf);
+	//if (!insideAgain && collisionResponse.collisions.size() >= 2)
+	//{
+	//	if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], nextPosition, &correctPosition, other, tpf))
+	//	{
+	//		skipCorrection = true;
+	//	}
+	//}
+
+	collisionState = COLLISOR_COLLISION(GetPosition(), GetName(), other->GetName(), true);
+
+}
+
+bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, hpms::Collisor* collisor, float tpf)
+{
+	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, correctPosition);
+	glm::vec3 correctPosition2 = *correctPosition;
+	UP(correctPosition2) = UP(actor->GetPosition());
+	*correctPosition = correctPosition2;
+	hpms::CollisionResponse collisionResponse;
+	glm::vec2 noTranslation(0, 0);
+	hpms::CircleInteractPolygon(GetPosition(), GetScaledBoundingRadius(), noTranslation, collisor->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);	
+	bool noCollision = !collisionResponse.AnyCollision();
+	if (noCollision)
+	{
+		ApplyHeight(correctPosition, tpf);
+		return true;
+	}
+	return false;
 }
 
 hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
@@ -48,28 +77,28 @@ hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 	// Infact after slide the new position could be outside of perimeter.
 	bool skipCorrection = false;
 	glm::vec3 correctPosition;
-	bool insideAgain = CorrectAndRetry(collisionResponse.collisions[0], nextPosition, &correctPosition, tpf);
+	bool insideAgain = CorrectAndRetryWalkmap(collisionResponse.collisions[0], nextPosition, &correctPosition, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
 	{
-		if (!CorrectAndRetry(collisionResponse.collisions[1], nextPosition, &correctPosition, tpf))
+		if (!CorrectAndRetryWalkmap(collisionResponse.collisions[1], nextPosition, &correctPosition, tpf))
 		{
 			skipCorrection = true;
 		}
 	}
 
-	
+
 	return WALKMAP_COLLISION(correctPosition, GetName(), skipCorrection);
 }
 
-bool hpms::Collisor::CorrectAndRetry(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf)
-{	
+bool hpms::Collisor::CorrectAndRetryWalkmap(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf)
+{
 	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, correctPosition);
 	glm::vec3 correctPosition2 = *correctPosition;
 	UP(correctPosition2) = UP(actor->GetPosition());
 	*correctPosition = correctPosition2;
 	hpms::CollisionResponse collisionResponse;
 	walkMap->Collides(*correctPosition, config.radius, &collisionResponse);
-	float inPerimeter = !collisionResponse.AnyCollision();
+	bool inPerimeter = !collisionResponse.AnyCollision();
 	if (inPerimeter)
 	{
 		ApplyHeight(correctPosition, tpf);
@@ -113,40 +142,7 @@ float hpms::Collisor::GetHeightInMap()
 		currentTriangle->TO_UP1(), currentTriangle->TO_UP2(), currentTriangle->TO_UP3(), actor->GetPosition());
 }
 
-// UNUSED
-void hpms::Collisor::DetectBySector()
-{
-//	auto* nextTriangle = walkMap->SampleTriangle(nextPosition, config.radius);
-//
-//	if (nextTriangle)
-//	{
-//		// No collision, go to next triangle.
-//		actor->SetPosition(nextPosition);
-//		currentTriangle = nextTriangle;
-//		return;
-//	}
-//	else
-//	{
-//		// No sampling.
-//		if (currentTriangle == nullptr)
-//		{
-//			return;
-//		}
-//
-//		// Check potential collisions.
-//		for (auto* side : currentTriangle->GetPerimetralSides())
-//		{
-//			std::pair<glm::vec2, glm::vec2> sidePair = walkMap->GetSideCoordsFromTriangle(currentTriangle, side);
-//			float t = IntersectRayLineSegment(actor->GetPosition(), direction, sidePair.first, sidePair.second);
-//			// Correct side.
-//			if (t > -1)
-//			{
-//				CorrectPositionSectorMode(sidePair.first, sidePair.second, true);
-//				return;
-//			}
-//		}
-//	}
-}
+
 
 void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec3* correctPosition)
 {
@@ -164,32 +160,19 @@ void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, c
 	*correctPosition = ADDV3_V2(actor->GetPosition(), vt);
 }
 
-void hpms::Collisor::CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle)
+bool hpms::Collisor::RayIntersect(const glm::vec3& dir, hpms::Collisor* target)
 {
-//	glm::vec2 n = glm::normalize(Perpendicular(sideA - sideB));
-//	glm::vec3 v = nextPosition - actor->GetPosition();
-//	glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
-//	glm::vec2 vt = glm::vec2(SD(v), FW(v)) - vn;
-//	glm::vec3 correctPosition = ADDV3_V2(actor->GetPosition(), vt);
-//
-//	if (resampleTriangle)
-//	{
-//
-//		auto* correctTriangle = walkMap->SampleTriangle(correctPosition, config.radius);
-//
-//		if (correctTriangle != nullptr)
-//		{
-//			// Calculated position is good, move actor to calculated position.
-//			actor->SetPosition(correctPosition);
-//
-//			// Assign for safe, but correctTriangle should be the original.
-//			currentTriangle = correctTriangle;
-//		}
-//	}
-//	else
-//	{
-//		actor->SetPosition(correctPosition);
-//	}
+	for (size_t i = 0; i < GetScaledBoundingRect().size(); i++)
+	{
+		size_t index1 = i;
+		size_t index2 = i < GetScaledBoundingRect().size() - 1 ? i : 0;
+		float res = hpms::IntersectRayLineSegment(target->GetPosition(), dir, GetScaledBoundingRect()[index1], GetScaledBoundingRect()[index2]);
+		if (res != -1)
+		{
+			return true;
+		}
+	}
+	return false;
 }
 
 void hpms::Collisor::Move(const glm::vec3& nextPosition, const glm::vec2 direction)
@@ -199,7 +182,7 @@ void hpms::Collisor::Move(const glm::vec3& nextPosition, const glm::vec2 directi
 		outOfDate = true;
 	}
 	Collisor::nextPosition = nextPosition;
-	Collisor::direction = direction;
+	Collisor::direction = direction;	
 }
 
 std::string hpms::Collisor::GetName() const
@@ -248,6 +231,19 @@ void hpms::Collisor::SetPosition(const glm::vec3& position)
 	Move(position, dir2);
 }
 
+void hpms::Collisor::UpdateBounding()
+{
+	scaledRadius = config.radius * ((GetScale().x + GetScale().y + GetScale().z) / 3);
+	glm::vec2 dim = config.rect * ((GetScale().x + GetScale().y + GetScale().z) / 3);
+	scaledRect.clear();
+	scaledRect.push_back(glm::vec2(GetPosition().x - dim.x / 2, GetPosition().y - dim.y / 2));
+	scaledRect.push_back(glm::vec2(GetPosition().x + dim.x / 2, GetPosition().y - dim.y / 2));
+	scaledRect.push_back(glm::vec2(GetPosition().x + dim.x / 2, GetPosition().y + dim.y / 2));
+	scaledRect.push_back(glm::vec2(GetPosition().x - dim.x / 2, GetPosition().y + dim.y / 2));
+
+}
+
+
 hpms::Collisor::Collisor(hpms::ActorAdapter* actor, hpms::WalkmapAdapter* walkMap, const CollisorConfig& config) : actor(actor),
 walkMap(walkMap),
 config(config),
@@ -263,9 +259,13 @@ collisionState(CollisionInfo{})
 		return false;
 	};
 	walkMap->ForEachSide(checkPerimeter);
+
+	// Calc bounding radius/rect.
+	UpdateBounding();
+	
 }
 
 hpms::Collisor::~Collisor()
 {
-	
+
 }

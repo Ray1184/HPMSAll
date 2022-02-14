@@ -22,6 +22,7 @@ namespace hpms
 		VS_WALKMAP = 1,
 		VS_COLLISOR = 2
 	};
+	
 	struct CollisorConfig
 	{
 		float gravityAffection{ 9.81f };
@@ -57,6 +58,8 @@ namespace hpms
 		std::vector<glm::vec2> perimeter;
 		CollisorConfig config;
 		CollisionInfo collisionState;
+		float scaledRadius;
+		std::vector<glm::vec2> scaledRect;
 	public:
 
 
@@ -127,20 +130,47 @@ namespace hpms
 			return actor;
 		}
 
+
+		inline float GetScaledBoundingRadius()
+		{
+			return scaledRadius;
+		}
+
+		inline std::vector<glm::vec2> GetScaledBoundingRect()
+		{
+			return scaledRect;
+		}
+
+
 		void Sample(float tpf);
 
 		void CollidesWalkmap(float tpf);
 
 		void CollidesCollisor(float tpf, hpms::Collisor* other);
 
+		void UpdateBounding();
+
+		
+
 	private:
-		void DetectBySector();
+		void DetectBySector();		
+
 		CollisionInfo DetectByBoundingRadius(float tpf);
+
 		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec3* correctPosition);
+
 		void CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec2* correctPosition);
+
 		void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
-		bool CorrectAndRetry(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf);
+
+		bool CorrectAndRetryWalkmap(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf);
+
+		bool CorrectAndRetryCollisor(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, hpms::Collisor* collisor, float tpf);
+		
 		void ApplyHeight(glm::vec3* correctPosition, float tpf);
+		
+		bool RayIntersect(const glm::vec3& dir, hpms::Collisor* target);
+		
 		float GetHeightInMap();
 	};
 }

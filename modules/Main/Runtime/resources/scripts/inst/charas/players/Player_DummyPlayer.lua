@@ -16,6 +16,7 @@ function dummy_player:ret()
 
     local path = g.res_refs.players.DUMMY_PLAYER.PATH
     local rad = g.res_refs.players.DUMMY_PLAYER.B_RAD
+    local rect = g.res_refs.players.DUMMY_PLAYER.B_RECT
     local ghost = g.res_refs.players.DUMMY_PLAYER.GHOST
     local id = g.res_refs.players.DUMMY_PLAYER.ID
     local anagr = {
@@ -80,7 +81,7 @@ function dummy_player:ret()
 
     }
 
-    local this = player:ret(path, id, rad, ghost)
+    local this = player:ret(path, id, rad, rect, ghost)
 
     this:set_anagr(anagr)
     this:set_stats(stats)

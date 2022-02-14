@@ -32,11 +32,11 @@ function game_consts:get()
             -- Entities paths.
             players =
             {
-                DUMMY_PLAYER = { ID = 'dummy_player', PATH = 'DummyAnim.mesh', B_RAD = 0.3098, GHOST = false }
+                DUMMY_PLAYER = { ID = 'dummy_player', PATH = 'DummyAnim.mesh', B_RAD = 0.3098, B_RECT = { x = 0.439, y = 0.439 }, GHOST = false }
             },
             actors =
             {
-                DUMMY_CHEST = { ID = 'dummy_chest', PATH = 'DummyChest.mesh', B_RAD = 0.6410, GHOST = false }
+                DUMMY_CHEST = { ID = 'dummy_chest', PATH = 'DummyChest.mesh', B_RAD = 0.6410, B_RECT = { x = 0.909, y = 0.909 }, GHOST = false }
             }
 
 

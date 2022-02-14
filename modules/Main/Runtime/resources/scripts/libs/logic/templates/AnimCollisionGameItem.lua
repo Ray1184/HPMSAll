@@ -16,13 +16,13 @@ dependencies = {
 
 anim_collision_game_item = { }
 
-function anim_collision_game_item:ret(path, id, bounding_radius, ghost)
+function anim_collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost)
     lib = backend:get()
     insp = inspector:get()
 
     local id = 'anim_collision_game_item/' .. id
     local ret = anim_game_item:ret(path, id)
-    local ret2 = collision_game_item:ret(path, id, bounding_radius, ghost)
+    local ret2 = collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost)
 
     local this = context:inst():get_object(id,
     function()

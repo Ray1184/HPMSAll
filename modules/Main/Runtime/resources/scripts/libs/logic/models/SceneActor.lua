@@ -16,12 +16,12 @@ dependencies = {
 
 scene_actor = { }
 
-function scene_actor:ret(path, id, rad, ghost)
+function scene_actor:ret(path, id, rad, rect, ghost)
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
     local id = 'scene_actor/' .. id
-    local ret = anim_collision_game_item:ret(path, id, rad, ghost)
+    local ret = anim_collision_game_item:ret(path, id, rad, rect, ghost)
 
     local this = context:inst():get_object(id,
     function()

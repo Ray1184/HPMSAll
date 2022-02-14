@@ -17,7 +17,7 @@ dependencies = {
 
 collision_game_item = { }
 
-function collision_game_item:ret(path, id, bounding_radius, ghost)
+function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost)
     lib = backend:get()
     k = game_mechanics_consts:get()
     trx = transform:get()
@@ -37,6 +37,7 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
                 collision_info =
                 {
                     bounding_radius = bounding_radius or 0,
+                    bounding_rect = bounding_rect or { x = 0, y = 0 },
                     ghost = ghost or false
                 }
             }
@@ -92,14 +93,14 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
     function collision_game_item:move_dir(ratio, dir)
         if self.serializable.expired then
             return
-        end       
+        end
         local collisor = self.transient.collisor
         local dir = dir or lib.get_direction(collisor.rotation, lib.vec3(0, -1, 0))
         local nextPos = lib.vec3_add(collisor.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
         lib.move_collisor_dir(collisor, nextPos, lib.vec2(dir.x, dir.y))
     end
 
-    function collision_game_item:rotate(rx, ry, rz)     
+    function collision_game_item:rotate(rx, ry, rz)
         self.metainfo.override.game_item.rotate(self, rx, ry, rz)
     end
 
@@ -128,10 +129,10 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         if self.serializable.expired then
             return
         end
-        local scaledRad = self.get_scaled_rad(self)
-        -- TODO bounding rect.
-        local conf = lib.get_collisor_config(not self.serializable.collision_info.ghost, k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT, scaledRad, lib.vec2(0, 0))
- 
+        local rad = self.serializable.collision_info.bounding_radius
+        local rect = lib.vec2(self.serializable.collision_info.bounding_rect.x, self.serializable.collision_info.bounding_rect.y)
+        local conf = lib.get_collisor_config(not self.serializable.collision_info.ghost, k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT, rad, rect)
+
         local tra = {
             transient =
             {
@@ -146,10 +147,10 @@ function collision_game_item:ret(path, id, bounding_radius, ghost)
         self.metainfo.override.game_item.update(self)
         if self.serializable.expired then
             return
-        end      
+        end
         local collisor = self.transient.collisor
         local collPos = collisor.position
-        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }        
+        self.serializable.visual_info.position = { x = collPos.x, y = collPos.y, z = collPos.z }
     end
 
     function collision_game_item:kill_instance()
