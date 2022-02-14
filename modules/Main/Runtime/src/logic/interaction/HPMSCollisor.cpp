@@ -23,25 +23,25 @@ void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 	bool noCollision = !collisionResponse.AnyCollision();
 	if (noCollision)
 	{
-		//ApplyHeight(&nextPosition, tpf);
+		ApplyHeight(&nextPosition, tpf);
 		collisionState = NO_COLLISION(nextPosition, GetName());
 		return;
 	}
 
 	// Double check is required because of correct position result.
 	// Infact after slide the new position could be outside of perimeter.
-	//bool skipCorrection = false;
-	//glm::vec3 correctPosition;
-	//bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], nextPosition, &correctPosition, other, tpf);
-	//if (!insideAgain && collisionResponse.collisions.size() >= 2)
-	//{
-	//	if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], nextPosition, &correctPosition, other, tpf))
-	//	{
-	//		skipCorrection = true;
-	//	}
-	//}
+	bool skipCorrection = false;
+	glm::vec3 correctPosition;
+	bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], nextPosition, &correctPosition, other, tpf);
+	if (!insideAgain && collisionResponse.collisions.size() >= 2)
+	{
+		if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], nextPosition, &correctPosition, other, tpf))
+		{
+			skipCorrection = true;
+		}
+	}
 
-	collisionState = COLLISOR_COLLISION(GetPosition(), GetName(), other->GetName(), true);
+	collisionState = COLLISOR_COLLISION(correctPosition, GetName(), other->GetName(), true);
 
 }
 
@@ -234,12 +234,13 @@ void hpms::Collisor::SetPosition(const glm::vec3& position)
 void hpms::Collisor::UpdateBounding()
 {
 	scaledRadius = config.radius * ((GetScale().x + GetScale().y + GetScale().z) / 3);
-	glm::vec2 dim = config.rect * ((GetScale().x + GetScale().y + GetScale().z) / 3);
+	glm::vec2 dim = config.rect;// *((GetScale().x + GetScale().y + GetScale().z) / 3);
 	scaledRect.clear();
-	scaledRect.push_back(glm::vec2(GetPosition().x - dim.x / 2, GetPosition().y - dim.y / 2));
-	scaledRect.push_back(glm::vec2(GetPosition().x + dim.x / 2, GetPosition().y - dim.y / 2));
-	scaledRect.push_back(glm::vec2(GetPosition().x + dim.x / 2, GetPosition().y + dim.y / 2));
-	scaledRect.push_back(glm::vec2(GetPosition().x - dim.x / 2, GetPosition().y + dim.y / 2));
+	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y - (dim.y / 2)));
+	scaledRect.push_back(glm::vec2(GetPosition().x + (dim.x / 2), GetPosition().y - (dim.y / 2)));
+	scaledRect.push_back(glm::vec2(GetPosition().x + (dim.x / 2), GetPosition().y + (dim.y / 2)));
+	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y + (dim.y / 2)));
+	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y - (dim.y / 2)));
 
 }
 
