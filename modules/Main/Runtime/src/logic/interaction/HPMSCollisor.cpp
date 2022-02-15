@@ -18,8 +18,13 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
 	CollisionResponse collisionResponse;
+	std::string collName = GetName();
+	if ("node_player/dummy_player" == collName)
+	{
+		bool x = true;
+	}
 	glm::vec2 noTranslation(0, 0);
-	hpms::CircleInteractPolygon(GetPosition(), GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
+	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
 	bool noCollision = !collisionResponse.AnyCollision();
 	if (noCollision)
 	{
@@ -30,18 +35,20 @@ void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 
 	// Double check is required because of correct position result.
 	// Infact after slide the new position could be outside of perimeter.
+	
 	bool skipCorrection = false;
 	glm::vec3 correctPosition;
 	bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], nextPosition, &correctPosition, other, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
 	{
+		
 		if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], nextPosition, &correctPosition, other, tpf))
 		{
 			skipCorrection = true;
 		}
 	}
 
-	collisionState = COLLISOR_COLLISION(correctPosition, GetName(), other->GetName(), true);
+	collisionState = COLLISOR_COLLISION(correctPosition, GetName(), other->GetName(), skipCorrection);
 
 }
 
@@ -53,7 +60,7 @@ bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse
 	*correctPosition = correctPosition2;
 	hpms::CollisionResponse collisionResponse;
 	glm::vec2 noTranslation(0, 0);
-	hpms::CircleInteractPolygon(GetPosition(), GetScaledBoundingRadius(), noTranslation, collisor->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);	
+	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, collisor->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
 	bool noCollision = !collisionResponse.AnyCollision();
 	if (noCollision)
 	{
@@ -234,7 +241,7 @@ void hpms::Collisor::SetPosition(const glm::vec3& position)
 void hpms::Collisor::UpdateBounding()
 {
 	scaledRadius = config.radius * ((GetScale().x + GetScale().y + GetScale().z) / 3);
-	glm::vec2 dim = config.rect;// *((GetScale().x + GetScale().y + GetScale().z) / 3);
+	glm::vec2 dim = config.rect * ((GetScale().x + GetScale().y + GetScale().z) / 3);
 	scaledRect.clear();
 	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y - (dim.y / 2)));
 	scaledRect.push_back(glm::vec2(GetPosition().x + (dim.x / 2), GetPosition().y - (dim.y / 2)));

@@ -106,23 +106,22 @@ function actors_manager:new(scene_manager)
     end
 
     function actors_manager:manage_pushes(tpf)
-        -- Push between player and pushables
+        -- Push between player and pushables.
         for ka, actor in pairs(self.loaded_actors) do            
             local pushing = actor.serializable.pushable
             pushing = pushing and self.loaded_player.serializable.action_mode == k.actor_action_mode.PUSH
             pushing = pushing and self.loaded_player.serializable.performing_action
-            if pushing and collision_actor_actor(actor, self.loaded_player, lib) then
+            if pushing and collision_actor_actor_custom(self.loaded_player, actor, lib, k.DEFAULT_MIN_PUSH_DISTANCE) then                
                 local evts_info = get_push_events(self.loaded_player, actor)               
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
-                actor_event(tpf, actor, evts_info.evt_info_1, lib)
             end
         end
     end
 
     function actors_manager:manage_collisions(tpf)
-        -- Collision between player and actors
+        -- Collision between player and actors.
         for ka, actor in pairs(self.loaded_actors) do
-            if collision_actor_actor(actor, self.loaded_player, lib) then
+            if collision_actor_actor(self.loaded_player, actor, lib) then
                 local evts_info = get_collision_events(self.collisions_states, ka, self.loaded_player, actor)
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
                 actor_event(tpf, actor, evts_info.evt_info_1, lib)
@@ -130,6 +129,8 @@ function actors_manager:new(scene_manager)
                 reset_collision_counter(self.collisions_states, ka)
             end
         end
+
+        -- Collision between actors and actors.
     end
 
     function actors_manager:update_actors(tpf)

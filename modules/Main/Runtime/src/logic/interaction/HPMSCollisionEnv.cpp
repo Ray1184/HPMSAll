@@ -19,7 +19,7 @@ hpms::CollisionInfo hpms::CollisionEnv::GetCollisionState(const std::string& col
 		ss << "Collisor with name " << collisorName << " not present in collision environment";
 		LOG_ERROR(ss.str().c_str());
 	}
-	else 
+	else
 	{
 		return collisor->GetCollisionState();
 	}
@@ -28,9 +28,10 @@ hpms::CollisionInfo hpms::CollisionEnv::GetCollisionState(const std::string& col
 void hpms::CollisionEnv::Update(float tpf, bool ignoreCollisions)
 {
 	for (const auto& current : allCollisors)
-	{	
+	{
 		std::string currentName = current.first;
 		auto* currentCollisor = current.second;
+		auto originalPosition = currentCollisor->GetPosition();
 
 		currentCollisor->Sample(tpf);
 
@@ -55,19 +56,19 @@ void hpms::CollisionEnv::Update(float tpf, bool ignoreCollisions)
 				continue;
 			}
 
-			currentCollisor->CollidesCollisor(tpf, otherCollisor);
+			currentCollisor->CollidesCollisor(tpf, otherCollisor);			
+
+			collStateCollisor = GetCollisionState(currentName);
 
 			// At first collision jump to next.
-			collStateCollisor = GetCollisionState(currentName);	
-			if (collStateCollisor.collision) {				
+			if (collStateCollisor.collision) {
 				break;
-			}	
-			
+			}
+
 		}
-		if (collStateWalkmap.skipCorrection || (collStateWalkmap.collision && collStateCollisor.collision))
+		if (collStateWalkmap.skipCorrection || collStateCollisor.skipCorrection)
 		{
-			// If collision is in blind spot (like corner) or both walkmap and collisor, don't move the actor.
-			break;
+			currentCollisor->GetActor()->SetPosition(originalPosition);
 		}
 		else if (collStateWalkmap.collision)
 		{
@@ -85,7 +86,7 @@ void hpms::CollisionEnv::Update(float tpf, bool ignoreCollisions)
 		currentCollisor->UpdateBounding();
 
 	}
-	
+
 }
 
 const std::string hpms::CollisionEnv::Name() const
