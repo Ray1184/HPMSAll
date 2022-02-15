@@ -17,12 +17,7 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
-	CollisionResponse collisionResponse;
-	std::string collName = GetName();
-	if ("node_player/dummy_player" == collName)
-	{
-		bool x = true;
-	}
+	CollisionResponse collisionResponse;	
 	glm::vec2 noTranslation(0, 0);
 	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
 	bool noCollision = !collisionResponse.AnyCollision();
@@ -38,11 +33,11 @@ void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 	
 	bool skipCorrection = false;
 	glm::vec3 correctPosition;
-	bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], nextPosition, &correctPosition, other, tpf);
+	bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], &correctPosition, other, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
 	{
 		
-		if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], nextPosition, &correctPosition, other, tpf))
+		if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], &correctPosition, other, tpf))
 		{
 			skipCorrection = true;
 		}
@@ -52,7 +47,7 @@ void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 
 }
 
-bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, hpms::Collisor* collisor, float tpf)
+bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse& singleCollision, glm::vec3* correctPosition, hpms::Collisor* collisor, float tpf)
 {
 	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, correctPosition);
 	glm::vec3 correctPosition2 = *correctPosition;
@@ -60,7 +55,7 @@ bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse
 	*correctPosition = correctPosition2;
 	hpms::CollisionResponse collisionResponse;
 	glm::vec2 noTranslation(0, 0);
-	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, collisor->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
+	hpms::CircleInteractPolygon(*correctPosition, GetScaledBoundingRadius(), noTranslation, collisor->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
 	bool noCollision = !collisionResponse.AnyCollision();
 	if (noCollision)
 	{
@@ -84,10 +79,10 @@ hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 	// Infact after slide the new position could be outside of perimeter.
 	bool skipCorrection = false;
 	glm::vec3 correctPosition;
-	bool insideAgain = CorrectAndRetryWalkmap(collisionResponse.collisions[0], nextPosition, &correctPosition, tpf);
+	bool insideAgain = CorrectAndRetryWalkmap(collisionResponse.collisions[0], &correctPosition, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
 	{
-		if (!CorrectAndRetryWalkmap(collisionResponse.collisions[1], nextPosition, &correctPosition, tpf))
+		if (!CorrectAndRetryWalkmap(collisionResponse.collisions[1], &correctPosition, tpf))
 		{
 			skipCorrection = true;
 		}
@@ -97,7 +92,7 @@ hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 	return WALKMAP_COLLISION(correctPosition, GetName(), skipCorrection);
 }
 
-bool hpms::Collisor::CorrectAndRetryWalkmap(const hpms::SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf)
+bool hpms::Collisor::CorrectAndRetryWalkmap(const hpms::SingleCollisionResponse& singleCollision, glm::vec3* correctPosition, float tpf)
 {
 	CorrectPositionBoundingRadiusMode(singleCollision.sidePointA, singleCollision.sidePointB, correctPosition);
 	glm::vec3 correctPosition2 = *correctPosition;

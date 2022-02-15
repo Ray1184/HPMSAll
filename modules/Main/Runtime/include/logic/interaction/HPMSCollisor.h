@@ -163,9 +163,9 @@ namespace hpms
 
 		void CorrectPositionSectorMode(const glm::vec2& sideA, const glm::vec2& sideB, bool resampleTriangle);
 
-		bool CorrectAndRetryWalkmap(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, float tpf);
+		bool CorrectAndRetryWalkmap(const SingleCollisionResponse& singleCollision, glm::vec3* correctPosition, float tpf);
 
-		bool CorrectAndRetryCollisor(const SingleCollisionResponse& singleCollision, const glm::vec3& nextPosition, glm::vec3* correctPosition, hpms::Collisor* collisor, float tpf);
+		bool CorrectAndRetryCollisor(const SingleCollisionResponse& singleCollision, glm::vec3* correctPosition, hpms::Collisor* collisor, float tpf);
 		
 		void ApplyHeight(glm::vec3* correctPosition, float tpf);
 		
