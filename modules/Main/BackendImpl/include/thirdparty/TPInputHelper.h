@@ -30,7 +30,11 @@
 #include <thirdparty/TPVector2D.h>
 #include <stdio.h>
 #include <vector>
+#ifdef CROSS_BUILD
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
 
 namespace tp
 {

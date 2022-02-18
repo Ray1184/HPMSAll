@@ -3,7 +3,7 @@
     {
       "name": "x64-Debug",
       "generator": "Ninja",
-      "configurationType": "Debug",
+      "configurationType": "RelWithDebInfo",
       "inheritEnvironments": [ "msvc_x64_x64" ],
       "buildRoot": "${projectDir}\\Debug",
       "installRoot": "${projectDir}\\Debug",
@@ -12,7 +12,8 @@
       "ctestCommandArgs": "",
       "environments": [
         {
-          "OGRE_ROOT": "C:/Users/nicco/Desktop/Projects/ogre"
+          "OGRE_BUILD": "C:/Users/stron/projects/ogre/Release",
+          "OGRE_SRC": "C:/Users/stron/projects/ogre"
         }
       ]
     },
@@ -28,7 +29,8 @@
       "ctestCommandArgs": "",
       "environments": [
         {
-          "OGRE_ROOT": "C:/Users/nicco/Desktop/Projects/ogre"
+          "OGRE_BUILD": "C:/Users/stron/projects/ogre/Release",
+          "OGRE_SRC": "C:/Users/stron/projects/ogre"
         }
       ]
     }

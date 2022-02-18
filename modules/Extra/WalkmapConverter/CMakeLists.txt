@@ -20,18 +20,19 @@ install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
 install_from_repo(https://github.com/mtrempoltsev/pods.git PODS ${PODS_VERSION} FALSE /include/)
 
-ogre_include(${OGRE_ROOT})
-get_filename_component(BUILD_TYPE ${CMAKE_BINARY_DIR} NAME)
-set(OGRE_BUILD ${OGRE_ROOT}/${BUILD_TYPE})
-set(OGRE_BIN ${OGRE_BUILD}/bin)
-set(OGRE_BIN_2 ${OGRE_BUILD}/Dependencies/bin)
+ogre_include($ENV{OGRE_SRC} $ENV{OGRE_BUILD})
+
+set(OGRE_BIN $ENV{OGRE_BUILD}/bin)
+set(OGRE_BIN_2 $ENV{OGRE_BUILD}/Dependencies/bin)
 
 include_directories(../../Main/Api/include)
 include_directories(../../Main/BackendImpl/include)
 include_directories(include)
 
 # Copy dist to build.
-file(COPY ${PROJECT_SOURCE_DIR}/../../shared-dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/ext/)
+if (MINGW)
+    file(COPY ${PROJECT_SOURCE_DIR}/../../shared-dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/ext/)
+endif()
 
 set(SOURCES
         src/tools/HPMSWalkmapConverter.cpp)

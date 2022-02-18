@@ -7,3 +7,5 @@ modules/Extra/BlenderPlugin/BlenderBatch/.gradle
 modules/Extra/BlenderPlugin/BlenderBatch/build
 docs/Simulations/.gradle
 docs/Simulations/build
+/Debug
+/Release

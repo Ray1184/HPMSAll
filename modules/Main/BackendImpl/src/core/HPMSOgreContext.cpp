@@ -3,7 +3,11 @@
  */
 
 #include <core/HPMSOgreContext.h>
+#ifdef CROSS_BUILD
 #include <SDL2/SDL_syswm.h>
+#else
+#include <SDL_syswm.h>
+#endif
 #include <resource/HPMSLuaScriptManager.h>
 
 hpms::OgreContext::OgreContext(const OgreWindowSettings& settings) : root(nullptr),

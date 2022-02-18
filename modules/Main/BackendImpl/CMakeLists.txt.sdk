@@ -1,6 +1,6 @@
-###########################################
-# USE THIS IF YOU BUILD OGRE FROM SOURCES #
-###########################################
+############################################
+# USE THIS IF YOU BUILD OGRE FROM MSVC SDK #
+############################################
 
 # Engine impl (OGRE) project
 cmake_minimum_required(VERSION 3.17)
@@ -13,11 +13,13 @@ set(CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake)
 
 set(PODS_VERSION master)
 set(GLM_VERSION 0.9.9.8)
+set(SDL_VERSION release-2.0.20)
 
 if (NOT DEFINED DEP_PATH)
     set(DEP_PATH ${CMAKE_BINARY_DIR}/_deps)
 endif ()
 
+set(SDL_BUILD_PATH ${DEP_PATH}/sdl-build)
 
 include(../../../cmake/Shared.cmake)
 include(../../../cmake/OgreUtils.cmake)
@@ -27,12 +29,16 @@ install_from_repo(https://github.com/mtrempoltsev/pods.git PODS ${PODS_VERSION} 
 
 install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
+install_from_repo(https://github.com/libsdl-org/SDL.git SDL ${SDL_VERSION} TRUE /include/)
+
 # Ogre setup.
-set(OGRE_BIN $ENV{OGRE_BUILD}/bin)
-set(OGRE_LIB $ENV{OGRE_BUILD}/lib)
+get_filename_component(BUILD_TYPE ${CMAKE_BINARY_DIR} NAME)
+set(OGRE_BUILD ${OGRE_ROOT})
+set(OGRE_BIN ${OGRE_BUILD}/bin)
+set(OGRE_LIB ${OGRE_BUILD}/lib)
 
 message(STATUS "Ogre searching paths:")
-message(STATUS "OGRE_BUILD:" $ENV{OGRE_BUILD})
+message(STATUS "OGRE_BUILD:" ${OGRE_BUILD})
 message(STATUS "OGRE_BIN:" ${OGRE_BIN})
 message(STATUS "OGRE_LIB:" ${OGRE_LIB})
 
@@ -53,43 +59,30 @@ find_library(OGRE_PROPERTY
 
 find_library(OGRE_CODEC
         NAMES Codec_STBI libCodec_STBI Codec_STBI.dll libCodec_STBI.dll Codec_STBI_d libCodec_STBI_d Codec_STBI_d.dll libCodec_STBI_d.dll
-        PATHS ${OGRE_LIB}
+        PATHS ${OGRE_BIN}
         REQUIRED)
 
 find_library(OGRE_RS
         NAMES RenderSystem_GL libRenderSystem_GL RenderSystem_GL.dll libRenderSystem_GL.dll RenderSystem_GL_d libRenderSystem_GL_d RenderSystem_GL_d.dll libRenderSystem_GL_d.dll
-        PATHS ${OGRE_LIB}
-        REQUIRED)
-
-find_library(OGRE_GL
-        NAMES OgreGLSupport libOgreGLSupport OgreGLSupport.dll libOgreGLSupport.dll OgreGLSupport_d libOgreGLSupport_d OgreGLSupport_d.dll libOgreGLSupport_d.dll
-        PATHS ${OGRE_LIB}
+        PATHS ${OGRE_BIN}
         REQUIRED)
 
 find_library(OGRE_SDL2
         NAMES SDL2 libSDL2 SDL2.dll libSDL2.dll SDL2d libSDL2d SDL2d.dll libSDL2d.dll
-        PATHS ${OGRE_LIB}
+        PATHS ${SDL_BUILD_PATH}
         REQUIRED)
 
 find_library(OGRE_SDL2MAIN
         NAMES SDL2main libSDL2main SDL2main.dll libSDL2main.dll SDL2maind libSDL2maind SDL2maind.dll libSDL2maind.dll
-        PATHS ${OGRE_LIB}
+        PATHS ${SDL_BUILD_PATH}
         REQUIRED)
 
-find_library(OGRE_ZLIB
-        NAMES zlib libzlib zlib.dll libzlib.dll zlibd libzlibd zlibd.dll libzlibd.dll
-        PATHS ${OGRE_LIB}
-        REQUIRED)
 
-find_library(OGRE_ZLIBSTATIC
-        NAMES zlibstatic libzlibstatic zlibstatic.dll libzlibstatic.dll zlibstaticd libzlibstaticd zlibstaticd.dll libzlibstaticd.dll
-        PATHS ${OGRE_LIB}
-        REQUIRED)
 
 if (MINGW)
     find_library(OGRE_ZZIP
             NAMES zzip libzzip zzip.dll libzzip.dll zzipd libzzipd zzipd.dll libzzipd.dll
-            PATHS ${OGRE_LIB}
+            PATHS ${OGRE_BIN}
             REQUIRED)
 endif()
 
@@ -106,10 +99,8 @@ message(STATUS "OGRE_SDL2MAIN: ${OGRE_SDL2MAIN}")
 message(STATUS "OGRE_ZLIB: ${OGRE_ZLIB}")
 message(STATUS "OGRE_ZLIBSTATIC: ${OGRE_ZLIBSTATIC}")
 message(STATUS "OGRE_ZZIP: ${OGRE_ZZIP}")
-message(STATUS "OGRE_SRC: $ENV{OGRE_SRC}")
 
-ogre_include($ENV{OGRE_SRC} $ENV{OGRE_BUILD})
-
+ogre_include(${OGRE_ROOT})
 include_directories(../Api/include)
 include_directories(include)
 
@@ -155,7 +146,7 @@ add_custom_command(TARGET HPMSBackendImpl
         POST_BUILD
         # Copy Ogre dll files.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/rt/
-        # Delete folders and files.
+        # Delete folders and files.       
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/resources.cfg
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/samples.cfg
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/plugins.cfg

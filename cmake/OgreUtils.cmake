@@ -1,19 +1,17 @@
 #! OGRE_INCLUDE
 # Include all ogre dependencies.
 #
-# \arg:OGRE_ROOT Ogre project root path.
+# \arg:OGRE_SRC Ogre project src path.
 #
-function(OGRE_INCLUDE OGRE_ROOT)
-    get_filename_component(BUILD_TYPE ${CMAKE_BINARY_DIR} NAME)
-    set(OGRE_BUILD ${OGRE_ROOT}/${BUILD_TYPE})
+function(OGRE_INCLUDE OGRE_SRC OGRE_BUILD)
     set(OGRE_H_0 ${OGRE_BUILD}/include)
     set(OGRE_H_1 ${OGRE_BUILD}/Dependencies/include)
-    set(OGRE_H_2 ${OGRE_ROOT}/OgreMain/include)
-    set(OGRE_H_3 ${OGRE_ROOT}/Components/Overlay/include)
-    set(OGRE_H_4 ${OGRE_ROOT}/Components/Property/include)
-    set(OGRE_H_5 ${OGRE_ROOT}/RenderSystems/GL/include)
-    set(OGRE_H_6 ${OGRE_ROOT}/PlugIns/STBICodec/include)
-    set(OGRE_H_7 ${OGRE_ROOT}/RenderSystems/GL/include)
+    set(OGRE_H_2 ${OGRE_SRC}/OgreMain/include)
+    set(OGRE_H_3 ${OGRE_SRC}/Components/Overlay/include)
+    set(OGRE_H_4 ${OGRE_SRC}/Components/Property/include)
+    set(OGRE_H_5 ${OGRE_SRC}/RenderSystems/GL/include)
+    set(OGRE_H_6 ${OGRE_SRC}/PlugIns/STBICodec/include)
+    set(OGRE_H_7 ${OGRE_SRC}/RenderSystems/GL/include)
 
     message(STATUS "Ogre includes: ")
     message(STATUS "OGRE_H_0: ${OGRE_H_0}")

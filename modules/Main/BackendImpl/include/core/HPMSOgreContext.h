@@ -8,7 +8,11 @@
 #include <Ogre.h>
 #include <OgreFileSystemLayer.h>
 #include <common/HPMSNamedWrapper.h>
+#ifdef CROSS_BUILD
 #include <SDL2/SDL.h>
+#else
+#include <SDL.h>
+#endif
 #include <input/HPMSInputHandler.h>
 #include <OgreOverlayManager.h>
 #include <OgreOverlaySystem.h>

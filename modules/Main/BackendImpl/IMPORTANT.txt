@@ -1,0 +1,4 @@
+DO BEFORE BUILD
+After building OGRE, do following steps:
+- move all content from $BUILD_TYPE/bin/$BUILD_TYPE to $BUILD_TYPE/bin delete all folders
+- move all content from $BUILD_TYPE/Dependencies/lib to $BUILD_TYPE/lib

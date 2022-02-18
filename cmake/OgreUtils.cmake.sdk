@@ -1,0 +1,23 @@
+#! OGRE_INCLUDE
+# Include all ogre dependencies.
+#
+# \arg:OGRE_ROOT Ogre project root path.
+#
+function(OGRE_INCLUDE OGRE_ROOT)
+    set(OGRE_H_0 ${OGRE_ROOT}/include/OGRE)
+    set(OGRE_H_1 ${OGRE_ROOT}/include/OGRE/Overlay)
+    set(OGRE_H_2 ${OGRE_ROOT}/include/OGRE/Plugins)
+    set(OGRE_H_3 ${OGRE_ROOT}/include/OGRE/RenderSystems)
+
+    message(STATUS "Ogre includes: ")
+    message(STATUS "OGRE_H_0: ${OGRE_H_0}")
+    message(STATUS "OGRE_H_1: ${OGRE_H_1}")
+    message(STATUS "OGRE_H_2: ${OGRE_H_2}")
+    message(STATUS "OGRE_H_3: ${OGRE_H_3}")
+
+    include_directories(${OGRE_H_0})
+    include_directories(${OGRE_H_1})
+    include_directories(${OGRE_H_2})
+    include_directories(${OGRE_H_3})
+
+endfunction()

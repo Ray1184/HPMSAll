@@ -34,13 +34,16 @@ install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
 install_from_repo(https://github.com/vinniefalco/LuaBridge.git LUABRIDGE ${LUABRIDGE_VERSION} TRUE /Source/LuaBridge/)
 
-ogre_include(${OGRE_ROOT})
+ogre_include($ENV{OGRE_SRC} $ENV{OGRE_BUILD})
 include_directories(../Api/include)
 include_directories(../BackendImpl/include)
 include_directories(include)
 
 # Copy dist to build.
-file(COPY ${PROJECT_SOURCE_DIR}/../../shared-dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
+if (MINGW)
+    file(COPY ${PROJECT_SOURCE_DIR}/../../shared-dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
+endif()
+
 file(COPY ${PROJECT_SOURCE_DIR}/dist/ DESTINATION ${CMAKE_BINARY_DIR}/bin/rt/)
 
 
