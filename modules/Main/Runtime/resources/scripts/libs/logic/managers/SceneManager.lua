@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2021 17:04
--- -
---- Scene management functions.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2021 17:04
+--
+-- Scene management functions.
+--
 
 dependencies = {
     'libs/utils/Utils.lua',

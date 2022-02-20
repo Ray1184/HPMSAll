@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2021 17:04
--- -
---- Actors management for events processing.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2021 17:04
+--
+-- Actors management for events processing.
+--
 
 dependencies = {
     'libs/utils/Utils.lua',

@@ -1,15 +1,19 @@
--- -
---- Created by Ray1184.
---- DateTime: 08/10/2020 17:04
--- -
---- All game consts.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 08/10/2020 17:04
+--
+-- All game consts.
+--
 
 game_mechanics_consts = { }
 
 function game_mechanics_consts:get()
 
     return {
+
+        DEFAULT_GLOBAL_TIMER_LIMIT = 320000, -- 100 hours
+
+        DEFAULT_WORKFLOW_TIMER_LIMIT = 3200, -- 1 hour
 
         DEFAULT_MIN_PUSH_DISTANCE = 0.1,
 

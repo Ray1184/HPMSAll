@@ -24,7 +24,13 @@ if ($ENV{OGRE_SRC} STREQUAL "")
 endif ()
 
 set(OGRE_ROOT $ENV{OGRE_ROOT})
+
 add_definitions(-DCROSS_BUILD)
+add_definitions(-DCOORD_SYSTEM_BLENDER)
+
+if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
+    add_definitions(-DFORCE_DEBUG_LOG)
+endif ()
 
 add_subdirectory(modules/Main)
 add_subdirectory(modules/Extra)

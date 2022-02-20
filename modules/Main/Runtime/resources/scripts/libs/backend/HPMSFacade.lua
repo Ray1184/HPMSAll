@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2020 17:04
--- -
---- C++ backend facade.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2020 17:04
+--
+-- C++ backend facade.
+--
 
 dependencies = {
     'libs/Context.lua',

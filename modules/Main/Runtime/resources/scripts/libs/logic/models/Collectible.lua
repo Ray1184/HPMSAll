@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 08/10/2020 17:04
--- -
---- Generic collectible and usable object.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 08/10/2020 17:04
+--
+-- Generic collectible and usable object.
+--
 
 
 dependencies = {

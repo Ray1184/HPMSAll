@@ -2,5 +2,5 @@
 ------------------------------------------------------------------------------------------------------
 Sistema di collisioni con bounding sphere												| 100%
 Adattamento a walkmpa																	| 100%
-Altezza actor in base ad altezza settore												| 50%
-Collisioni più fluide con ostacoli														| 80%
+Altezza actor in base ad altezza settore												| 100%
+Collisioni più fluide con ostacoli														| 100%

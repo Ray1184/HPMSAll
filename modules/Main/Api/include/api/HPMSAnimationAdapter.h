@@ -44,5 +44,7 @@ namespace hpms
 		virtual float GetWeight() const = 0;
 
 		virtual void SetWeight(float weight) = 0;
+
+		virtual float GetLength() const = 0;
 	};
 }

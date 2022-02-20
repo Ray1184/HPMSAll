@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 04/07/2021 17:04
----
---- Input text area.
----
+--
+-- Created by Ray1184.
+-- DateTime: 04/07/2021 17:04
+--
+-- Input text area.
+--
 
 dependencies = { 'libs/gui/Image2D.lua',
                  'libs/backend/HPMSFacade.lua' }

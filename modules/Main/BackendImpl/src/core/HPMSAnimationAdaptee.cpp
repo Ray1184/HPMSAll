@@ -87,6 +87,12 @@ void hpms::AnimationAdaptee::SetWeight(float weight)
     ogreAnim->setWeight(weight);
 }
 
+float hpms::AnimationAdaptee::GetLength() const
+{
+    Check(ogreAnim);
+    return ogreAnim->getLength();
+}
+
 
 hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : AdapteeCommon(nullptr),
                                                                            normalizedTime(0.0f),

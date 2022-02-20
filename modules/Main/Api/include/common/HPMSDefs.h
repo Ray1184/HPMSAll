@@ -21,6 +21,8 @@
 
 #define OGRE_LOG_FILE HPMS_DATA_FOLDER "ogre.log"
 
-#define DEFAULT_CAMERA_NAME "DEFAULT_CAM"
+#define DEFAULT_CAMERA_NAME "DefaultCamera"
 
-#define COORD_SYSTEM_BLENDER
+#if !defined(NDEBUG) || defined(FORCE_DEBUG_LOG)
+#define HPMS_DEBUG
+#endif

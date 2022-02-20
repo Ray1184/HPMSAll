@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 01/01/2022 17:04
--- -
---- All game instances.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 01/01/2022 17:04
+--
+-- All game instances.
+--
 
 dependencies = {
     'libs/Context.lua',

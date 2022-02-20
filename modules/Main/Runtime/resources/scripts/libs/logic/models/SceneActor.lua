@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 08/10/2020 17:04
--- -
---- Generic scene object with animation, collision and behavior (player, static, npc, etc...).
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 08/10/2020 17:04
+--
+-- Generic scene object with animation, collision and behavior (player, static, npc, etc...).
+--
 
 
 dependencies = {

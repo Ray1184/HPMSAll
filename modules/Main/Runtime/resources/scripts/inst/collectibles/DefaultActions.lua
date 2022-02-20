@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 08/10/2020 17:04
----
---- Base player actions.
----
+--
+-- Created by Ray1184.
+-- DateTime: 08/10/2020 17:04
+--
+-- Base player actions.
+--
 
 require('data/scripts/libs/CollectibleObject')
 

@@ -6,3 +6,4 @@ Eliminare ogni errore                                                           
 Capire dove viene impostato il bounding circle                                          | 100%
 Far funzionare il nuovo sistema di collisioni                                           | 100%
 Capire se al delete dei nodi c'è qualche SIGSEV                                         | 100%
+Sistemare il glitch quando l'animazione cambia velocemente								| 0%

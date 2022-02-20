@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 04/07/2021 17:04
----
---- Abstract 2D item on screen.
----
+--
+-- Created by Ray1184.
+-- DateTime: 04/07/2021 17:04
+--
+-- Abstract 2D item on screen.
+--
 
 dependencies = { 'libs/utils/MathUtils.lua',
                  'libs/utils/Utils.lua' }

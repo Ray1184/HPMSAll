@@ -1,21 +1,21 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2020 17:04
--- -
---- Abstract game object. Used as template for all object that need to keep their state
---- within game cycle (after save games etc...)
---- Each child has usually the following structure
---- this = {
----     serializable = { ... },
----     metainfo =
----     {
----         object_type = 'my_object',
----         parent_type = 'parent_object',
----         override = { ... }
----     },
----     transient = { ... }
---- }
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2020 17:04
+--
+-- Abstract game object. Used as template for all object that need to keep their state
+-- within game cycle (after save games etc...)
+-- Each child has usually the following structure
+-- this = {
+--     serializable = { ... },
+--     metainfo =
+--     {
+--         object_type = 'my_object',
+--         parent_type = 'parent_object',
+--         override = { ... }
+--     },
+--     transient = { ... }
+-- }
+--
 
 abstract_object = { }
 

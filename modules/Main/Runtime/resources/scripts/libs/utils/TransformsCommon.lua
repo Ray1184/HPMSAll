@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 04/10/2020 17:04
----
---- Common transform functions.
----
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2020 17:04
+--
+-- Common transform functions.
+--
 
 dependencies = { 'libs/backend/HPMSFacade.lua' }
 

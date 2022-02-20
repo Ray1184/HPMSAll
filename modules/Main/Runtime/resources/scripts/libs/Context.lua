@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2020 17:04
--- -
---- Wrapper for cached context.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2020 17:04
+--
+-- Wrapper for cached context.
+--
 dependencies = { 'libs/utils/Utils.lua' }
 
 context = { }

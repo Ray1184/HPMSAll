@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 04/08/2021 17:04
----
---- Common math.
----
+--
+-- Created by Ray1184.
+-- DateTime: 04/08/2021 17:04
+--
+-- Common math.
+--
 
 dependencies = { 'libs/backend/HPMSFacade.lua' }
 

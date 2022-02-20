@@ -4,6 +4,8 @@
 
 #include <logic/interaction/HPMSCollisor.h>
 #include <glm/gtx/vector_angle.hpp>
+#include <glm/gtx/euler_angles.hpp>
+#include <glm/gtx/rotate_vector.hpp>
 
 void hpms::Collisor::Sample(float tpf)
 {
@@ -17,7 +19,7 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
-	CollisionResponse collisionResponse;	
+	CollisionResponse collisionResponse;
 	glm::vec2 noTranslation(0, 0);
 	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
 	bool noCollision = !collisionResponse.AnyCollision();
@@ -30,13 +32,13 @@ void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 
 	// Double check is required because of correct position result.
 	// Infact after slide the new position could be outside of perimeter.
-	
+
 	bool skipCorrection = false;
 	glm::vec3 correctPosition;
 	bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], &correctPosition, other, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
 	{
-		
+
 		if (!CorrectAndRetryCollisor(collisionResponse.collisions[1], &correctPosition, other, tpf))
 		{
 			skipCorrection = true;
@@ -184,7 +186,7 @@ void hpms::Collisor::Move(const glm::vec3& nextPosition, const glm::vec2 directi
 		outOfDate = true;
 	}
 	Collisor::nextPosition = nextPosition;
-	Collisor::direction = direction;	
+	Collisor::direction = direction;
 }
 
 std::string hpms::Collisor::GetName() const
@@ -237,12 +239,17 @@ void hpms::Collisor::UpdateBounding()
 {
 	scaledRadius = config.radius * ((GetScale().x + GetScale().y + GetScale().z) / 3);
 	glm::vec2 dim = config.rect * ((GetScale().x + GetScale().y + GetScale().z) / 3);
+
+	//float angle = UP(glm::eulerAngles((GetRotation())));
+
 	scaledRect.clear();
-	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y - (dim.y / 2)));
-	scaledRect.push_back(glm::vec2(GetPosition().x + (dim.x / 2), GetPosition().y - (dim.y / 2)));
-	scaledRect.push_back(glm::vec2(GetPosition().x + (dim.x / 2), GetPosition().y + (dim.y / 2)));
-	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y + (dim.y / 2)));
-	scaledRect.push_back(glm::vec2(GetPosition().x - (dim.x / 2), GetPosition().y - (dim.y / 2)));
+	glm::vec2 v = glm::vec2(dim.x / 2, dim.y / 2);
+	//glm::vec2 v = glm::rotate(glm::vec2(dim.x / 2, dim.y / 2), angle);
+	scaledRect.push_back(glm::vec2(GetPosition().x - v.x, GetPosition().y - v.y));
+	scaledRect.push_back(glm::vec2(GetPosition().x + v.x, GetPosition().y - v.y));
+	scaledRect.push_back(glm::vec2(GetPosition().x + v.x, GetPosition().y + v.y));
+	scaledRect.push_back(glm::vec2(GetPosition().x - v.x, GetPosition().y + v.y));
+	scaledRect.push_back(glm::vec2(GetPosition().x - v.x, GetPosition().y - v.y));
 
 }
 
@@ -265,7 +272,7 @@ collisionState(CollisionInfo{})
 
 	// Calc bounding radius/rect.
 	UpdateBounding();
-	
+
 }
 
 hpms::Collisor::~Collisor()

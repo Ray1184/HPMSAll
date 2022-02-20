@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 08/10/2020 17:04
----
---- Dummy weapon for test.
----
+--
+-- Created by Ray1184.
+-- DateTime: 08/10/2020 17:04
+--
+-- Dummy weapon for test.
+--
 
 require('data/scripts/libs/CollectibleObject')
 

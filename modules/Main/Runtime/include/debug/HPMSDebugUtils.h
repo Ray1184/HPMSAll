@@ -33,6 +33,18 @@ namespace hpms
             drawer->BeginDraw(BLUE, BLUE);
             drawer->DrawCircle(actor->GetPosition(), actor->GetScaledBoundingRadius());
             drawer->EndDraw();
+
+            drawer->BeginDraw(GREEN, GREEN);
+            for (size_t i = 0; i < actor->GetScaledBoundingRect().size() - 1; i++)
+            {
+                const auto& a = actor->GetScaledBoundingRect()[i];
+                const auto& b = actor->GetScaledBoundingRect()[i + 1];
+                drawer->DrawLine(V2_TO_V3(a), V2_TO_V3(b));
+            }
+            const auto& a = actor->GetScaledBoundingRect()[actor->GetScaledBoundingRect().size() - 1];
+            const auto& b = actor->GetScaledBoundingRect()[0];
+            drawer->DrawLine(V2_TO_V3(a), V2_TO_V3(b));
+            drawer->EndDraw();
         }
 
         inline static void DrawPerimeter(hpms::WalkmapAdapter* walkmap)
@@ -41,7 +53,7 @@ namespace hpms
             auto drawProcess = [drawer](const glm::vec2& posA, const glm::vec2& posB)
             {
                 drawer->BeginDraw(GREEN, GREEN);
-                drawer->DrawLine(glm::vec3(posA.x, posA.y, 0), glm::vec3(posB.x, posB.y, 0));
+                drawer->DrawLine(V2_TO_V3(posA), V2_TO_V3(posB));
                 drawer->EndDraw();
                 return false;
             };

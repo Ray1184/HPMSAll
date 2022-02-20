@@ -1,9 +1,9 @@
----
---- Created by Ray1184.
---- DateTime: 04/07/2021 17:04
----
---- 2D image on screen for gui elements.
----
+--
+-- Created by Ray1184.
+-- DateTime: 04/07/2021 17:04
+--
+-- 2D image on screen for gui elements.
+--
 
 dependencies = { 'libs/utils/MathUtils.lua',
                  'libs/gui/Area2D.lua',

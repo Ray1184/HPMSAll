@@ -9,3 +9,7 @@ docs/Simulations/.gradle
 docs/Simulations/build
 /Debug
 /Release
+.vs/HPMSAll
+.vs
+modules/Main/Runtime/resources/scripts.config
+modules/Main/Runtime/resources/scripts.luaproj

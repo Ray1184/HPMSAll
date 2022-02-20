@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2021 17:04
--- -
---- Actors management functions.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2021 17:04
+--
+-- Actors management functions.
+--
 
 dependencies = {
     'libs/utils/Utils.lua',

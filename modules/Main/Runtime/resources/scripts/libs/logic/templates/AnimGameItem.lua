@@ -1,9 +1,9 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2020 17:04
--- -
---- Animated stateful game object.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2020 17:04
+--
+-- Animated stateful game object.
+--
 
 dependencies = {
     'libs/Context.lua',

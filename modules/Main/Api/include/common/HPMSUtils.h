@@ -33,10 +33,6 @@ if (!(check)) {                 \
     LOG_ERROR(msg);             \
 }                               \
 
-#ifndef NDEBUG
-#define HPMS_DEBUG
-#endif
-
 #ifdef HPMS_DEBUG
 #define LOG_DEBUG(msg) hpms::MsgHandler("HPMS-DEBUG", msg)
 #else

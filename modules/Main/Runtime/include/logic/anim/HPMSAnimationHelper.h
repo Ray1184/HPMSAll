@@ -17,11 +17,9 @@ namespace hpms
 			std::string activeAnimationName = entity->GetActiveAnimation();
 			std::string lastAnimationName = entity->GetLastAnimation();
 			auto* activeAnimation = entity->GetAnimationByName(activeAnimationName);
-
 			if (!activeAnimation->IsPlaying())
 			{
 				activeAnimation->SetPlaying(true);
-
 			}
 
 			if (blend && activeAnimationName != lastAnimationName && lastAnimationName != NO_ANIM)
@@ -48,8 +46,10 @@ namespace hpms
 					activeAnimation->SetWeight(activeAnimWeight);
 				}
 				lastAnimation->Update(tpf);
-			}/**/
+			}
+			
 			activeAnimation->Update(tpf);
+			
 		}
 	};
 }

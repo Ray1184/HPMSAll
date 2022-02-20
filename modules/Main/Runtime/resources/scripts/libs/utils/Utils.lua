@@ -1,10 +1,15 @@
--- -
---- Created by Ray1184.
---- DateTime: 04/10/2020 17:04
--- -
---- Utils functions.
--- -
+--
+-- Created by Ray1184.
+-- DateTime: 04/10/2020 17:04
+--
+-- Utils functions.
+--
 
+local charset = {}  do -- [0-9a-zA-Z]
+    for c = 48, 57  do table.insert(charset, string.char(c)) end
+    for c = 65, 90  do table.insert(charset, string.char(c)) end
+    for c = 97, 122 do table.insert(charset, string.char(c)) end
+end
 
 local debug_flag = false
 
@@ -57,6 +62,12 @@ function table_contains(table, val)
         end
     end
     return false
+end
+
+function random_string(length)
+    if not length or length <= 0 then return '' end
+    math.randomseed(os.clock()^5)
+    return random_string(length - 1) .. charset[math.random(1, #charset)]
 end
 
 local function log(msg)

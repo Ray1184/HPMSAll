@@ -4,7 +4,7 @@
  Adattare states e logiche runtime.                             | 100%			|
  Mappare tutti i suppliers/funzioni nella VM lua.               | 100%			|
  Text box e bone attachment.                                    | 100%			|
- Collisioni.                                                    | 80%			| d-collisions.txt
+ Collisioni.                                                    | 100%			| d-collisions.txt
  Demo tecnica minimale.                                         | 100%			|
  Batch esportazione scena da blender in Java/Python             | 70%			|
  Implementare console LUA in tempo reale.                       | 100%			|
