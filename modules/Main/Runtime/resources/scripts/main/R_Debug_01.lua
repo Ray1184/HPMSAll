@@ -36,7 +36,7 @@ scene = {
 
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
-        cin = cinematics:new(scene.name)
+        cin = cinematics:new()
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')

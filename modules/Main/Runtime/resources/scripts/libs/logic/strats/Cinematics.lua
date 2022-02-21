@@ -21,7 +21,7 @@ dependencies = {
 
 cinematics = { }
 
-function cinematics:new(scene_name)
+function cinematics:new()
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
@@ -30,7 +30,6 @@ function cinematics:new(scene_name)
         module_name = 'cinematics',
         workflows = { }
     }
-    log_debug('Creating cinematics module for room ' .. scene_name)
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
