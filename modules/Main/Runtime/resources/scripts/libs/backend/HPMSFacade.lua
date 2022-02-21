@@ -131,6 +131,10 @@ function backend:get()
                 return { }
             end,
 
+            look_collisor_at = function(c, v3, f)
+                return { }
+            end,
+
             rotate = function(a, rx, ry, rz)
                 log_debug('Rotating actor ' .. a.dummy_id)
             end,
@@ -309,6 +313,7 @@ function backend:get()
             get_camera = hpms.get_camera,
             set_ambient = hpms.set_ambient,
             move_collisor_dir = hpms.move_collisor_dir,
+            look_collisor_at = hpms.look_collisor_at,
             rotate = hpms.rotate,
             slice_anim = hpms.slice_anim,
             play_anim = hpms.play_anim,

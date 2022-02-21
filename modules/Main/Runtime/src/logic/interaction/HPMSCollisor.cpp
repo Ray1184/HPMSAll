@@ -6,6 +6,19 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/rotate_vector.hpp>
+#include <numbers>
+
+void hpms::Collisor::LookAt(const glm::vec3& to, float interpolateRatio)
+{
+	const double pi = std::atan(1.0) * 4;
+	glm::vec3 newDir = to - GetPosition();
+	glm::vec2 newDir2d = glm::normalize(direction);
+	glm::vec2 oldDir2d = glm::normalize(V3_TO_V2(newDir));
+	float angle = glm::orientedAngle(newDir2d, oldDir2d);
+	glm::quat currRot = GetRotation();
+	auto finalRot1 = glm::rotate(currRot, angle, VEC_UP);
+	SetRotation(glm::mix(GetRotation(), finalRot1, interpolateRatio));
+}
 
 void hpms::Collisor::Sample(float tpf)
 {

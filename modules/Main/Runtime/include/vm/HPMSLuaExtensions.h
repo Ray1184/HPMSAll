@@ -448,9 +448,14 @@ namespace hpms
 			return coll->GetCollisionState();
 		}
 
-		static inline void LMoveCollisor(hpms::Collisor* collisor, glm::vec3 position, glm::vec2 direction)
+		static inline void LMoveCollisor(hpms::Collisor* collisor, const glm::vec3& position, glm::vec2 direction)
 		{
 			collisor->Move(position, direction);
+		}
+
+		static inline void LLookCollisorAt(hpms::Collisor* collisor, const glm::vec3& direction, float interpolateRatio)
+		{
+			collisor->LookAt(direction, interpolateRatio);
 		}
 
 		static inline void LStopRewindAnimation(hpms::EntityAdapter* entity)

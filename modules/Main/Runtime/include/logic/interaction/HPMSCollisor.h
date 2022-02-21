@@ -141,6 +141,7 @@ namespace hpms
 			return scaledRect;
 		}
 
+		void LookAt(const glm::vec3& to, float interpolateRatio = 1);
 
 		void Sample(float tpf);
 

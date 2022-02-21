@@ -32,7 +32,7 @@ scene = {
         cam.near = 0.05
         cam.far = 100
         cam.fovy = lib.to_radians(40)
-        interactive = false
+        interactive = true
 
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
@@ -65,7 +65,7 @@ scene = {
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
         player:set_action_mode(7)
         player.serializable.performing_action = true
-        player:set_position(0, 0, 0.0)
+        player:set_position(0, 3, 0)
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest:set_position(2, 1, 0)
@@ -96,25 +96,25 @@ scene = {
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
 
-        cin:add_workflow( {
-            {
-                action = function(tpf, timer)
-                    player:set_anim('Walk_Forward')
-                    player:play(ANIM_MODE_LOOP, 1)
-                    walkRatio = 1
-                end,
-                complete_on = function(tpf, timer)
-                    if timer >= 2 then
-                        player:set_anim('Idle')
-                        player:play(ANIM_MODE_LOOP, 1)
-                        walkRatio = 0
-                        interactive = true
-                        return true
-                    end
-                    return false
-                end
-            }
-        } )
+        --cin:add_workflow( {
+        --    {
+        --        action = function(tpf, timer)
+        --            player:set_anim('Walk_Forward')
+        --            player:play(ANIM_MODE_LOOP, 1)
+        --            walkRatio = 1
+        --        end,
+        --        complete_on = function(tpf, timer)
+        --            if timer >= 2 then
+        --                player:set_anim('Idle')
+        --                player:play(ANIM_MODE_LOOP, 1)
+        --                walkRatio = 0
+        --                interactive = true
+        --                return true
+        --            end
+        --            return false
+        --        end
+        --    }
+        --} )
 
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
@@ -252,12 +252,14 @@ scene = {
             elseif turn then
                 player:set_anim('Idle')
                 player:play(ANIM_MODE_LOOP, 1)
+                --lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
 
                 -- player.serializable.performing_action = true
             else
                 -- player.serializable.performing_action = false
                 player:set_anim('Idle')
                 player:play(ANIM_MODE_LOOP, 2, 1)
+                lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), tpf * 2)
             end
         end
         if not action then
@@ -265,7 +267,7 @@ scene = {
         end
         player:move_dir(tpf * walkRatio * 1)
         -- player:update(tpf)
-
+       
 
 
         -- TODOBATCH-END

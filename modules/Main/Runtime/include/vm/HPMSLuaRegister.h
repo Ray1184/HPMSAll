@@ -412,6 +412,7 @@ namespace hpms
                     .addFunction("get_collision_state_by_name", &hpms::LuaExtensions::LGetCollisionStateByName)
                     .addFunction("get_collision_state_by_collisor", &hpms::LuaExtensions::LGetCollisionStateByCollisor)
                     .addFunction("move_collisor_dir", &hpms::LuaExtensions::LMoveCollisor)
+                    .addFunction("look_collisor_at", &hpms::LuaExtensions::LLookCollisorAt)
                     .addFunction("play_anim", &hpms::LuaExtensions::LPlayAnimation)
                     .addFunction("slice_anim", &hpms::LuaExtensions::LSliceAnimation)
                     .addFunction("stop_rewind_anim", &hpms::LuaExtensions::LStopRewindAnimation)
