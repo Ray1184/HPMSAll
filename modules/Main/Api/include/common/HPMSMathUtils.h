@@ -21,6 +21,41 @@ namespace hpms
 		return std::fabs(f1 - f2) < HPMS_EPSILON;
 	}
 
+	inline glm::vec2 RotateVec2(const glm::vec2& in, float angle, const glm::vec2& t)
+	{
+		glm::vec2 v = glm::vec2(in.x - t.x, in.y - t.y);
+		float x = v.x * std::cos(angle) - v.y * std::sin(angle);
+		float y = v.x * std::sin(angle) + v.y * std::cos(angle);
+		return glm::vec2(x + t.x, y + t.y);
+	}
+
+	inline glm::vec4 SafeNormalize(const glm::vec4& v)
+	{
+		if (v.x == 0.0f && v.y == 0.0f && v.z == 0.0f && v.w == 0.0f)
+		{
+			return v;
+		}
+		return glm::normalize(v);
+	}
+
+	inline glm::vec3 SafeNormalize(const glm::vec3& v)
+	{
+		if (v.x == 0.0f && v.y == 0.0f && v.z == 0.0f)
+		{
+			return v;
+		}
+		return glm::normalize(v);
+	}
+
+	inline glm::vec2 SafeNormalize(const glm::vec2& v)
+	{
+		if (v.x == 0.0f && v.y == 0.0f)
+		{
+			return v;
+		}
+		return glm::normalize(v);
+	}
+
 	struct SingleCollisionResponse
 	{
 		bool collided;
@@ -102,7 +137,7 @@ namespace hpms
 	{
 		glm::mat3 rotMat = glm::mat3_cast(rot);
 		glm::vec3 dir = rotMat * forward;
-		return glm::normalize(dir);
+		return hpms::SafeNormalize(dir);
 	}
 
 	bool PointInsideCircle(const glm::vec2& point, const glm::vec2& data, float radius);

@@ -9,6 +9,7 @@ dependencies = {
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
     'libs/logic/strats/Cinematics.lua',
+    'libs/logic/strats/CinematicsSequences.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua'
 }
@@ -37,6 +38,7 @@ scene = {
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
         cin = cinematics:new()
+        seq = cinematics_sequences:new()
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
@@ -65,16 +67,16 @@ scene = {
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
         player:set_action_mode(7)
         player.serializable.performing_action = true
-        player:set_position(0, 3, 0)
+        player:set_position(0, -3, 0)
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest:set_position(2, 1, 0)
-
+        
         chest2 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest2:set_position(-2, -1, 0)
 
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-        chest3:set_position(-1, 2, 0)
+        chest3:set_position(0, -1, 0)
         chest3:scale(0.5, 0.5, 0.5)
         actors_mgr:init_events()
 
@@ -96,7 +98,7 @@ scene = {
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
 
-        --cin:add_workflow( {
+        -- cin:add_workflow( {
         --    {
         --        action = function(tpf, timer)
         --            player:set_anim('Walk_Forward')
@@ -114,8 +116,13 @@ scene = {
         --            return false
         --        end
         --    }
-        --} )
+        -- } )
 
+
+        cin:add_workflow( {
+            seq:motion_path_with_look_at(chest3,{ x = 0, y = 3, z = 0 },false, 1, 1, 0.1),
+            seq:motion_path_with_look_at(chest3,{ x = 0, y = -1, z = 0 },false, 1, 1, 0.1)
+        }, nil, true )
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
         lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
@@ -252,14 +259,13 @@ scene = {
             elseif turn then
                 player:set_anim('Idle')
                 player:play(ANIM_MODE_LOOP, 1)
-                --lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
+                -- lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
 
                 -- player.serializable.performing_action = true
             else
                 -- player.serializable.performing_action = false
                 player:set_anim('Idle')
                 player:play(ANIM_MODE_LOOP, 2, 1)
-                lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), tpf * 2)
             end
         end
         if not action then
@@ -267,7 +273,7 @@ scene = {
         end
         player:move_dir(tpf * walkRatio * 1)
         -- player:update(tpf)
-       
+
 
 
         -- TODOBATCH-END

@@ -59,6 +59,8 @@ namespace hpms
 		CollisorConfig config;
 		CollisionInfo collisionState;
 		float scaledRadius;
+		float cumulatedInterpolation;
+		glm::vec3 lookTarget{};
 		std::vector<glm::vec2> scaledRect;
 	public:
 
@@ -141,7 +143,7 @@ namespace hpms
 			return scaledRect;
 		}
 
-		void LookAt(const glm::vec3& to, float interpolateRatio = 1);
+		float LookAt(const glm::vec3& to, float interpolateRatio = 1);
 
 		void Sample(float tpf);
 

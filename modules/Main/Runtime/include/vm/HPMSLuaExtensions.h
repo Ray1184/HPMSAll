@@ -74,7 +74,7 @@ namespace hpms
 
 		static inline glm::vec3 NormVec3(const glm::vec3& v)
 		{
-			return glm::normalize(v);
+			return hpms::SafeNormalize(v);
 		}
 
 		static inline float DistVec3(const glm::vec3& v1, const glm::vec3& v2)
@@ -114,7 +114,7 @@ namespace hpms
 
 		static inline glm::vec4 NormVec4(const glm::vec4& v)
 		{
-			return glm::normalize(v);
+			return hpms::SafeNormalize(v);
 		}
 
 		static inline float DotVec4(const glm::vec4& v1, const glm::vec4& v2)
@@ -145,7 +145,7 @@ namespace hpms
 
 		static inline glm::vec2 NormVec2(const glm::vec2& v)
 		{
-			return glm::normalize(v);
+			return hpms::SafeNormalize(v);
 		}
 
 		static inline float DistVec2(const glm::vec2& v1, const glm::vec2& v2)
@@ -453,9 +453,9 @@ namespace hpms
 			collisor->Move(position, direction);
 		}
 
-		static inline void LLookCollisorAt(hpms::Collisor* collisor, const glm::vec3& direction, float interpolateRatio)
+		static inline float LLookCollisorAt(hpms::Collisor* collisor, const glm::vec3& direction, float interpolateRatio)
 		{
-			collisor->LookAt(direction, interpolateRatio);
+			return collisor->LookAt(direction, interpolateRatio);
 		}
 
 		static inline void LStopRewindAnimation(hpms::EntityAdapter* entity)

@@ -6,18 +6,29 @@
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/euler_angles.hpp>
 #include <glm/gtx/rotate_vector.hpp>
-#include <numbers>
 
-void hpms::Collisor::LookAt(const glm::vec3& to, float interpolateRatio)
+float hpms::Collisor::LookAt(const glm::vec3& to, float interpolateRatio)
 {
 	const double pi = std::atan(1.0) * 4;
 	glm::vec3 newDir = to - GetPosition();
-	glm::vec2 newDir2d = glm::normalize(direction);
-	glm::vec2 oldDir2d = glm::normalize(V3_TO_V2(newDir));
-	float angle = glm::orientedAngle(newDir2d, oldDir2d);
+	glm::vec2 currDir2d = hpms::CalcDirection(actor->GetRotation(), VEC_FORWARD);
+	glm::vec2 newDir2d = V3_TO_V2(newDir);
+	float angle = glm::orientedAngle(hpms::SafeNormalize(currDir2d), hpms::SafeNormalize(newDir2d));
 	glm::quat currRot = GetRotation();
-	auto finalRot1 = glm::rotate(currRot, angle, VEC_UP);
-	SetRotation(glm::mix(GetRotation(), finalRot1, interpolateRatio));
+	auto finalRot = glm::rotate(currRot, angle, VEC_UP);
+	if (lookTarget != to)
+	{
+		lookTarget = to;
+		cumulatedInterpolation = 0;
+	}
+	cumulatedInterpolation += interpolateRatio;
+	if (cumulatedInterpolation >= 1)
+	{
+		cumulatedInterpolation = 1;
+	}
+	SetRotation(glm::slerp(GetRotation(), finalRot, cumulatedInterpolation));
+	return angle;
+	
 }
 
 void hpms::Collisor::Sample(float tpf)
@@ -170,7 +181,7 @@ void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, c
 
 void hpms::Collisor::CorrectPositionBoundingRadiusMode(const glm::vec2& sideA, const glm::vec2& sideB, glm::vec2* correctPosition)
 {
-	glm::vec2 n = glm::normalize(Perpendicular(sideA - sideB));
+	glm::vec2 n = hpms::SafeNormalize(Perpendicular(sideA - sideB));
 	glm::vec3 v = nextPosition - actor->GetPosition();
 	glm::vec2 vn = n * glm::dot(glm::vec2(SD(v), FW(v)), n);
 	glm::vec2 vt = glm::vec2(SD(v), FW(v)) - vn;
@@ -250,19 +261,25 @@ void hpms::Collisor::SetPosition(const glm::vec3& position)
 
 void hpms::Collisor::UpdateBounding()
 {
+	float angle = UP(glm::eulerAngles((GetRotation())));
+	std::string angleS = "angle: " + std::to_string(angle);
 	scaledRadius = config.radius * ((GetScale().x + GetScale().y + GetScale().z) / 3);
 	glm::vec2 dim = config.rect * ((GetScale().x + GetScale().y + GetScale().z) / 3);
 
-	//float angle = UP(glm::eulerAngles((GetRotation())));
-
 	scaledRect.clear();
 	glm::vec2 v = glm::vec2(dim.x / 2, dim.y / 2);
-	//glm::vec2 v = glm::rotate(glm::vec2(dim.x / 2, dim.y / 2), angle);
-	scaledRect.push_back(glm::vec2(GetPosition().x - v.x, GetPosition().y - v.y));
-	scaledRect.push_back(glm::vec2(GetPosition().x + v.x, GetPosition().y - v.y));
-	scaledRect.push_back(glm::vec2(GetPosition().x + v.x, GetPosition().y + v.y));
-	scaledRect.push_back(glm::vec2(GetPosition().x - v.x, GetPosition().y + v.y));
-	scaledRect.push_back(glm::vec2(GetPosition().x - v.x, GetPosition().y - v.y));
+	glm::vec2 v1 = glm::vec2(GetPosition().x - v.x, GetPosition().y - v.y);
+	glm::vec2 v2 = glm::vec2(GetPosition().x + v.x, GetPosition().y - v.y);
+	glm::vec2 v3 = glm::vec2(GetPosition().x + v.x, GetPosition().y + v.y);
+	glm::vec2 v4 = glm::vec2(GetPosition().x - v.x, GetPosition().y + v.y);
+	glm::vec2 v5 = glm::vec2(GetPosition().x - v.x, GetPosition().y - v.y);
+
+	scaledRect.push_back(hpms::RotateVec2(v1, angle, V3_TO_V2(GetPosition())));
+	scaledRect.push_back(hpms::RotateVec2(v2, angle, V3_TO_V2(GetPosition())));
+	scaledRect.push_back(hpms::RotateVec2(v3, angle, V3_TO_V2(GetPosition())));
+	scaledRect.push_back(hpms::RotateVec2(v4, angle, V3_TO_V2(GetPosition())));
+	scaledRect.push_back(hpms::RotateVec2(v5, angle, V3_TO_V2(GetPosition())));
+
 
 }
 
@@ -272,10 +289,10 @@ walkMap(walkMap),
 config(config),
 ignore(false),
 outOfDate(true),
+cumulatedInterpolation(0),
 baseHeightDefined(false),
 collisionState(CollisionInfo{})
-{
-
+{	
 	auto checkPerimeter = [&](const glm::vec2& sideAPos, const glm::vec2& sideBPos)
 	{
 		perimeter.push_back(sideAPos);
