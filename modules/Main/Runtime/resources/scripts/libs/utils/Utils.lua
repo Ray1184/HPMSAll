@@ -5,9 +5,11 @@
 -- Utils functions.
 --
 
-local charset = {}  do -- [0-9a-zA-Z]
-    for c = 48, 57  do table.insert(charset, string.char(c)) end
-    for c = 65, 90  do table.insert(charset, string.char(c)) end
+local charset = { }  
+do
+    -- [0-9a-zA-Z]
+    for c = 48, 57 do table.insert(charset, string.char(c)) end
+    for c = 65, 90 do table.insert(charset, string.char(c)) end
     for c = 97, 122 do table.insert(charset, string.char(c)) end
 end
 
@@ -46,6 +48,27 @@ function merge_tables(orig, new)
     return orig
 end
 
+function safe_string(str)
+    local ret = ''
+    for i = 1, #str do
+        local c = str:sub(i, i)
+        if c == 'è' or c == 'é' then
+            ret = ret .. 'e\''
+        elseif c == 'ò' then
+            ret = ret .. 'o\''
+        elseif c == 'à' then
+            ret = ret .. 'a\''
+        elseif c == 'ì' then
+            ret = ret .. 'i\''
+        elseif c == 'ù' then
+            ret = ret .. 'u\''
+        else
+            ret = ret .. c
+        end
+    end
+    return ret
+end
+
 function array_contains(array, val)
     for i = 1, #array do
         if array[i] == val then
@@ -66,7 +89,7 @@ end
 
 function random_string(length)
     if not length or length <= 0 then return '' end
-    math.randomseed(os.clock()^5)
+    math.randomseed(os.clock() ^ 5)
     return random_string(length - 1) .. charset[math.random(1, #charset)]
 end
 

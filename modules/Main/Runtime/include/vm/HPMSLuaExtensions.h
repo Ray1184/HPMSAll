@@ -499,6 +499,11 @@ namespace hpms
 			LOG_INTERFACE(logMsg.c_str());
 		}
 
+		static std::string SLLoadStringFile(const std::string& filePath)
+		{
+			return hpms::ReadFile(filePath);
+		}
+
 		// Debug Utils.
 		static inline void DDebugDrawClear()
 		{

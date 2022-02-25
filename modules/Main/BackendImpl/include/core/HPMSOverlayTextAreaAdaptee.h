@@ -28,11 +28,7 @@ namespace hpms
         std::string name;
         bool enabled;
     public:
-        inline const std::string Name() const override
-        {
-            return "OverlayTextAreaAdapter";
-        }
-
+        
         OverlayTextAreaAdaptee(const std::string& boxName, const std::string& fontName, float fontSize, int x, int y, int width, int height, int zOrder, OgreContext* ctx);
 
         virtual ~OverlayTextAreaAdaptee();

@@ -420,6 +420,7 @@ namespace hpms
                     .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
                     .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
                     .addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
+                    .addFunction("load_file", &hpms::LuaExtensions::SLLoadStringFile)
                     .endNamespace();
         }
 

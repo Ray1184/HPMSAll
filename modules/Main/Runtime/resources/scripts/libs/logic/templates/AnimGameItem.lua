@@ -16,10 +16,6 @@ dependencies = {
 
 anim_game_item = { }
 
-ANIM_MODE_LOOP = 0
-ANIM_MODE_ONCE = 1
-ANIM_MODE_FRAME = 2
-
 function anim_game_item:ret(path, id)
     lib = backend:get()
     k = game_mechanics_consts:get()
@@ -39,7 +35,7 @@ function anim_game_item:ret(path, id)
                 anim_data =
                 {
                     channel_name = k.default_animations.IDLE,
-                    mode = ANIM_MODE_FRAME,
+                    mode = k.anim_modes.ANIM_MODE_FRAME,
                     playing = false,
                     changed = true,
                     slowdown = 1,
@@ -119,7 +115,7 @@ function anim_game_item:ret(path, id)
 
         if self.serializable.anim_data.playing then
 
-            if self.serializable.anim_data.mode == ANIM_MODE_ONCE then
+            if self.serializable.anim_data.mode == k.anim_modes.ANIM_MODE_ONCE then
                 local finished = lib.anim_finished(self.transient.entity, self.serializable.anim_data.channel_name)
                 if finished then
                     lib.stop_rewind_anim(self.transient.entity)
@@ -131,7 +127,7 @@ function anim_game_item:ret(path, id)
             time = tpf / self.serializable.anim_data.slowdown
             lib.update_anim(self.transient.entity, time, true, k.DEFAULT_ANIM_TRANSITION_TIME)
 
-            if self.serializable.anim_data.mode == ANIM_MODE_FRAME then
+            if self.serializable.anim_data.mode == k.anim_modes.ANIM_MODE_FRAME then
                 self.serializable.anim_data.playing = false
             end
         end

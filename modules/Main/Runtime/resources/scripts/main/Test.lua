@@ -31,7 +31,7 @@ scene = {
 
         -- Collisions
         map = lib.make_walkmap("Dummy_Scene.walkmap")
-        collisor = lib.make_node_collisor(player_node, map, 0.3098)
+        --collisor = lib.make_node_collisor(player_node, map, 0.3098)
 
         -- Backgrounds
         back = lib.make_background("R_Debug_01/CM_01.png")
@@ -42,9 +42,9 @@ scene = {
         cam.near = 0.05
         cam.far = 50
         cam.fovy = lib.to_radians(40)
-        scn_mgr = scene_manager:new(scene.name, cam)
+        --scn_mgr = scene_manager:new(scene.name, cam)
         -- @formatter:off
-        scn_mgr:sample_view_by_callback(function() return true end, back, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
+        --scn_mgr:sample_view_by_callback(function() return true end, back, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         -- @formatter:on
 
         -- Light
@@ -55,8 +55,8 @@ scene = {
         cursor = lib.make_overlay('Pointer.png', 0, 0, 200)
         --points = {0, 0, 320, 0, 320, 50, 0, 50}
         points = { lib.vec2(0, 0), lib.vec2(320, 0), lib.vec2(320, 50), lib.vec2(0, 50) }
-        --text2d = input_text_2d:new(points, 0, 0, 'Console_White.png', 100, 'DebugConsoleArea', 'Tamzen', 16, lib.vec4(1.0, 1.0, 1.0, 1.0), 5)
-        --text2d:set_position(0, 0)
+        text2d = input_text_2d:new(points, 0, 0, 'Console_White.png', 100, 'DebugConsoleArea', 'Alagard', 16, lib.vec4(1.0, 1.0, 1.0, 1.0), 5)
+        text2d:set_position(0, 0)
 
 
     end,
@@ -100,7 +100,7 @@ scene = {
 
     end,
     update = function(tpf)
-        lib.update_collisor(collisor)
+        --lib.update_collisor(collisor)
         cursor.position = lib.vec3(mx, my, 100)
 
         if speed == 0 and rotate == 0 then
@@ -111,13 +111,13 @@ scene = {
         if animating then
             lib.update_anim(player, "my_animation", tpf / 2)
         end
-        f_move_collisor_towards_direction(collisor, speed * tpf)
-        f_rotate(player, 0, 0, rotate * tpf * 10)
+        --f_move_collisor_towards_direction(collisor, speed * tpf)
+        --f_rotate(player, 0, 0, rotate * tpf * 10)
         hpms.debug_draw_clear()
         hpms.debug_draw_perimeter(map)
-        hpms.debug_draw_aabb(collisor)
+        --hpms.debug_draw_aabb(collisor)
         --sector = collisor.sector
-        scn_mgr:update()
+        --scn_mgr:update()
     end,
     cleanup = function()
         log_info("ENDING TEST STAGE")

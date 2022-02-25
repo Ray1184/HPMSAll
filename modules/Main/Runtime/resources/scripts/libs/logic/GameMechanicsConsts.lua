@@ -11,9 +11,11 @@ function game_mechanics_consts:get()
 
     return {
 
-        DEFAULT_GLOBAL_TIMER_LIMIT = 320000, -- 100 hours
+        DEFAULT_GLOBAL_TIMER_LIMIT = 320000,
+        -- 100 hours
 
-        DEFAULT_WORKFLOW_TIMER_LIMIT = 3200, -- 1 hour
+        DEFAULT_WORKFLOW_TIMER_LIMIT = 3200,
+        -- 1 hour
 
         DEFAULT_MIN_PUSH_DISTANCE = 0.1,
 
@@ -22,6 +24,22 @@ function game_mechanics_consts:get()
         DEFAULT_GAVITY = 0.98,
 
         DEFAULT_MAX_STEP_HEIGHT = 0.1,
+
+        anim_modes =
+        {
+            ANIM_MODE_LOOP = 0,
+            ANIM_MODE_ONCE = 1,
+            ANIM_MODE_FRAME = 2
+        },
+
+        input_modes =
+        {
+            PRESSED_FIRST_TIME = 1,
+            PRESSED = 2,
+            RELEASED = 3,
+            NONE = 0
+
+        },
 
         actor_move_mode =
         {
@@ -180,6 +198,11 @@ function game_mechanics_consts:get()
             NPCS = 'npcs',
             ACTORS = 'actors',
             COLLECTIBLES = 'collectibles'
+        },
+        diplay_msg_styles =
+        {
+            MSG_BOX = 'msg_box',
+            BOOK = 'book'
         }
 
     }

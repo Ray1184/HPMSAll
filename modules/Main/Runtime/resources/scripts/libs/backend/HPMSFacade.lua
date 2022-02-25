@@ -203,6 +203,10 @@ function backend:get()
                 return { }
             end,
 
+            stream_text = function(t)
+                return { }
+            end,
+
             -- Math functions.
             vec3 = function(x, y, z)
                 return { }
@@ -276,6 +280,11 @@ function backend:get()
 
             key_action_performed = function(keys, code, type)
                 return { }
+            end,
+
+            -- System.
+            load_file = function(file)
+                return { }
             end
 
         }
@@ -308,6 +317,7 @@ function backend:get()
             make_collision_env = hpms.make_collision_env,
             delete_collision_env = hpms.delete_collision_env,
             get_collisor_config = hpms.get_collisor_config,
+            stream_text = hpms.stream_text,
 
             -- Logic.
             get_camera = hpms.get_camera,
@@ -353,7 +363,10 @@ function backend:get()
             -- Input.
             current_key_code = hpms.current_key_code,
             mbutton_action_performed = hpms.mbutton_action_performed,
-            key_action_performed = hpms.key_action_performed
+            key_action_performed = hpms.key_action_performed,
+
+            -- System.
+            load_file = hpms.load_file
         }
     end
 end

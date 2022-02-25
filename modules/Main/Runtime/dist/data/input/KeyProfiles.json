@@ -4,11 +4,11 @@
     "DOWN": "DOWN",
     "LEFT": "LEFT",
     "RIGHT": "RIGHT",
-    "INVENTORY": "ENTER",
+    "INVENTORY": "I",
     "EXIT": "ESC",
-    "ACTION_1": "LSHIFT",
-    "ACTION_2": "LCTRL",
-    "ACTION_3": "SPACE",
+    "ACTION_1": "E",
+    "ACTION_2": "SPACE",
+    "ACTION_3": "LCTRL",
     "PAUSE": "P"
   }
 }

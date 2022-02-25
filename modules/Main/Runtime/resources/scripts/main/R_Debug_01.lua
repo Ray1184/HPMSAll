@@ -6,6 +6,7 @@ dependencies = {
     'libs/logic/models/Player.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/Utils.lua',
+    'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
     'libs/logic/strats/Cinematics.lua',
@@ -35,6 +36,7 @@ scene = {
         cam.fovy = lib.to_radians(40)
         interactive = true
 
+        input_prf = input_profile:new('default')
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
         cin = cinematics:new()
@@ -71,7 +73,7 @@ scene = {
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest:set_position(2, 1, 0)
-        
+
         chest2 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
         chest2:set_position(-2, -1, 0)
 
@@ -86,43 +88,24 @@ scene = {
         -- log_debug(player)
         -- log_debug(chest)
         -- player:fill_transient_data(walkmap)
-        player:play(ANIM_MODE_LOOP, 2, 1)
+        player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
         -- item2:fill_transient_data(walkmap)
 
         json = json_helper:get()
         -- log_debug(player)
-
+        nextPressed = false
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_01' else return false end end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_02' else return false end end, 'R_Debug_01/CM_02.png', lib.vec3(0.0, 5.838781833648682, 1.5), lib.quat(-3.467857823125087e-08, -2.6609807690647358e-08, 0.6087614297866821, 0.7933533191680908))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_03' else return false end end, 'R_Debug_01/CM_03.png', lib.vec3(0.0, 12.0, 3.5), lib.quat(8.921578142917497e-08, -4.213227988714152e-09, -0.5735764503479004, -0.8191520571708679))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
 
-        -- cin:add_workflow( {
-        --    {
-        --        action = function(tpf, timer)
-        --            player:set_anim('Walk_Forward')
-        --            player:play(ANIM_MODE_LOOP, 1)
-        --            walkRatio = 1
-        --        end,
-        --        complete_on = function(tpf, timer)
-        --            if timer >= 2 then
-        --                player:set_anim('Idle')
-        --                player:play(ANIM_MODE_LOOP, 1)
-        --                walkRatio = 0
-        --                interactive = true
-        --                return true
-        --            end
-        --            return false
-        --        end
-        --    }
-        -- } )
-
 
         cin:add_workflow( {
-            seq:motion_path_with_look_at(chest3,{ x = 0, y = 3, z = 0 },false, 1, 1, 0.1),
-            seq:motion_path_with_look_at(chest3,{ x = 0, y = -1, z = 0 },false, 1, 1, 0.1)
-        }, nil, true )
+            seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
+            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end, k.diplay_msg_styles.MSG_BOX, true),
+            seq:wait(5)
+        } , nil, true)
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
         lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
@@ -166,6 +149,7 @@ scene = {
     end,
     input = function(keys, mouse_buttons, x, y)
 
+        input_prf:poll_inputs(keys, mouse_buttons)
         if not interactive then
             return
         end
@@ -176,8 +160,14 @@ scene = {
                 scene.quit = true
             end
 
-            if lib.key_action_performed(keys, 'E', 1) then
-                debug_console_exec()
+            --if lib.key_action_performed(keys, 'E', 1) then
+            --    debug_console_exec()
+            --end
+
+            if lib.key_action_performed(keys, 'S', 1) then
+                nextPressed = true
+            else
+                nextPressed = false
             end
 
             if lib.key_action_performed(keys, 'P', 1) then
@@ -248,24 +238,24 @@ scene = {
         if interactive then
             if action then
                 player:set_anim('Push')
-                player:play(ANIM_MODE_LOOP, 1)
+                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
                 player.serializable.performing_action = true
             elseif walkF or(walkF and turn) then
                 player:set_anim('Walk_Forward')
-                player:play(ANIM_MODE_LOOP, 1)
+                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
             elseif walkB or(walkB and turn) then
                 player:set_anim('Walk_Back')
-                player:play(ANIM_MODE_LOOP, 1)
+                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
             elseif turn then
                 player:set_anim('Idle')
-                player:play(ANIM_MODE_LOOP, 1)
+                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
                 -- lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
 
                 -- player.serializable.performing_action = true
             else
                 -- player.serializable.performing_action = false
                 player:set_anim('Idle')
-                player:play(ANIM_MODE_LOOP, 2, 1)
+                player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
             end
         end
         if not action then
@@ -313,6 +303,7 @@ scene = {
         -- View CM_01 delete
         actors_mgr:delete_all()
         scn_mgr:delete_all()
+        seq:delete_all()
 
         -- Collision map R_Debug_01 delete
         -- lib.delete_walkmap(walkmap_r_debug_01)

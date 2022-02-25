@@ -43,6 +43,13 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
+	if (!GetConfig().active || !other->GetConfig().active)
+	{
+		ApplyHeight(&nextPosition, tpf);
+		collisionState = NO_COLLISION(nextPosition, GetName());
+		return;
+	}
+
 	CollisionResponse collisionResponse;
 	glm::vec2 noTranslation(0, 0);
 	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
@@ -93,6 +100,11 @@ bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse
 
 hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 {
+	if (!GetConfig().active)
+	{
+		ApplyHeight(&nextPosition, tpf);
+		return NO_COLLISION(nextPosition, GetName());
+	}
 	CollisionResponse collisionResponse;
 	walkMap->Collides(nextPosition, config.radius, &collisionResponse);
 	bool inPerimeter = !collisionResponse.AnyCollision();

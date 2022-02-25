@@ -37,12 +37,19 @@ glm::vec3 hpms::GuiText::GetPosition() const
 
 void hpms::GuiText::SetVisible(bool visible)
 {
-
+    if (visible)
+    {
+        textArea->Show();
+    } 
+    else
+    {
+        textArea->Hide();
+    }
 }
 
 bool hpms::GuiText::IsVisible() const
 {
-    return false;
+    return textArea->IsVisible();
 }
 
 void hpms::GuiText::SetColor(const glm::vec4& color)

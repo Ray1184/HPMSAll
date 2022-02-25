@@ -8,8 +8,6 @@
 dependencies = { 'libs/gui/Image2D.lua',
                  'libs/backend/HPMSFacade.lua' }
 
-local lib = backend:get()
-
 input_text_2d = {}
 
 local char_map = {}
@@ -93,6 +91,8 @@ char_map['SH_Y'] = 'Y'
 char_map['SH_Z'] = 'Z'
 
 function input_text_2d:new(data, x, y, image, order, id, font_name, font_size, font_color, max_lines)
+    
+    lib = backend:get()
     local ret = image_2d:new(TYPE_POLYGON, data, x, y, image, order)
     local new = {
         textarea = lib.make_textarea(id, font_name, font_size, data[1].x, data[1].y, data[3].x, data[3].y, order + 1, font_color),
