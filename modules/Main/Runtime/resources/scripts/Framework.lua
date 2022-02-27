@@ -5,5 +5,6 @@ dependencies = {
     'libs/utils/DebugConsole.lua',
     'libs/utils/Utils.lua',
     'libs/logic/managers/SceneManager.lua',
-    'libs/logic/managers/ActorsManager.lua'
+    'libs/logic/managers/ActorsManager.lua',
+    'libs/logic/managers/GameMenu.lua'
 }

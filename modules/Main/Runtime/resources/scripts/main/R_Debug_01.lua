@@ -12,7 +12,8 @@ dependencies = {
     'libs/logic/strats/Cinematics.lua',
     'libs/logic/strats/CinematicsSequences.lua',
     'inst/Instances.lua',
-    'inst/GameplayConsts.lua'
+    'inst/GameplayConsts.lua',
+    'libs/logic/managers/GameMenu.lua'
 }
 
 scene = {
@@ -41,6 +42,12 @@ scene = {
         actors_mgr = actors_manager:new(scn_mgr)
         cin = cinematics:new()
         seq = cinematics_sequences:new()
+        local guis = { }
+        guis[k.menu_modes.INVENTORY] = 'Menu/Inventory.png'
+        menu = game_menu:get( {
+            background_image = 'Menu/MenuShade.png',
+            gui_images = guis
+        } , k.menu_modes.INVENTORY)
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
@@ -103,7 +110,7 @@ scene = {
 
         cin:add_workflow( {
             seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
-            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end, k.diplay_msg_styles.MSG_BOX, true),
+            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
             seq:wait(5)
         } , nil, true)
 
@@ -160,9 +167,9 @@ scene = {
                 scene.quit = true
             end
 
-            --if lib.key_action_performed(keys, 'E', 1) then
+            -- if lib.key_action_performed(keys, 'E', 1) then
             --    debug_console_exec()
-            --end
+            -- end
 
             if lib.key_action_performed(keys, 'S', 1) then
                 nextPressed = true
@@ -264,8 +271,14 @@ scene = {
         player:move_dir(tpf * walkRatio * 1)
         -- player:update(tpf)
 
-
-
+        -- INVENTORY
+        if input_prf:action_done_once('ACTION_2') then
+            if menu.opened then
+                menu:close()
+            else
+                menu:open()
+            end
+        end
         -- TODOBATCH-END
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]

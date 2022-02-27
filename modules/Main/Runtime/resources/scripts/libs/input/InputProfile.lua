@@ -43,8 +43,6 @@ function input_profile:new(profile)
     end
 
     function input_profile:action_done_once(action)
-        log_debug('ACTION: ' .. action)
-        log_debug('KEVENT: ' .. tostring(self.state[action]))
         return self.state[action] == k.input_modes.PRESSED_FIRST_TIME
     end
 
@@ -64,7 +62,6 @@ function input_profile:new(profile)
                 local keycode = v
                 if lib.key_action_performed(keys, keycode, k.input_modes.PRESSED_FIRST_TIME) then
                     self.state[kc] = k.input_modes.PRESSED_FIRST_TIME
-                    log_debug('PRESSED FIRST TIME: ' .. kc .. '/' .. v)
                 elseif lib.key_action_performed(keys, keycode, k.input_modes.PRESSED) then
                     self.state[kc] = k.input_modes.PRESSED
                 elseif lib.key_action_performed(keys, keycode, k.input_modes.RELEASED) then

@@ -74,6 +74,13 @@ function game_mechanics_consts:get()
             SWIM = 9,
             JUMP = 10
         },
+        menu_modes =
+        {
+            STATISTICS = 0,
+            INVENTORY = 1,
+            SKILLS = 2,
+            OPTIONS = 3
+        },
         item_types =
         {
             WEAPON = 0,

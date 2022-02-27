@@ -37,7 +37,7 @@ function actors_manager:new(scene_manager)
         collectibles = 0,
         positions = { }
     }
-    log_debug('Creating actors module for room')
+    log_debug('Creating actors module for room ' .. scene_manager:get_scene_name())
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)

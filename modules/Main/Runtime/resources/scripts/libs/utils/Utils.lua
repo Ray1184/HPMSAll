@@ -48,6 +48,14 @@ function merge_tables(orig, new)
     return orig
 end
 
+local function remove_by_key(tab, val)
+    for i, v in ipairs(tab) do
+        if (v.id == val) then
+            tab[i] = nil
+        end
+    end
+end
+
 function safe_string(str)
     local ret = ''
     for i = 1, #str do
