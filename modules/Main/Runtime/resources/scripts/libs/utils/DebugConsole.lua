@@ -5,7 +5,7 @@
 -- Debug shell.
 --
 
-dependencies = { 'libs/utils/Utils.lua' }
+dependencies = { }
 
 local console_path = 'data/debug/Console.lua'
 

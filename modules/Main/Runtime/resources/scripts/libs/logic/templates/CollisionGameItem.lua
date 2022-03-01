@@ -6,8 +6,8 @@
 --
 
 dependencies = {
-    'libs/Context.lua',
-    'libs/utils/Utils.lua',
+    ----'Context.lua',
+    --'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/TransformsCommon.lua',
@@ -140,6 +140,12 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
             }
         }
         self = merge_tables(self, tra)
+        local collisor = self.transient.collisor
+        local visualInfo = self.serializable.visual_info
+        local pos = visualInfo.position
+        local rot = visualInfo.rotation
+        collisor.position = lib.vec3(pos.x, pos.y, pos.z)
+        collisor.rotation = lib.from_euler(rot.x, rot.y, rot.z)
 
     end
 

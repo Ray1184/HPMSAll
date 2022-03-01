@@ -6,8 +6,8 @@
 --
 
 dependencies = {
-    'libs/Context.lua',
-    'libs/utils/Utils.lua',
+    ----'Context.lua',
+    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/templates/CollisionGameItem.lua',
     'libs/logic/templates/AnimGameItem.lua',

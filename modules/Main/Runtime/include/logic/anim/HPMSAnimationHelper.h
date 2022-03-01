@@ -16,6 +16,12 @@ namespace hpms
 		{
 			std::string activeAnimationName = entity->GetActiveAnimation();
 			std::string lastAnimationName = entity->GetLastAnimation();
+			if (activeAnimationName == NO_ANIM)
+			{
+				std::string msg = "No animation set for entity " + entity->GetName();
+				LOG_WARN(msg.c_str());
+				return;
+			}
 			auto* activeAnimation = entity->GetAnimationByName(activeAnimationName);
 			if (!activeAnimation->IsPlaying())
 			{

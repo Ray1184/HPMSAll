@@ -6,9 +6,9 @@
 --
 
 dependencies = {
-    'libs/utils/Utils.lua',
+    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/Context.lua',
+    ----'Context.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/managers/ActorsEventsHelper.lua'
 }

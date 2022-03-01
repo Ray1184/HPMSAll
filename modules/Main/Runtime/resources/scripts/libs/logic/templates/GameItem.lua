@@ -6,8 +6,8 @@
 --
 
 dependencies = {
-    'libs/Context.lua',
-    'libs/utils/Utils.lua',
+    ----'Context.lua',
+    --'libs/utils/Utils.lua',
     'libs/utils/TransformsCommon.lua',
     'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
@@ -150,7 +150,8 @@ function game_item:ret(path, id)
     end
 
     function game_item:kill_instance()
-        self.serializable.expired = true
+        -- TODO Deprecated
+        --self.serializable.expired = true 
     end
 
     function game_item:set_event_callback(evt_callback)

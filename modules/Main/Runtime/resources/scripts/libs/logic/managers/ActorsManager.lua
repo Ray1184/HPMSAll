@@ -6,9 +6,9 @@
 --
 
 dependencies = {
-    'libs/utils/Utils.lua',
+    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/Context.lua',
+    ----'Context.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/managers/ActorsHelper.lua',
     'libs/logic/managers/ActorsEventsHelper.lua'
@@ -47,22 +47,22 @@ function actors_manager:new(scene_manager)
     function actors_manager:delete_all()
         for ka, actor in pairs(self.loaded_actors) do
             actor:delete_transient_data()
-            actor:kill_instance()
+            --actor:kill_instance()
 
         end
         for kn, npc in pairs(self.loaded_npcs) do
             npc:delete_transient_data()
-            npc:kill_instance()
+            --npc:kill_instance()
 
         end
         for kc, collectible in pairs(self.loaded_collectibles) do
             collectible:delete_transient_data()
-            collectible:kill_instance()
+            --collectible:kill_instance()
 
         end
         if self.loaded_player ~= nil then
             self.loaded_player:delete_transient_data()
-            self.loaded_player:kill_instance()
+            --self.loaded_player:kill_instance()
         end
 
         self.loaded_actors = { }
@@ -95,6 +95,9 @@ function actors_manager:new(scene_manager)
     end
 
     function actors_manager:poll_events(tpf)
+        if self.scene_manager:is_paused() then
+            return
+        end
         -- Note: update_collision_env must be done for first, as the collision engine updates all collisors new positions.
         -- After that we can manage the behavior based on new positions.        
         self:update_actors(tpf)  

@@ -4,8 +4,9 @@
 dependencies = {
     'Framework.lua',
     'libs/logic/models/Player.lua',
+    'libs/logic/models/RoomState.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/utils/Utils.lua',
+    --'libs/utils/Utils.lua',
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
@@ -24,9 +25,9 @@ scene = {
     next = 'TBD',
     setup = function()
         -- TODOBATCH-BEGIN
-
-
-
+        context:inst()
+        context:inst():disable_dummy()
+        enable_debug()
         -- TODOBATCH-END
 
         -- Base scene setup
@@ -37,10 +38,12 @@ scene = {
         cam.fovy = lib.to_radians(40)
         interactive = true
 
+        room_st = room_state:ret(scene.name)
+
         input_prf = input_profile:new('default')
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
-        cin = cinematics:new()
+        cin = cinematics:new(scn_mgr)
         seq = cinematics_sequences:new()
         local guis = { }
         guis[k.menu_modes.INVENTORY] = 'Menu/Inventory.png'
@@ -51,15 +54,15 @@ scene = {
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
-
+    
         register_all_instances()
-        action = true
+        action = false
 
         walkRatio = 0
         walk = 0
         rotate = 0
-        enable_debug()
-        context:inst():disable_dummy()
+        
+        
         lib = backend:get()
         insp = inspector:get()
         -- > gestirlo via scene_manager
@@ -74,19 +77,37 @@ scene = {
         lib.set_node_entity(mask_node, mask)
 
         player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
-        player:set_action_mode(7)
-        player.serializable.performing_action = true
-        player:set_position(0, -3, 0)
+
+
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-        chest:set_position(2, 1, 0)
+
 
         chest2 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-        chest2:set_position(-2, -1, 0)
+
 
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-        chest3:set_position(0, -1, 0)
-        chest3:scale(0.5, 0.5, 0.5)
+
+        log_warn(tostring(room_st))
+        if not room_st:get_object(k.room_state_items.VARIABLES, 'init') then
+            log_warn('FIRST TIME IN ROOM')
+            player:set_action_mode(7)
+            player.serializable.performing_action = true
+            player:set_position(0, -3, 0)
+            chest:set_position(2, 1, 0)
+            chest2:set_position(-2, -1, 0)
+            chest3:set_position(0, -1, 0)
+            chest3:scale(0.5, 0.5, 0.5)
+            room_st:set_object(k.room_state_items.VARIABLES, 'init', true)
+            log_warn(tostring(room_st))
+        else
+            log_warn('RETURN BACK IN ROOM')
+        end
+
+
+
+
+
         actors_mgr:init_events()
 
         -- log_warn(insp.inspect(player))
@@ -244,18 +265,21 @@ scene = {
         player.serializable.performing_action = false
         if interactive then
             if action then
-                player:set_anim('Push')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
                 player.serializable.performing_action = true
+                log_info('anim push')
             elseif walkF or(walkF and turn) then
                 player:set_anim('Walk_Forward')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                log_info('anim fw')
             elseif walkB or(walkB and turn) then
                 player:set_anim('Walk_Back')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                log_info('anim bk')
             elseif turn then
                 player:set_anim('Idle')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                log_info('anim id')
                 -- lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
 
                 -- player.serializable.performing_action = true
@@ -263,6 +287,7 @@ scene = {
                 -- player.serializable.performing_action = false
                 player:set_anim('Idle')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
+                log_info('anim id2')
             end
         end
         if not action then
@@ -272,12 +297,9 @@ scene = {
         -- player:update(tpf)
 
         -- INVENTORY
-        if input_prf:action_done_once('ACTION_2') then
-            if menu.opened then
-                menu:close()
-            else
-                menu:open()
-            end
+        if input_prf:action_done_once('INVENTORY') then
+            scene.next = 'main/menu/R_Inventory.lua'
+            scene.finished = true
         end
         -- TODOBATCH-END
 

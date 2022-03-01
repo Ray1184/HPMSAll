@@ -31,19 +31,23 @@ function input_profile:new(profile)
     log_debug('Creating input mapping from ' .. actions_path .. ' with profile \'' .. profile .. '\'')
     local content = lib.load_file(actions_path)
     this.keys_map = json.decode(content)
-    
+
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
     end
-    
+
     function input_profile:to_key(action, customProf)
         return self.keys_map[customProf or self.profile][action]
     end
 
     function input_profile:action_done_once(action)
-        return self.state[action] == k.input_modes.PRESSED_FIRST_TIME
+        if self.state[action] == k.input_modes.PRESSED_FIRST_TIME then
+            self.state[action] = k.input_modes.NONE
+            return true
+        end
+        return false
     end
 
     function input_profile:action_doing(action)
@@ -51,7 +55,11 @@ function input_profile:new(profile)
     end
 
     function input_profile:action_terminated(action)
-        return self.state[action] == k.input_modes.RELEASED
+        if self.state[action] == k.input_modes.RELEASED then
+            self.state[action] = k.input_modes.NONE
+            return true
+        end
+        return false
     end
 
     function input_profile:poll_inputs(keys, mouse_buttons)

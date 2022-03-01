@@ -5,13 +5,15 @@
 -- 2D image on screen for gui elements.
 --
 
-dependencies = { 'libs/utils/MathUtils.lua',
-                 'libs/gui/Area2D.lua',
-                 'libs/backend/HPMSFacade.lua'}
+dependencies = {
+    'libs/utils/MathUtils.lua',
+    'libs/gui/Area2D.lua',
+    'libs/backend/HPMSFacade.lua'
+}
 
 local lib = backend:get()
 
-image_2d = {}
+image_2d = { }
 
 TYPE_CIRCLE = 0
 TYPE_POLYGON = 1
@@ -19,9 +21,10 @@ TYPE_POLYGON = 1
 function image_2d:new(type, data, x, y, image, order)
     local ret = area_2d:new(type, data, x, y)
     local new = {
-        overlay = lib.make_overlay(image, x, y, order),
+        overlay = lib.make_overlay(image,x,y,order),
         order = order,
-        override_area_2d = {
+        override_area_2d =
+        {
             point_inside = ret.point_inside,
             set_position = ret.set_position
         }

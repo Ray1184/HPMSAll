@@ -7,8 +7,8 @@
 
 
 dependencies = {
-    'libs/Context.lua',
-    'libs/utils/Utils.lua',
+    ----'Context.lua',
+    --'libs/utils/Utils.lua',
     'libs/gui/Image2D.lua',
     'libs/gui/OutputText2D.lua',
     'libs/logic/templates/AbstractObject.lua',

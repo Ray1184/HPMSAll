@@ -8,6 +8,7 @@
 #include <common/HPMSObject.h>
 #include <api/HPMSActorAdapter.h>
 #include <api/HPMSImageAdapter.h>
+#include <api/HPMSSceneNodeAdapter.h>
 namespace hpms
 {
 
@@ -43,6 +44,10 @@ namespace hpms
         virtual void SetVisible(bool visible) override = 0;
 
         virtual bool IsVisible() const override = 0;
+
+        virtual void AddNode(hpms::SceneNodeAdapter* node) = 0;
+
+        virtual void RemoveNode(hpms::SceneNodeAdapter* node) = 0;
 
     };
 }

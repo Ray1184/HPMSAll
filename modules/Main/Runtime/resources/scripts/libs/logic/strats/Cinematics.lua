@@ -14,21 +14,22 @@
 --
 
 dependencies = {
-    'libs/utils/Utils.lua',
+    --'libs/utils/Utils.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/backend/HPMSFacade.lua'
 }
 
 cinematics = { }
 
-function cinematics:new()
+function cinematics:new(sceneMgr)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
     local this = {
         module_name = 'cinematics',
-        workflows = { }
+        workflows = { },
+        scene_manager = sceneMgr
     }
     setmetatable(this, self)
     self.__index = self
@@ -47,6 +48,9 @@ function cinematics:new()
     end
 
     function cinematics:poll_events(tpf)
+        if self.scene_manager:is_paused() then
+            return
+        end
         for i = 1, #self.workflows do
             if not self.workflows[i].expired then
                 if self.workflows[i].condition == nil or workflows[i].condition() then

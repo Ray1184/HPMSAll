@@ -184,4 +184,8 @@ std::vector<hpms::EntityAdapter*> hpms::SceneNodeAdaptee::GetAttachedEntitiesInT
     return allAttachedEntitiesInTree;
 }
 
+Ogre::SceneNode* hpms::SceneNodeAdaptee::GetNativeNode()
+{
+    return ogreNode;
+}
 

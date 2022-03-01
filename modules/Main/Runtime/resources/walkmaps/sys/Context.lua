@@ -2,27 +2,29 @@
 -- Created by Ray1184.
 -- DateTime: 04/10/2020 17:04
 --
--- Wrapper for cached context.
+-- DO NOT INCLUDE THIS!!!
 --
-dependencies = { 'libs/utils/Utils.lua' }
 
 context = { }
 
-cats = {
-    STATE = 'state',
-    OBJECTS = 'objects',
-    INSTANCES = 'instances',
-    EVENTS = 'events',
-    LANG = 'lang',
-    MISC = 'misc'
-}
+
 
 function context:new()
+
+    cats = {
+        STATE = 'state',
+        OBJECTS = 'objects',
+        INSTANCES = 'instances',
+        EVENTS = 'events',
+        LANG = 'lang',
+        MISC = 'misc'
+    }
+
     local ctx = { dummy = false }
-    log_debug('Creating context with categories:')
+    log_info('Creating context with categories:')
     for kc, v in pairs(cats) do
         ctx[v] = { }
-        log_debug('- ' .. v)
+        log_info('- ' .. v)
     end
     setmetatable(ctx, self)
     self.__index = self
@@ -118,8 +120,10 @@ end
 
 function context:inst()
     if self.instance == nil then
-        log_debug('New context created')
+        log_info('New context created')
         self.instance = self:new()
+    else
+        log_debug('Context already present')
     end
     return self.instance
 end
@@ -144,12 +148,12 @@ function context:get_state(key)
     return self.instance[cats.STATE][key]
 end
 
-function context:get_object(key, supplier_callback)
-    return self.instance:get(cats.OBJECTS, key, supplier_callback)
+function context:get_object(key, supplierCallback)
+    return self.instance:get(cats.OBJECTS, key, supplierCallback)
 end
 
-function context:register_instance(subcat, id, retrieve_callback)
-    self.instance[cats.INSTANCES][subcat .. '/' .. id] = retrieve_callback
+function context:register_instance(subcat, id, retrieveCallback)
+    self.instance[cats.INSTANCES][subcat .. '/' .. id] = retrieveCallback
 end
 
 function context:get_instance(subcat, id, ...)
@@ -157,7 +161,7 @@ function context:get_instance(subcat, id, ...)
     if inst ~= nil then
         return inst(...)
     end
-    log_warn('No instances availables with id ' .. subcat .. '/' .. id)
+    log_warn('No instances availables with id ' .. tostring(subcat) .. '/' .. tostring(id))
     return nil
 end
 
@@ -166,7 +170,7 @@ function context:put(cat, key, obj)
         log_warn('Cannot put in context object with nil category')
         return
     elseif self.instance[cat] == nil then
-        log_warn('Cannot put in context object: ' .. cat .. ' category unknown')
+        log_warn('Cannot put in context object: ' .. tostring(cat) .. ' category unknown')
         return
     end
 
@@ -182,24 +186,25 @@ function context:put(cat, key, obj)
     self.instance[cat][key] = obj.serializable
 end
 
-function context:get(cat, key, supplier_callback)
+function context:get(cat, key, supplierCallback)
     if self.instance[cat] == nil then
         if cat == nil then
             log_warn('Cannot get object from context with nil category')
         else
-            log_warn('Cannot get object from context: ' .. cat .. ' category unknown')
+            log_warn('Cannot get object from context: ' .. tostring(cat) .. ' category unknown')
         end
         return nil
     end
     if self.instance[cat][key] == nil then
+
         if key == nil then
             log_warn('Cannot get object from context with nil key')
             return nil
         else
-            self.instance:put(cat, key, supplier_callback())
+            log_debug('Object with key ' .. tostring(key) .. ' and category ' .. tostring(cat) .. ' NOT found/created in context')
+            self.instance:put(cat, key, supplierCallback())
         end
     end
-    log_debug('Object with key ' .. key .. ' and category ' .. cat .. ' found/created in context')
     local obj = { }
     obj.serializable = self.instance[cat][key]
     return obj

@@ -5,10 +5,12 @@
 -- Abstract 2D item on screen.
 --
 
-dependencies = { 'libs/utils/MathUtils.lua',
-                 'libs/utils/Utils.lua' }
+dependencies = {
+    'libs/utils/MathUtils.lua'
+    -- 'libs/utils/Utils.lua'
+}
 
-area_2d = {}
+area_2d = { }
 
 TYPE_CIRCLE = 0
 TYPE_POLYGON = 1

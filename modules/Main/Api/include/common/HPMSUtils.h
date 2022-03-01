@@ -130,8 +130,7 @@ namespace hpms
 #ifdef HPMS_DEBUG
 		hpms::MemoryDump();
 #endif
-		hpms::LogBuffer::Instance().Close();
-		exit(-1);
+		throw std::exception("Forced quit");
 	}
 
 	inline void MsgHandler(const char* desc, const char* message)

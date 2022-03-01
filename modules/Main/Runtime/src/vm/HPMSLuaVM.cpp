@@ -20,27 +20,31 @@ hpms::LuaVM::~LuaVM()
 
 void hpms::LuaVM::ExecuteScript(const std::string& path)
 {
-    luaL_dofile(state, path.c_str());    
-    lua_pcall(state, 0, 0, 0);
+    Handle(luaL_dofile(state, path.c_str()) || lua_pcall(state, 0, 0, 0));
 
 }
 
 void hpms::LuaVM::ExecuteStatement(const std::string& stat, const std::string& name)
 {
     std::string desc("@" + name);
-    luaL_loadbuffer(state, stat.c_str(), stat.length(), desc.c_str());
-    lua_pcall(state, 0, 0, 0);
+    Handle(luaL_loadbuffer(state, stat.c_str(), stat.length(), desc.c_str()) || lua_pcall(state, 0, 0, 0));
+}
+
+void hpms::LuaVM::Handle(int error)
+{
+    if (error)
+    {
+        auto errorDescr = lua_tostring(state, -1);
+        lua_pop(state, 1);
+        Close();
+        std::string errorComplete = "LUA script compilation error: " + std::string(errorDescr);
+        LOG_ERROR(errorComplete.c_str());
+    }
 }
 
 LuaRef hpms::LuaVM::GetGlobal(const std::string& name)
 {
     return getGlobal(state, name.c_str());
-}
-
-void hpms::LuaVM::ClearState()
-{
-    int stackSize = lua_gettop(state);
-    lua_pop(state, stackSize);
 }
 
 void hpms::LuaVM::RegisterAll()
@@ -78,7 +82,9 @@ void hpms::LuaVM::RegisterAll()
 
 void hpms::LuaVM::Close()
 {
+    lua_gc(state, LUA_GCCOLLECT, 0);
     lua_close(state);
+    state = 0;
     closed = true;
 }
 

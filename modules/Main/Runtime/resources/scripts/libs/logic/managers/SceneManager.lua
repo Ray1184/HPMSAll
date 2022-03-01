@@ -6,7 +6,7 @@
 --
 
 dependencies = {
-    'libs/utils/Utils.lua',
+    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua'
 }
 
@@ -24,7 +24,8 @@ function scene_manager:new(scene_name, camera)
         views_map = { },
         loaded_walkmap = nil,
         loaded_env = lib.make_collision_env(),
-        loaded_images = { }
+        loaded_images = { },
+        paused = false
     }
     log_debug('Creating scene module for room ' .. scene_name)
     setmetatable(this, self)
@@ -49,6 +50,14 @@ function scene_manager:new(scene_name, camera)
         self.loaded_env = nil
         self.loaded_images = { }
 
+    end
+
+    function scene_manager:set_paused(flag)
+        self.paused = flag
+    end
+
+    function scene_manager:is_paused()
+        return self.paused
     end
 
     function scene_manager:create_walkmap(walkmap_name)
@@ -87,6 +96,9 @@ function scene_manager:new(scene_name, camera)
     end
 
     function scene_manager:poll_events()
+        if self.paused then
+            return
+        end
         local settings_to_apply
         for i = 1, #self.views_map do
             if self.views_map[i].condition() then

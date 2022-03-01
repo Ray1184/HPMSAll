@@ -5,7 +5,9 @@
 #include <states/HPMSLuaLogic.h>
 #include <sstream>
 
-#define ENTRY_POINT "Init.lua"
+#define ENTRY_POINT "sys/Init.lua"
+#define STATE_CONTEXT "sys/Context.lua"
+#define UTILS "sys/Utils.lua"
 
 hpms::LuaLogic::LuaLogic() : clear(false), currentState(nullptr)
 {
@@ -20,9 +22,15 @@ hpms::LuaLogic::~LuaLogic()
 void hpms::LuaLogic::OnCreate()
 {
     vm->RegisterAll();
-    auto* script = hpms::LoadScript(ENTRY_POINT);
-    vm->ExecuteStatement(script->GetContent(), ENTRY_POINT);
-    hpms::DestroyScript(script);
+    auto* scriptUtils = hpms::LoadScript(UTILS);
+    vm->ExecuteStatement(scriptUtils->GetContent(), UTILS);
+    hpms::DestroyScript(scriptUtils);
+    auto* scriptCtx = hpms::LoadScript(STATE_CONTEXT);
+    vm->ExecuteStatement(scriptCtx->GetContent(), STATE_CONTEXT);
+    hpms::DestroyScript(scriptCtx);
+    auto* scriptEp = hpms::LoadScript(ENTRY_POINT);
+    vm->ExecuteStatement(scriptEp->GetContent(), ENTRY_POINT);
+    hpms::DestroyScript(scriptEp);    
     LuaRef config = vm->GetGlobal("config");
     std::string firstScript = config["first_script"];
     LoadState(firstScript);
@@ -76,7 +84,6 @@ bool hpms::LuaLogic::TriggerStop()
 
 void hpms::LuaLogic::LoadState(const std::string& scriptName)
 {
-    vm->ClearState();
     auto* script = hpms::LoadScript(scriptName);
     vm->ExecuteStatement(script->GetContent(), scriptName);
     std::stringstream ss;

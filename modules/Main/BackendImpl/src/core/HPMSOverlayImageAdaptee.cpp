@@ -3,6 +3,7 @@
  */
 
 #include <core/HPMSOverlayImageAdaptee.h>
+#include <core/HPMSSceneNodeAdaptee.h>
 #include <OgreColourValue.h>
 
 
@@ -106,6 +107,20 @@ void hpms::OverlayImageAdaptee::SetAlpha(float alpha)
     Check();
     auto* texState = ogrePanel->getMaterial()->getTechnique(0)->getPass(0)->getTextureUnitState(0);
     texState->setAlphaOperation(Ogre::LayerBlendOperationEx::LBX_MODULATE, Ogre::LayerBlendSource::LBS_TEXTURE, Ogre::LayerBlendSource::LBS_MANUAL, 1.0f, alpha);
+}
+
+void hpms::OverlayImageAdaptee::AddNode(hpms::SceneNodeAdapter* node)
+{
+    Check();
+    auto* nodeAdaptee = dynamic_cast<hpms::SceneNodeAdaptee*>(node);
+    overlay->add3D(nodeAdaptee->GetNativeNode());
+}
+
+void hpms::OverlayImageAdaptee::RemoveNode(hpms::SceneNodeAdapter* node)
+{
+    Check();
+    auto* nodeAdaptee = dynamic_cast<hpms::SceneNodeAdaptee*>(node);
+    overlay->remove3D(nodeAdaptee->GetNativeNode());
 }
 
 

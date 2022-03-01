@@ -6,7 +6,7 @@
 --
 
 dependencies = {
-    'libs/utils/Utils.lua',
+    --'libs/utils/Utils.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/strats/Cinematics.lua',
     'libs/gui/OutputText2D.lua',

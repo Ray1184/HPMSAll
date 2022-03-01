@@ -7,8 +7,8 @@
 
 
 dependencies = {
-    'libs/Context.lua',
-    'libs/utils/Utils.lua',
+    ----'Context.lua',
+    --'libs/utils/Utils.lua',
     'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/thirdparty/Inspect.lua'
@@ -16,7 +16,7 @@ dependencies = {
 
 room_state = { }
 
-function room_state:ret(id, items)
+function room_state:ret(id)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
@@ -33,9 +33,9 @@ function room_state:ret(id, items)
             {
                 state =
                 {
-                    actors = items.actors,
-                    collectibles = items.collectibles,
-                    variables = items.variables
+                    actors = { },
+                    collectibles = { },
+                    variables = { }
                 }
             }
         }

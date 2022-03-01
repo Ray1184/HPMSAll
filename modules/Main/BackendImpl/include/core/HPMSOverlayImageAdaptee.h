@@ -53,6 +53,10 @@ namespace hpms
         virtual void Show() override;
 
         virtual void Hide() override;
+
+        virtual void AddNode(hpms::SceneNodeAdapter* node) override;
+
+        virtual void RemoveNode(hpms::SceneNodeAdapter* node) override;
     };
 }
 

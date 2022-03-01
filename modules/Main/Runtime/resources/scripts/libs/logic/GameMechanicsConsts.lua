@@ -41,6 +41,13 @@ function game_mechanics_consts:get()
 
         },
 
+        room_state_items =
+        {
+            ACTORS = 'actors',
+            COLLECTIBLES = 'collectibles',
+            VARIABLES = 'variables'
+
+        },
         actor_move_mode =
         {
             IDLE = 0,
