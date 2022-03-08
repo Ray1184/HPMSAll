@@ -5,9 +5,9 @@
 #include <states/HPMSLuaLogic.h>
 #include <sstream>
 
-#define ENTRY_POINT "sys/Init.lua"
-#define STATE_CONTEXT "sys/Context.lua"
-#define UTILS "sys/Utils.lua"
+#define ENTRY_POINT "libs/sys/Init.lua"
+#define STATE_CONTEXT "libs/sys/Context.lua"
+#define UTILS "libs/sys/Utils.lua"
 
 hpms::LuaLogic::LuaLogic() : clear(false), currentState(nullptr)
 {

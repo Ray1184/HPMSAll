@@ -207,6 +207,10 @@ function backend:get()
                 return { }
             end,
 
+            overlay_alpha = function(o, a)
+                log_debug('Setting alpha ' .. a .. ' for overlay ' .. o.dummy_id)
+            end,
+
             -- Math functions.
             vec3 = function(x, y, z)
                 return { }
@@ -285,6 +289,10 @@ function backend:get()
             -- System.
             load_file = function(file)
                 return { }
+            end,
+
+            write_file = function(file, data)
+                log_debug('Writing data to ' .. file)
             end
 
         }
@@ -318,6 +326,7 @@ function backend:get()
             delete_collision_env = hpms.delete_collision_env,
             get_collisor_config = hpms.get_collisor_config,
             stream_text = hpms.stream_text,
+            overlay_alpha = hpms.overlay_alpha,
 
             -- Logic.
             get_camera = hpms.get_camera,
@@ -366,7 +375,8 @@ function backend:get()
             key_action_performed = hpms.key_action_performed,
 
             -- System.
-            load_file = hpms.load_file
+            load_file = hpms.load_file,
+            write_file = hpms.write_file
         }
     end
 end

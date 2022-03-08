@@ -21,7 +21,7 @@ function game_item:ret(path, id)
     trx = transform:get()
     insp = inspector:get()
 
-
+    local transientDataInit = false
     local id = 'game_item/' .. id
     local ret = abstract_object:ret(id)
 
@@ -86,8 +86,7 @@ function game_item:ret(path, id)
         end
         local node = self.transient.node        
         local dir = dir or lib.get_direction(node.rotation, lib.vec3(0, -1, 0))
-        node.position = lib.vec3_add(node.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))
-        self.serializable.visual_info.position = { x = node.position.x, y = node.position.y, z = node.position.z }
+        node.position = lib.vec3_add(node.position, lib.vec3(ratio * dir.x, ratio * dir.y, 0))        
     end
 
     function game_item:rotate(rx, ry, rz)
@@ -95,9 +94,7 @@ function game_item:ret(path, id)
             return
         end
         local node = self.transient.node
-        trx.rotate(node, rx, ry, rz)
-        local rot = lib.to_euler(node.rotation)
-        self.serializable.visual_info.rotation = { x = rot.x, y = rot.y, z = rot.z }
+        trx.rotate(node, rx, ry, rz)   
     end
 
     function game_item:scale(sx, sy, sz)
@@ -106,13 +103,13 @@ function game_item:ret(path, id)
         end
         local node = self.transient.node
         node.scale = lib.vec3(sx, sy, sz)
-        self.serializable.visual_info.scale = { x = node.scale.x, y = node.scale.y, z = node.scale.z }
     end
 
     function game_item:delete_transient_data()
-        if self.serializable.expired then
+        if not self.transientDataInit then
             return
         end
+        self.transientDataInit = false
         lib.delete_node(self.transient.node)
         lib.delete_entity(self.transient.entity)
 
@@ -136,9 +133,10 @@ function game_item:ret(path, id)
         local rot = visualInfo.rotation
         local sca = visualInfo.scale
         node.position = lib.vec3(pos.x, pos.y, pos.z)
-        node.rotation = lib.from_euler(rot.x, rot.y, rot.z)
+        node.rotation = lib.from_euler(rot.x, rot.y, rot.z)        
         node.scale = lib.vec3(sca.x, sca.y, sca.z)
         lib.set_node_entity(node, self.transient.entity)
+        self.transientDataInit = true
 
     end
 
@@ -147,11 +145,17 @@ function game_item:ret(path, id)
             return
         end
         self.transient.entity.visible = self.serializable.visual_info.visible
+        local node = self.transient.node     
+        local rot = lib.to_euler(node.rotation)
+        self.serializable.visual_info.rotation = { x = rot.x, y = rot.y, z = rot.z }     
+        self.serializable.visual_info.position = { x = node.position.x, y = node.position.y, z = node.position.z }
+        self.serializable.visual_info.scale = { x = node.scale.x, y = node.scale.y, z = node.scale.z }
     end
 
     function game_item:kill_instance()
-        -- TODO Deprecated
-        --self.serializable.expired = true 
+        -- WARNING, here change state forever after call. 
+        self:update()
+        self.serializable.expired = true
     end
 
     function game_item:set_event_callback(evt_callback)

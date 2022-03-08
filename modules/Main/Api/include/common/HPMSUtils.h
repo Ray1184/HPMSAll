@@ -327,6 +327,8 @@ namespace hpms
 
 	bool FileExists(const std::string& fileName);
 
+	void WriteStringData(const std::string& fileName, const std::string& data);
+
 	inline void WriteLinesToFile(const std::string& outputFile, const std::vector<std::string>& lines)
 	{
 		if (lines.empty())

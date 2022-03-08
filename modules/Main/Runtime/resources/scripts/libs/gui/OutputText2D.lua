@@ -28,7 +28,8 @@ function output_text_2d:new(data, x, y, image, order, id, font_name, font_size, 
             point_inside = ret.point_inside,
             set_position = ret.set_position,
             set_visible = ret.set_visible,
-            delete = ret.delete
+            delete = ret.delete,
+            alpha = ret.alpha
         }
     }
     local this = merge_tables(ret, new)
@@ -57,7 +58,13 @@ function output_text_2d:new(data, x, y, image, order, id, font_name, font_size, 
     function output_text_2d:stream(text)
         return lib.stream_text(self.textarea, text, self.max_lines)        
     end
+
+    function image_2d:alpha(a)
+        self.override_image_2d.alpha(a)
+    end
+
     return this
+      
 
 end
 

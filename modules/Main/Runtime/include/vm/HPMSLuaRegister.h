@@ -421,6 +421,7 @@ namespace hpms
                     .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
                     .addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
                     .addFunction("load_file", &hpms::LuaExtensions::SLLoadStringFile)
+                    .addFunction("write_file", &hpms::LuaExtensions::SLWriteStringFile)
                     .endNamespace();
         }
 

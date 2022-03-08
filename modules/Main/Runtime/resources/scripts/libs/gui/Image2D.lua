@@ -11,14 +11,13 @@ dependencies = {
     'libs/backend/HPMSFacade.lua'
 }
 
-local lib = backend:get()
-
 image_2d = { }
 
 TYPE_CIRCLE = 0
 TYPE_POLYGON = 1
 
 function image_2d:new(type, data, x, y, image, order)
+    local lib = backend:get()
     local ret = area_2d:new(type, data, x, y)
     local new = {
         overlay = lib.make_overlay(image,x,y,order),
@@ -49,6 +48,10 @@ function image_2d:new(type, data, x, y, image, order)
 
     function image_2d:delete()
         lib.delete_overlay(self.overlay)
+    end
+
+    function image_2d:alpha(a)
+        lib.overlay_alpha(self.overlay, a)
     end
 
     return this

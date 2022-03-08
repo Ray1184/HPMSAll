@@ -222,6 +222,7 @@ hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName,
         textArea = dynamic_cast<Ogre::TextAreaOverlayElement*>(ogrePanel->getChild("OverlayElementTextArea_" + name));
     }
     ogrePanel->show();
+    textArea->show();
     overlay->setZOrder(zOrder);
     SetBlending(BlendingType::NORMAL);
     overlay->show();

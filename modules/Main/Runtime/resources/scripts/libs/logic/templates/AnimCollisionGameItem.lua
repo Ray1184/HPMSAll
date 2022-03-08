@@ -133,7 +133,16 @@ function anim_collision_game_item:ret(path, id, bounding_radius, bounding_rect, 
     end
 
     function anim_collision_game_item:fill_transient_data(walkmap)
-        -- Manage collisor only
+        -- Manage collisor only, for anim data just reset
+        self.serializable.anim_data =
+        {
+            channel_name = k.default_animations.IDLE,
+            mode = k.anim_modes.ANIM_MODE_LOOP,
+            playing = false,
+            changed = true,
+            slowdown = 1,
+            slice = 1
+        }
         self.metainfo.override.collision_game_item.fill_transient_data(self, walkmap)
     end
 

@@ -7,7 +7,7 @@
 std::string hpms::LightAdaptee::GetName() const
 {
     Check();
-    return ogreLight->getName();
+    return std::to_string(ogreLight->getType());
 }
 
 void hpms::LightAdaptee::SetPosition(const glm::vec3& position)

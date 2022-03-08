@@ -49,6 +49,13 @@ bool hpms::FileExists(const std::string& fileName)
     return exists;
 }
 
+void hpms::WriteStringData(const std::string& fileName, const std::string& data)
+{
+    std::ofstream out(fileName);
+    out << data;
+    out.close();
+}
+
 
 std::vector<std::string> hpms::Split(const std::string& stringToSplit, const std::string& reg)
 {

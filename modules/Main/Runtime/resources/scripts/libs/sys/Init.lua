@@ -5,6 +5,6 @@
 -- DO NOT INCLUDE THIS!!!
 --
 config = {
-    first_script = "main/scenes/R_Debug_01.lua"
+    first_script = "main/menu/R_MainMenu.lua"
 }
 

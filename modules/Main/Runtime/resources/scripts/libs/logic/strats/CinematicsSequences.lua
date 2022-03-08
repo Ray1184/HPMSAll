@@ -6,7 +6,7 @@
 --
 
 dependencies = {
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/strats/Cinematics.lua',
     'libs/gui/OutputText2D.lua',
@@ -20,6 +20,7 @@ function cinematics_sequences:new()
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
+    local fullBox = { lib.vec2(0, 0), lib.vec2(320, 0), lib.vec2(320, 200), lib.vec2(0, 200) }
     local msgBox = { lib.vec2(10, 10), lib.vec2(270, 10), lib.vec2(270, 80), lib.vec2(10, 80) }
     local bookBox = { lib.vec2(40, 10), lib.vec2(220, 10), lib.vec2(220, 160), lib.vec2(40, 160) }
 
@@ -28,8 +29,11 @@ function cinematics_sequences:new()
     local this = {
         module_name = 'cinematics_sequences',
         text_style = { },
+        shade_overlays = { },
         tmp_vars = { }
     }
+
+    this.tmp_vars['CURRENT_ALPHA'] = 0
 
     this.text_style[k.diplay_msg_styles.MSG_BOX] = {
         renderer = output_text_2d:new(msgBox,0,0,'Console_Empty.png',100,'MessageBoxArea','Alagard',16,lib.vec4(1.0,0.8,0.0,1.0),4),
@@ -39,7 +43,8 @@ function cinematics_sequences:new()
         renderer = output_text_2d:new(bookBox,0,0,'Console_Empty.png',98,'BookArea','Alagard',16,lib.vec4(0.0,0.0,0.0,1.0),12),
         renderer_shadow = output_text_2d:new(bookBox,0,0,'Console_Empty.png',97,'BookAreaShadow','Alagard',16,lib.vec4(1.0,1.0,1.0,0.5),12)
     }
-
+    this.shade_overlays[k.overlay_colors.BLACK] = image_2d:new(POLYGONS, fullBox, 0, 0, 'default/Black.png', 150)
+    this.shade_overlays[k.overlay_colors.BLACK]:alpha(this.tmp_vars['CURRENT_ALPHA'])
 
     this.text_style[k.diplay_msg_styles.MSG_BOX].renderer:set_visible(false)
     this.text_style[k.diplay_msg_styles.MSG_BOX].renderer:set_position(10, 130)
@@ -64,6 +69,56 @@ function cinematics_sequences:new()
             end,
             complete_on = function(tpf, timer)
                 return timer >= time
+            end
+        }
+    end
+
+    function cinematics_sequences:fade_in(duration, style)
+        return {
+            action = function(tpf, timer)
+                if duration <= 0 then
+                    self.shade_overlays[style or k.overlay_colors.BLACK]:alpha(0)
+                    self.tmp_vars['CURRENT_ALPHA'] = 0
+                else
+                    local currAlpha = self.tmp_vars['CURRENT_ALPHA']
+                    local nextAlpha = currAlpha -(tpf / duration)
+                    self.shade_overlays[style or k.overlay_colors.BLACK]:alpha(nextAlpha)
+                    self.tmp_vars['CURRENT_ALPHA'] = nextAlpha
+                end
+            end,
+            complete_on = function(tpf, timer)
+                return self.tmp_vars['CURRENT_ALPHA'] <= 0
+            end
+        }
+    end
+
+    function cinematics_sequences:fade_out(duration, style)
+        return {
+            action = function(tpf, timer)
+
+                if duration <= 0 then
+                    self.shade_overlays[style or k.overlay_colors.BLACK]:alpha(1)
+                    self.tmp_vars['CURRENT_ALPHA'] = 1
+                else
+                    local currAlpha = self.tmp_vars['CURRENT_ALPHA']
+                    local nextAlpha = currAlpha +(tpf / duration)
+                    self.shade_overlays[style or k.overlay_colors.BLACK]:alpha(nextAlpha)
+                    self.tmp_vars['CURRENT_ALPHA'] = nextAlpha
+                end
+            end,
+            complete_on = function(tpf, timer)
+                return self.tmp_vars['CURRENT_ALPHA'] >= 1
+            end
+        }
+    end
+
+    function cinematics_sequences:pipe(what, args)
+        return {
+            action = function(tpf, timer)
+                what(args)
+            end,
+            complete_on = function(tpf, timer)
+                return true
             end
         }
     end
@@ -145,6 +200,9 @@ function cinematics_sequences:new()
             for k1, v1 in pairs(v) do
                 v1:delete()
             end
+        end
+        for k, v in pairs(self.shade_overlays) do
+            v:delete()
         end
     end
 

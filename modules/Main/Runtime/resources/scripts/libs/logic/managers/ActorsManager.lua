@@ -47,22 +47,18 @@ function actors_manager:new(scene_manager)
     function actors_manager:delete_all()
         for ka, actor in pairs(self.loaded_actors) do
             actor:delete_transient_data()
-            --actor:kill_instance()
 
         end
         for kn, npc in pairs(self.loaded_npcs) do
             npc:delete_transient_data()
-            --npc:kill_instance()
 
         end
         for kc, collectible in pairs(self.loaded_collectibles) do
             collectible:delete_transient_data()
-            --collectible:kill_instance()
 
         end
         if self.loaded_player ~= nil then
             self.loaded_player:delete_transient_data()
-            --self.loaded_player:kill_instance()
         end
 
         self.loaded_actors = { }
@@ -75,7 +71,9 @@ function actors_manager:new(scene_manager)
         if self.loaded_player == nil then
             self.loaded_player = context:get_instance(k.inst_cat.PLAYERS, player_id)
             self.loaded_player:fill_transient_data(self.scene_manager:get_walkmap())
-            lib.add_collisor_to_env(self.scene_manager:get_collision_env(), player_id, self.loaded_player.transient.collisor)
+            if not self.loaded_player.serializable.expired then
+                lib.add_collisor_to_env(self.scene_manager:get_collision_env(), player_id, self.loaded_player.transient.collisor)
+            end
         end
         return self.loaded_player
     end
@@ -85,7 +83,9 @@ function actors_manager:new(scene_manager)
         local actor = context:get_instance(k.inst_cat.ACTORS, actor_id, id_suffix)
         self.loaded_actors[actor.serializable.id] = actor
         self.loaded_actors[actor.serializable.id]:fill_transient_data(self.scene_manager:get_walkmap())
-        lib.add_collisor_to_env(self.scene_manager:get_collision_env(), actor.serializable.id, self.loaded_actors[actor.serializable.id].transient.collisor)
+        if not self.loaded_actors[actor.serializable.id].serializable.expired then
+            lib.add_collisor_to_env(self.scene_manager:get_collision_env(), actor.serializable.id, self.loaded_actors[actor.serializable.id].transient.collisor)
+        end
         self.actors = self.actors + 1
         return self.loaded_actors[actor.serializable.id]
     end

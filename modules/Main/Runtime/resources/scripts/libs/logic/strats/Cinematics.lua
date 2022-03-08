@@ -14,7 +14,7 @@
 --
 
 dependencies = {
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/backend/HPMSFacade.lua'
 }
@@ -37,12 +37,14 @@ function cinematics:new(sceneMgr)
         return insp.inspect(o)
     end
 
-    function cinematics:add_workflow(sequences, condition, loop)
+    function cinematics:add_workflow(sequences, condition, loop, name)
         local workflow = {
             sequences = sequences,
             condition = condition or nil,
             loop = loop or false,
-            expired = false
+            expired = false,
+            main_condition_verified = false,
+            name = name or 'undef'
         }
         table.insert(self.workflows, workflow)
     end
@@ -53,14 +55,18 @@ function cinematics:new(sceneMgr)
         end
         for i = 1, #self.workflows do
             if not self.workflows[i].expired then
-                if self.workflows[i].condition == nil or workflows[i].condition() then
+                local conditionVer = self.workflows[i].condition == nil or self.workflows[i].condition()
+                if conditionVer then
+                    self.workflows[i].main_condition_verified = true
+                end
+                if self.workflows[i].main_condition_verified then
                     self:process_workflow(self.workflows[i], tpf)
                 end
             end
         end
     end
 
-    function cinematics:process_workflow(workflow, tpf)        
+    function cinematics:process_workflow(workflow, tpf)
         if workflow.expired then
             return
         end
@@ -100,6 +106,7 @@ function cinematics:new(sceneMgr)
         for i = 1, #workflow.sequences do
             workflow.sequences[i].completed = nil
             workflow.sequences[i].timer = 0
+            workflow.main_condition_verified = false
         end
     end
 

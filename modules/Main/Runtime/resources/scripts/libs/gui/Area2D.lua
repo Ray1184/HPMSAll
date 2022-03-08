@@ -7,7 +7,6 @@
 
 dependencies = {
     'libs/utils/MathUtils.lua'
-    -- 'libs/utils/Utils.lua'
 }
 
 area_2d = { }

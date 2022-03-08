@@ -18,7 +18,7 @@
 std::string hpms::EntityAdaptee::GetName() const
 {
     Check(ogreEntity);
-    return ogreEntity->getMesh()->getName() + "/" + ogreEntity->getName();
+    return ogreEntity->getMesh()->getName();
 }
 
 void hpms::EntityAdaptee::SetPosition(const glm::vec3& position)

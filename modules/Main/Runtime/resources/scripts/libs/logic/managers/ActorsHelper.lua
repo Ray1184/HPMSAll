@@ -58,6 +58,9 @@ function get_collision_events(collisions_states, id, actor1, actor2)
 end
 
 function collision_actor_actor(i1, i2, lib)
+    if i1.serializable.expired or i2.serializable.expired then
+        return false
+    end
     local collState = lib.get_collision_state_by_collisor(i2.transient.collisor)
     return collState ~= nil and collState.second == 'node_' .. i1.serializable.id
 end

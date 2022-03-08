@@ -1,7 +1,5 @@
 -- Scene script.
 dependencies = {
-    ----'Context.lua',
-    --'libs/utils/Utils.lua',
     'libs/gui/Image2D.lua',
     'libs/gui/OutputText2D.lua',
     'libs/logic/templates/AbstractObject.lua',

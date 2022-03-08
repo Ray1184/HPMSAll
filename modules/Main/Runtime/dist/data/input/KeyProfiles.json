@@ -8,7 +8,7 @@
     "EXIT": "ESC",
     "ACTION_1": "E",
     "ACTION_2": "SPACE",
-    "ACTION_3": "LCTRL",
+    "ACTION_3": "LSHIFT",
     "PAUSE": "P"
   }
 }

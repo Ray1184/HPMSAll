@@ -7,7 +7,7 @@
 
 dependencies = {
     ----'Context.lua',
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/TransformsCommon.lua',
@@ -117,7 +117,7 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
     end
 
     function collision_game_item:delete_transient_data()
-        if self.serializable.expired then
+        if not self.transientDataInit then
             return
         end
         lib.delete_collisor(self.transient.collisor)
@@ -143,9 +143,7 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
         local collisor = self.transient.collisor
         local visualInfo = self.serializable.visual_info
         local pos = visualInfo.position
-        local rot = visualInfo.rotation
         collisor.position = lib.vec3(pos.x, pos.y, pos.z)
-        collisor.rotation = lib.from_euler(rot.x, rot.y, rot.z)
 
     end
 

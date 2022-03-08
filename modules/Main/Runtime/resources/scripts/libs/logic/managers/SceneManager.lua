@@ -6,7 +6,7 @@
 --
 
 dependencies = {
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua'
 }
 
@@ -41,7 +41,7 @@ function scene_manager:new(scene_name, camera)
         if self.loaded_walkmap ~= nil then
             lib.delete_walkmap(self.loaded_walkmap)
         end
-         if self.loaded_env ~= nil then
+        if self.loaded_env ~= nil then
             lib.delete_collision_env(self.loaded_env)
         end
 
@@ -107,7 +107,6 @@ function scene_manager:new(scene_name, camera)
             end
         end
         if settings_to_apply == nil then
-            log_warn('No sector view condition defined for scene ' .. self.scene_name)
             return
         end
 

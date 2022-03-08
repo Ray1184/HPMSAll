@@ -6,7 +6,6 @@ dependencies = {
     'libs/logic/models/Player.lua',
     'libs/logic/models/RoomState.lua',
     'libs/backend/HPMSFacade.lua',
-    --'libs/utils/Utils.lua',
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
@@ -14,7 +13,7 @@ dependencies = {
     'libs/logic/strats/CinematicsSequences.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
-    'libs/logic/managers/GameMenu.lua'
+    'libs/logic/managers/GlobalStateManager.lua'
 }
 
 scene = {
@@ -25,7 +24,6 @@ scene = {
     next = 'TBD',
     setup = function()
         -- TODOBATCH-BEGIN
-        context:inst()
         context:inst():disable_dummy()
         enable_debug()
         -- TODOBATCH-END
@@ -39,30 +37,26 @@ scene = {
         interactive = true
 
         room_st = room_state:ret(scene.name)
+        gsm = global_state_manager:new()
 
         input_prf = input_profile:new('default')
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
         cin = cinematics:new(scn_mgr)
         seq = cinematics_sequences:new()
-        local guis = { }
-        guis[k.menu_modes.INVENTORY] = 'Menu/Inventory.png'
-        menu = game_menu:get( {
-            background_image = 'Menu/MenuShade.png',
-            gui_images = guis
-        } , k.menu_modes.INVENTORY)
+
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
-    
+
         register_all_instances()
         action = false
 
         walkRatio = 0
         walk = 0
         rotate = 0
-        
-        
+
+
         lib = backend:get()
         insp = inspector:get()
         -- > gestirlo via scene_manager
@@ -128,12 +122,26 @@ scene = {
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
 
+        cin:add_workflow( {
+            seq:fade_out(0)
+        } , nil, false, 'fade out')
+
+        cin:add_workflow( {
+            seq:fade_in(1)
+        } , nil, false, 'fade in')
 
         cin:add_workflow( {
             seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
             seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
-            seq:wait(5)
-        } , nil, true)
+            seq:wait(2),
+            seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
+            seq:pipe( function() chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
+        } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
+
+        cin:add_workflow( {
+            seq:pipe( function() gsm:save_data(scene.name, 'data/save/savedata00.json') end),
+            seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true)
+        } , function() return input_prf:action_done_once('ACTION_3') end, true, 'save_data_flow')
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
         lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
@@ -265,21 +273,18 @@ scene = {
         player.serializable.performing_action = false
         if interactive then
             if action then
+                player:set_anim('Push')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
                 player.serializable.performing_action = true
-                log_info('anim push')
             elseif walkF or(walkF and turn) then
                 player:set_anim('Walk_Forward')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-                log_info('anim fw')
             elseif walkB or(walkB and turn) then
                 player:set_anim('Walk_Back')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-                log_info('anim bk')
             elseif turn then
                 player:set_anim('Idle')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-                log_info('anim id')
                 -- lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
 
                 -- player.serializable.performing_action = true
@@ -287,7 +292,6 @@ scene = {
                 -- player.serializable.performing_action = false
                 player:set_anim('Idle')
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
-                log_info('anim id2')
             end
         end
         if not action then
@@ -305,11 +309,11 @@ scene = {
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]
 
-        hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
-        hpms.debug_draw_aabb(player.transient.collisor)
-        hpms.debug_draw_aabb(chest.transient.collisor)
-        hpms.debug_draw_aabb(chest2.transient.collisor)
-        hpms.debug_draw_aabb(chest3.transient.collisor)
+        -- hpms.debug_draw_perimeter(scn_mgr:get_walkmap())
+        -- hpms.debug_draw_aabb(player.transient.collisor)
+        -- hpms.debug_draw_aabb(chest.transient.collisor)
+        -- hpms.debug_draw_aabb(chest2.transient.collisor)
+        -- hpms.debug_draw_aabb(chest3.transient.collisor)
 
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [update]
         current_sector = player.transient.collisor.sector

@@ -7,7 +7,7 @@
 
 dependencies = {
     ----'Context.lua',
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/thirdparty/Inspect.lua',
@@ -35,7 +35,7 @@ function anim_game_item:ret(path, id)
                 anim_data =
                 {
                     channel_name = k.default_animations.IDLE,
-                    mode = k.anim_modes.ANIM_MODE_FRAME,
+                    mode = k.anim_modes.ANIM_MODE_LOOP,
                     playing = false,
                     changed = true,
                     slowdown = 1,
@@ -104,6 +104,15 @@ function anim_game_item:ret(path, id)
     end
 
     function anim_game_item:fill_transient_data()
+        self.serializable.anim_data =
+        {
+            channel_name = k.default_animations.IDLE,
+            mode = k.anim_modes.ANIM_MODE_LOOP,
+            playing = false,
+            changed = true,
+            slowdown = 1,
+            slice = 1
+        }
         self.metainfo.override.game_item.fill_transient_data(self)
     end
 
@@ -114,7 +123,6 @@ function anim_game_item:ret(path, id)
         end
 
         if self.serializable.anim_data.playing then
-
             if self.serializable.anim_data.mode == k.anim_modes.ANIM_MODE_ONCE then
                 local finished = lib.anim_finished(self.transient.entity, self.serializable.anim_data.channel_name)
                 if finished then

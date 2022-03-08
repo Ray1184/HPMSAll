@@ -13,7 +13,7 @@ function context:new()
 
     cats = {
         STATE = 'state',
-        OBJECTS = 'objects',
+        SERIALIZABLES = 'serializables',
         INSTANCES = 'instances',
         EVENTS = 'events',
         LANG = 'lang',
@@ -29,6 +29,14 @@ function context:new()
     setmetatable(ctx, self)
     self.__index = self
     return ctx
+end
+
+function context:set_serializable_data(data)
+    self.instance[cats.SERIALIZABLES] = data
+end
+
+function context:get_serializable_data()
+    return self.instance[cats.SERIALIZABLES]
 end
 
 function context:set_coord_system_blender()
@@ -149,7 +157,7 @@ function context:get_state(key)
 end
 
 function context:get_object(key, supplierCallback)
-    return self.instance:get(cats.OBJECTS, key, supplierCallback)
+    return self.instance:get(cats.SERIALIZABLES, key, supplierCallback)
 end
 
 function context:register_instance(subcat, id, retrieveCallback)

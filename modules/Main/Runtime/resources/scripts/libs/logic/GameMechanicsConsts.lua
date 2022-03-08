@@ -11,6 +11,8 @@ function game_mechanics_consts:get()
 
     return {
 
+        HPMS_VERSION = 1.0,
+
         DEFAULT_GLOBAL_TIMER_LIMIT = 320000,
         -- 100 hours
 
@@ -217,6 +219,10 @@ function game_mechanics_consts:get()
         {
             MSG_BOX = 'msg_box',
             BOOK = 'book'
+        },
+        overlay_colors =
+        {
+            BLACK = 'black'
         }
 
     }

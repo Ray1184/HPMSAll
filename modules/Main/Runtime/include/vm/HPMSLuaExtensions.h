@@ -504,6 +504,11 @@ namespace hpms
 			return hpms::ReadFile(filePath);
 		}
 
+		static void SLWriteStringFile(const std::string& fileName, const std::string& data)
+		{
+			return hpms::WriteStringData(fileName, data);
+		}
+
 		// Debug Utils.
 		static inline void DDebugDrawClear()
 		{

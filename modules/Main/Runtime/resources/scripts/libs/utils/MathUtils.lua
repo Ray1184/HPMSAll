@@ -7,12 +7,12 @@
 
 dependencies = { 'libs/backend/HPMSFacade.lua' }
 
-local lib = backend:get()
-
 function point_inside_circle(x, y, cx, cy, radius)
+    local lib = backend:get()
     return lib.point_inside_circle(lib.vec2(x, y), lib.vec2(cx, cy), radius)
 end
 
 function point_inside_polygon(x, y, cx, cy, data)
+    local lib = backend:get()
     return lib.point_inside_polygon(lib.vec2(x, y), lib.vec2(cx, cy), data)
 end
