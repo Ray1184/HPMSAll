@@ -55,8 +55,7 @@ function cinematics:new(sceneMgr)
         end
         for i = 1, #self.workflows do
             if not self.workflows[i].expired then
-                local conditionVer = self.workflows[i].condition == nil or self.workflows[i].condition()
-                if conditionVer then
+                if self.workflows[i].condition == nil or self.workflows[i].condition() then
                     self.workflows[i].main_condition_verified = true
                 end
                 if self.workflows[i].main_condition_verified then

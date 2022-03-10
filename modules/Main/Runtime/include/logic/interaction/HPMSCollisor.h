@@ -51,7 +51,6 @@ namespace hpms
 		float baseHeight;
 		bool baseHeightDefined;
 		glm::vec3 nextPosition{};
-		glm::vec3 lastPosition{};
 		glm::vec2 direction{};
 		bool outOfDate;
 		hpms::TriangleAdapter* currentTriangle{ nullptr };
@@ -175,5 +174,7 @@ namespace hpms
 		bool RayIntersect(const glm::vec3& dir, hpms::Collisor* target);
 		
 		float GetHeightInMap();
+
+		bool IsStopped();
 	};
 }

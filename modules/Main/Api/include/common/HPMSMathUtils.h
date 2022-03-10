@@ -156,4 +156,14 @@ namespace hpms
 		return glm::vec2(m[0][0] * v.x + m[1][0] * v.y + m[3][0], m[0][1] * v.x + m[1][1] * v.y + m[3][1]);
 	}
 
+	inline float DistanceVec3(const glm::vec3& v1, const glm::vec3& v2)
+	{
+		return std::sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2) + pow(v2.z - v1.z, 2));
+	}
+
+	inline float DistanceVec2(const glm::vec2& v1, const glm::vec2& v2)
+	{
+		return std::sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
+	}
+
 }

@@ -79,7 +79,7 @@ namespace hpms
 
 		static inline float DistVec3(const glm::vec3& v1, const glm::vec3& v2)
 		{
-			return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2) + pow(v2.z - v1.z, 2));
+			return hpms::DistanceVec3(v1, v2);
 		}
 
 		static inline float DotVec3(const glm::vec3& v1, const glm::vec3& v2)
@@ -150,7 +150,7 @@ namespace hpms
 
 		static inline float DistVec2(const glm::vec2& v1, const glm::vec2& v2)
 		{
-			return (float)sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
+			return hpms::DistanceVec2(v1, v2);
 		}
 
 

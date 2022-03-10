@@ -43,16 +43,18 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
-	if (!GetConfig().active || !other->GetConfig().active)
+	if (!GetConfig().active || !other->GetConfig().active || IsStopped())
 	{
 		ApplyHeight(&nextPosition, tpf);
 		collisionState = NO_COLLISION(nextPosition, GetName());
 		return;
 	}
 
-	CollisionResponse collisionResponse;
 	glm::vec2 noTranslation(0, 0);
+
+	CollisionResponse collisionResponse;
 	hpms::CircleInteractPolygon(nextPosition, GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponse);
+	
 	bool noCollision = !collisionResponse.AnyCollision();
 	if (noCollision)
 	{
@@ -61,10 +63,25 @@ void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 		return;
 	}
 
+	// If previus step was a collision and object were nearest then current, keep current as good.
+	CollisionResponse collisionResponseTestPrev;
+	hpms::CircleInteractPolygon(GetPosition(), GetScaledBoundingRadius(), noTranslation, other->GetScaledBoundingRect(), OUTSIDE, &collisionResponseTestPrev);
+	bool prevCollision = collisionResponseTestPrev.AnyCollision();
+	float distOld = hpms::DistanceVec3(GetPosition(), other->GetPosition());
+	float distNew = hpms::DistanceVec3(nextPosition, other->GetPosition());
+	if (prevCollision && distNew >= distOld)
+	{
+		ApplyHeight(&nextPosition, tpf);
+		collisionState = NO_COLLISION(nextPosition, GetName());
+		return;
+	}
+
+
 	// Double check is required because of correct position result.
 	// Infact after slide the new position could be outside of perimeter.
 
-	bool skipCorrection = false;
+  	bool skipCorrection = false;
+	glm::vec3 lastPos = actor->GetPosition();
 	glm::vec3 correctPosition;
 	bool insideAgain = CorrectAndRetryCollisor(collisionResponse.collisions[0], &correctPosition, other, tpf);
 	if (!insideAgain && collisionResponse.collisions.size() >= 2)
@@ -100,7 +117,7 @@ bool hpms::Collisor::CorrectAndRetryCollisor(const hpms::SingleCollisionResponse
 
 hpms::CollisionInfo hpms::Collisor::DetectByBoundingRadius(float tpf)
 {
-	if (!GetConfig().active)
+	if (!GetConfig().active || IsStopped())
 	{
 		ApplyHeight(&nextPosition, tpf);
 		return NO_COLLISION(nextPosition, GetName());
@@ -169,7 +186,11 @@ void hpms::Collisor::ApplyHeight(glm::vec3* nextPos, float tpf)
 	}
 }
 
-
+bool hpms::Collisor::IsStopped()
+{
+	auto lastPosition = actor->GetPosition();
+	return lastPosition == nextPosition;
+}
 
 float hpms::Collisor::GetHeightInMap()
 {
