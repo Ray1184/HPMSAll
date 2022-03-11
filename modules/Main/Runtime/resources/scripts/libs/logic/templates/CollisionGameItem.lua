@@ -26,25 +26,34 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
     local id = 'collision_game_item/' .. id
     local ret = game_item:ret(path, id)
 
-    local this = context:inst():get_object(id,
+    local this = context:inst():get_object(id, false,
     function()
         log_debug('New collision_game_item object ' .. id)
 
         local new = {
             serializable =
             {
-                id = id,
-                collision_info =
-                {
-                    bounding_radius = bounding_radius or 0,
-                    bounding_rect = bounding_rect or { x = 0, y = 0 },
-                    ghost = ghost or false
-                }
+                id = id
             }
         }
 
         return merge_tables(ret, new)
     end )
+
+    local notSer = {
+        not_serializable =
+        {
+            collision_info =
+            {
+                bounding_radius = bounding_radius or 0,
+                bounding_rect = bounding_rect or { x = 0, y = 0 },
+                ghost = ghost or false
+            }
+        }
+    }
+   
+    notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
+    this = merge_tables(this, notSer)
 
     local metainf =
     {
@@ -70,7 +79,7 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
         }
     }
 
-    local this = merge_tables(this, metainf)
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
@@ -109,11 +118,11 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
     end
 
     function collision_game_item:get_scaled_rad()
-        return self.serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale.x + self.serializable.visual_info.scale.y) / 2)
+        return self.not_serializable.collision_info.bounding_radius *((self.serializable.visual_info.scale.x + self.serializable.visual_info.scale.y) / 2)
     end
 
     function collision_game_item:ghost()
-        return self.serializable.collision_info.ghost
+        return self.not_serializable.collision_info.ghost
     end
 
     function collision_game_item:delete_transient_data()
@@ -129,9 +138,9 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
         if self.serializable.expired then
             return
         end
-        local rad = self.serializable.collision_info.bounding_radius
-        local rect = lib.vec2(self.serializable.collision_info.bounding_rect.x, self.serializable.collision_info.bounding_rect.y)
-        local conf = lib.get_collisor_config(not self.serializable.collision_info.ghost, k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT, rad, rect)
+        local rad = self.not_serializable.collision_info.bounding_radius
+        local rect = lib.vec2(self.not_serializable.collision_info.bounding_rect.x, self.not_serializable.collision_info.bounding_rect.y)
+        local conf = lib.get_collisor_config(not self.not_serializable.collision_info.ghost, k.DEFAULT_GAVITY, k.DEFAULT_MAX_STEP_HEIGHT, rad, rect)
 
         local tra = {
             transient =

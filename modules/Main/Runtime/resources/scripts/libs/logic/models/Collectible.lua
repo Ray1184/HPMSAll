@@ -8,7 +8,7 @@
 
 dependencies = {
     ----'Context.lua',
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/thirdparty/Inspect.lua'
@@ -16,7 +16,7 @@ dependencies = {
 
 collectible = { }
 
-function collectible:ret(path, id)
+function collectible:ret(path, id, amount, showAmount)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
@@ -24,7 +24,7 @@ function collectible:ret(path, id)
     local id = 'collectible/' .. id
     local ret = game_item:ret(path)
 
-    local this = context:inst():get_object(id,
+    local this = context:inst():get_object(id, true,
     function()
         log_debug('New collectible object ' .. id)
 
@@ -32,82 +32,21 @@ function collectible:ret(path, id)
             serializable =
             {
                 id = id,
-                visual_info_2d =
-                {
-                    position = { 0, 0, 0 },
-                    rotation = { 0, 0, 0 },
-                    scale = { 0, 0, 0 }
-                },
                 selected = false,
-                obj_info =
-                {
-                    name = 'Collectible',
-                    description = 'N/A',
-                    item_type = k.item_types.ACTIONS,
-                    item_license = k.item_license.NONE,
-                    amount = 1,
-                    available_actions = { k.item_actions.USE, k.item_actions.CHECK, k.item_actions.DROP },
-                    show_amount = true,
-                    modifiers =
-                    {
-                        -- Amount
-                        { k.stats.standard_params.HP, 0 },
-                        { k.stats.standard_params.MAX_HP, 0 },
-                        { k.stats.standard_params.SP, 0 },
-                        { k.stats.standard_params.MAX_SP, 0 },
-                        { k.stats.standard_params.VP, 0 },
-                        { k.stats.standard_params.MAX_VP, 0 },
-                        { k.stats.standard_params.LV, 0 },
-                        { k.stats.standard_params.AP, 0 },
-                        { k.stats.standard_params.MONEY, 0 },
-                        { k.stats.standard_params.ARMOR, 0 },
-
-                        { k.stats.support_params.STRENGTH, 0 },
-                        { k.stats.support_params.STAMINA, 0 },
-                        { k.stats.support_params.INTELLIGENCE, 0 },
-                        { k.stats.support_params.SCIENCE, 0 },
-                        { k.stats.support_params.HANDYMAN, 0 },
-                        { k.stats.support_params.DEXTERITY, 0 },
-                        { k.stats.support_params.OCCULT, 0 },
-                        { k.stats.support_params.CHARISMA, 0 },
-                        { k.stats.support_params.FORTUNE, 0 },
-
-                        -- Affection flag, affection ratio (1: 100%, 0: 0%)
-                        { k.stats.negative_status_params.SLEEP, false, 1 },
-                        { k.stats.negative_status_params.POISON, false, 1 },
-                        { k.stats.negative_status_params.TOXIN, false, 1 },
-                        { k.stats.negative_status_params.BURN, false, 1 },
-                        { k.stats.negative_status_params.FREEZE, false, 1 },
-                        { k.stats.negative_status_params.BLIND, false, 1 },
-                        { k.stats.negative_status_params.PARALYSIS, false, 1 },
-                        { k.stats.negative_status_params.SHOCK, false, 1 },
-
-                        { k.stats.positive_status_params.REGEN, false, 1 },
-                        { k.stats.positive_status_params.RAD, false, 1 },
-                        { k.stats.positive_status_params.INVINCIBLITY, false },
-
-                        { k.stats.phobies.ARACHNOPHOBIA, false, 1 },
-                        { k.stats.phobies.HEMOPHOBIA, false, 1 },
-                        { k.stats.phobies.ANTHROPOPHOBIA, false, 1 },
-                        { k.stats.phobies.AQUAPHOBIA, false, 1 },
-                        { k.stats.phobies.PYROPHOBIA, false, 1 },
-                        { k.stats.phobies.ACROPHOBIA, false, 1 },
-                        { k.stats.phobies.NECROPHOBIA, false, 1 },
-                        { k.stats.phobies.AEROPHOBIA, false, 1 },
-                        { k.stats.phobies.AVIOPHOBIA, false, 1 },
-                        { k.stats.phobies.PHOTOPHOBIA, false, 1 },
-                        { k.stats.phobies.NYCTOPHOBIA, false, 1 },
-                        { k.stats.phobies.CRYOPHOBIA, false, 1 }
-
-                    }
-
-                }
-
+                amount = amount or 1,
+                show_amount = showAmount or false
             }
         }
 
         return merge_tables(ret, new)
     end )
+
+    local notSer = {
+        not_serializable = { }
+    }
+   
+    notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
+    this = merge_tables(this, notSer)
 
     local metainf =
     {
@@ -133,7 +72,9 @@ function collectible:ret(path, id)
         }
     }
 
-    local this = merge_tables(this, metainf)
+    metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
+
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
@@ -142,11 +83,11 @@ function collectible:ret(path, id)
     end
 
     function collectible:set_position(x, y, z)
-        self.metainfo.override.anim_collision_game_item.set_position(self, x, y, z)
+        self.metainfo.override.game_item.set_position(self, x, y, z)
     end
 
     function collectible:get_position()
-        return self.metainfo.override.anim_collision_game_item.get_position(self)
+        return self.metainfo.override.game_item.get_position(self)
     end
 
     function collectible:move_dir(ratio, dir)
@@ -158,7 +99,7 @@ function collectible:ret(path, id)
     end
 
     function collectible:scale(sx, sy, sz)
-        self.metainfo.override.anim_collision_game_item.scale(self, sx, sy, sz)
+        self.metainfo.override.game_item.scale(self, sx, sy, sz)
     end
 
     function collectible:delete_transient_data()
@@ -185,7 +126,7 @@ function collectible:ret(path, id)
         self.metainfo.override.game_item.update(self)
     end
 
-     function collectible:set_action_callback(action_callback)
+    function collectible:set_action_callback(action_callback)
         self.metainfo.action_callback = action_callback
     end
 
@@ -193,6 +134,10 @@ function collectible:ret(path, id)
         if self.metainfo.action_callback ~= nil then
             self.metainfo.action_callback(action_info)
         end
+    end
+
+    function scene_actor:kill_instance()
+        self.metainfo.override.game_item.kill_instance(self)
     end
 
     return this

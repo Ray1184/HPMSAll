@@ -22,7 +22,7 @@ function room_state:ret(id)
     local id = 'room_state/' .. id
     local ret = abstract_object:ret(id)
 
-    local this = context:inst():get_object(id,
+    local this = context:inst():get_object(id, true, 
     function()
         log_debug('New room_state object ' .. id)
 

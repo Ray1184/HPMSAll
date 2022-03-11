@@ -8,7 +8,7 @@
 
 dependencies = {
     ----'Context.lua',
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/models/SceneActor.lua',
     'libs/logic/GameMechanicsConsts.lua'
@@ -21,10 +21,8 @@ function player:ret(path, id, rad, rect, ghost)
     insp = inspector:get()
 
     local id = 'player/' .. id
-    local ret = scene_actor:ret(path, id, rad, rect, ghost)
-
-
-    local this = context:inst():get_object(id,
+    local ret = scene_actor:ret(path, id, rad, rect, ghost, true)
+    local this = context:inst():get_object(id, true,
     function()
         log_debug('New player object ' .. id)
 
@@ -39,18 +37,6 @@ function player:ret(path, id, rad, rect, ghost)
                 pushable = false,
                 searchable = false,
                 hittable = true,
-                anagr =
-                {
-                    name = 'Player',
-                    birth_date = '0000-01-01',
-                    birth_place = 'Nowhere',
-                    country = 'Outworld',
-                    job = 'Nothing',
-                    height = 0,
-                    weight = 0,
-                    info = 'N/A',
-                    photo = 'N/A'
-                },
                 stats =
                 {
 
@@ -117,8 +103,30 @@ function player:ret(path, id, rad, rect, ghost)
 
             }
         }
+        
         return merge_tables(ret, new)
     end )
+
+    local notSer = {
+        not_serializable =
+        {
+            anagr =
+            {
+                name = 'Player',
+                birth_date = '0000-01-01',
+                birth_place = 'Nowhere',
+                country = 'Outworld',
+                job = 'Nothing',
+                height = 0,
+                weight = 0,
+                info = 'N/A',
+                photo = 'N/A'
+            },
+        }
+    }
+
+    notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
+    this = merge_tables(this, notSer)
 
     local metainf = {
         metainfo =
@@ -155,7 +163,7 @@ function player:ret(path, id, rad, rect, ghost)
 
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
 
-    local this = merge_tables(this, metainf)
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
@@ -172,11 +180,11 @@ function player:ret(path, id, rad, rect, ghost)
     end
 
     function player:set_anagr(anagr)
-        self.serializable.anagr = anagr
+        self.not_serializable.anagr = anagr
     end
 
     function player:set_stats(stats)
-        self.metainfo.override.scene_actor.set_stats(self, stats)
+        self.serializable.stats = stats
     end
 
     function player:modify_stat(stat_type, stat_name, stat_value, stat_affection)

@@ -24,7 +24,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius, bounding_rect, 
     local ret = anim_game_item:ret(path, id)
     local ret2 = collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost)
 
-    local this = context:inst():get_object(id,
+    local this = context:inst():get_object(id, false, 
     function()
         log_debug('New anim_collision_game_item object ' .. id)
 
@@ -39,6 +39,13 @@ function anim_collision_game_item:ret(path, id, bounding_radius, bounding_rect, 
         return merge_tables(ret3, new)
 
     end )
+
+    local notSer = {
+        not_serializable = { }
+    }
+   
+    notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
+    this = merge_tables(this, notSer)
 
 
     local metainf = {
@@ -83,7 +90,7 @@ function anim_collision_game_item:ret(path, id, bounding_radius, bounding_rect, 
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret2.metainfo.override)
 
-    local this = merge_tables(this, metainf)
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self

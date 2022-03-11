@@ -156,8 +156,8 @@ function context:get_state(key)
     return self.instance[cats.STATE][key]
 end
 
-function context:get_object(key, supplierCallback)
-    return self.instance:get(cats.SERIALIZABLES, key, supplierCallback)
+function context:get_object(key, persist, supplierCallback)
+    return self.instance:get(cats.SERIALIZABLES, key, persist, supplierCallback)
 end
 
 function context:register_instance(subcat, id, retrieveCallback)
@@ -194,7 +194,10 @@ function context:put(cat, key, obj)
     self.instance[cat][key] = obj.serializable
 end
 
-function context:get(cat, key, supplierCallback)
+function context:get(cat, key, persist, supplierCallback)
+    if not persist then
+        return supplierCallback()
+    end
     if self.instance[cat] == nil then
         if cat == nil then
             log_warn('Cannot get object from context with nil category')

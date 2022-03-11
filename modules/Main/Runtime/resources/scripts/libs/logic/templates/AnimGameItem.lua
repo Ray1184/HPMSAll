@@ -24,7 +24,7 @@ function anim_game_item:ret(path, id)
     local id = 'anim_game_item/' .. id
     local ret = game_item:ret(path, id)
 
-    local this = context:inst():get_object(id,
+    local this = context:inst():get_object(id, false, 
     function()
         log_debug('New anim_game_item object ' .. id)
 
@@ -46,6 +46,13 @@ function anim_game_item:ret(path, id)
 
         return merge_tables(ret, new)
     end )
+
+    local notSer = {
+        not_serializable = { }
+    }
+   
+    notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
+    this = merge_tables(this, notSer)
 
     local metainf =
     {
@@ -71,7 +78,7 @@ function anim_game_item:ret(path, id)
         }
     }
 
-    local this = merge_tables(this, metainf)
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self

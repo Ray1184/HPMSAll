@@ -8,7 +8,7 @@
 
 dependencies = {
     ----'Context.lua',
-    --'libs/utils/Utils.lua',
+    -- 'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/templates/AnimCollisionGameItem.lua',
     'libs/logic/GameMechanicsConsts.lua'
@@ -16,14 +16,14 @@ dependencies = {
 
 scene_actor = { }
 
-function scene_actor:ret(path, id, rad, rect, ghost)
+function scene_actor:ret(path, id, rad, rect, ghost, template)
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
     local id = 'scene_actor/' .. id
     local ret = anim_collision_game_item:ret(path, id, rad, rect, ghost)
 
-    local this = context:inst():get_object(id,
+    local this = context:inst():get_object(id, not(template or false),
     function()
         log_debug('New scene_actor object ' .. id)
 
@@ -37,51 +37,18 @@ function scene_actor:ret(path, id, rad, rect, ghost)
                 movable = false,
                 pushable = false,
                 searchable = false,
-                hittable = true,
-
-                stats =
-                {                    
-                    -- Amount
-                    { k.stats.standard_params.HP, 0 },
-                    { k.stats.standard_params.MAX_HP, 0 },
-                    { k.stats.standard_params.SP, 0 },
-                    { k.stats.standard_params.MAX_SP, 0 },
-                    { k.stats.standard_params.VP, 0 },
-                    { k.stats.standard_params.MAX_VP, 0 },
-                    { k.stats.standard_params.LV, 0 },
-                    { k.stats.standard_params.AP, 0 },
-                    { k.stats.standard_params.MONEY, 0 },
-                    { k.stats.standard_params.ARMOR, 0 },
-
-                    { k.stats.support_params.STRENGTH, 0 },
-                    { k.stats.support_params.STAMINA, 0 },
-                    { k.stats.support_params.INTELLIGENCE, 0 },
-                    { k.stats.support_params.SCIENCE, 0 },
-                    { k.stats.support_params.HANDYMAN, 0 },
-                    { k.stats.support_params.DEXTERITY, 0 },
-                    { k.stats.support_params.OCCULT, 0 },
-                    { k.stats.support_params.CHARISMA, 0 },
-                    { k.stats.support_params.FORTUNE, 0 },
-
-                    -- Affection flag, affection ratio (1: 100%, 0: 0%)
-                    { k.stats.negative_status_params.SLEEP, false, 1 },
-                    { k.stats.negative_status_params.POISON, false, 1 },
-                    { k.stats.negative_status_params.TOXIN, false, 1 },
-                    { k.stats.negative_status_params.BURN, false, 1 },
-                    { k.stats.negative_status_params.FREEZE, false, 1 },
-                    { k.stats.negative_status_params.BLIND, false, 1 },
-                    { k.stats.negative_status_params.PARALYSIS, false, 1 },
-                    { k.stats.negative_status_params.SHOCK, false, 1 },
-
-                    { k.stats.positive_status_params.REGEN, false, 1 },
-                    { k.stats.positive_status_params.RAD, false, 1 },
-                    { k.stats.positive_status_params.INVINCIBLITY, false }
-                }
-
+                hittable = true
             }
         }
         return merge_tables(ret, new)
     end )
+
+    local notSer = {
+        not_serializable = { }
+    }
+
+    notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
+    this = merge_tables(this, notSer)
 
     local metainf = {
         metainfo =
@@ -112,7 +79,7 @@ function scene_actor:ret(path, id, rad, rect, ghost)
 
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
 
-    local this = merge_tables(this, metainf)
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
@@ -135,16 +102,16 @@ function scene_actor:ret(path, id, rad, rect, ghost)
     end
 
     function scene_actor:set_stats(stats)
-        self.serializable.stats = stats
+        self.transient.stats = stats
     end
 
     function scene_actor:modify_stat(stat_type, stat_name, stat_value, stat_affection)
-        for i = 1, #self.serializable.stats[stat_type] do
-            if self.serializable.stats[stat_type][i][1] == stat_name then
-                self.serializable.stats[stat_type][i][2] = stat_value
+        for i = 1, #self.transient.stats[stat_type] do
+            if self.transient.stats[stat_type][i][1] == stat_name then
+                self.transient.stats[stat_type][i][2] = stat_value
                 if stat_affection ~= nil then
-                    if #self.serializable.stats[stat_type][i] == 3 then
-                        self.serializable.stats[stat_type][i][3] = stat_affection
+                    if #self.transient.stats[stat_type][i] == 3 then
+                        self.transient.stats[stat_type][i][3] = stat_affection
                     else
                         log_warn('State affection ratio not available for ' .. stat_name)
                     end
