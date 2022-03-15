@@ -33,15 +33,17 @@ function dummy_player:ret()
     local stats =
     {
 
-        { k.stats.standard_params.HP, 999 },
-        { k.stats.standard_params.MAX_HP, 999 },
-        { k.stats.standard_params.SP, 999 },
-        { k.stats.standard_params.MAX_SP, 999 },
-        { k.stats.standard_params.VP, 99 },
-        { k.stats.standard_params.MAX_VP, 99 },
-        { k.stats.standard_params.LV, 100 },
+        { k.stats.standard_params.HP, 180 },
+        { k.stats.standard_params.MAX_HP, 250 },
+        { k.stats.standard_params.SP, 85 },
+        { k.stats.standard_params.MAX_SP, 250 },
+        { k.stats.standard_params.VP, 230 },
+        { k.stats.standard_params.MAX_VP, 250 },
+        { k.stats.standard_params.EXP, 120 },
+        { k.stats.standard_params.EXP_NEXT, 1500 },
+        { k.stats.standard_params.LV, 85 },
         { k.stats.standard_params.AP, 99 },
-        { k.stats.standard_params.MONEY, 99999 },
+        { k.stats.standard_params.MONEY, 49999.99 },
         { k.stats.standard_params.ARMOR, 100 },
 
         { k.stats.support_params.STRENGTH, 100 },

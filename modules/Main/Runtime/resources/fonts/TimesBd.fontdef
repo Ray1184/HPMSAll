@@ -1,0 +1,6 @@
+font TimesBd
+{
+	type truetype
+	source TimesBd.ttf
+	size 18
+}

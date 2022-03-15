@@ -2,20 +2,19 @@
 -- Created by Ray1184.
 -- DateTime: 04/11/2021 17:04
 --
--- Presets cinematics sequences.
+-- Presets workflow sequences.
 --
 
 dependencies = {
-    -- 'libs/utils/Utils.lua',
     'libs/logic/GameMechanicsConsts.lua',
-    'libs/logic/strats/Cinematics.lua',
+    'libs/logic/strats/Workflow.lua',
     'libs/gui/OutputText2D.lua',
     'libs/backend/HPMSFacade.lua'
 }
 
-cinematics_sequences = { }
+workflow_sequences = { }
 
-function cinematics_sequences:new()
+function workflow_sequences:new()
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
@@ -27,7 +26,7 @@ function cinematics_sequences:new()
 
 
     local this = {
-        module_name = 'cinematics_sequences',
+        module_name = 'workflow_sequences',
         text_style = { },
         shade_overlays = { },
         tmp_vars = { }
@@ -62,7 +61,7 @@ function cinematics_sequences:new()
     end
 
 
-    function cinematics_sequences:wait(time)
+    function workflow_sequences:wait(time)
         return {
             action = function(tpf, timer)
                 -- Just wait...
@@ -73,7 +72,7 @@ function cinematics_sequences:new()
         }
     end
 
-    function cinematics_sequences:fade_in(duration, style)
+    function workflow_sequences:fade_in(duration, style)
         return {
             action = function(tpf, timer)
                 if duration <= 0 then
@@ -92,7 +91,7 @@ function cinematics_sequences:new()
         }
     end
 
-    function cinematics_sequences:fade_out(duration, style)
+    function workflow_sequences:fade_out(duration, style)
         return {
             action = function(tpf, timer)
 
@@ -112,7 +111,7 @@ function cinematics_sequences:new()
         }
     end
 
-    function cinematics_sequences:pipe(what, args)
+    function workflow_sequences:pipe(what, args)
         return {
             action = function(tpf, timer)
                 what(args)
@@ -123,7 +122,7 @@ function cinematics_sequences:new()
         }
     end
 
-    function cinematics_sequences:message_box(text, proceedCallback, style, drawShadow)
+    function workflow_sequences:message_box(text, proceedCallback, style, drawShadow)
         local textRend = self.text_style[style or k.diplay_msg_styles.MSG_BOX]
         return {
             action = function(tpf, timer)
@@ -164,7 +163,7 @@ function cinematics_sequences:new()
         }
     end
 
-    function cinematics_sequences:motion_path_with_look_at(actor, positionCallback, animated, moveSpeed, rotateSpeed, nearTreshold, angleTreshold, animation, animSpeed)
+    function workflow_sequences:motion_path_with_look_at(actor, positionCallback, animated, moveSpeed, rotateSpeed, nearTreshold, angleTreshold, animation, animSpeed)
         return {
             action = function(tpf, timer)
                 local target = positionCallback(tpf, timer)
@@ -195,7 +194,7 @@ function cinematics_sequences:new()
         }
     end
 
-    function cinematics_sequences:delete_all()
+    function workflow_sequences:delete_all()
         for k, v in pairs(self.text_style) do
             for k1, v1 in pairs(v) do
                 v1:delete()

@@ -1,7 +1,7 @@
-font BlueHighway
+font Broadway
 {
 	type truetype
-	source bluehigh.ttf
+	source Broadway.ttf
 	size 16
 	code_points 1-255
 }

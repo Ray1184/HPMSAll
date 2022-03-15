@@ -1,0 +1,7 @@
+font Cardinal
+{
+	type truetype
+	source Cardinal.ttf
+	size 24
+	code_points 1-255
+}

@@ -1,8 +1,7 @@
-Typewriter
+font Typewriter
 {
 	type truetype
 	source Typewriter.ttf
-	size 15
-	resolution 180
+	size 14
 	code_point 1-255
 }

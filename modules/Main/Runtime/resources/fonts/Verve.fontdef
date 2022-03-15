@@ -1,0 +1,7 @@
+font Verve
+{
+	type truetype
+	source Verve.ttf
+	size 20
+	code_points 1-255
+}

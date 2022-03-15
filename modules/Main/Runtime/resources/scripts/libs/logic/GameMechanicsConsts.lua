@@ -136,7 +136,9 @@ function game_mechanics_consts:get()
                 LV = 'lv',
                 AP = 'ap',
                 MONEY = 'money',
-                ARMOR = 'armor'
+                ARMOR = 'armor',
+                EXP = 'exp',
+                EXP_NEXT = 'exp_next'
             },
             support_params =
             {
@@ -223,6 +225,12 @@ function game_mechanics_consts:get()
         overlay_colors =
         {
             BLACK = 'black'
+        },
+        session_vars =
+        {
+            LAST_ROOM = 'last_room',
+            CURRENT_PLAYER_ID = 'current_player_id',
+            CURRENT_PLAYER_REF = 'current_player_ref'
         }
 
     }

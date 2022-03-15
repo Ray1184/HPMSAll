@@ -27,10 +27,25 @@ function global_state_manager:new()
         return insp.inspect(o)
     end
 
-    function global_state_manager:save_data(roomId, fileName)
+    function global_state_manager:get_session_var(name)
+        return context:get_state(name)
+    end
+
+    function global_state_manager:put_session_var(name, val)
+        context:put_state(name, val)
+    end
+
+    function global_state_manager:put_session_var_if_nil(name, val)
+        if context:get_state(name) == nil then
+            context:put_state(name, val)
+        end
+    end
+
+    function global_state_manager:save_data(fileName, saveInfo)
         local saveData = {
             version = k.HPMS_VERSION,
-            current_room = roomId,
+            current_room = saveInfo.room_id,
+            current_player_id = self:get_session_var(k.session_vars.CURRENT_PLAYER_ID),
             data = context:get_serializable_data()
         }
         local saveDataJson = json.encode(saveData)
@@ -39,7 +54,7 @@ function global_state_manager:new()
     end
 
 
-    function global_state_manager:load_data(fileName)   
+    function global_state_manager:load_data(fileName)
         local loadDataJson = lib.load_file(fileName)
         local loadData = json.decode(loadDataJson)
         context:set_serializable_data(loadData.data)

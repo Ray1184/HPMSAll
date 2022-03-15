@@ -1,7 +1,7 @@
-font Alagard
+font DayRoman
 {
 	type truetype
-	source Alagard.ttf
+	source DayRoman.ttf
 	size 16
 	resolution 72
 	code_points 1-255

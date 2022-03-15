@@ -9,25 +9,24 @@
 --               {action = function(tpf, timer)                                         end, complete_on = function(tpf, timer) timer > 5000                 end},
 --               {action = function(tpf, timer) walks:walk_to_sector(player, 'SG05'))   end, complete_on = function(tpf, timer) player:get_sector == 'SG05'  end},
 --            }
--- cinematics.execute(workflow}
+-- workflow.execute(workflow}
 -- Each flow sequence has two callbacks, one is the action to be executed, other one the condition to be completed.
 --
 
 dependencies = {
-    -- 'libs/utils/Utils.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/backend/HPMSFacade.lua'
 }
 
-cinematics = { }
+workflow = { }
 
-function cinematics:new(sceneMgr)
+function workflow:new(sceneMgr)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
     local this = {
-        module_name = 'cinematics',
+        module_name = 'workflow',
         workflows = { },
         scene_manager = sceneMgr
     }
@@ -37,7 +36,7 @@ function cinematics:new(sceneMgr)
         return insp.inspect(o)
     end
 
-    function cinematics:add_workflow(sequences, condition, loop, name)
+    function workflow:add_workflow(sequences, condition, loop, name)
         local workflow = {
             sequences = sequences,
             condition = condition or nil,
@@ -49,7 +48,7 @@ function cinematics:new(sceneMgr)
         table.insert(self.workflows, workflow)
     end
 
-    function cinematics:poll_events(tpf)
+    function workflow:poll_events(tpf)
         if self.scene_manager:is_paused() then
             return
         end
@@ -65,7 +64,7 @@ function cinematics:new(sceneMgr)
         end
     end
 
-    function cinematics:process_workflow(workflow, tpf)
+    function workflow:process_workflow(workflow, tpf)
         if workflow.expired then
             return
         end
@@ -87,7 +86,7 @@ function cinematics:new(sceneMgr)
         end
     end
 
-    function cinematics:process_sequence(sequence, tpf)
+    function workflow:process_sequence(sequence, tpf)
         if sequence.timer == nil then
             sequence.timer = 0
         end
@@ -101,7 +100,7 @@ function cinematics:new(sceneMgr)
         end
     end
 
-    function cinematics:reset_workflow(workflow)
+    function workflow:reset_workflow(workflow)
         for i = 1, #workflow.sequences do
             workflow.sequences[i].completed = nil
             workflow.sequences[i].timer = 0

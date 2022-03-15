@@ -7,8 +7,8 @@ dependencies = {
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
-    'libs/logic/strats/Cinematics.lua',
-    'libs/logic/strats/CinematicsSequences.lua',
+    'libs/logic/strats/Workflow.lua',
+    'libs/logic/strats/WorkflowSequences.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua'
@@ -33,8 +33,8 @@ scene = {
         insp = inspector:get()
         gsm = global_state_manager:new()
         scn_mgr = scene_manager:new(scene.name, cam)
-        cin = cinematics:new(scn_mgr)
-        seq = cinematics_sequences:new()
+        cin = workflow:new(scn_mgr)
+        seq = workflow_sequences:new()
         input_prf = input_profile:new('default')
 
         callback = function(tpf, timer)

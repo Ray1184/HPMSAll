@@ -30,66 +30,6 @@ function player:ret(path, id, rad, rect, ghost)
             serializable =
             {
                 id = id,
-                action_mode = k.actor_action_mode.SEARCH,
-                move_mode = k.actor_move_mode.IDLE,
-                performing_action = false,
-                movable = true,
-                pushable = false,
-                searchable = false,
-                hittable = true,
-                stats =
-                {
-
-                    -- Amount
-                    { k.stats.standard_params.HP, 0 },
-                    { k.stats.standard_params.MAX_HP, 0 },
-                    { k.stats.standard_params.SP, 0 },
-                    { k.stats.standard_params.MAX_SP, 0 },
-                    { k.stats.standard_params.VP, 0 },
-                    { k.stats.standard_params.MAX_VP, 0 },
-                    { k.stats.standard_params.LV, 0 },
-                    { k.stats.standard_params.AP, 0 },
-                    { k.stats.standard_params.MONEY, 0 },
-                    { k.stats.standard_params.ARMOR, 0 },
-
-                    { k.stats.support_params.STRENGTH, 0 },
-                    { k.stats.support_params.STAMINA, 0 },
-                    { k.stats.support_params.INTELLIGENCE, 0 },
-                    { k.stats.support_params.SCIENCE, 0 },
-                    { k.stats.support_params.HANDYMAN, 0 },
-                    { k.stats.support_params.DEXTERITY, 0 },
-                    { k.stats.support_params.OCCULT, 0 },
-                    { k.stats.support_params.CHARISMA, 0 },
-                    { k.stats.support_params.FORTUNE, 0 },
-
-                    -- Affection flag, affection ratio (1: 100%, 0: 0%)
-                    { k.stats.negative_status_params.SLEEP, false, 1 },
-                    { k.stats.negative_status_params.POISON, false, 1 },
-                    { k.stats.negative_status_params.TOXIN, false, 1 },
-                    { k.stats.negative_status_params.BURN, false, 1 },
-                    { k.stats.negative_status_params.FREEZE, false, 1 },
-                    { k.stats.negative_status_params.BLIND, false, 1 },
-                    { k.stats.negative_status_params.PARALYSIS, false, 1 },
-                    { k.stats.negative_status_params.SHOCK, false, 1 },
-
-                    { k.stats.positive_status_params.REGEN, false, 1 },
-                    { k.stats.positive_status_params.RAD, false, 1 },
-                    { k.stats.positive_status_params.INVINCIBLITY, false },
-
-                    { k.stats.phobies.ARACHNOPHOBIA, false, 1 },
-                    { k.stats.phobies.HEMOPHOBIA, false, 1 },
-                    { k.stats.phobies.ANTHROPOPHOBIA, false, 1 },
-                    { k.stats.phobies.AQUAPHOBIA, false, 1 },
-                    { k.stats.phobies.PYROPHOBIA, false, 1 },
-                    { k.stats.phobies.ACROPHOBIA, false, 1 },
-                    { k.stats.phobies.NECROPHOBIA, false, 1 },
-                    { k.stats.phobies.AEROPHOBIA, false, 1 },
-                    { k.stats.phobies.AVIOPHOBIA, false, 1 },
-                    { k.stats.phobies.PHOTOPHOBIA, false, 1 },
-                    { k.stats.phobies.NYCTOPHOBIA, false, 1 },
-                    { k.stats.phobies.CRYOPHOBIA, false, 1 }
-
-                },
                 equip = nil,
                 inventory =
                 {
@@ -103,7 +43,7 @@ function player:ret(path, id, rad, rect, ghost)
 
             }
         }
-        
+
         return merge_tables(ret, new)
     end )
 
@@ -150,7 +90,8 @@ function player:ret(path, id, rad, rect, ghost)
                     set_anim = ret.set_anim,
                     play = ret.play,
                     set_stats = ret.set_stats,
-                    modify_stats = ret.modify_stat,
+                    modify_stat = ret.modify_stat,
+                    get_stat = ret.get_stat,
                     set_move_mode = ret.set_move_mode,
                     set_action_mode = ret.set_action_mode,
                     event = ret.event,
@@ -183,12 +124,20 @@ function player:ret(path, id, rad, rect, ghost)
         self.not_serializable.anagr = anagr
     end
 
+    function player:get_anagr()
+        return self.not_serializable.anagr
+    end
+
     function player:set_stats(stats)
         self.serializable.stats = stats
     end
 
-    function player:modify_stat(stat_type, stat_name, stat_value, stat_affection)
-        self.metainfo.override.scene_actor.modify_stat(self, stat_type, stat_name, stat_value, stat_affection)
+    function player:modify_stat(stat_name, stat_value, stat_affection)
+        self.metainfo.override.scene_actor.modify_stat(self, stat_name, stat_value, stat_affection)
+    end
+
+    function player:get_stat(stat_name)
+        return self.metainfo.override.scene_actor.get_stat(self, stat_name)
     end
 
     function player:set_position(x, y, z)

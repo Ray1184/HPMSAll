@@ -150,7 +150,7 @@ function context:get_state(key)
         return nil
     end
     if self.instance[cats.STATE][key] == nil then
-        log_error('State object ' .. key .. ' was not initialized in context')
+        log_warn('State object ' .. key .. ' was not initialized in context')
         return nil
     end
     return self.instance[cats.STATE][key]

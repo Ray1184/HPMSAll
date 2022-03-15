@@ -37,14 +37,72 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
                 movable = false,
                 pushable = false,
                 searchable = false,
-                hittable = true
+                hittable = true,
+                stats =
+                {
+
+                    -- Amount
+                    { k.stats.standard_params.HP, 0 },
+                    { k.stats.standard_params.MAX_HP, 0 },
+                    { k.stats.standard_params.SP, 0 },
+                    { k.stats.standard_params.MAX_SP, 0 },
+                    { k.stats.standard_params.VP, 0 },
+                    { k.stats.standard_params.MAX_VP, 0 },
+                    { k.stats.standard_params.EXP, 0 },
+                    { k.stats.standard_params.EXP_NEXT, 0 },
+                    { k.stats.standard_params.LV, 0 },
+                    { k.stats.standard_params.AP, 0 },
+                    { k.stats.standard_params.MONEY, 0 },
+                    { k.stats.standard_params.ARMOR, 0 },
+
+                    { k.stats.support_params.STRENGTH, 0 },
+                    { k.stats.support_params.STAMINA, 0 },
+                    { k.stats.support_params.INTELLIGENCE, 0 },
+                    { k.stats.support_params.SCIENCE, 0 },
+                    { k.stats.support_params.HANDYMAN, 0 },
+                    { k.stats.support_params.DEXTERITY, 0 },
+                    { k.stats.support_params.OCCULT, 0 },
+                    { k.stats.support_params.CHARISMA, 0 },
+                    { k.stats.support_params.FORTUNE, 0 },
+
+                    -- Affection flag, affection ratio (1: 100%, 0: 0%)
+                    { k.stats.negative_status_params.SLEEP, false, 1 },
+                    { k.stats.negative_status_params.POISON, false, 1 },
+                    { k.stats.negative_status_params.TOXIN, false, 1 },
+                    { k.stats.negative_status_params.BURN, false, 1 },
+                    { k.stats.negative_status_params.FREEZE, false, 1 },
+                    { k.stats.negative_status_params.BLIND, false, 1 },
+                    { k.stats.negative_status_params.PARALYSIS, false, 1 },
+                    { k.stats.negative_status_params.SHOCK, false, 1 },
+
+                    { k.stats.positive_status_params.REGEN, false, 1 },
+                    { k.stats.positive_status_params.RAD, false, 1 },
+                    { k.stats.positive_status_params.INVINCIBLITY, false },
+
+                    { k.stats.phobies.ARACHNOPHOBIA, false, 1 },
+                    { k.stats.phobies.HEMOPHOBIA, false, 1 },
+                    { k.stats.phobies.ANTHROPOPHOBIA, false, 1 },
+                    { k.stats.phobies.AQUAPHOBIA, false, 1 },
+                    { k.stats.phobies.PYROPHOBIA, false, 1 },
+                    { k.stats.phobies.ACROPHOBIA, false, 1 },
+                    { k.stats.phobies.NECROPHOBIA, false, 1 },
+                    { k.stats.phobies.AEROPHOBIA, false, 1 },
+                    { k.stats.phobies.AVIOPHOBIA, false, 1 },
+                    { k.stats.phobies.PHOTOPHOBIA, false, 1 },
+                    { k.stats.phobies.NYCTOPHOBIA, false, 1 },
+                    { k.stats.phobies.CRYOPHOBIA, false, 1 }
+
+                }
             }
         }
         return merge_tables(ret, new)
     end )
 
     local notSer = {
-        not_serializable = { }
+        not_serializable =
+        {
+
+        }
     }
 
     notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
@@ -102,16 +160,25 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
     end
 
     function scene_actor:set_stats(stats)
-        self.transient.stats = stats
+        self.serializable.stats = stats
     end
 
-    function scene_actor:modify_stat(stat_type, stat_name, stat_value, stat_affection)
-        for i = 1, #self.transient.stats[stat_type] do
-            if self.transient.stats[stat_type][i][1] == stat_name then
-                self.transient.stats[stat_type][i][2] = stat_value
+    function scene_actor:get_stat(stat_name)
+        for i = 1, #self.serializable.stats do            
+            if self.serializable.stats[i][1] == stat_name then
+                return self.serializable.stats[i][2]
+            end            
+        end
+        log_warn('State with name ' .. stat_name .. ' not available')
+    end
+
+    function scene_actor:modify_stat(stat_name, stat_value, stat_affection)
+        for i = 1, #self.serializable.stats do
+            if self.serializable.stats[i][1] == stat_name then
+                self.serializable.stats[i][2] = stat_value
                 if stat_affection ~= nil then
-                    if #self.transient.stats[stat_type][i] == 3 then
-                        self.transient.stats[stat_type][i][3] = stat_affection
+                    if #self.serializable.stats[i] == 3 then
+                        self.serializable.stats[i][3] = stat_affection
                     else
                         log_warn('State affection ratio not available for ' .. stat_name)
                     end

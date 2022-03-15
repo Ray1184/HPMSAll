@@ -9,8 +9,8 @@ dependencies = {
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
-    'libs/logic/strats/Cinematics.lua',
-    'libs/logic/strats/CinematicsSequences.lua',
+    'libs/logic/strats/Workflow.lua',
+    'libs/logic/strats/WorkflowSequences.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua'
@@ -23,7 +23,8 @@ scene = {
     finished = false,
     next = 'TBD',
     setup = function()
-        -- TODOBATCH-BEGIN
+        -- TODOBATCH-BEGIN g.res_refs.players.DUMMY_PLAYER.ID
+       
         context:inst():disable_dummy()
         enable_debug()
         -- TODOBATCH-END
@@ -38,12 +39,13 @@ scene = {
 
         room_st = room_state:ret(scene.name)
         gsm = global_state_manager:new()
+        
 
         input_prf = input_profile:new('default')
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
-        cin = cinematics:new(scn_mgr)
-        seq = cinematics_sequences:new()
+        wk = workflow:new(scn_mgr)
+        seq = workflow_sequences:new()
 
 
         -- Collision map R_Debug_01 setup
@@ -70,8 +72,9 @@ scene = {
         mask_node = lib.make_node("DummyMaskNode")
         lib.set_node_entity(mask_node, mask)
 
-        player = actors_mgr:create_player(g.res_refs.players.DUMMY_PLAYER.ID)
-
+        gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.players.DUMMY_PLAYER.ID)
+        player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
+        gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
 
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
@@ -122,15 +125,15 @@ scene = {
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
 
-        cin:add_workflow( {
+        wk:add_workflow( {
             seq:fade_out(0)
         } , nil, false, 'fade out')
 
-        cin:add_workflow( {
+        wk:add_workflow( {
             seq:fade_in(1)
         } , nil, false, 'fade in')
 
-        cin:add_workflow( {
+        wk:add_workflow( {
             seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
             seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
             seq:wait(2),
@@ -138,8 +141,8 @@ scene = {
             seq:pipe( function() chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
         } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
 
-        cin:add_workflow( {
-            seq:pipe( function() gsm:save_data(scene.name, 'data/save/savedata00.json') end),
+        wk:add_workflow( {
+            seq:pipe( function() gsm:save_data('data/save/savedata00.json', {room_id = scene.name}) end),
             seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true)
         } , function() return input_prf:action_done_once('ACTION_3') end, true, 'save_data_flow')
 
@@ -302,7 +305,8 @@ scene = {
 
         -- INVENTORY
         if input_prf:action_done_once('INVENTORY') then
-            scene.next = 'main/menu/R_Inventory.lua'
+            gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+            scene.next = 'main/menu/R_Stats.lua'
             scene.finished = true
         end
         -- TODOBATCH-END
@@ -320,7 +324,7 @@ scene = {
         -- log_warn(current_sector.id)
         scn_mgr:poll_events(tpf)
         actors_mgr:poll_events(tpf)
-        cin:poll_events(tpf)
+        wk:poll_events(tpf)
         -- log_debug('CURR TPF: ' .. tostring(1 / tpf))
     end,
     cleanup = function()
