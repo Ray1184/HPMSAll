@@ -46,7 +46,7 @@ scene = {
         } , nil, false, 'Inventory fade in')
 
         cin:add_workflow( {
-            seq:pipe( function()
+            seq:pipe( function(tpf)
                 local lastRoom = gsm:get_session_var(k.session_vars.LAST_ROOM)
                 gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
                 scene.next = 'main/scenes/' .. lastRoom .. '.lua'

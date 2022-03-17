@@ -168,6 +168,7 @@ function game_mechanics_consts:get()
             {
                 REGEN = 'regen',
                 RAD = 'rad',
+                ARMOR = 'armor',
                 INVINCIBLITY = 'invinciblity'
             },
             phobies =

@@ -114,7 +114,7 @@ function workflow_sequences:new()
     function workflow_sequences:pipe(what, args)
         return {
             action = function(tpf, timer)
-                what(args)
+                what(tpf, args)
             end,
             complete_on = function(tpf, timer)
                 return true

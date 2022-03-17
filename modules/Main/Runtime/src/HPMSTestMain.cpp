@@ -1,214 +1,105 @@
-/*!
- * File HPMSTestMain.cpp
- */
 
-#include <sstream>
-#include <windows.h>
-#include <api/HPMSSimulatorAdapter.h>
-#include <facade/HPMSEngineFacade.h>
-#include <Ogre.h>
-#include <OgreOverlay.h>
-#include <OgreOverlayContainer.h>
-#include <OgreOverlayElement.h>
-#include <core/HPMSMaterialHelper.h>
-#include <OgreTextAreaOverlayElement.h>
+/** Tool designed to take the binary width files from BitmapFontBuilder
+    http://www.lmnopc.com/bitmapfontbuilder/ and convert them into
+    Ogre .fontdef 'glyph' statements.
+    Highly inelegant, but it works!
+*/
 
-#define WIDTH 960
-#define HEIGHT 600
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <math.h>
+using namespace std;
 
-class TestLogic : public hpms::CustomLogic
+int main(int argc, char** argv)
 {
-public:
-//    virtual void OnCreate() override
-//    {
-//        auto* entity = hpms::GetSupplier()->CreateEntity("Cube.mesh");
-//        hpms::GetSupplier()->GetRootSceneNode()->AttachObject(entity);
-//        hpms::GetSupplier()->GetCamera()->SetPosition(glm::vec3(5, 5, 5));
-//        hpms::GetSupplier()->SetAmbientLight(glm::vec3(0.1, 0.1, 0.1));
-//        auto* light = hpms::GetSupplier()->CreateLight(0.5, 0.5, 0.5);
-//
-    /*auto* overlayManager = Ogre::OverlayManager::getSingletonPtr();
-    auto* overlay = overlayManager->create("Overlay_");
-    auto* ogrePanel = dynamic_cast<Ogre::OverlayContainer*>(overlayManager->createOverlayElement("Panel", "OverlayElement_"));
-    unsigned int width, height;
-    auto material = CreateTexturedMaterial("Derceto.png", &width, &height, "Test");
-    material->getTechnique(0)->getPass(0)->setSceneBlending(Ogre::SceneBlendType::SBT_ADD);
-    ogrePanel->setMaterial(material);
-//
-//        // NOTE: Overlay doesn't work well with RTT, so are excluded and pixelated manually (see HPMSRenderToTexture.cpp).
-//        unsigned int pixelation = 1;
-//        ogrePanel->setMetricsMode(Ogre::GMM_PIXELS);
-//        ogrePanel->setPosition(WIDTH, HEIGHT);
-//        ogrePanel->setDimensions(width, height);
-//        ogrePanel->show();
-//        overlay->add2D(ogrePanel);
-//        //overlay->setZOrder(zOrder);
-//        //SetBlending(BlendingType::NORMAL);
-//        overlay->show();*/
-//    }
-//
-//    virtual void OnUpdate(float tpf) override
-//    {
-//
-//    }
-//
-//    virtual void OnInput(const std::vector<hpms::KeyEvent>& keyEvents, const std::vector<hpms::MouseEvent>& mouseButtonEvents, unsigned int x, unsigned int y) override
-//    {
-//
-//    }
-//
-//    virtual void OnDestroy() override
-//    {
-//
-//    }
-//
-//    virtual bool TriggerStop() override
-//    {
-//        return false;
-//    }
-//
-//    inline static Ogre::MaterialPtr
-//    CreateTexturedMaterial(const std::string& textureName, unsigned int* width = nullptr, unsigned int* height = nullptr, std::string materialName = "_undef_")
-//    {
-//        Ogre::TexturePtr texture = Ogre::TextureManager::getSingleton().load(textureName, "General");
-//        if (width)
-//        {
-//            *width = texture->getWidth();
-//        }
-//
-//        if (height)
-//        {
-//            *height = texture->getHeight();
-//        }
-//
-//        if (materialName == "_undef_") {
-//            materialName = textureName;
-//        }
-//        auto material = Ogre::MaterialManager::getSingleton().create("Material_" + materialName,
-//                                                                     Ogre::ResourceGroupManager::DEFAULT_RESOURCE_GROUP_NAME);
-//
-//        auto* textState = material->getTechnique(0)->getPass(0)->createTextureUnitState(texture->getName());
-//        textState->setTextureFiltering(Ogre::TFO_NONE);
-//        material->getTechnique(0)->getPass(0)->setDepthCheckEnabled(false);
-//        material->getTechnique(0)->getPass(0)->setDepthWriteEnabled(false);
-//        material->getTechnique(0)->getPass(0)->setLightingEnabled(false);
-//
-//        return material;
-//    }
+    int size;
+    std::string datName, newName, fontName, imageName, genGlyph;
+    int addLeftPixels, addRightPixels, addTopPixels, addBottomPixels;
 
-private:
-    hpms::SupplierAdapter* supplier;
-    bool exit;
-    hpms::EntityAdapter* entity;
-    hpms::EntityAdapter* depthEntity;
-    hpms::LightAdapter* light;
-    hpms::SceneNodeAdapter* node;
-    hpms::SceneNodeAdapter* depthNode;
-    hpms::WalkmapAdapter* walkmap;
-    hpms::BackgroundImageAdapter* background;
-    //hpms::OverlayImageAdapter* overlay;
-    hpms::OverlayTextAreaAdapter* textArea;
-    unsigned int fps;
-public:
+    cout << "Enter unique font name: ";
+    cin >> fontName;
+    cout << "Enter font image name: ";
+    cin >> imageName;
+    cout << "Enter size of texture(Example: 256): ";
+    cin >> size;
+    cout << "Enter name of file containing binary widths: ";
+    cin >> datName;
 
-    TestLogic() : exit(false)
+    cout << endl;
+    cout << "If you've modified the output from BitmapFontBuilder, e.g. by adding a\n"
+        "dropshadow, you'll need to widen the glyphs a little. If you used\n"
+        "BitmapFontBuilder's output directly, just answer 0 in the following two\n"
+        "questions.\n";
+    cout << "Enter number of pixels to add to the left of all glyphs: ";
+    cin >> addLeftPixels;
+    cout << "Enter number of pixels to add to the right of all glyphs: ";
+    cin >> addRightPixels;
+    cout << "Enter number of pixels to add to the top of all glyphs: ";
+    cin >> addTopPixels;
+    cout << "Enter number of pixels to add to the bottom of all glyphs: ";
+    cin >> addBottomPixels;
+    cout << endl;
+
+    cout << "Generate all glyph statements (Select yes for extended ASCII characters)(Y/N): ";
+    cin >> genGlyph;
+    cout << "Enter name of new text file to create: ";
+    cin >> newName;
+
+    int charSize = size / 16;
+    int halfWidth = charSize / 2;
+    FILE* fp = fopen(datName.c_str(), "rb");
+
+    ofstream o(newName.c_str());
+
+    o << fontName << endl;
+    o << "{" << "\n\n";
+    o << "\ttype\timage" << endl;
+    o << "\tsource\t" << imageName << "\n\n\n";
+
+    int posx = 0;
+    int posy = 0;
+    int colcount = 0;
+    for (int c = 0; c < 256; c++, colcount++)
     {
-
-    }
-
-    virtual ~TestLogic()
-    {
-
-    }
-
-
-    virtual void OnCreate() override
-    {
-        supplier = hpms::GetSupplier();
-        //std::cout << "Scene user setup starting..." << std::endl;
-        supplier->SetAmbientLight(glm::vec3(0.1, 0.1, 0.1));
-        supplier->GetCamera()->SetNear(0.5);
-        supplier->GetCamera()->SetFar(50);
-        supplier->GetCamera()->SetPosition(glm::vec3(5, 5, 5));
-        supplier->GetCamera()->LookAt(glm::vec3(0, 0, 0));
-        entity = supplier->CreateEntity("Cube.mesh");
-        node = supplier->GetRootSceneNode()->CreateChild("CubeNode");
-        node->AttachObject(entity);
-        depthEntity = supplier->CreateEntity("DepthCube.mesh");
-        depthEntity->SetMode(hpms::EntityMode::DEPTH_ONLY);
-        depthNode = supplier->GetRootSceneNode()->CreateChild("DepthCubeNode");
-        depthNode->AttachObject(depthEntity);
-        light = supplier->CreateLight(0.5, 0.5, 0.5);
-        light->SetPosition(glm::vec3(5, 5, 5));
-        walkmap = supplier->CreateWalkmap("Basement.hrdat");
-        background = supplier->CreateBackgroundImage("Derceto.png");
-        background->Show();
-        textArea = supplier->CreateTextArea("PROVA!!!", "Typewriter", 15, 0, 0, WIDTH, HEIGHT, 10);
-        textArea->SetText("AMBARABACICCICOCOO");
-    }
-
-
-    virtual void OnUpdate(float tpf) override
-    {
-        auto q = node->GetRotation();
-        q = q * glm::quat(glm::vec3(0, tpf, 0));
-        node->SetRotation(q);
-
-        fps = (int) (1.0 / tpf);
-    }
-
-    virtual void
-    OnInput(const std::vector<hpms::KeyEvent>& keyEvents, const std::vector<hpms::MouseEvent>& mouseButtonEvents,
-            unsigned int x, unsigned int y) override
-    {
-        for (const auto& key : keyEvents)
+        if (colcount == 16)
         {
-            if (key.state == hpms::KeyEvent::PRESSED_FIRST_TIME)
-            {
-                if (key.name == "ESC")
-                {
-                    exit = true;
-                }
-            }
+            colcount = 0;
+            posx = 0;
+            posy += charSize;
         }
+
+        // Read width from binary file
+        int w1 = fgetc(fp) & 0xFF;      // NOTE: These two fgetc() have to be in seperate statements to ensure ordering!
+        int w2 = fgetc(fp) & 0xFF;
+        int width = w1 + (w2 << 8);     // Little endian only, but this tool isn't available for OSX anyway
+
+        float thisx_start = float(posx + halfWidth - (width / 2) - addLeftPixels);
+        float thisx_end = float(posx + halfWidth + (width / 2) + addRightPixels);
+
+        float u1, u2, v1, v2;
+        u1 = thisx_start / (float)(size);
+        u2 = thisx_end / (float)(size);
+        v1 = (float)(posy - addTopPixels) / (float)(size);
+        v2 = (float)(posy + charSize + addBottomPixels) / (float)(size);
+
+        if ((genGlyph.at(0) == 'N' || genGlyph.at(0) == 'n') && c >= '!' && c <= '~')
+        {
+            std::string s = " ";
+            s.at(0) = c;
+            o << "\tglyph " << s << " " << u1 << " " << v1 << " " << u2 << " " << v2 << std::endl;
+        }
+
+        if ((genGlyph.at(0) != 'N' && genGlyph.at(0) != 'n'))
+        {
+            o << "\tglyph u" << c << " " << u1 << " " << v1 << " " << u2 << " " << v2 << std::endl;
+        }
+        posx += charSize;
+
     }
+    o << endl;
+    o << "}" << endl;
+    fclose(fp);
 
-    virtual void OnDestroy() override
-    {
-        //hpms::SafeDelete(overlay);
-        hpms::SafeDelete(background);
-        hpms::SafeDelete(walkmap);
-        hpms::SafeDelete(light);
-        hpms::SafeDelete(node);
-        hpms::SafeDelete(entity);
-        hpms::SafeDelete(depthNode);
-        hpms::SafeDelete(depthEntity);
-    }
-
-    virtual bool TriggerStop() override
-    {
-        return exit;
-    }
-};
-
-#if defined(_WIN32) || defined(WIN32)
-
-INT WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR cmdLine, INT)
-#else
-int main(int argc, char *argv[])
-#endif
-{
-
-    hpms::WindowSettings s;
-    s.name = "Demo";
-    s.width = WIDTH;
-    s.height = HEIGHT;
-    s.pixelRatio = WIDTH / 320;
-    auto* customLogic = hpms::SafeNew<TestLogic>();
-    hpms::InitContext(s, customLogic);
-    auto* simulator = hpms::GetSimulator();
-    simulator->Run();
-    hpms::SafeDelete(customLogic);
-    hpms::DestroyContext();
+    return 0;
 }
-

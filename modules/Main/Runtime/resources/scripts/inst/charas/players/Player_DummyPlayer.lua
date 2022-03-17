@@ -1,6 +1,4 @@
 dependencies = {
-    ----'Context.lua',
-    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/models/Player.lua',
     'libs/logic/GameMechanicsConsts.lua',
@@ -20,7 +18,7 @@ function dummy_player:ret()
     local ghost = g.res_refs.players.DUMMY_PLAYER.GHOST
     local id = g.res_refs.players.DUMMY_PLAYER.ID
     local anagr = {
-        name = 'Joe Dummy',
+        name = 'Test Player',
         birth_date = '1900-01-01',
         birth_place = 'New Yates',
         country = 'US',
@@ -41,20 +39,19 @@ function dummy_player:ret()
         { k.stats.standard_params.MAX_VP, 250 },
         { k.stats.standard_params.EXP, 120 },
         { k.stats.standard_params.EXP_NEXT, 1500 },
-        { k.stats.standard_params.LV, 85 },
-        { k.stats.standard_params.AP, 99 },
-        { k.stats.standard_params.MONEY, 49999.99 },
-        { k.stats.standard_params.ARMOR, 100 },
+        { k.stats.standard_params.LV, 38 },
+        { k.stats.standard_params.AP, 15 },
+        { k.stats.standard_params.MONEY, 742.65 },
 
-        { k.stats.support_params.STRENGTH, 100 },
-        { k.stats.support_params.STAMINA, 100 },
-        { k.stats.support_params.INTELLIGENCE, 100 },
-        { k.stats.support_params.SCIENCE, 100 },
-        { k.stats.support_params.HANDYMAN, 100 },
-        { k.stats.support_params.DEXTERITY, 100 },
-        { k.stats.support_params.OCCULT, 100 },
-        { k.stats.support_params.CHARISMA, 100 },
-        { k.stats.support_params.FORTUNE, 100 },
+        { k.stats.support_params.STRENGTH, 65 },
+        { k.stats.support_params.STAMINA, 50 },
+        { k.stats.support_params.INTELLIGENCE, 80 },
+        { k.stats.support_params.SCIENCE, 55 },
+        { k.stats.support_params.HANDYMAN, 42 },
+        { k.stats.support_params.DEXTERITY, 35 },
+        { k.stats.support_params.OCCULT, 20 },
+        { k.stats.support_params.CHARISMA, 35 },
+        { k.stats.support_params.FORTUNE, 15 },
 
         { k.stats.negative_status_params.SLEEP, false, 1 },
         { k.stats.negative_status_params.POISON, false, 1 },
@@ -67,7 +64,8 @@ function dummy_player:ret()
 
         { k.stats.positive_status_params.REGEN, false, 1 },
         { k.stats.positive_status_params.RAD, false, 1 },
-        { k.stats.positive_status_params.INVINCIBLITY, false },
+        { k.stats.positive_status_params.ARMOR, false, 1 },
+        { k.stats.positive_status_params.INVINCIBLITY, false, 1 },
 
         { k.stats.phobies.ARACHNOPHOBIA, false, 1 },
         { k.stats.phobies.HEMOPHOBIA, false, 1 },

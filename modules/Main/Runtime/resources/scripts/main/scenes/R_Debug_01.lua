@@ -50,7 +50,7 @@ scene = {
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
-
+        
         register_all_instances()
         action = false
 
@@ -138,11 +138,11 @@ scene = {
             seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
             seq:wait(2),
             seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
-            seq:pipe( function() chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
+            seq:pipe( function(tpf) chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
         } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
 
         wk:add_workflow( {
-            seq:pipe( function() gsm:save_data('data/save/savedata00.json', {room_id = scene.name}) end),
+            seq:pipe( function(tpf) gsm:save_data('data/save/savedata00.json', {room_id = scene.name}) end),
             seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true)
         } , function() return input_prf:action_done_once('ACTION_3') end, true, 'save_data_flow')
 
