@@ -77,17 +77,17 @@ scene = {
                 -- print('enter')
                 debug_console_exec()
             end
-            if lib.key_action_performed(keys, 'UP', 2) then
+            if lib.key_action_performed(keys, k.input_actions.UP, 2) then
                 speed = 1
-            elseif lib.key_action_performed(keys, 'DOWN', 2) then
+            elseif lib.key_action_performed(keys, k.input_actions.DOWN, 2) then
                 speed = -1
             else
                 speed = 0
             end
 
-            if lib.key_action_performed(keys, 'RIGHT', 2) then
+            if lib.key_action_performed(keys, k.input_actions.RIGHT, 2) then
                 rotate = -5
-            elseif lib.key_action_performed(keys, 'LEFT', 2) then
+            elseif lib.key_action_performed(keys, k.input_actions.LEFT, 2) then
                 rotate = 5
             else
                 rotate = 0

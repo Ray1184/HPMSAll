@@ -38,11 +38,11 @@ scene = {
         input_prf = input_profile:new('default')
 
         callback = function(tpf, timer)
-            if input_prf:action_done_once('ACTION_1') then
+            if input_prf:action_done_once(k.input_actions.ACTION_1) then
                 scene.next = 'main/scenes/R_Debug_01.lua'
                 scene.finished = true
                 return true
-            elseif input_prf:action_done_once('ACTION_2') then
+            elseif input_prf:action_done_once(k.input_actions.ACTION_2) then
                 local state = gsm:load_data('data/save/savedata00.json')
                 scene.next = 'main/scenes/' .. state.current_room .. '.lua'
                 scene.finished = true

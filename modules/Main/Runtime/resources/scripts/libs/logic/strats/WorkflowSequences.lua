@@ -35,12 +35,12 @@ function workflow_sequences:new()
     this.tmp_vars['CURRENT_ALPHA'] = 0
 
     this.text_style[k.diplay_msg_styles.MSG_BOX] = {
-        renderer = output_text_2d:new(msgBox,0,0,'Console_Empty.png',100,'MessageBoxArea','Alagard',16,lib.vec4(1.0,0.8,0.0,1.0),4),
-        renderer_shadow = output_text_2d:new(msgBox,0,0,'Console_Empty.png',99,'MessageBoxAreaShadow','Alagard',16,lib.vec4(0.0,0.0,0.0,0.5),4)
+        renderer = output_text_2d:new(msgBox,0,0,'default/Console_Empty.png',100,'MessageBoxArea','Alagard',16,lib.vec4(1.0,0.8,0.0,1.0),4),
+        renderer_shadow = output_text_2d:new(msgBox,0,0,'default/Console_Empty.png',99,'MessageBoxAreaShadow','Alagard',16,lib.vec4(0.0,0.0,0.0,0.5),4)
     }
     this.text_style[k.diplay_msg_styles.BOOK] = {
-        renderer = output_text_2d:new(bookBox,0,0,'Console_Empty.png',98,'BookArea','Alagard',16,lib.vec4(0.0,0.0,0.0,1.0),12),
-        renderer_shadow = output_text_2d:new(bookBox,0,0,'Console_Empty.png',97,'BookAreaShadow','Alagard',16,lib.vec4(1.0,1.0,1.0,0.5),12)
+        renderer = output_text_2d:new(bookBox,0,0,'default/Console_Empty.png',98,'BookArea','Alagard',16,lib.vec4(0.0,0.0,0.0,1.0),12),
+        renderer_shadow = output_text_2d:new(bookBox,0,0,'default/Console_Empty.png',97,'BookAreaShadow','Alagard',16,lib.vec4(1.0,1.0,1.0,0.5),12)
     }
     this.shade_overlays[k.overlay_colors.BLACK] = image_2d:new(POLYGONS, fullBox, 0, 0, 'default/Black.png', 150)
     this.shade_overlays[k.overlay_colors.BLACK]:alpha(this.tmp_vars['CURRENT_ALPHA'])

@@ -32,6 +32,12 @@ function register_all_instances()
     context:inst():register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_CHEST.ID, function(id_suffix) return dummy_chest:ret(id_suffix) end)
 
     -- Inventory
-    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM.ID, function(id_suffix, amount) return dummy_item:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_1.ID, function(id_suffix, amount) return dummy_item_1:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_2.ID, function(id_suffix, amount) return dummy_item_2:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_3.ID, function(id_suffix, amount) return dummy_item_3:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_4.ID, function(id_suffix, amount) return dummy_item_4:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_5.ID, function(id_suffix, amount) return dummy_item_5:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_6.ID, function(id_suffix, amount) return dummy_item_6:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_7.ID, function(id_suffix, amount) return dummy_item_7:ret(id_suffix, amount) end)
 
 end

@@ -22,11 +22,11 @@ function create_text_label(id, text, lib, x, y, font, size, color, shadowColor, 
     shadowColor1.w = 0.8
     shadowColor2.w = 0.8
     shadowColor3.w = 0.4
-    local nameBox = { lib.vec2(x, y), lib.vec2(x + 300, y), lib.vec2(x + 300, y + 50), lib.vec2(x, y + 50) }
-    renderer = output_text_2d:new(nameBox, 0, 0, 'Console_Empty.png', 104, 'TextBoxArea_' .. id, font, size, color, lines)
-    rendererShadow = output_text_2d:new(nameBox, 0, 0, 'Console_Empty.png', 103, 'TextBoxAreaShadow_' .. id, font, size, shadowColor1, lines)
-    rendererShadow2 = output_text_2d:new(nameBox, 0, 0, 'Console_Empty.png', 102, 'TextBoxAreaShadow2_' .. id, font, size, shadowColor2, lines)
-    rendererShadow3 = output_text_2d:new(nameBox, 0, 0, 'Console_Empty.png', 101, 'TextBoxAreaShadow3_' .. id, font, size, shadowColor3, lines)
+    local nameBox = { lib.vec2(0, 0), lib.vec2(300, 0), lib.vec2(300, 50), lib.vec2(0, 50) }
+    renderer = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 104, 'TextBoxArea_' .. id, font, size, color, lines)
+    rendererShadow = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 103, 'TextBoxAreaShadow_' .. id, font, size, shadowColor1, lines)
+    rendererShadow2 = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 102, 'TextBoxAreaShadow2_' .. id, font, size, shadowColor2, lines)
+    rendererShadow3 = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 101, 'TextBoxAreaShadow3_' .. id, font, size, shadowColor3, lines)
     renderer:set_position(x, y)
     rendererShadow:set_position(x + 1, y)
     rendererShadow2:set_position(x, y + 1)

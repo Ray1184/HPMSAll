@@ -13,6 +13,10 @@ dependencies = {
 }
 
 function add_to_inventory(player, item)
+    if item.serializable.picked then
+        log_warn('Item ' .. item.serializable.id .. ' already present in inventory')
+        return
+    end
     local invSlots = player:get_inventory().objects
     item.serializable.picked = true
     table.insert(invSlots, item.serializable)

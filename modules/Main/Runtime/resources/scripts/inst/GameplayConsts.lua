@@ -21,7 +21,13 @@ function game_consts:get()
             },
             collectibles =
             {
-                DUMMY_ITEM = { ID = 'dummy_item', PATH = 'DummyChest.mesh' }
+                DUMMY_ITEM_1 = { ID = 'dummy_item_1', PATH = 'DummyChest.mesh' },
+                DUMMY_ITEM_2 = { ID = 'dummy_item_2', PATH = 'DummyChest.mesh' },
+                DUMMY_ITEM_3 = { ID = 'dummy_item_3', PATH = 'DummyChest.mesh' },
+                DUMMY_ITEM_4 = { ID = 'dummy_item_4', PATH = 'DummyChest.mesh' },
+                DUMMY_ITEM_5 = { ID = 'dummy_item_5', PATH = 'DummyChest.mesh' },
+                DUMMY_ITEM_6 = { ID = 'dummy_item_6', PATH = 'DummyChest.mesh' },
+                DUMMY_ITEM_7 = { ID = 'dummy_item_7', PATH = 'DummyChest.mesh' }
             }
 
 

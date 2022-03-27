@@ -57,7 +57,7 @@ scene = {
                 scene.next = 'main/scenes/' .. lastRoom .. '.lua'
                 scene.finished = true
             end )
-        } , function() return input_prf:action_done_once('INVENTORY') end, false, 'Exit inventory')
+        } , function() return input_prf:action_done_once(k.input_actions.INVENTORY) end, false, 'Exit inventory')
 
         -- Base graphics
         local invBox = { lib.vec2(10, 0), lib.vec2(320, 0), lib.vec2(320, 200), lib.vec2(0, 200) }

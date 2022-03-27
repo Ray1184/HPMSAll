@@ -42,7 +42,7 @@ scene = {
         gsm = global_state_manager:new()
 
 
-        input_prf = input_profile:new('default')
+        input_prf = input_profile:new(context:get_input_profile())
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
         wk = workflow:new(scn_mgr)
@@ -87,16 +87,15 @@ scene = {
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
 
 
-        local obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 1)
-        local obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 0)
-        local obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 2)
-        local obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 20)
-        local obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 200)
-        local obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 5)
-        local obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 76)
+        local obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_1.ID, 1)
+        local obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_2.ID, 0)
+        local obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_3.ID, 2)
+        local obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_4.ID, 20)
+        local obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_5.ID, 200)
+        local obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_6.ID, 5)
+        local obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_7.ID, 76)
 
-
-
+        
         add_to_inventory(player, obj1)
         add_to_inventory(player, obj2)
         add_to_inventory(player, obj3)
@@ -158,16 +157,16 @@ scene = {
 
         wk:add_workflow( {
             seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
-            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
+            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
             seq:wait(2),
-            seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true),
+            seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
             seq:pipe( function(tpf) chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
         } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
 
         wk:add_workflow( {
             seq:pipe( function(tpf) gsm:save_data('data/save/savedata00.json', { room_id = scene.name }) end),
-            seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true)
-        } , function() return input_prf:action_done_once('ACTION_3') end, true, 'save_data_flow')
+            seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true)
+        } , function() return input_prf:action_done_once(k.input_actions.ACTION_3) end, true, 'save_data_flow')
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
         lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
@@ -239,9 +238,9 @@ scene = {
                 -- log_debug('JSON --> ' .. json.encode(player.serializable))
             end
 
-            if lib.key_action_performed(keys, 'UP', 2) then
+            if lib.key_action_performed(keys, k.input_actions.UP, 2) then
                 walk = 1
-            elseif lib.key_action_performed(keys, 'DOWN', 2) then
+            elseif lib.key_action_performed(keys, k.input_actions.DOWN, 2) then
                 walk = -1
             else
                 walk = 0
@@ -253,9 +252,9 @@ scene = {
                 action = false
             end
 
-            if lib.key_action_performed(keys, 'RIGHT', 2) then
+            if lib.key_action_performed(keys, k.input_actions.RIGHT, 2) then
                 rotate = -2
-            elseif lib.key_action_performed(keys, 'LEFT', 2) then
+            elseif lib.key_action_performed(keys, k.input_actions.LEFT, 2) then
                 rotate = 2
             else
                 rotate = 0
@@ -327,7 +326,7 @@ scene = {
         -- player:update(tpf)
 
         -- INVENTORY
-        if input_prf:action_done_once('INVENTORY') then
+        if input_prf:action_done_once(k.input_actions.INVENTORY) then
             gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
             scene.next = 'main/menu/R_Inventory.lua'
             scene.finished = true

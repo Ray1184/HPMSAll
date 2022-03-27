@@ -33,6 +33,7 @@ scene = {
 
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
+        input_prf = input_profile:new(context:get_input_profile())
 
         wk = workflow:new(scn_mgr)
         seq = workflow_sequences:new()
@@ -44,6 +45,9 @@ scene = {
 
         scn_mgr:sample_view_by_callback( function() return true end, 'menu/B_Inventory.png', lib.vec3(-0.675, -2, 0.55), lib.quat(0.707107, 0.707107, 0, 0))
 
+        slots = { }
+        itemsBar = nil
+        selectedIndex = 1
 
         wk:add_workflow( {
             seq:fade_out(0)
@@ -60,15 +64,40 @@ scene = {
                 scene.next = 'main/scenes/' .. lastRoom .. '.lua'
                 scene.finished = true
             end )
-        } , function() return input_prf:action_done_once('INVENTORY') end, false, 'Exit inventory')
+        } , function() return input_prf:action_done_once(k.input_actions.INVENTORY) end, false, 'Exit inventory')
 
-        -- Base graphics
+        wk:add_workflow( {
+            seq:pipe( function(tpf)
+                if selectedIndex > 1 then
+                    selectedIndex = selectedIndex - 1
+                    local barBoxIndex = selectedIndex - 1
+                    itemsBar:set_position(10, 55 +(16 * barBoxIndex))
+                end
+            end )
+        } , function() return input_prf:action_done_once(k.input_actions.UP) end, true, 'Move slot up')
+
+        wk:add_workflow( {
+            seq:pipe( function(tpf)
+                if selectedIndex < 5 then
+                    selectedIndex = selectedIndex + 1
+                    local barBoxIndex = selectedIndex - 1
+                    itemsBar:set_position(10, 55 +(16 * barBoxIndex))
+                end
+            end )
+        } , function() return input_prf:action_done_once(k.input_actions.DOWN) end, true, 'Move slot down')
+
+        -- Base graphics.
         local invBox = { lib.vec2(10, 0), lib.vec2(320, 0), lib.vec2(320, 200), lib.vec2(0, 200) }
-        gui = image_2d:new(TYPE_POLYGON, invBox, 0, 0, 'menu/O_Inventory.png', 100)
+        gui = image_2d:new(TYPE_POLYGON, invBox, 0, 0, 'menu/O_Inventory.png', 99)
         gui:set_visible(true)
-        slots = { }
-        selectedIndex = 1
-        draw_item_list(player:get_inventory(), slots, selectedIndex)
+
+        -- Item list.       
+        local barBox = { lib.vec2(0, 0), lib.vec2(147, 0), lib.vec2(147, 20), lib.vec2(0, 20) }
+        itemsBar = image_2d:new(TYPE_POLYGON, barBox, 0, 0, 'menu/Bar_Items.png', 100)
+        
+        draw_item_list(player:get_inventory(), slots, selectedIndex, itemsBar)
+
+
 
 
 
@@ -81,7 +110,6 @@ scene = {
     end,
     update = function(tpf)
         -- Update function callback.
-
         scn_mgr:poll_events(tpf)
         wk:poll_events(tpf)
 
@@ -94,6 +122,7 @@ scene = {
         seq:delete_all()
         gui:delete()
         clear_item_list(slots)
+        itemsBar:delete()
 
     end
 }
@@ -102,23 +131,27 @@ function clear_item_list(slots)
     for i = 1, #slots do
         delete_text_label(slots[i])
     end
+   
 end
 
-function draw_item_list(inventory, slots, selectedIndex)
+function draw_item_list(inventory, slots, selectedIndex, itemsBar)
     clear_item_list(slots)
+    local itemToDisplay = k.INVENTORY_DISPLAY_LIST_SIZE
+    local barBoxIndex = selectedIndex - 1
+    itemsBar:set_position(10, 55 +(20 * barBoxIndex))
+
     local countItems = #inventory.objects
-    local from = limit_up(selectedIndex - 4, 1)
-    local to = limit_down(selectedIndex + 4, countItems)
+    local from = 1 -- TODO
+    local to = itemToDisplay -- TODO
     local rndIndex = 0
     for i = from, to do
         local id = inventory.objects[i].id
         local currObject = context:get_full_ref(id)
         local invLabel = bm:msg(currObject:get_properties().name)
+
         table.insert(slots, create_text_label('inv_item_' .. rndIndex, invLabel, lib, 12, 58 +(16 * rndIndex)))
         rndIndex = rndIndex + 1
     end
-
-
 end
 
 function limit_up(val, limit)

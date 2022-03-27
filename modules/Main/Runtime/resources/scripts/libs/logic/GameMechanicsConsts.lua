@@ -27,6 +27,21 @@ function game_mechanics_consts:get()
 
         DEFAULT_MAX_STEP_HEIGHT = 0.1,
 
+        INVENTORY_DISPLAY_LIST_SIZE = 5,
+
+        input_actions =
+        {
+            INVENTORY = 'INVENTORY',
+            UP = 'UP',
+            DOWN = 'DOWN',
+            LEFT = 'LEFT',
+            RIGHT = 'RIGHT',
+            EXIT = 'EXIT',
+            ACTION_1 = 'ACTION_1',
+            ACTION_2 = 'ACTION_2',
+            ACTION_3 = 'ACTION_3'
+        },
+
         anim_modes =
         {
             ANIM_MODE_LOOP = 0,
@@ -114,7 +129,7 @@ function game_mechanics_consts:get()
             PUSH = 'Push',
             FIGHT = 'Fight',
             DIE = 'Die'
-        },        
+        },
         item_actions =
         {
             USE = 0,

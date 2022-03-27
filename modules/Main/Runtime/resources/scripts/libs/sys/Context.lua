@@ -108,6 +108,17 @@ function context:get_camera()
     return self.instance.camera
 end
 
+function context:set_input_profile(prof)
+    self.instance.input_profile = prof
+end
+
+function context:get_input_profile()
+    if self.instance.input_profile == nil then
+        self.instance.input_profile = 'default'
+    end
+    return self.instance.input_profile
+end
+
 function context:set_lang(lang)
     self.instance.lang = lang
 end
