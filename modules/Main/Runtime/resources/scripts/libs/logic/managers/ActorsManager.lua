@@ -6,9 +6,7 @@
 --
 
 dependencies = {
-    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
-    ----'Context.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/managers/ActorsHelper.lua',
     'libs/logic/managers/ActorsEventsHelper.lua'
@@ -16,7 +14,7 @@ dependencies = {
 
 actors_manager = { }
 
-function actors_manager:new(scene_manager)
+function actors_manager:new(sceneManager)
     lib = backend:get()
     insp = inspector:get()
     k = game_mechanics_consts:get()
@@ -24,7 +22,7 @@ function actors_manager:new(scene_manager)
         module_name = 'actors_manager',
 
         -- Room info
-        scene_manager = scene_manager,
+        scene_manager = sceneManager,
 
         -- Backend data ref
         loaded_actors = { },
@@ -37,7 +35,7 @@ function actors_manager:new(scene_manager)
         collectibles = 0,
         positions = { }
     }
-    log_debug('Creating actors module for room ' .. scene_manager:get_scene_name())
+    log_debug('Creating actors module for room ' .. sceneManager:get_scene_name())
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
@@ -67,20 +65,20 @@ function actors_manager:new(scene_manager)
         self.loaded_player = nil
     end
 
-    function actors_manager:create_player(player_id)
+    function actors_manager:create_player(playerId)
         if self.loaded_player == nil then
-            self.loaded_player = context:get_instance(k.inst_cat.PLAYERS, player_id)
+            self.loaded_player = context:get_instance(k.inst_cat.ACTORS, playerId)
             self.loaded_player:fill_transient_data(self.scene_manager:get_walkmap())
             if not self.loaded_player.serializable.expired then
-                lib.add_collisor_to_env(self.scene_manager:get_collision_env(), player_id, self.loaded_player.transient.collisor)
+                lib.add_collisor_to_env(self.scene_manager:get_collision_env(), playerId, self.loaded_player.transient.collisor)
             end
         end
         return self.loaded_player
     end
 
-    function actors_manager:create_actor(actor_id)
-        local id_suffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.actors)
-        local actor = context:get_instance(k.inst_cat.ACTORS, actor_id, id_suffix)
+    function actors_manager:create_actor(actorId)
+        local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.actors)
+        local actor = context:get_instance(k.inst_cat.ACTORS, actorId, idSuffix)
         self.loaded_actors[actor.serializable.id] = actor
         self.loaded_actors[actor.serializable.id]:fill_transient_data(self.scene_manager:get_walkmap())
         if not self.loaded_actors[actor.serializable.id].serializable.expired then
@@ -88,6 +86,15 @@ function actors_manager:new(scene_manager)
         end
         self.actors = self.actors + 1
         return self.loaded_actors[actor.serializable.id]
+    end
+
+    function actors_manager:create_item(itemId, amount)
+        local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.collectibles)
+        local item = context:get_instance(k.inst_cat.COLLECTIBLES, itemId, idSuffix, amount)
+        self.loaded_collectibles[item.serializable.id] = item
+        self.loaded_collectibles[item.serializable.id]:fill_transient_data()       
+        self.collectibles = self.collectibles + 1
+        return self.loaded_collectibles[item.serializable.id]
     end
 
     function actors_manager:init_events()

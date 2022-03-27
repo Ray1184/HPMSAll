@@ -18,11 +18,10 @@ function room_state:ret(id)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
-
     local id = 'room_state/' .. id
     local ret = abstract_object:ret(id)
 
-    local this = context:inst():get_object(id, true, 
+    local this = context:inst():get_object(id, true,
     function()
         log_debug('New room_state object ' .. id)
 
@@ -75,6 +74,8 @@ function room_state:ret(id)
             self.serializable.state[objectCat][objectId] = object
         end
     end
+
+    context:put_full_ref_obj(this)
 
     return this
 end

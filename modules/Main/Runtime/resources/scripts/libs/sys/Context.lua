@@ -15,9 +15,8 @@ function context:new()
         STATE = 'state',
         SERIALIZABLES = 'serializables',
         INSTANCES = 'instances',
-        EVENTS = 'events',
-        LANG = 'lang',
-        MISC = 'misc'
+        FULL_REFS = 'full_refs',
+        BUNDLES = 'bundles'
     }
 
     local ctx = { dummy = false }
@@ -37,6 +36,14 @@ end
 
 function context:get_serializable_data()
     return self.instance[cats.SERIALIZABLES]
+end
+
+function context:set_bundles(data)
+    self.instance[cats.BUNDLES] = data
+end
+
+function context:get_bundles()
+    return self.instance[cats.BUNDLES]
 end
 
 function context:set_coord_system_blender()
@@ -136,6 +143,30 @@ function context:inst()
     return self.instance
 end
 
+function context:put_full_ref_obj(obj)
+    self.instance:put_full_ref(obj.serializable.id, obj)
+end
+
+function context:put_full_ref(key, obj)
+    if key == nil then
+        log_warn('Key cannot be nil')
+        return
+    end
+    self.instance[cats.FULL_REFS][key] = obj
+end
+
+function context:get_full_ref(key)
+    if key == nil then
+        log_error('Key cannot be nil')
+        return nil
+    end
+    if self.instance[cats.FULL_REFS][key] == nil then
+        log_warn('FullRef object ' .. key .. ' is nil in context')
+        return nil
+    end
+    return self.instance[cats.FULL_REFS][key]
+end
+
 function context:put_state(key, obj)
     if key == nil then
         log_warn('Key cannot be nil')
@@ -146,18 +177,14 @@ end
 
 function context:get_state(key)
     if key == nil then
-        log_error('State object nil not allowed')
+        log_error('Key cannot be nil')
         return nil
     end
     if self.instance[cats.STATE][key] == nil then
-        log_warn('State object ' .. key .. ' was not initialized in context')
+        log_warn('State object ' .. key .. ' is nil in context')
         return nil
     end
     return self.instance[cats.STATE][key]
-end
-
-function context:get_object(key, persist, supplierCallback)
-    return self.instance:get(cats.SERIALIZABLES, key, persist, supplierCallback)
 end
 
 function context:register_instance(subcat, id, retrieveCallback)
@@ -173,11 +200,8 @@ function context:get_instance(subcat, id, ...)
     return nil
 end
 
-function context:put(cat, key, obj)
-    if cat == nil then
-        log_warn('Cannot put in context object with nil category')
-        return
-    elseif self.instance[cat] == nil then
+function context:put_object(key, obj)
+    if self.instance[cats.SERIALIZABLES] == nil then
         log_warn('Cannot put in context object: ' .. tostring(cat) .. ' category unknown')
         return
     end
@@ -191,32 +215,24 @@ function context:put(cat, key, obj)
         log_warn('For put object in context this must have a serializable block')
         return
     end
-    self.instance[cat][key] = obj.serializable
+    self.instance[cats.SERIALIZABLES][key] = obj.serializable
 end
 
-function context:get(cat, key, persist, supplierCallback)
+function context:get_object(key, persist, supplierCallback)
     if not persist then
         return supplierCallback()
     end
-    if self.instance[cat] == nil then
-        if cat == nil then
-            log_warn('Cannot get object from context with nil category')
-        else
-            log_warn('Cannot get object from context: ' .. tostring(cat) .. ' category unknown')
-        end
-        return nil
-    end
-    if self.instance[cat][key] == nil then
+    if self.instance[cats.SERIALIZABLES][key] == nil then
 
         if key == nil then
             log_warn('Cannot get object from context with nil key')
             return nil
         else
-            log_debug('Object with key ' .. tostring(key) .. ' and category ' .. tostring(cat) .. ' NOT found/created in context')
-            self.instance:put(cat, key, supplierCallback())
+            log_debug('Object with key ' .. tostring(key) .. ' NOT found/created in context')
+            self.instance:put_object(key, supplierCallback())
         end
     end
     local obj = { }
-    obj.serializable = self.instance[cat][key]
+    obj.serializable = self.instance[cats.SERIALIZABLES][key]
     return obj
 end

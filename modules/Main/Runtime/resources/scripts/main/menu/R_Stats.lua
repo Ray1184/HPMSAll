@@ -2,7 +2,7 @@
 dependencies = {
     'libs/gui/Image2D.lua',
     'libs/gui/OutputText2D.lua',
-    'libs/logic/managers/TextHelper.lua',
+    'libs/logic/gameplay/TextHelper.lua',
     'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/managers/GlobalStateManager.lua',
@@ -27,11 +27,15 @@ scene = {
         cam.near = 0.05
         cam.far = 100
         cam.fovy = lib.to_radians(40)
+
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
+
         wk = workflow:new(scn_mgr)
         seq = workflow_sequences:new()
+
         player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)
+        
         lamp = lib.make_light(lib.vec3(2, 2, 2))
         lamp.position = lib.vec3(-0.675, -2, 0.55)
 
@@ -70,22 +74,21 @@ scene = {
         wk:add_workflow( {
             seq:pipe( function(tpf)
                 playerModel:rotate(0, 0, 200 * tpf)
-                playerModel:update(tpf * 2)
-            end )
+                playerModel:update(tpf)
+            end, true )
         } , nil, true, 'Animate model')
-
 
         -- Labels
         nameLabel = create_text_label('player_name', player:get_anagr().name, lib, 205, 63)
-        lvLabel = create_text_label('player_level', player:get_stat(k.stats.standard_params.LV), lib, 162, 63)
-        moneyLabel = create_text_label('player_money', player:get_stat(k.stats.standard_params.MONEY), lib, 113, 78)
+        lvLabel = create_text_label('player_level', player:get_stats().lv, lib, 162, 63)
+        moneyLabel = create_text_label('player_money', player:get_stats().money, lib, 113, 78)
 
 
         -- Bars
-        healthBar = fill_bar(43, 68, player:get_stat(k.stats.standard_params.HP), player:get_stat(k.stats.standard_params.MAX_HP), 'menu/ST_Health.png')
-        sanityBar = fill_bar(43, 84, player:get_stat(k.stats.standard_params.SP), player:get_stat(k.stats.standard_params.MAX_SP), 'menu/ST_Sanity.png')
-        vigorBar = fill_bar(43, 100, player:get_stat(k.stats.standard_params.VP), player:get_stat(k.stats.standard_params.MAX_VP), 'menu/ST_Vigor.png')
-        expBar = fill_bar(119, 68, player:get_stat(k.stats.standard_params.EXP), player:get_stat(k.stats.standard_params.EXP_NEXT), 'menu/ST_Exp.png')
+        healthBar = fill_bar(43, 68, player:get_stats().hp, player:get_stats().max_hp, 'menu/ST_Health.png')
+        sanityBar = fill_bar(43, 84, player:get_stats().sp, player:get_stats().max_sp, 'menu/ST_Sanity.png')
+        vigorBar = fill_bar(43, 100, player:get_stats().vp, player:get_stats().max_vp, 'menu/ST_Vigor.png')
+        expBar = fill_bar(119, 68, player:get_stats().exp, player:get_stats().next_exp, 'menu/ST_Exp.png')
 
     end,
     input = function(keys, mouse_buttons, x, y)

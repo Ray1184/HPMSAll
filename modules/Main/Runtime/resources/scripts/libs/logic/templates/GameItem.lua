@@ -48,10 +48,7 @@ function game_item:ret(path, id)
     end )
 
     local notSer = {
-        not_serializable =
-        {
-            collision_info = { }
-        }
+        not_serializable = { }
     }
 
     this = merge_tables(this, notSer)

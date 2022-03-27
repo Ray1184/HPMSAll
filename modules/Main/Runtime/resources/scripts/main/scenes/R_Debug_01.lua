@@ -11,6 +11,7 @@ dependencies = {
     'libs/thirdparty/Inspect.lua',
     'libs/logic/strats/Workflow.lua',
     'libs/logic/strats/WorkflowSequences.lua',
+    'libs/logic/gameplay/InventoryHelper.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua'
@@ -23,8 +24,8 @@ scene = {
     finished = false,
     next = 'TBD',
     setup = function()
-        -- TODOBATCH-BEGIN g.res_refs.players.DUMMY_PLAYER.ID
-       
+        -- TODOBATCH-BEGIN g.res_refs.actors.DUMMY_PLAYER.ID
+
         context:inst():disable_dummy()
         enable_debug()
         -- TODOBATCH-END
@@ -39,7 +40,7 @@ scene = {
 
         room_st = room_state:ret(scene.name)
         gsm = global_state_manager:new()
-        
+
 
         input_prf = input_profile:new('default')
         scn_mgr = scene_manager:new(scene.name, cam)
@@ -50,7 +51,7 @@ scene = {
 
         -- Collision map R_Debug_01 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
-        
+
         register_all_instances()
         action = false
 
@@ -72,7 +73,7 @@ scene = {
         mask_node = lib.make_node("DummyMaskNode")
         lib.set_node_entity(mask_node, mask)
 
-        gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.players.DUMMY_PLAYER.ID)
+        gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.actors.DUMMY_PLAYER.ID)
         player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
         gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
 
@@ -85,6 +86,25 @@ scene = {
 
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
 
+
+        local obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 1)
+        local obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 0)
+        local obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 2)
+        local obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 20)
+        local obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 200)
+        local obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 5)
+        local obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM.ID, 76)
+
+
+
+        add_to_inventory(player, obj1)
+        add_to_inventory(player, obj2)
+        add_to_inventory(player, obj3)
+        add_to_inventory(player, obj4)
+        add_to_inventory(player, obj5)
+        add_to_inventory(player, obj6)
+        add_to_inventory(player, obj7)
+
         log_warn(tostring(room_st))
         if not room_st:get_object(k.room_state_items.VARIABLES, 'init') then
             log_warn('FIRST TIME IN ROOM')
@@ -95,6 +115,9 @@ scene = {
             chest2:set_position(-2, -1, 0)
             chest3:set_position(0, -1, 0)
             chest3:scale(0.5, 0.5, 0.5)
+            invSlots = player:get_inventory().objects
+
+
             room_st:set_object(k.room_state_items.VARIABLES, 'init', true)
             log_warn(tostring(room_st))
         else
@@ -142,7 +165,7 @@ scene = {
         } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
 
         wk:add_workflow( {
-            seq:pipe( function(tpf) gsm:save_data('data/save/savedata00.json', {room_id = scene.name}) end),
+            seq:pipe( function(tpf) gsm:save_data('data/save/savedata00.json', { room_id = scene.name }) end),
             seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once('ACTION_1') end,k.diplay_msg_styles.MSG_BOX,true)
         } , function() return input_prf:action_done_once('ACTION_3') end, true, 'save_data_flow')
 
@@ -306,7 +329,7 @@ scene = {
         -- INVENTORY
         if input_prf:action_done_once('INVENTORY') then
             gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-            scene.next = 'main/menu/R_Stats.lua'
+            scene.next = 'main/menu/R_Inventory.lua'
             scene.finished = true
         end
         -- TODOBATCH-END

@@ -7,7 +7,7 @@
 #include <glm/glm.hpp>
 #include <common/HPMSMathUtils.h>
 
-#define RATIO 4
+#define RATIO 3
 #define WIDTH 320 * RATIO
 #define HEIGHT 200 * RATIO
 

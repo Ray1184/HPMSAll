@@ -12,14 +12,14 @@ dependencies = {
 
 scene_manager = { }
 
-function scene_manager:new(scene_name, camera)
+function scene_manager:new(sceneName, camera)
     lib = backend:get()
     insp = inspector:get()
     local this = {
         module_name = 'scene_manager',
 
         -- Room info
-        scene_name = scene_name,
+        scene_name = sceneName,
         camera = camera,
         views_map = { },
         loaded_walkmap = nil,
@@ -27,7 +27,7 @@ function scene_manager:new(scene_name, camera)
         loaded_images = { },
         paused = false
     }
-    log_debug('Creating scene module for room ' .. scene_name)
+    log_debug('Creating scene module for room ' .. sceneName)
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
@@ -60,9 +60,9 @@ function scene_manager:new(scene_name, camera)
         return self.paused
     end
 
-    function scene_manager:create_walkmap(walkmap_name)
+    function scene_manager:create_walkmap(walkmapName)
         if self.loaded_walkmap == nil then
-            self.loaded_walkmap = lib.make_walkmap(walkmap_name)
+            self.loaded_walkmap = lib.make_walkmap(walkmapName)
             lib.set_walkmap_to_env(self.loaded_env, self.loaded_walkmap)
         end
     end

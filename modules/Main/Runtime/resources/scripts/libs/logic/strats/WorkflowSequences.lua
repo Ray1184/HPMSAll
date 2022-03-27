@@ -111,13 +111,13 @@ function workflow_sequences:new()
         }
     end
 
-    function workflow_sequences:pipe(what, args)
+    function workflow_sequences:pipe(what, loop, args)
         return {
             action = function(tpf, timer)
                 what(tpf, args)
             end,
             complete_on = function(tpf, timer)
-                return true
+                return not (loop or false)
             end
         }
     end

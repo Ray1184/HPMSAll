@@ -6,24 +6,32 @@
 --
 
 dependencies = {
-    ----'Context.lua',
-    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/GameMechanicsConsts.lua',
+    'libs/logic/managers/BundleManager.lua',
     'inst/GameplayConsts.lua',
-    'inst/charas/players/Player_DummyPlayer.lua',
-    'inst/actors/scene_actors/SceneActor_DummyChest.lua'
+    'inst/actors/players/DummyPlayer.lua',
+    'inst/actors/scene/DummyChest.lua',
+    'inst/collectibles/misc/DummyItem.lua',
+    'bundles/Objects.lua'
 }
 
 function register_all_instances()
 
     k = game_mechanics_consts:get()
     g = game_consts:get()
+    bm = bundle_manager:new()
+
+    -- Text bundles.
+    bm:register_dictionary(get_bundle_set_1())
 
     -- Players.
-    context:inst():register_instance(k.inst_cat.PLAYERS, g.res_refs.players.DUMMY_PLAYER.ID, function() return dummy_player:ret() end)
+    context:inst():register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_PLAYER.ID, function() return dummy_player:ret() end)
     
-    -- Actors.
+    -- Scene.
     context:inst():register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_CHEST.ID, function(id_suffix) return dummy_chest:ret(id_suffix) end)
+
+    -- Inventory
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM.ID, function(id_suffix, amount) return dummy_item:ret(id_suffix, amount) end)
 
 end

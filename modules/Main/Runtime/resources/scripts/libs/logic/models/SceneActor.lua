@@ -7,8 +7,6 @@
 
 
 dependencies = {
-    ----'Context.lua',
-    -- 'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/templates/AnimCollisionGameItem.lua',
     'libs/logic/GameMechanicsConsts.lua'
@@ -19,7 +17,6 @@ scene_actor = { }
 function scene_actor:ret(path, id, rad, rect, ghost, template)
     k = game_mechanics_consts:get()
     insp = inspector:get()
-
     local id = 'scene_actor/' .. id
     local ret = anim_collision_game_item:ret(path, id, rad, rect, ghost)
 
@@ -39,60 +36,7 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
                 searchable = false,
                 hittable = true,
                 stats =
-                {
-
-                    -- Amount
-                    { k.stats.standard_params.HP, 0 },
-                    { k.stats.standard_params.MAX_HP, 0 },
-                    { k.stats.standard_params.SP, 0 },
-                    { k.stats.standard_params.MAX_SP, 0 },
-                    { k.stats.standard_params.VP, 0 },
-                    { k.stats.standard_params.MAX_VP, 0 },
-                    { k.stats.standard_params.EXP, 0 },
-                    { k.stats.standard_params.EXP_NEXT, 0 },
-                    { k.stats.standard_params.LV, 0 },
-                    { k.stats.standard_params.AP, 0 },
-                    { k.stats.standard_params.MONEY, 0 },
-                    { k.stats.standard_params.ARMOR, 0 },
-
-                    { k.stats.support_params.STRENGTH, 0 },
-                    { k.stats.support_params.STAMINA, 0 },
-                    { k.stats.support_params.INTELLIGENCE, 0 },
-                    { k.stats.support_params.SCIENCE, 0 },
-                    { k.stats.support_params.HANDYMAN, 0 },
-                    { k.stats.support_params.DEXTERITY, 0 },
-                    { k.stats.support_params.OCCULT, 0 },
-                    { k.stats.support_params.CHARISMA, 0 },
-                    { k.stats.support_params.FORTUNE, 0 },
-
-                    -- Affection flag, affection ratio (1: 100%, 0: 0%)
-                    { k.stats.negative_status_params.SLEEP, false, 1 },
-                    { k.stats.negative_status_params.POISON, false, 1 },
-                    { k.stats.negative_status_params.TOXIN, false, 1 },
-                    { k.stats.negative_status_params.BURN, false, 1 },
-                    { k.stats.negative_status_params.FREEZE, false, 1 },
-                    { k.stats.negative_status_params.BLIND, false, 1 },
-                    { k.stats.negative_status_params.PARALYSIS, false, 1 },
-                    { k.stats.negative_status_params.SHOCK, false, 1 },
-
-                    { k.stats.positive_status_params.REGEN, false, 1 },
-                    { k.stats.positive_status_params.RAD, false, 1 },
-                    { k.stats.positive_status_params.INVINCIBLITY, false },
-
-                    { k.stats.phobies.ARACHNOPHOBIA, false, 1 },
-                    { k.stats.phobies.HEMOPHOBIA, false, 1 },
-                    { k.stats.phobies.ANTHROPOPHOBIA, false, 1 },
-                    { k.stats.phobies.AQUAPHOBIA, false, 1 },
-                    { k.stats.phobies.PYROPHOBIA, false, 1 },
-                    { k.stats.phobies.ACROPHOBIA, false, 1 },
-                    { k.stats.phobies.NECROPHOBIA, false, 1 },
-                    { k.stats.phobies.AEROPHOBIA, false, 1 },
-                    { k.stats.phobies.AVIOPHOBIA, false, 1 },
-                    { k.stats.phobies.PHOTOPHOBIA, false, 1 },
-                    { k.stats.phobies.NYCTOPHOBIA, false, 1 },
-                    { k.stats.phobies.CRYOPHOBIA, false, 1 }
-
-                }
+                { }
             }
         }
         return merge_tables(ret, new)
@@ -145,49 +89,28 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
         return insp.inspect(o)
     end
 
-    function scene_actor:set_move_mode(move_mode)
-        if not table_contains(k.actor_move_mode, move_mode) then
-            log_error('Actor walk mode ' .. move_mode .. ' not defined. Check managed actor walk modes inside libs/logic/GameMechanicsConsts.lua or extend them')
+    function scene_actor:set_move_mode(moveMode)
+        if not table_contains(k.actor_move_mode, moveMode) then
+            log_error('Actor walk mode ' .. moveMode .. ' not defined. Check managed actor walk modes inside libs/logic/GameMechanicsConsts.lua or extend them')
         end
-        self.serializable.move_mode = move_mode
+        self.serializable.move_mode = moveMode
     end
 
-    function scene_actor:set_action_mode(action_mode)
-        if not table_contains(k.actor_action_mode, action_mode) then
-            log_error('Actor action mode ' .. action_mode .. ' not defined. Check managed actor action modes inside libs/logic/GameMechanicsConsts.lua or extend them')
+    function scene_actor:set_action_mode(actionMode)
+        if not table_contains(k.actor_action_mode, actionMode) then
+            log_error('Actor action mode ' .. actionMode .. ' not defined. Check managed actor action modes inside libs/logic/GameMechanicsConsts.lua or extend them')
         end
-        self.serializable.action_mode = action_mode
+        self.serializable.action_mode = actionMode
     end
 
     function scene_actor:set_stats(stats)
         self.serializable.stats = stats
     end
 
-    function scene_actor:get_stat(stat_name)
-        for i = 1, #self.serializable.stats do            
-            if self.serializable.stats[i][1] == stat_name then
-                return self.serializable.stats[i][2]
-            end            
-        end
-        log_warn('State with name ' .. stat_name .. ' not available')
+    function scene_actor:get_stats()
+        return self.serializable.stats
     end
 
-    function scene_actor:modify_stat(stat_name, stat_value, stat_affection)
-        for i = 1, #self.serializable.stats do
-            if self.serializable.stats[i][1] == stat_name then
-                self.serializable.stats[i][2] = stat_value
-                if stat_affection ~= nil then
-                    if #self.serializable.stats[i] == 3 then
-                        self.serializable.stats[i][3] = stat_affection
-                    else
-                        log_warn('State affection ratio not available for ' .. stat_name)
-                    end
-                end
-                return
-            end
-        end
-        log_warn('State with name ' .. stat_name .. ' not available')
-    end
 
     function scene_actor:set_position(x, y, z)
         self.metainfo.override.anim_collision_game_item.set_position(self, x, y, z)
@@ -238,19 +161,21 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
         self.metainfo.override.anim_collision_game_item.play(self, mode, slowdown, slice)
     end
 
-    function scene_actor:set_event_callback(evt_callback)
-        self.metainfo.evt_callback = evt_callback
+    function scene_actor:set_event_callback(evtCallback)
+        self.metainfo.evt_callback = evtCallback
     end
 
-    function scene_actor:event(tpf, evt_info)
+    function scene_actor:event(tpf, evtInfo)
         if self.metainfo.evt_callback ~= nil then
-            self.metainfo.evt_callback(tpf, evt_info)
+            self.metainfo.evt_callback(tpf, evtInfo)
         end
     end
 
     function scene_actor:kill_instance()
         self.metainfo.override.anim_collision_game_item.kill_instance(self)
     end
+
+    context:put_full_ref_obj(this)
 
     return this
 end

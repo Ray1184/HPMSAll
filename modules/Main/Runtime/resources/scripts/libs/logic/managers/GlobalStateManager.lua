@@ -20,7 +20,7 @@ function global_state_manager:new()
     local this = {
         module_name = 'global_state_manager'
     }
-    log_debug('Creating scene module for room')
+    log_debug('Creating global state manager')
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)

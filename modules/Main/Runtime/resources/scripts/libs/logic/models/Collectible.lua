@@ -7,8 +7,6 @@
 
 
 dependencies = {
-    ----'Context.lua',
-    -- 'libs/utils/Utils.lua',
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/thirdparty/Inspect.lua'
@@ -16,14 +14,13 @@ dependencies = {
 
 collectible = { }
 
-function collectible:ret(path, id, amount, showAmount)
+function collectible:ret(path, id, amount)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
 
+    local ret = game_item:ret(path, id)
     local id = 'collectible/' .. id
-    local ret = game_item:ret(path)
-
     local this = context:inst():get_object(id, true,
     function()
         log_debug('New collectible object ' .. id)
@@ -34,7 +31,7 @@ function collectible:ret(path, id, amount, showAmount)
                 id = id,
                 selected = false,
                 amount = amount or 1,
-                show_amount = showAmount or false
+                picked = false
             }
         }
 
@@ -44,7 +41,7 @@ function collectible:ret(path, id, amount, showAmount)
     local notSer = {
         not_serializable = { }
     }
-   
+
     notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
     this = merge_tables(this, notSer)
 
@@ -74,12 +71,20 @@ function collectible:ret(path, id, amount, showAmount)
 
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
 
-    this = merge_tables(this, metainf)
+    this = merge_tables(this, metainf)    
 
     setmetatable(this, self)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
+    end
+
+    function collectible:set_properties(properties)
+        self.not_serializable.properties = properties
+    end
+
+    function collectible:get_properties()
+        return self.not_serializable.properties
     end
 
     function collectible:set_position(x, y, z)
@@ -106,39 +111,36 @@ function collectible:ret(path, id, amount, showAmount)
         self.metainfo.override.game_item.delete_transient_data(self)
     end
 
-    function collectible:fill_transient_data(actions)
+    function collectible:fill_transient_data()
         self.metainfo.override.game_item.fill_transient_data(self)
         if self.serializable.expired then
             return
         end
-        self.transient.available_actions = { }
-        local available_actions = self.serializable.obj_info.available_actions
-        for i = 1, #actions do
-            if table_contains(available_actions, actions[i][1]) then
-                table.insert(self.transient.available_actions, actions[i][1])
-            else
-                log_warn('Action ' .. actions[i][1] .. ' not available for collectible item ' .. self.serializable.obj_info)
-            end
-        end
     end
 
     function collectible:update()
+        if self.serializable.expired then
+            return
+        end
+        self.serializable.visual_info.visible = not self.serializable.picked
         self.metainfo.override.game_item.update(self)
     end
 
-    function collectible:set_action_callback(action_callback)
-        self.metainfo.action_callback = action_callback
+    function collectible:set_event_callback(evtCallback)
+        self.metainfo.evt_callback = evtCallback
     end
 
-    function collectible:action(action_info)
-        if self.metainfo.action_callback ~= nil then
-            self.metainfo.action_callback(action_info)
+    function collectible:event(tpf, evtInfo)
+        if self.metainfo.evt_callback ~= nil then
+            self.metainfo.evt_callback(tpf, evtInfo)
         end
     end
 
-    function scene_actor:kill_instance()
+    function collectible:kill_instance()
         self.metainfo.override.game_item.kill_instance(self)
     end
+       
+    context:put_full_ref_obj(this)
 
     return this
 end

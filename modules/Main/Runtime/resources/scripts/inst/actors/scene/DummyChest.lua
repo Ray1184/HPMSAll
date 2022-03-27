@@ -1,6 +1,4 @@
 dependencies = {
-    ----'Context.lua',
-    --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/models/SceneActor.lua',
     'libs/logic/GameMechanicsConsts.lua',
@@ -9,7 +7,7 @@ dependencies = {
 
 dummy_chest = { }
 
-function dummy_chest:ret(id_suffix)
+function dummy_chest:ret(idSuffix)
     k = game_mechanics_consts:get()
     g = game_consts:get()
     insp = inspector:get()
@@ -18,7 +16,7 @@ function dummy_chest:ret(id_suffix)
     local rad = g.res_refs.actors.DUMMY_CHEST.B_RAD
     local rect = g.res_refs.actors.DUMMY_CHEST.B_RECT
     local ghost = g.res_refs.actors.DUMMY_CHEST.GHOST
-    local id = g.res_refs.actors.DUMMY_CHEST.ID .. '/' .. id_suffix
+    local id = g.res_refs.actors.DUMMY_CHEST.ID .. '/' .. idSuffix
 
     local this = scene_actor:ret(path, id, rad, rect, ghost)
     this.serializable.pushable = true
@@ -27,7 +25,7 @@ function dummy_chest:ret(id_suffix)
         return insp.inspect(o)
     end
 
-    this:set_event_callback( function(tpf, evt_info)
+    this:set_event_callback( function(tpf, evtInfo)
         --if evt_info.first then
         --    log_warn('RICORRENZA-CHEST ' .. this.serializable.id .. ': ' .. tostring(evt_info.first))
         --end

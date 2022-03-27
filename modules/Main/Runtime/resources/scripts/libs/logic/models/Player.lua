@@ -7,8 +7,6 @@
 
 
 dependencies = {
-    ----'Context.lua',
-    -- 'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/models/SceneActor.lua',
     'libs/logic/GameMechanicsConsts.lua'
@@ -19,7 +17,6 @@ player = { }
 function player:ret(path, id, rad, rect, ghost)
     k = game_mechanics_consts:get()
     insp = inspector:get()
-
     local id = 'player/' .. id
     local ret = scene_actor:ret(path, id, rad, rect, ghost, true)
     local this = context:inst():get_object(id, true,
@@ -34,11 +31,7 @@ function player:ret(path, id, rad, rect, ghost)
                 inventory =
                 {
                     size = 10,
-                    weapons = { },
-                    supplies = { },
-                    key_items = { },
-                    reading_items = { },
-                    misc_items = { }
+                    objects = { }
                 }
 
             }
@@ -90,8 +83,7 @@ function player:ret(path, id, rad, rect, ghost)
                     set_anim = ret.set_anim,
                     play = ret.play,
                     set_stats = ret.set_stats,
-                    modify_stat = ret.modify_stat,
-                    get_stat = ret.get_stat,
+                    get_stats = ret.get_stats,
                     set_move_mode = ret.set_move_mode,
                     set_action_mode = ret.set_action_mode,
                     event = ret.event,
@@ -112,16 +104,20 @@ function player:ret(path, id, rad, rect, ghost)
         return insp.inspect(o)
     end
 
-    function player:set_move_mode(move_mode)
-        self.metainfo.override.scene_actor.set_move_mode(self, move_mode)
+    function player:set_move_mode(moveMode)
+        self.metainfo.override.scene_actor.set_move_mode(self, moveMode)
     end
 
-    function player:set_action_mode(action_mode)
-        self.metainfo.override.scene_actor.set_action_mode(self, action_mode)
+    function player:set_action_mode(actionMode)
+        self.metainfo.override.scene_actor.set_action_mode(self, actionMode)
     end
 
     function player:set_anagr(anagr)
         self.not_serializable.anagr = anagr
+    end
+
+    function player:get_inventory()
+        return self.serializable.inventory
     end
 
     function player:get_anagr()
@@ -129,15 +125,11 @@ function player:ret(path, id, rad, rect, ghost)
     end
 
     function player:set_stats(stats)
-        self.serializable.stats = stats
+        self.metainfo.override.scene_actor.set_stats(self, stats)
     end
 
-    function player:modify_stat(stat_name, stat_value, stat_affection)
-        self.metainfo.override.scene_actor.modify_stat(self, stat_name, stat_value, stat_affection)
-    end
-
-    function player:get_stat(stat_name)
-        return self.metainfo.override.scene_actor.get_stat(self, stat_name)
+    function player:get_stats()
+        return self.metainfo.override.scene_actor.get_stats(self)
     end
 
     function player:set_position(x, y, z)
@@ -212,17 +204,19 @@ function player:ret(path, id, rad, rect, ghost)
         self.metainfo.override.scene_actor.play(self, mode, slowdown, slice)
     end
 
-    function player:set_event_callback(evt_callback)
-        self.metainfo.override.scene_actor.set_event_callback(self, evt_callback)
+    function player:set_event_callback(evtCallback)
+        self.metainfo.override.scene_actor.set_event_callback(self, evtCallback)
     end
 
-    function player:event(tpf, evt_info)
-        self.metainfo.override.scene_actor.event(self, tpf, evt_info)
+    function player:event(tpf, evtInfo)
+        self.metainfo.override.scene_actor.event(self, tpf, evtInfo)
     end
 
     function player:kill_instance()
         self.metainfo.override.scene_actor.kill_instance(self)
     end
+
+    context:put_full_ref_obj(this)
 
     return this
 end
