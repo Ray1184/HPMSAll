@@ -50,6 +50,7 @@ scene = {
 
         slots = { }
         itemsBar = nil
+        currentDescr = nil
         selectedIndex = 1
 
         wk:add_workflow( {
@@ -126,6 +127,10 @@ scene = {
             selectedModel:delete_transient_data()
         end
 
+        if currentDescr ~= nil then
+            delete_text_label(currentDescr)
+        end
+
     end
 }
 
@@ -154,7 +159,7 @@ function draw_item_list(inventory, slots, selectedIndex, itemsBar)
         local id = inventory.objects[i].id
         local currObject = context:get_full_ref(id)
         local invLabel = bm:msg(currObject:get_properties().name)
-        table.insert(slots, create_text_label('inv_item_' .. rndIndex, invLabel, lib, 12, 58 +(16 * rndIndex)))
+        table.insert(slots, create_text_label('inv_item_' .. rndIndex, invLabel, lib, 12, 56 +(16 * rndIndex)))
         rndIndex = rndIndex + 1
     end
 
@@ -167,10 +172,10 @@ function draw_item_list(inventory, slots, selectedIndex, itemsBar)
 
     -- Note: for position offset use control node and child node for rotation and scale
     selectedModel = game_item:ret(selectedItem.serializable.path, selectedItem.serializable.id .. '/inv_menu_model')
-    selectedModel:fill_transient_data()    
+    selectedModel:fill_transient_data()
     local offsetPos = selectedItem:get_properties().inventory_position_offset
     local offsetRot = selectedItem:get_properties().inventory_rotation_offset
-    local offsetScale = selectedItem:get_properties().inventory_scale_offset    
+    local offsetScale = selectedItem:get_properties().inventory_scale_offset
     selectedModel:rotate(offsetRot.x, offsetRot.y, offsetRot.z)
     selectedModel:scale(offsetScale.x, offsetScale.y, offsetScale.z)
     selectedModel.transient.ctrl_node.position = lib.vec3(offsetPos.x, offsetPos.y, offsetPos.z)
@@ -182,4 +187,16 @@ function draw_item_list(inventory, slots, selectedIndex, itemsBar)
             selectedModel:update(tpf)
         end,true)
     } , nil, true, 'Animate model')
+
+    -- Short description
+    display_current_description(selectedItem)
+end
+
+function display_current_description(item)
+    if currentDescr ~= nil then
+        delete_text_label(currentDescr)
+    end
+    local descrLabel = bm:msg(item:get_properties().description)
+    log_warn('description ' .. tostring(descrLabel))
+    currentDescr = create_text_label('short_item_description', descrLabel, lib, 12, 144, 3)
 end

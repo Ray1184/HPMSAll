@@ -20,7 +20,7 @@ function workflow_sequences:new()
     insp = inspector:get()
 
     local fullBox = { lib.vec2(0, 0), lib.vec2(320, 0), lib.vec2(320, 200), lib.vec2(0, 200) }
-    local msgBox = { lib.vec2(10, 10), lib.vec2(270, 10), lib.vec2(270, 80), lib.vec2(10, 80) }
+    local msgBox = { lib.vec2(10, 10), lib.vec2(300, 10), lib.vec2(300, 80), lib.vec2(10, 80) }
     local bookBox = { lib.vec2(40, 10), lib.vec2(220, 10), lib.vec2(220, 160), lib.vec2(40, 160) }
 
 

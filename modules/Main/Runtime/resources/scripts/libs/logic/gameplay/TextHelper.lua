@@ -11,7 +11,8 @@ dependencies = {
     'libs/gui/OutputText2D.lua'
 }
 
-function create_text_label(id, text, lib, x, y, font, size, color, shadowColor, lines)
+function create_text_label(id, text, lib, x, y, lines, font, size, color, shadowColor)
+    text = safe_string(text)
     font = font or 'Alagard'
     size = size or 16
     color = color or lib.vec4(1.0, 0.7, 0.0, 1)
@@ -22,7 +23,7 @@ function create_text_label(id, text, lib, x, y, font, size, color, shadowColor, 
     shadowColor1.w = 0.8
     shadowColor2.w = 0.8
     shadowColor3.w = 0.4
-    local nameBox = { lib.vec2(0, 0), lib.vec2(300, 0), lib.vec2(300, 50), lib.vec2(0, 50) }
+    local nameBox = { lib.vec2(0, 0), lib.vec2(300, 0), lib.vec2(300, 200), lib.vec2(0, 200) }
     renderer = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 104, 'TextBoxArea_' .. id, font, size, color, lines)
     rendererShadow = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 103, 'TextBoxAreaShadow_' .. id, font, size, shadowColor1, lines)
     rendererShadow2 = output_text_2d:new(nameBox, 0, 0, 'default/Console_Empty.png', 102, 'TextBoxAreaShadow2_' .. id, font, size, shadowColor2, lines)
