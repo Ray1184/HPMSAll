@@ -115,6 +115,7 @@ function game_item:ret(path, id)
         end
         self.transientDataInit = false
         lib.delete_node(self.transient.node)
+        lib.delete_node(self.transient.ctrl_node)
         lib.delete_entity(self.transient.entity)
 
     end
@@ -123,11 +124,14 @@ function game_item:ret(path, id)
         if self.serializable.expired then
             return
         end
+        local controlNode = lib.make_node('ctrl_node_' .. self.serializable.id)
         local tra = {
             transient =
             {
                 entity = lib.make_entity(self.serializable.path),
-                node = lib.make_node('node_' .. self.serializable.id)
+                ctrl_node = controlNode,
+                node = lib.make_child_node('node_' .. self.serializable.id,controlNode)
+
             }
         }
         self = merge_tables(self, tra)

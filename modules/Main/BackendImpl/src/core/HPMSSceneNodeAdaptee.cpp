@@ -91,7 +91,7 @@ void hpms::SceneNodeAdaptee::AttachObject(hpms::ActorAdapter* actor)
             {
                 std::vector<EntityAdapter*> entitiesInTree = currParent->GetAttachedEntitiesInTree();
                 entitiesInTree.push_back(e);
-                currParent = parent->GetParent();
+                currParent = currParent->GetParent();
             }
         }
 

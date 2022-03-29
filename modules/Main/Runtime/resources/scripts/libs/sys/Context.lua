@@ -147,9 +147,7 @@ end
 function context:inst()
     if self.instance == nil then
         log_info('New context created')
-        self.instance = self:new()
-    else
-        log_debug('Context already present')
+        self.instance = self:new()    
     end
     return self.instance
 end

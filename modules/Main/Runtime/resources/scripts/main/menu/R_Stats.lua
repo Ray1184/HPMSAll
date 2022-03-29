@@ -65,7 +65,7 @@ scene = {
         gui:set_visible(true)
 
         -- Model
-        playerModel = anim_game_item:ret(player.serializable.path, player.serializable.id .. '/inv_model')
+        playerModel = anim_game_item:ret(player.serializable.path, player.serializable.id .. '/stats_menu_model')
         playerModel:fill_transient_data()
         playerModel:set_position(0, 0, 0)
         playerModel:scale(0.4, 0.4, 0.4)

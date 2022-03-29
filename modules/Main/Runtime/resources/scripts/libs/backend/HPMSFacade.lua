@@ -5,11 +5,6 @@
 -- C++ backend facade.
 --
 
-dependencies = {
-    ----'Context.lua',
-    --'libs/utils/Utils.lua'
-}
-
 backend = { }
 
 function backend:get()
@@ -35,6 +30,10 @@ function backend:get()
             end,
 
             make_node = function(name)
+                return { dummy_id = 'Node[' .. name .. ']' }
+            end,
+
+            make_child_node = function(name, parent)
                 return { dummy_id = 'Node[' .. name .. ']' }
             end,
 
@@ -297,13 +296,13 @@ function backend:get()
 
         }
     else
-        log_debug('Using HPMS functions')
         return {
             make_entity = hpms.make_entity,
             make_depth_entity = hpms.make_depth_entity,
             make_collision_entity = hpms.make_collision_entity,
             delete_entity = hpms.delete_entity,
             make_node = hpms.make_node,
+            make_child_node = hpms.make_child_node,
             delete_node = hpms.delete_node,
             make_animator = hpms.make_animator,
             delete_animator = hpms.delete_animator,

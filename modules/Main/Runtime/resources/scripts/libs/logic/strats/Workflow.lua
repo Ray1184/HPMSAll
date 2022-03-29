@@ -108,6 +108,12 @@ function workflow:new(sceneMgr)
         end
     end
 
+    function workflow:clear()
+        for i = 1, #self.workflows do
+            self.workflows[i] = nil
+        end
+    end
+
     return this
 end
 

@@ -40,3 +40,32 @@ function drop_from_inventory(player, itemId)
     item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
 
 end
+
+function calculate_cursor_and_offset(cursorIndex, cursorSize, inventorySize)
+
+    local downShift = math.floor(cursorSize / 2)
+    local upShift = math.floor(cursorSize / 2)
+    if cursorSize % 2 == 0 then
+        upShift = upShift + 1
+    end
+    if cursorIndex <= downShift + 1 then
+        return {
+            cursor_slot = cursorIndex,
+            display_from = 1,
+            display_to = cursorSize
+        }
+    elseif cursorIndex >= inventorySize -(downShift - 1) then
+        return {
+            cursor_slot = cursorSize -(inventorySize - cursorIndex),
+            display_from = inventorySize -(cursorSize -(downShift - 1)),
+            display_to = inventorySize
+        }
+    else
+        return {
+            cursor_slot = downShift + 1,
+            display_from = cursorIndex - downShift,
+            display_to = cursorIndex + upShift
+        }
+    end
+
+end

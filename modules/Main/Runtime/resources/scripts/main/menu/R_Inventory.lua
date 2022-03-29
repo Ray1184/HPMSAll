@@ -1,5 +1,6 @@
 -- Scene script.
 dependencies = {
+    'libs/utils/TransformsCommon.lua',
     'libs/gui/Image2D.lua',
     'libs/gui/OutputText2D.lua',
     'libs/logic/gameplay/TextHelper.lua',
@@ -25,6 +26,7 @@ scene = {
         insp = inspector:get()
         gsm = global_state_manager:new()
         bm = bundle_manager:new()
+        trx = transform:get()
 
         cam = lib.get_camera()
         cam.near = 0.05
@@ -36,6 +38,7 @@ scene = {
         input_prf = input_profile:new(context:get_input_profile())
 
         wk = workflow:new(scn_mgr)
+        wkModels = workflow:new(scn_mgr)
         seq = workflow_sequences:new()
 
         player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)
@@ -64,24 +67,22 @@ scene = {
                 scene.next = 'main/scenes/' .. lastRoom .. '.lua'
                 scene.finished = true
             end )
-        } , function() return input_prf:action_done_once(k.input_actions.INVENTORY) end, false, 'Exit inventory')
+        } , function() return input_prf:action_done_once(k.input_actions.INVENTORY) or input_prf:action_done_once(k.input_actions.EXIT) end, false, 'Exit inventory')
 
         wk:add_workflow( {
             seq:pipe( function(tpf)
                 if selectedIndex > 1 then
                     selectedIndex = selectedIndex - 1
-                    local barBoxIndex = selectedIndex - 1
-                    itemsBar:set_position(10, 55 +(16 * barBoxIndex))
+                    draw_item_list(player:get_inventory(), slots, selectedIndex, itemsBar)
                 end
             end )
         } , function() return input_prf:action_done_once(k.input_actions.UP) end, true, 'Move slot up')
 
         wk:add_workflow( {
             seq:pipe( function(tpf)
-                if selectedIndex < 5 then
+                if selectedIndex < #player:get_inventory().objects then
                     selectedIndex = selectedIndex + 1
-                    local barBoxIndex = selectedIndex - 1
-                    itemsBar:set_position(10, 55 +(16 * barBoxIndex))
+                    draw_item_list(player:get_inventory(), slots, selectedIndex, itemsBar)
                 end
             end )
         } , function() return input_prf:action_done_once(k.input_actions.DOWN) end, true, 'Move slot down')
@@ -91,14 +92,11 @@ scene = {
         gui = image_2d:new(TYPE_POLYGON, invBox, 0, 0, 'menu/O_Inventory.png', 99)
         gui:set_visible(true)
 
-        -- Item list.       
+        -- Item list.
         local barBox = { lib.vec2(0, 0), lib.vec2(147, 0), lib.vec2(147, 20), lib.vec2(0, 20) }
         itemsBar = image_2d:new(TYPE_POLYGON, barBox, 0, 0, 'menu/Bar_Items.png', 100)
-        
+
         draw_item_list(player:get_inventory(), slots, selectedIndex, itemsBar)
-
-
-
 
 
     end,
@@ -112,6 +110,7 @@ scene = {
         -- Update function callback.
         scn_mgr:poll_events(tpf)
         wk:poll_events(tpf)
+        wkModels:poll_events(tpf)
 
     end,
     cleanup = function()
@@ -123,6 +122,9 @@ scene = {
         gui:delete()
         clear_item_list(slots)
         itemsBar:delete()
+        if selectedModel ~= nil then
+            selectedModel:delete_transient_data()
+        end
 
     end
 }
@@ -130,42 +132,54 @@ scene = {
 function clear_item_list(slots)
     for i = 1, #slots do
         delete_text_label(slots[i])
+        slots[i] = nil
     end
-   
+
 end
 
 function draw_item_list(inventory, slots, selectedIndex, itemsBar)
     clear_item_list(slots)
-    local itemToDisplay = k.INVENTORY_DISPLAY_LIST_SIZE
-    local barBoxIndex = selectedIndex - 1
-    itemsBar:set_position(10, 55 +(20 * barBoxIndex))
 
     local countItems = #inventory.objects
-    local from = 1 -- TODO
-    local to = itemToDisplay -- TODO
+    local settings = calculate_cursor_and_offset(selectedIndex, k.INVENTORY_DISPLAY_LIST_SIZE, countItems)
+
+    -- Cursor
+    itemsBar:set_position(10, 55 +(16 *(settings.cursor_slot - 1)))
+
+    -- Labels
+    local from = settings.display_from
+    local to = settings.display_to
     local rndIndex = 0
     for i = from, to do
         local id = inventory.objects[i].id
         local currObject = context:get_full_ref(id)
         local invLabel = bm:msg(currObject:get_properties().name)
-
         table.insert(slots, create_text_label('inv_item_' .. rndIndex, invLabel, lib, 12, 58 +(16 * rndIndex)))
         rndIndex = rndIndex + 1
     end
-end
 
-function limit_up(val, limit)
-    if val <= limit then
-        return limit
-    else
-        return val
+    -- Model
+    local id = inventory.objects[selectedIndex].id
+    local selectedItem = context:get_full_ref(id)
+    if selectedModel ~= nil then
+        selectedModel:delete_transient_data()
     end
-end
 
-function limit_down(val, limit)
-    if val >= limit then
-        return limit
-    else
-        return val
-    end
+    -- Note: for position offset use control node and child node for rotation and scale
+    selectedModel = game_item:ret(selectedItem.serializable.path, selectedItem.serializable.id .. '/inv_menu_model')
+    selectedModel:fill_transient_data()    
+    local offsetPos = selectedItem:get_properties().inventory_position_offset
+    local offsetRot = selectedItem:get_properties().inventory_rotation_offset
+    local offsetScale = selectedItem:get_properties().inventory_scale_offset    
+    selectedModel:rotate(offsetRot.x, offsetRot.y, offsetRot.z)
+    selectedModel:scale(offsetScale.x, offsetScale.y, offsetScale.z)
+    selectedModel.transient.ctrl_node.position = lib.vec3(offsetPos.x, offsetPos.y, offsetPos.z)
+    wkModels:clear()
+
+    wkModels:add_workflow( {
+        seq:pipe( function(tpf)
+            trx.rotate(selectedModel.transient.ctrl_node, 0, 0, 200 * tpf)
+            selectedModel:update(tpf)
+        end,true)
+    } , nil, true, 'Animate model')
 end
