@@ -73,6 +73,7 @@ scene = {
         -- Cleanup function callback.
         scn_mgr:delete_all()
         seq:delete_all()
+        lib.cleanup_pending()
 
     end
 }

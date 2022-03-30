@@ -28,10 +28,10 @@ scene = {
         cam.far = 100
         cam.fovy = lib.to_radians(40)
 
-        scn_mgr = scene_manager:new(scene.name, cam)
-        actors_mgr = actors_manager:new(scn_mgr)
+        scnMgr = scene_manager:new(scene.name, cam)
+        actorsMgr = actors_manager:new(scnMgr)
 
-        wk = workflow:new(scn_mgr)
+        wk = workflow:new(scnMgr)
         seq = workflow_sequences:new()
 
         player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)
@@ -39,7 +39,7 @@ scene = {
         lamp = lib.make_light(lib.vec3(2, 2, 2))
         lamp.position = lib.vec3(-0.675, -2, 0.55)
 
-        scn_mgr:sample_view_by_callback( function() return true end, 'menu/B_Stats.png', lib.vec3(-0.675, -2, 0.55), lib.quat(0.707107, 0.707107, 0, 0))
+        scnMgr:sample_view_by_callback( function() return true end, 'menu/B_Stats.png', lib.vec3(-0.675, -2, 0.55), lib.quat(0.707107, 0.707107, 0, 0))
 
 
         wk:add_workflow( {
@@ -57,7 +57,7 @@ scene = {
                 scene.next = 'main/scenes/' .. lastRoom .. '.lua'
                 scene.finished = true
             end )
-        } , function() return input_prf:action_done_once(k.input_actions.INVENTORY) end, false, 'Exit inventory')
+        } , function() return inputPrf:action_done_once(k.input_actions.INVENTORY) end, false, 'Exit inventory')
 
         -- Base graphics
         local invBox = { lib.vec2(10, 0), lib.vec2(320, 0), lib.vec2(320, 200), lib.vec2(0, 200) }
@@ -93,14 +93,14 @@ scene = {
     end,
     input = function(keys, mouse_buttons, x, y)
         -- Input function callback.
-        input_prf:poll_inputs(keys, mouse_buttons)
+        inputPrf:poll_inputs(keys, mouse_buttons)
 
 
     end,
     update = function(tpf)
         -- Update function callback.
 
-        scn_mgr:poll_events(tpf)
+        scnMgr:poll_events(tpf)
         wk:poll_events(tpf)
 
     end,
@@ -115,16 +115,17 @@ scene = {
         delete_text_label(moneyLabel)
         delete_text_label(lvLabel)
         delete_text_label(nameLabel)
-        scn_mgr:delete_all()
-        actors_mgr:delete_all()
+        scnMgr:delete_all()
+        actorsMgr:delete_all()
         seq:delete_all()
         gui:delete()
+        lib.cleanup_pending()
 
     end
 }
 
 function fill_bar(x, y, val, max, iconName)
-    local amount = 32.0 *(val / max)
+    local amount = 32 *(val / max)
     local refs = { }
     local xPos = x
     for i = 1, amount do

@@ -63,6 +63,27 @@ void hpms::SupplierAdaptee::SetAmbientLight(const glm::vec3& rgb)
     (ctx)->GetSceneManager()->setAmbientLight(Ogre::ColourValue(rgb.x, rgb.y, rgb.z));
 }
 
+hpms::WalkmapAdapter* hpms::SupplierAdaptee::CreateWalkmap(const std::string& name)
+{
+    return hpms::SafeNew<hpms::WalkmapAdaptee>(name);
+}
+
+void hpms::SupplierAdaptee::CleanupPending()
+{
+    // Deleting all created overlay.
+    //Ogre::OverlayManager* overlayManager = ctx->GetOverlayManager();
+    //overlayManager->destroyAllOverlayElements();
+    //overlayManager->destroyAll();
+}
+
+std::string hpms::SupplierAdaptee::GetImplName()
+{
+    std::stringstream ss;
+    ss << "Ogre 3D " << OGRE_VERSION_MAJOR << "." << OGRE_VERSION_MINOR << "." << OGRE_VERSION_PATCH << " (" << OGRE_VERSION_NAME << ")";
+    return ss.str();
+}
+
+
 hpms::SupplierAdaptee::SupplierAdaptee(hpms::OgreContext* ctx) : AdapteeCommon(ctx)
 {
     Check();
@@ -79,16 +100,6 @@ hpms::SupplierAdaptee::~SupplierAdaptee()
     hpms::WalkmapManager::GetSingleton().unloadAll();
 }
 
-hpms::WalkmapAdapter* hpms::SupplierAdaptee::CreateWalkmap(const std::string& name)
-{
-    return hpms::SafeNew<hpms::WalkmapAdaptee>(name);
-}
 
-std::string hpms::SupplierAdaptee::GetImplName()
-{
-    std::stringstream ss;
-    ss << "Ogre 3D " << OGRE_VERSION_MAJOR << "." << OGRE_VERSION_MINOR << "." << OGRE_VERSION_PATCH << " (" << OGRE_VERSION_NAME << ")";
-    return ss.str();
-}
 
 

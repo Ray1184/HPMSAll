@@ -182,13 +182,12 @@ std::string hpms::OverlayTextAreaAdaptee::ProcessLine(const std::string& text, f
 }
 
 
-hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName, const std::string& fontName, float fontSize, int x, int y, int width, int height, int zOrder, hpms::OgreContext* ctx) : name(boxName),
-                                                                                                                                                                                                         AdapteeCommon(ctx),
+hpms::OverlayTextAreaAdaptee::OverlayTextAreaAdaptee(const std::string& boxName, const std::string& fontName, float fontSize, int x, int y, int width, int height, int zOrder, hpms::OgreContext* ctx) : AdapteeCommon(ctx),
                                                                                                                                                                                                          ogrePanel(nullptr),
                                                                                                                                                                                                          overlay(nullptr)
 {
     Check();
-    std::string name = boxName + "_" + std::to_string(x) + std::to_string(y) + std::to_string(zOrder);
+    name = boxName + "_" + std::to_string(x) + std::to_string(y) + std::to_string(zOrder);
     Ogre::OverlayManager* overlayManager = ctx->GetOverlayManager();
     overlay = overlayManager->getByName("OverlayText_" + name);
     if (overlay == nullptr)

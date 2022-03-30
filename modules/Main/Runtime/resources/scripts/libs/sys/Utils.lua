@@ -57,6 +57,7 @@ local function remove_by_key(tab, val)
 end
 
 function safe_string(str)
+    str = str or ''
     local ret = ''
     for i = 1, #str do
         local c = str:sub(i, i)

@@ -29,6 +29,8 @@ function game_mechanics_consts:get()
 
         INVENTORY_DISPLAY_LIST_SIZE = 5,
 
+        ACTIONS_DISPLAY_LIST_SIZE = 3,
+
         input_actions =
         {
             INVENTORY = 'INVENTORY',
@@ -132,20 +134,22 @@ function game_mechanics_consts:get()
         },
         item_actions =
         {
-            USE = 0,
-            CHECK = 1,
-            DROP = 2,
-            EQUIP = 3,
-            EAT_DRINK = 4,
-            RELOAD = 5,
-            READ = 6
+            USE = 'actions_use',
+            SEARCH = 'actions_search',
+            CHECK = 'actions_check',
+            DROP = 'actions_drop',
+            EQUIP = 'actions_equip',
+            EAT_DRINK = 'actions_eat_drink',
+            RELOAD = 'actions_reload',
+            READ = 'actions_read'
         },
         item_events =
         {
             PICK = 0,
             COLLISION = 1,
             DROP = 2,
-            PUSH = 3
+            PUSH = 3,
+            ACTION = 4
         },
         actor_events =
         {

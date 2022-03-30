@@ -419,18 +419,26 @@ namespace hpms
                     .addFunction("anim_finished", &hpms::LuaExtensions::LAnimationFinished)
                     .addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
                     .addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
-                    .addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
-                    .addFunction("load_file", &hpms::LuaExtensions::SLLoadStringFile)
-                    .addFunction("write_file", &hpms::LuaExtensions::SLWriteStringFile)
+                    .addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)                    
                     .endNamespace();
         }
 
         inline static void RegisterSysLogic(lua_State* state)
         {
             getGlobalNamespace(state)
-                    .beginNamespace("_hpms")
-                    .addFunction("log_msg", &hpms::LuaExtensions::SLLogMessage)
+                    .beginNamespace("hpms")
+                    .addFunction("cleanup_pending", &hpms::LuaExtensions::SLCleanupPending)
+                    .addFunction("load_file", &hpms::LuaExtensions::SLLoadStringFile)
+                    .addFunction("write_file", &hpms::LuaExtensions::SLWriteStringFile)
                     .endNamespace();
+        }
+
+        inline static void RegisterInnerSysLogic(lua_State* state)
+        {
+            getGlobalNamespace(state)
+                .beginNamespace("_hpms")
+                .addFunction("log_msg", &hpms::LuaExtensions::SLLogMessage)
+                .endNamespace();
         }
 
         inline static void RegisterDebug(lua_State* state)

@@ -87,13 +87,16 @@ scene = {
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
 
 
-        local obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_1.ID, 1)
+        local obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_1.ID, 6)
         local obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_2.ID, 0)
         local obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_3.ID, 2)
         local obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_4.ID, 20)
         local obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_5.ID, 200)
         local obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_6.ID, 5)
         local obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_7.ID, 76)
+        local obj8a = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 1)
+        local obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
+        local obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
 
         
         add_to_inventory(player, obj1)
@@ -103,6 +106,9 @@ scene = {
         add_to_inventory(player, obj5)
         add_to_inventory(player, obj6)
         add_to_inventory(player, obj7)
+        add_to_inventory(player, obj8a)
+        add_to_inventory(player, obj8b)
+        add_to_inventory(player, obj8c)
 
         log_warn(tostring(room_st))
         if not room_st:get_object(k.room_state_items.VARIABLES, 'init') then
@@ -381,6 +387,8 @@ scene = {
         lib.delete_light(lamp)
         lib.delete_node(mask_node)
         lib.delete_entity(mask)
+
+        lib.cleanup_pending()
 
 
     end

@@ -64,5 +64,7 @@ namespace hpms
 
         virtual hpms::WalkmapAdapter* CreateWalkmap(const std::string& name) = 0;
 
+        virtual void CleanupPending() = 0;
+
     };
 }

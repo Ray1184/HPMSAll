@@ -292,6 +292,10 @@ function backend:get()
 
             write_file = function(file, data)
                 log_debug('Writing data to ' .. file)
+            end,
+
+            cleanup_pending = function()
+                log_debung('Cleanup pending issues')
             end
 
         }
@@ -375,7 +379,8 @@ function backend:get()
 
             -- System.
             load_file = hpms.load_file,
-            write_file = hpms.write_file
+            write_file = hpms.write_file,
+            cleanup_pending = hpms.cleanup_pending
         }
     end
 end

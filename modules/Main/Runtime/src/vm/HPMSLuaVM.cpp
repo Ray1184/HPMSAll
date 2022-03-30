@@ -77,6 +77,7 @@ void hpms::LuaVM::RegisterAll()
     hpms::LuaRegister::RegisterAnimation(state);
     hpms::LuaRegister::RegisterLogic(state);
     hpms::LuaRegister::RegisterSysLogic(state);
+    hpms::LuaRegister::RegisterInnerSysLogic(state);
     hpms::LuaRegister::RegisterDebug(state);
 }
 

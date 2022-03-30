@@ -41,24 +41,25 @@ function drop_from_inventory(player, itemId)
 
 end
 
-function calculate_cursor_and_offset(cursorIndex, cursorSize, inventorySize)
-
+function calculate_cursor_and_offset(cursorIndex, cursorSize, repositorySize)
+    
     local downShift = math.floor(cursorSize / 2)
     local upShift = math.floor(cursorSize / 2)
     if cursorSize % 2 == 0 then
         upShift = upShift + 1
     end
+    log_warn('Even cursor can be unaligned, better use odd')
     if cursorIndex <= downShift + 1 then
         return {
             cursor_slot = cursorIndex,
             display_from = 1,
             display_to = cursorSize
         }
-    elseif cursorIndex >= inventorySize -(downShift - 1) then
+    elseif cursorIndex >= repositorySize -(downShift - 1) then
         return {
-            cursor_slot = cursorSize -(inventorySize - cursorIndex),
-            display_from = inventorySize -(cursorSize -(downShift - 1)),
-            display_to = inventorySize
+            cursor_slot = cursorSize -(repositorySize - cursorIndex),
+            display_from = (repositorySize - cursorSize) + 1,
+            display_to = repositorySize
         }
     else
         return {

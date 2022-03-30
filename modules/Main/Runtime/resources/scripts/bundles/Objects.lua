@@ -7,7 +7,7 @@ function get_bundle_set_1()
             -- Actions
             actions_equip = 'Equipaggia',
             actions_check = 'Esamina',
-            actions_search = 'Cerca / Parla',
+            actions_search = 'Cerca/Parla',
             actions_combat = 'Combatti',
             actions_stealth = 'Furtivo',
             actions_push = 'Spingi',
@@ -17,6 +17,7 @@ function get_bundle_set_1()
             actions_reload = 'Ricarica',
             actions_use = 'Usa',
             actions_read = 'Leggi',
+            actions_eat_drink = 'Mangia/Bevi',
 
             -- Objects
             items_misc_dummy_item_1_name = 'Oggetto di test A',
@@ -32,7 +33,9 @@ function get_bundle_set_1()
             items_misc_dummy_item_6_name = 'Oggetto di test F',
             items_misc_dummy_item_6_description = 'Questo è un oggetto di test (F) utilizzato per vedere se funziona tutto correttamente',
             items_misc_dummy_item_7_name = 'Oggetto di test G',
-            items_misc_dummy_item_7_description = 'Questo è un oggetto di test (G) utilizzato per vedere se funziona tutto correttamente'
+            items_misc_dummy_item_7_description = 'Questo è un oggetto di test (G) utilizzato per vedere se funziona tutto correttamente',
+            items_misc_dummy_item_8_name = 'Oggetto di test H',
+            items_misc_dummy_item_8_description = 'Questo è un oggetto di test (H) utilizzato per vedere se funzionano istanze multiple'
 
 
         }

@@ -509,6 +509,12 @@ namespace hpms
 			return hpms::WriteStringData(fileName, data);
 		}
 
+
+		static inline void SLCleanupPending()
+		{
+			hpms::GetSupplier()->CleanupPending();
+		}
+
 		// Debug Utils.
 		static inline void DDebugDrawClear()
 		{

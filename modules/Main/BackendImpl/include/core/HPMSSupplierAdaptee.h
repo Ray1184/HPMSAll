@@ -49,5 +49,7 @@ namespace hpms
 
         virtual std::string GetImplName() override;
 
+        virtual void CleanupPending() override;
+
     };
 }
