@@ -141,12 +141,10 @@ function collectible:ret(path, id, amount)
             local queuedEvent = {
                 id = k.queued_events.DROP_ITEMS,
                 condition = nil,
-                action = function() remove_from_inventory(evtInfo.player, self.serializable.id, true) end
+                action = function() remove_from_inventory(evtInfo.player, self.serializable.id, true, evtInfo.room_id) end
             }
             eqm:push(queuedEvent)
             local allEvents = context:get_all_events()
-            log_debug(#allEvents .. ' ready to consume')
-
             evtInfo.response = {
                 quit_inventory = true
             }

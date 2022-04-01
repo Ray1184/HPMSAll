@@ -28,12 +28,8 @@ function room_state:ret(id)
         local new = {
             serializable =
             {
-                state =
-                {
-                    actors = { },
-                    collectibles = { },
-                    variables = { }
-                }
+                collectibles = { },
+                variables = { }
             }
         }
 
@@ -59,19 +55,27 @@ function room_state:ret(id)
         return insp.inspect(o)
     end
 
-    function room_state:get_state()
-        return self.serializable.state
+    function room_state:get_var(varName)
+        return self.serializable.variables[varName]
     end
 
-    function room_state:get_object(objectCat, objectId)
-        return self.serializable.state[objectCat][objectId]
+    function room_state:set_var(varName, var)
+        self.serializable.variables[varName] = var
     end
 
-    function room_state:set_object(objectCat, objectId, object)
-        if object == nil then
-            remove_by_key(self.serializable.state[objectCat], objectId)
-        else
-            self.serializable.state[objectCat][objectId] = object
+    function room_state:add_collectible(obj)
+        table.insert(self.serializable.collectibles, obj)
+    end
+
+    function room_state:load_dropped_collectibles()
+        for i = 1, #self.serializable.collectibles do
+            self.serializable.collectibles[i].fill_transient_data()
+        end
+    end
+
+    function room_state:delete_dropped_collectibles()
+        for i = 1, #self.serializable.collectibles do
+            self.serializable.collectibles[i].delete_transient_data()
         end
     end
 

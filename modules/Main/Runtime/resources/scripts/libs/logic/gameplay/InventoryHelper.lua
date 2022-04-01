@@ -9,7 +9,8 @@ dependencies = {
     'libs/backend/HPMSFacade.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/models/Player.lua',
-    'libs/logic/models/Collectible.lua'
+    'libs/logic/models/Collectible.lua',
+    'libs/logic/models/RoomState.lua'
 }
 
 function add_to_inventory(player, item)
@@ -22,7 +23,7 @@ function add_to_inventory(player, item)
     table.insert(invSlots, item.serializable)
 end
 
-function remove_from_inventory(player, itemId, drop)
+function remove_from_inventory(player, itemId, drop, roomId)
     local item = context:get_full_ref(itemId)
     local invSlots = player:get_inventory().objects
     local newInvSlots = { }
@@ -41,6 +42,7 @@ function remove_from_inventory(player, itemId, drop)
         local offset = item.not_serializable.properties.scene_drop_position_offset
         local playerPos = player:get_position()
         item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
+        local roomState = room_state:ret(roomId)
     end
     return item
 end

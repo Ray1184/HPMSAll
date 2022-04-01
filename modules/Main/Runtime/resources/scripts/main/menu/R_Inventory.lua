@@ -104,6 +104,7 @@ scene = {
                     local evt =
                     {
                         name = k.item_events.ACTION,
+                        room_id = gsm:get_session_var(k.session_vars.LAST_ROOM),
                         player = player,
                         action = selectedItem:get_properties().allowed_actions[actionIndex]
                     }

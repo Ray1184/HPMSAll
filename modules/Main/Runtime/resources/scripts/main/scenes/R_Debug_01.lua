@@ -102,7 +102,7 @@ scene = {
 
 
         log_warn(tostring(room_st))
-        if not room_st:get_object(k.room_state_items.VARIABLES, 'init') then
+        if not room_st:get_var('init') then
 
             add_to_inventory(player, obj1)
             add_to_inventory(player, obj2)
@@ -126,7 +126,7 @@ scene = {
             invSlots = player:get_inventory().objects
 
 
-            room_st:set_object(k.room_state_items.VARIABLES, 'init', true)
+            room_st:set_var('init', true)
             log_warn(tostring(room_st))
         else
             log_warn('RETURN BACK IN ROOM')
@@ -135,7 +135,7 @@ scene = {
 
 
 
-
+        room_st:load_dropped_collectibles()
         actors_mgr:init_events()
 
         -- log_warn(insp.inspect(player))
@@ -375,6 +375,7 @@ scene = {
         -- lib.delete_entity(entity_ey_dummyanim)
 
         -- View CM_01 delete
+        room_st:delete_dropped_collectibles()
         actors_mgr:delete_all()
         scn_mgr:delete_all()
         seq:delete_all()
