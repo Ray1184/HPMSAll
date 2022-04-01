@@ -9,7 +9,9 @@
 dependencies = {
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/thirdparty/Inspect.lua'
+    'libs/thirdparty/Inspect.lua',
+    'libs/logic/gameplay/InventoryHelper.lua',
+    'libs/logic/managers/EventQueueManager.lua'
 }
 
 collectible = { }
@@ -18,6 +20,7 @@ function collectible:ret(path, id, amount)
     lib = backend:get()
     k = game_mechanics_consts:get()
     insp = inspector:get()
+    eqm = event_queue_manager:new()
 
     local ret = game_item:ret(path, id)
     local id = 'collectible/' .. id
@@ -71,7 +74,7 @@ function collectible:ret(path, id, amount)
 
     metainf.metainfo.override = merge_tables(metainf.metainfo.override, ret.metainfo.override)
 
-    this = merge_tables(this, metainf)    
+    this = merge_tables(this, metainf)
 
     setmetatable(this, self)
     self.__index = self
@@ -131,15 +134,39 @@ function collectible:ret(path, id, amount)
     end
 
     function collectible:event(tpf, evtInfo)
+        -- Process standard events.
+        local cbks = { }
+        local dropped = false
+        cbks[k.item_actions.DROP] = function()
+            local queuedEvent = {
+                id = k.queued_events.DROP_ITEMS,
+                condition = nil,
+                action = function() remove_from_inventory(evtInfo.player, self.serializable.id, true) end
+            }
+            eqm:push(queuedEvent)
+            local allEvents = context:get_all_events()
+            log_debug(#allEvents .. ' ready to consume')
+
+            evtInfo.response = {
+                quit_inventory = true
+            }
+            dropped = true
+        end
+
+        if cbks[evtInfo.action] ~= nil then
+            cbks[evtInfo.action]()
+        end
+
         if self.metainfo.evt_callback ~= nil then
             self.metainfo.evt_callback(tpf, evtInfo)
         end
+
     end
 
     function collectible:kill_instance()
         self.metainfo.override.game_item.kill_instance(self)
     end
-       
+
     context:put_full_ref_obj(this)
 
     return this

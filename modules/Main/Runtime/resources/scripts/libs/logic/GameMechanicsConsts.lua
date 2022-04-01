@@ -175,9 +175,12 @@ function game_mechanics_consts:get()
         },
         session_vars =
         {
-            LAST_ROOM = 'last_room',
-            CURRENT_PLAYER_ID = 'current_player_id',
-            CURRENT_PLAYER_REF = 'current_player_ref'
+            LAST_ROOM = 'var_last_room',
+            CURRENT_PLAYER_ID = 'var_current_player_id',
+            CURRENT_PLAYER_REF = 'var_current_player_ref'
+        },
+        queued_events = {
+            DROP_ITEMS = 'evt_drop_items'
         }
 
     }

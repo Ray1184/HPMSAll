@@ -121,7 +121,7 @@ function game_item:ret(path, id)
     end
 
     function game_item:fill_transient_data()
-        if self.serializable.expired then
+        if self.serializable.expired or self.transientDataInit then
             return
         end
         local controlNode = lib.make_node('ctrl_node_' .. self.serializable.id)

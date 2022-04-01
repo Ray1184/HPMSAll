@@ -13,10 +13,12 @@ function context:new()
 
     cats = {
         STATE = 'state',
+        EVENTS = 'events',
         SERIALIZABLES = 'serializables',
         INSTANCES = 'instances',
         FULL_REFS = 'full_refs',
-        BUNDLES = 'bundles'
+        BUNDLES = 'bundles',
+
     }
 
     local ctx = { dummy = false }
@@ -147,7 +149,7 @@ end
 function context:inst()
     if self.instance == nil then
         log_info('New context created')
-        self.instance = self:new()    
+        self.instance = self:new()
     end
     return self.instance
 end
@@ -194,6 +196,40 @@ function context:get_state(key)
         return nil
     end
     return self.instance[cats.STATE][key]
+end
+
+
+function context:put_event(key, obj)
+    if key == nil then
+        log_warn('Key cannot be nil')
+        return
+    end
+    self.instance[cats.EVENTS][key] = obj
+    log_warn('instnace: ' .. tostring(self.instance[cats.EVENTS][key].id))
+end
+
+function context:get_all_events()
+    return self.instance[cats.EVENTS]
+end
+
+function context:get_event(key)
+    if key == nil then
+        log_error('Key cannot be nil')
+        return nil
+    end
+    if self.instance[cats.EVENTS][key] == nil then
+        log_warn('Event object ' .. key .. ' is nil in context')
+        return nil
+    end
+    return self.instance[cats.EVENTS][key]
+end
+
+function context:remove_event(key)
+    if key == nil then
+        log_error('Key cannot be nil')
+        return nil
+    end
+    self.instance[cats.EVENTS][key] = nil
 end
 
 function context:register_instance(subcat, id, retrieveCallback)

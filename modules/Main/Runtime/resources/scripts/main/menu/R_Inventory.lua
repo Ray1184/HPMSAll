@@ -9,6 +9,7 @@ dependencies = {
     'libs/logic/managers/GlobalStateManager.lua',
     'libs/thirdparty/Inspect.lua',
     'libs/logic/managers/BundleManager.lua',
+    'libs/logic/gameplay/InventoryHelper.lua',
     'Framework.lua'
 }
 
@@ -103,9 +104,18 @@ scene = {
                     local evt =
                     {
                         name = k.item_events.ACTION,
-                        index = actionIndex
+                        player = player,
+                        action = selectedItem:get_properties().allowed_actions[actionIndex]
                     }
-                    if selectedItem:event(tpf, evt) then
+                    log_debug('Triggering action ' .. tostring(evt.action) .. ' for item ' .. selectedItem.serializable.id)
+                    selectedItem:event(tpf, evt)
+                    evt.response = evt.response or { }
+                    if evt.response.quit_inventory then
+                        local lastRoom = gsm:get_session_var(k.session_vars.LAST_ROOM)
+                        gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+                        scene.next = 'main/scenes/' .. lastRoom .. '.lua'
+                        scene.finished = true
+                    else
                         scope = SCOPE_LIST
                         update_view(player:get_inventory(), false)
                     end
@@ -246,6 +256,10 @@ function update_view(inventory, redraw)
         clear_item_list(slots)
 
         local countItems = #inventory.objects
+
+        if countItems == 0 then
+            return
+        end
         local settings = calculate_cursor_and_offset(selectedIndex, k.INVENTORY_DISPLAY_LIST_SIZE, countItems)
 
         -- Cursor

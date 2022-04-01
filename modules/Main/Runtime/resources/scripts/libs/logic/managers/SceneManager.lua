@@ -6,7 +6,6 @@
 --
 
 dependencies = {
-    -- 'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua'
 }
 

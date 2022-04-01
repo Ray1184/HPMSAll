@@ -22,34 +22,50 @@ function add_to_inventory(player, item)
     table.insert(invSlots, item.serializable)
 end
 
-function drop_from_inventory(player, itemId)
+function remove_from_inventory(player, itemId, drop)
+    local item = context:get_full_ref(itemId)
     local invSlots = player:get_inventory().objects
     local newInvSlots = { }
-    local item = nil
+    local insp = inspector.get()
     for i = 1, #invSlots do
-        if invSlots[i].serializable.id == itemId then
+        if invSlots[i].id == item.serializable.id then
             toRemove = invSlots[i]
         else
             table.insert(newInvSlots, invSlots[i])
         end
     end
     player:get_inventory().objects = newInvSlots
-    item.serializable.picked = false
-    local offset = item.not_serializable.properties.scene_drop_position_offset
-    local playerPos = player:get_position()
-    item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
 
+    if drop then
+        item.serializable.picked = false
+        local offset = item.not_serializable.properties.scene_drop_position_offset
+        local playerPos = player:get_position()
+        item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
+    end
+    return item
 end
 
 function calculate_cursor_and_offset(cursorIndex, cursorSize, repositorySize)
-    
+
     local downShift = math.floor(cursorSize / 2)
     local upShift = math.floor(cursorSize / 2)
     if cursorSize % 2 == 0 then
         upShift = upShift + 1
+        log_warn('Even cursor can be unaligned, better use odd')
     end
-    log_warn('Even cursor can be unaligned, better use odd')
-    if cursorIndex <= downShift + 1 then
+    if repositorySize == 0 then
+        return {
+            cursor_slot = 1,
+            display_from = 1,
+            display_to = 1
+        }
+    elseif repositorySize <= cursorSize then
+        return {
+            cursor_slot = cursorIndex,
+            display_from = 1,
+            display_to = repositorySize
+        }
+    elseif cursorIndex <= downShift + 1 then
         return {
             cursor_slot = cursorIndex,
             display_from = 1,

@@ -52,6 +52,9 @@ function dummy_item_1:ret(idSuffix, amount)
     end
 
     this:set_event_callback( function(tpf, evtInfo)
+        evtInfo.response = {
+            quit_inventory = true
+        }
     end )
 
     return this

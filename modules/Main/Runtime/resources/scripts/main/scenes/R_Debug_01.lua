@@ -9,12 +9,13 @@ dependencies = {
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
-    'libs/logic/strats/Workflow.lua',
-    'libs/logic/strats/WorkflowSequences.lua',
+    'libs/logic/gameplay/Workflow.lua',
+    'libs/logic/gameplay/WorkflowSequences.lua',
     'libs/logic/gameplay/InventoryHelper.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
-    'libs/logic/managers/GlobalStateManager.lua'
+    'libs/logic/managers/GlobalStateManager.lua',
+    'libs/logic/managers/EventQueueManager.lua'
 }
 
 scene = {
@@ -47,6 +48,7 @@ scene = {
         actors_mgr = actors_manager:new(scn_mgr)
         wk = workflow:new(scn_mgr)
         seq = workflow_sequences:new()
+        eqm = event_queue_manager:new()
 
 
         -- Collision map R_Debug_01 setup
@@ -98,20 +100,21 @@ scene = {
         local obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
         local obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
 
-        
-        add_to_inventory(player, obj1)
-        add_to_inventory(player, obj2)
-        add_to_inventory(player, obj3)
-        add_to_inventory(player, obj4)
-        add_to_inventory(player, obj5)
-        add_to_inventory(player, obj6)
-        add_to_inventory(player, obj7)
-        add_to_inventory(player, obj8a)
-        add_to_inventory(player, obj8b)
-        add_to_inventory(player, obj8c)
 
         log_warn(tostring(room_st))
         if not room_st:get_object(k.room_state_items.VARIABLES, 'init') then
+
+            add_to_inventory(player, obj1)
+            add_to_inventory(player, obj2)
+            add_to_inventory(player, obj3)
+            add_to_inventory(player, obj4)
+            add_to_inventory(player, obj5)
+            add_to_inventory(player, obj6)
+            add_to_inventory(player, obj7)
+            add_to_inventory(player, obj8a)
+            add_to_inventory(player, obj8b)
+            add_to_inventory(player, obj8c)
+
             log_warn('FIRST TIME IN ROOM')
             player:set_action_mode(7)
             player.serializable.performing_action = true
@@ -197,7 +200,7 @@ scene = {
         -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
         -- scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'SG_01' else return false end end, background_cm_01, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         -- scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
-        log_debug(scn_mgr)
+        eqm:consume_all()
         -- Entity EY_DummyAnim setup
         -- entity_ey_dummyanim = lib.make_entity('EY_DummyAnim.mesh')
         -- entity_node_ey_dummyanim = lib.make_node('EY_DummyAnimNode')
