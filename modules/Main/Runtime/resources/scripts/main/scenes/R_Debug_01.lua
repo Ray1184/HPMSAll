@@ -28,7 +28,7 @@ scene = {
         -- TODOBATCH-BEGIN g.res_refs.actors.DUMMY_PLAYER.ID
 
         context:inst():disable_dummy()
-        enable_debug()
+        disable_debug()
         -- TODOBATCH-END
 
         -- Base scene setup
@@ -89,21 +89,24 @@ scene = {
         chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
 
 
-        local obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_1.ID, 6)
-        local obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_2.ID, 0)
-        local obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_3.ID, 2)
-        local obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_4.ID, 20)
-        local obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_5.ID, 200)
-        local obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_6.ID, 5)
-        local obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_7.ID, 76)
-        local obj8a = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 1)
-        local obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
-        local obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
+        obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_1.ID, 8)
+        obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_2.ID, 0)
+        obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_3.ID, 2)
+        obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_4.ID, 20)
+        obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_5.ID, 200)
+        obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_6.ID, 5)
+        obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_7.ID, 76)
+        obj8a = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 1)
+        obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
+        obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
+        rev = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_REVOLVER.ID, 6)
+        --mag44ap = actors_mgr:create_item(g.res_refs.collectibles.MAG_44_AP.ID, 3)
 
 
-        log_warn(tostring(room_st))
         if not room_st:get_var('init') then
 
+            add_to_inventory(player, rev)
+            --add_to_inventory(player, mag44ap)
             add_to_inventory(player, obj1)
             add_to_inventory(player, obj2)
             add_to_inventory(player, obj3)
@@ -114,6 +117,7 @@ scene = {
             add_to_inventory(player, obj8a)
             add_to_inventory(player, obj8b)
             add_to_inventory(player, obj8c)
+             
 
             log_warn('FIRST TIME IN ROOM')
             player:set_action_mode(7)
@@ -127,7 +131,7 @@ scene = {
 
 
             room_st:set_var('init', true)
-            log_warn(tostring(room_st))
+
         else
             log_warn('RETURN BACK IN ROOM')
         end
@@ -334,12 +338,25 @@ scene = {
         player:move_dir(tpf * walkRatio * 1)
         -- player:update(tpf)
 
-        -- INVENTORY
+        -- INVENTORY PICK TEST
         if input_prf:action_done_once(k.input_actions.INVENTORY) then
+            gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_LIST)
+            gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
             gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
             scene.next = 'main/menu/R_Inventory.lua'
             scene.finished = true
         end
+        --if input_prf:action_done_once(k.input_actions.ACTION_3) then
+        --    gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_PICK)
+        --    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
+        --    gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+        --    gsm:put_session_var(k.session_vars.PICKED_ITEM_ID, obj1.serializable.id)
+        --    gsm:put_session_var(k.session_vars.PICKED_ITEM_AMOUNT, 1)
+        --    scene.next = 'main/menu/R_Inventory.lua'
+        --    scene.finished = true
+        --end
+
+
         -- TODOBATCH-END
 
         -- CUSTOM CODE STARTS HERE, DO NOT REMOVE THIS LINE [update]

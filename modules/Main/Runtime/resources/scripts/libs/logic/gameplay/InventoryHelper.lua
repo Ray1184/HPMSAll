@@ -43,6 +43,7 @@ function remove_from_inventory(player, itemId, drop, roomId)
         local playerPos = player:get_position()
         item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
         local roomState = room_state:ret(roomId)
+        roomState:add_collectible(item.serializable)
     end
     return item
 end

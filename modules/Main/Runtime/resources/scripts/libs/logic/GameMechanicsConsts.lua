@@ -176,12 +176,23 @@ function game_mechanics_consts:get()
         session_vars =
         {
             LAST_ROOM = 'var_last_room',
+            INV_ACTION = 'var_inv_action',
             CURRENT_PLAYER_ID = 'var_current_player_id',
-            CURRENT_PLAYER_REF = 'var_current_player_ref'
+            CURRENT_PLAYER_REF = 'var_current_player_ref',
+            PICKED_ITEM_ID = 'var_picked_item_id',
+            PICKED_ITEM_AMOUNT = 'var_picked_item_amount'
         },
-        queued_events = {
-            DROP_ITEMS = 'evt_drop_items'
+        queued_events =
+        {
+            DROP_ITEMS = 'evt_drop_items',
+        },
+        inventory_scope =
+        {
+            SCOPE_LIST = 1,
+            SCOPE_ACTIONS = 2,
+            SCOPE_PICK = 3
         }
+
 
     }
 end

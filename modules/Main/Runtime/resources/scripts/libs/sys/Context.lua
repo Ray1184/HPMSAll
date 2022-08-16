@@ -36,6 +36,22 @@ function context:set_serializable_data(data)
     self.instance[cats.SERIALIZABLES] = data
 end
 
+function context:update_serializable_data_obj(data)
+    self.instance:update_serializable_data(data.id, data)
+end
+
+function context:update_serializable_data(id, data)
+    self.instance[cats.SERIALIZABLES][id] = data
+end
+
+function context:update_full_ref_data(id, data)
+    if self.instance:get_full_ref(id) ~= nil then
+        local oldFullRef = self.instance:get_full_ref(id)
+        oldFullRef.serializable = data
+        self.instance:put_full_ref(oldFullRef)
+    end
+end
+
 function context:get_serializable_data()
     return self.instance[cats.SERIALIZABLES]
 end
@@ -205,7 +221,6 @@ function context:put_event(key, obj)
         return
     end
     self.instance[cats.EVENTS][key] = obj
-    log_warn('instnace: ' .. tostring(self.instance[cats.EVENTS][key].id))
 end
 
 function context:get_all_events()

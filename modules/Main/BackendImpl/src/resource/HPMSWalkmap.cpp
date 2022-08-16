@@ -12,7 +12,7 @@ void hpms::Walkmap::loadImpl()
     data = hpms::SafeNew<hpms::WalkmapData>();
     stream->read(buffer, size);
     pods::InputBuffer in(buffer, size);
-    pods::BinaryDeserializer<decltype(in)> deserializer(in);
+    POD_DESERIALIZER<decltype(in)> deserializer(in);
     if (deserializer.load(*data) != pods::Error::NoError)
     {
         std::stringstream ss;

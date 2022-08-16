@@ -9,7 +9,8 @@ dependencies = {
     'libs/backend/HPMSFacade.lua',
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/managers/ActorsHelper.lua',
-    'libs/logic/managers/ActorsEventsHelper.lua'
+    'libs/logic/managers/ActorsEventsHelper.lua',
+    'libs/logic/models/RoomState.lua'
 }
 
 actors_manager = { }
@@ -91,8 +92,16 @@ function actors_manager:new(sceneManager)
     function actors_manager:create_item(itemId, amount)
         local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.collectibles)
         local item = context:get_instance(k.inst_cat.COLLECTIBLES, itemId, idSuffix, amount)
+        local roomState = room_state:ret(self.scene_manager:get_scene_name())
+        if not roomState:has_item(item.serializable.id) then
+            log_debug('Item with id ' .. item.serializable.id .. ' not present in room state for ' .. self.scene_manager:get_scene_name())
+            item:fill_transient_data()
+        else
+            log_debug('Item with id ' .. item.serializable.id .. ' already stored in room state for ' .. self.scene_manager:get_scene_name())
+            item.serializable = roomState:get_item(item.serializable.id)
+            context:update_serializable_data_obj(item.serializable)
+        end
         self.loaded_collectibles[item.serializable.id] = item
-        self.loaded_collectibles[item.serializable.id]:fill_transient_data()       
         self.collectibles = self.collectibles + 1
         return self.loaded_collectibles[item.serializable.id]
     end
@@ -106,23 +115,23 @@ function actors_manager:new(sceneManager)
             return
         end
         -- Note: update_collision_env must be done for first, as the collision engine updates all collisors new positions.
-        -- After that we can manage the behavior based on new positions.        
-        self:update_actors(tpf)  
+        -- After that we can manage the behavior based on new positions.
+        self:update_actors(tpf)
         if self.loaded_player ~= nil then
             self:manage_pushes(tpf)
             self:manage_collisions(tpf)
-        end  
+        end
         lib.update_collision_env(self.scene_manager:get_collision_env(), tpf)
     end
 
     function actors_manager:manage_pushes(tpf)
         -- Push between player and pushables.
-        for ka, actor in pairs(self.loaded_actors) do            
+        for ka, actor in pairs(self.loaded_actors) do
             local pushing = actor.serializable.pushable
             pushing = pushing and self.loaded_player.serializable.action_mode == k.actor_action_mode.PUSH
             pushing = pushing and self.loaded_player.serializable.performing_action
-            if pushing and collision_actor_actor_custom(self.loaded_player, actor, lib, k.DEFAULT_MIN_PUSH_DISTANCE) then                
-                local evts_info = get_push_events(self.loaded_player, actor)               
+            if pushing and collision_actor_actor_custom(self.loaded_player, actor, lib, k.DEFAULT_MIN_PUSH_DISTANCE) then
+                local evts_info = get_push_events(self.loaded_player, actor)
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
             end
         end

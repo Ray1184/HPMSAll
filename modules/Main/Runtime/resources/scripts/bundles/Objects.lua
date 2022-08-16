@@ -1,24 +1,9 @@
-function get_bundle_set_1()
+function get_bundle_set_items()
     return {
 
         it =
         {
-
-            -- Actions
-            actions_equip = 'Equipaggia',
-            actions_check = 'Esamina',
-            actions_search = 'Cerca/Parla',
-            actions_combat = 'Combatti',
-            actions_stealth = 'Furtivo',
-            actions_push = 'Spingi',
-            actions_jump = 'Salta',
-            actions_swim = 'Nuota',
-            actions_drop = 'Getta',
-            actions_reload = 'Ricarica',
-            actions_use = 'Usa',
-            actions_read = 'Leggi',
-            actions_eat_drink = 'Mangia/Bevi',
-
+           
             -- Objects
             items_misc_dummy_item_1_name = 'Oggetto di test A',
             items_misc_dummy_item_1_description = 'Questo è un oggetto di test (A) utilizzato per vedere se funziona tutto correttamente',
@@ -35,7 +20,11 @@ function get_bundle_set_1()
             items_misc_dummy_item_7_name = 'Oggetto di test G',
             items_misc_dummy_item_7_description = 'Questo è un oggetto di test (G) utilizzato per vedere se funziona tutto correttamente',
             items_misc_dummy_item_8_name = 'Oggetto di test H',
-            items_misc_dummy_item_8_description = 'Questo è un oggetto di test (H) utilizzato per vedere se funzionano istanze multiple'
+            items_misc_dummy_item_8_description = 'Questo è un oggetto di test (H) utilizzato per vedere se funzionano istanze multiple',
+            items_misc_dummy_revolver_name = 'Revolver Dummy',
+            items_misc_dummy_revolver_description = 'Questa è un\'arma di prova, per testare le funzioni di sparo ed equipaggiamento',
+            items_misc_mag_44_ap_name = '44 Perforanti',
+            items_misc_mag_44_ap_description = 'Proiettili calibro 44 speciali con penetratore all\'uranio. Perforano fino a due pollici di acciaio'
 
 
         }

@@ -63,19 +63,37 @@ function room_state:ret(id)
         self.serializable.variables[varName] = var
     end
 
-    function room_state:add_collectible(obj)
-        table.insert(self.serializable.collectibles, obj)
+    function room_state:has_item(id)
+        for i = 1, #self.serializable.collectibles do
+            if self.serializable.collectibles[i].id == id then
+                return true
+            end
+        end
+        return false
+    end
+
+    function room_state:get_item(id)
+        for i = 1, #self.serializable.collectibles do
+            if self.serializable.collectibles[i].id == id then
+                return self.serializable.collectibles[i]
+            end
+        end
+        return nil
+    end
+
+    function room_state:add_collectible(ser)
+        table.insert(self.serializable.collectibles, ser)
     end
 
     function room_state:load_dropped_collectibles()
         for i = 1, #self.serializable.collectibles do
-            self.serializable.collectibles[i].fill_transient_data()
+            context:get_full_ref(self.serializable.collectibles[i].id):fill_transient_data()
         end
     end
 
     function room_state:delete_dropped_collectibles()
         for i = 1, #self.serializable.collectibles do
-            self.serializable.collectibles[i].delete_transient_data()
+            context:get_full_ref(self.serializable.collectibles[i].id):delete_transient_data()
         end
     end
 

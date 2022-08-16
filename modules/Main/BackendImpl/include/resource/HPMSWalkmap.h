@@ -10,8 +10,16 @@
 #include <common/HPMSUtils.h>
 #include <common/HPMSDefs.h>
 #include <pods/pods.h>
-#include <pods/buffers.h>
+#ifdef USE_PODS_MSG_PACK
+#include <pods/msgpack.h>
+#define  POD_SERIALIZER pods::MsgPackSerializer
+#define  POD_DESERIALIZER pods::MsgPackDeserializer
+#else
 #include <pods/binary.h>
+#define  POD_SERIALIZER pods::BinarySerializer
+#define  POD_DESERIALIZER pods::BinaryDeserializer
+#endif
+#include <pods/buffers.h>
 #include <common/HPMSCoordSystem.h>
 #include <glm/glm.hpp>
 

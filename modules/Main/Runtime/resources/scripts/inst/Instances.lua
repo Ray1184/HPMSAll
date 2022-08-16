@@ -13,7 +13,10 @@ dependencies = {
     'inst/actors/players/DummyPlayer.lua',
     'inst/actors/scene/DummyChest.lua',
     'inst/collectibles/misc/DummyItem.lua',
-    'bundles/Objects.lua'
+    'inst/collectibles/weapons/DummyRevolver.lua',
+    'inst/collectibles/ammo/Mag44AP.lua',
+    'bundles/Objects.lua',
+    'bundles/Menu.lua'
 }
 
 function register_all_instances()
@@ -23,7 +26,8 @@ function register_all_instances()
     bm = bundle_manager:new()
 
     -- Text bundles.
-    bm:register_dictionary(get_bundle_set_1())
+    bm:register_dictionary(get_bundle_set_menu())
+    bm:register_dictionary(get_bundle_set_items())
 
     -- Players.
     context:inst():register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_PLAYER.ID, function() return dummy_player:ret() end)
@@ -31,7 +35,7 @@ function register_all_instances()
     -- Scene.
     context:inst():register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_CHEST.ID, function(id_suffix) return dummy_chest:ret(id_suffix) end)
 
-    -- Inventory
+    -- Inventory.
     context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_1.ID, function(id_suffix, amount) return dummy_item_1:ret(id_suffix, amount) end)
     context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_2.ID, function(id_suffix, amount) return dummy_item_2:ret(id_suffix, amount) end)
     context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_3.ID, function(id_suffix, amount) return dummy_item_3:ret(id_suffix, amount) end)
@@ -40,5 +44,7 @@ function register_all_instances()
     context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_6.ID, function(id_suffix, amount) return dummy_item_6:ret(id_suffix, amount) end)
     context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_7.ID, function(id_suffix, amount) return dummy_item_7:ret(id_suffix, amount) end)
     context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_8.ID, function(id_suffix, amount) return dummy_item_8:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_REVOLVER.ID, function(id_suffix, amount) return dummy_revolver:ret(id_suffix, amount) end)
+    context:inst():register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.MAG_44_AP.ID, function(id_suffix, amount) return mag_44_ap:ret(id_suffix, amount) end)
 
 end

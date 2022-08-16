@@ -4,6 +4,16 @@
 
 #include <string>
 #include <iostream>
+#include <pods/pods.h>
+#ifdef USE_PODS_MSG_PACK
+#include <pods/msgpack.h>
+#define  POD_SERIALIZER pods::MsgPackSerializer
+#define  POD_DESERIALIZER pods::MsgPackDeserializer
+#else
+#include <pods/binary.h>
+#define  POD_SERIALIZER pods::BinarySerializer
+#define  POD_DESERIALIZER pods::BinaryDeserializer
+#endif
 #include <pods/buffers.h>
 #include <resource/HPMSWalkmap.h>
 #include <tools/HPMSWalkmapConverter.h>
@@ -95,7 +105,7 @@ ProcessResult Serialize(const std::string& inputPath, const std::string& outputP
 {
     hpms::WalkmapData* item = hpms::WalkmapConverter::LoadWalkmap(inputPath);    
     pods::ResizableOutputBuffer out;
-    pods::BinarySerializer<decltype(out)> serializer(out);
+    POD_SERIALIZER<decltype(out)> serializer(out);
     if (serializer.save(*item) != pods::Error::NoError)
     {
         std::stringstream ss;
