@@ -19,7 +19,7 @@ function player:ret(path, id, rad, rect, ghost)
     insp = inspector:get()
     local id = 'player/' .. id
     local ret = scene_actor:ret(path, id, rad, rect, ghost, true)
-    local this = context:inst():get_object(id, true,
+    local this = context_get_object(id, true,
     function()
         log_debug('New player object ' .. id)
 
@@ -43,6 +43,8 @@ function player:ret(path, id, rad, rect, ghost)
     local notSer = {
         not_serializable =
         {
+
+            equip_attachable = nil,
             anagr =
             {
                 name = 'Player',
@@ -185,11 +187,32 @@ function player:ret(path, id, rad, rect, ghost)
     end
 
     function player:delete_transient_data()
+        if not self.transientDataInit then
+            return
+        end
+        if self.not_serializable.equip_attachable ~= nil then
+            local equipWeaponModel = self.not_serializable.equip_attachable
+            equipWeaponModel:delete_transient_data()
+        end
         self.metainfo.override.scene_actor.delete_transient_data(self)
     end
 
     function player:fill_transient_data(walkmap)
         self.metainfo.override.scene_actor.fill_transient_data(self, walkmap)
+        if self.serializable.expired then
+            return
+        end
+        if self.serializable.equip ~= nil then
+            local weapon = context_get_full_ref(self.serializable.equip)
+            local attachTo = weapon:get_properties().weapon_properties.attach_to
+            local parentEntity = self.transient.entity
+
+            local posOffset = weapon:get_properties().weapon_properties.equip_position_offset
+            local rotOffset = weapon:get_properties().weapon_properties.equip_rotation_offset
+            local scale = weapon:get_properties().weapon_properties.equip_scale
+            self.not_serializable.equip_attachable = attachable:ret(weapon.serializable.path, weapon.serializable.id, parentEntity, attachTo, posOffset, rotOffset, scale)
+            self.not_serializable.equip_attachable:fill_transient_data()
+        end
     end
 
     function player:update(tpf)
@@ -216,7 +239,7 @@ function player:ret(path, id, rad, rect, ghost)
         self.metainfo.override.scene_actor.kill_instance(self)
     end
 
-    context:put_full_ref_obj(this)
+    context_put_full_ref_obj(this)
 
     return this
 end

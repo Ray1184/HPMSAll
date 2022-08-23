@@ -20,7 +20,7 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
     local id = 'scene_actor/' .. id
     local ret = anim_collision_game_item:ret(path, id, rad, rect, ghost)
 
-    local this = context:inst():get_object(id, not(template or false),
+    local this = context_get_object(id, not(template or false),
     function()
         log_debug('New scene_actor object ' .. id)
 
@@ -175,7 +175,7 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
         self.metainfo.override.anim_collision_game_item.kill_instance(self)
     end
 
-    context:put_full_ref_obj(this)
+    context_put_full_ref_obj(this)
 
     return this
 end

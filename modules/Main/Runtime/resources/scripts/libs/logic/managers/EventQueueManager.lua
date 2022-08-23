@@ -25,21 +25,21 @@ function event_queue_manager:new()
     end
 
     function event_queue_manager:push(event)
-        context:put_event(event.id, event)
+        context_put_event(event.id, event)
         log_debug('Event ' .. event.id .. ' pushed in events queue')
     end
 
     function event_queue_manager:consume(id)
-        local event = context:get_event(id)
+        local event = context_get_event(id)
         if event ~= nil and(event.condition == nil or event.condition()) then
             event.action()
-            context:remove_event(id)
+            context_remove_event(id)
             log_debug('Event ' .. event.id .. ' consumed from events queue')
         end
     end
 
     function event_queue_manager:consume_all()
-        local allEvents = context:get_all_events()
+        local allEvents = context_get_all_events()
         for eventId, event in pairs(allEvents) do
             self:consume(eventId)
         end      

@@ -1,0 +1,32 @@
+CONTESTO:
+
+L'equipaggiamento di un'arma funziona come segue:
+
+- alla pressione di EQUIP dall'inventario viene accodato un evento, nell'evento
+  l'arma equipaggiata viene aggiunta ai collectible che saranno presenti nella room.
+  Se ci sono altre armi equipaggiate queste vengono rimosse dei collectible della room
+  e al player viene assegnata quell'arma come equipaggiata.
+- Quando vengono caricati i collectible (dopo aver eseguito gli eventi accodati, tra cui il
+  precedente) se esiste un collectible equipaggiato dal player, allora questo viene associato
+  al bone del player, in modo da simulare l'arma in mano.
+
+PROBLEMA:
+
+Una entity non può essere agganciato a un bone, se questa è già associata a un node.
+I node non si possono associare ai bone e di base nel framework HPMS lua, tutti i GameItem
+quando vengono creati, vengono automaticamente agganciati a un nodo di controllo e a sua volta
+a un nodo wrapper.
+
+POSSIBILI SOLUZIONI:
+
+- Si può rendere tutto più semplice: nell'evento viene prima associata al player la nuova
+  arma (solamente come id, in modo da recuperarne i parametri in seguito) e si crea direttamente
+  una entity da agganciare direttamente al node. Bisognerà però tener in qualche modo traccia
+  di queste entity create (non recuperabili tramite context) per poi liberare la memoria correttamente.
+
+- Si tiene la strada precedente e si modifica l'api lua per regolare l'aggancio al nodo di controllo e wrapper
+  in base a un flag
+
+La prima soluzione sembrerebbe la più semplice e robusta, ma sarebbe il caso di creare un oggetto nell'api.
+
+UPDATE: la soluzione funziona correttamente, ora bisogna capire in generale come mantenere lo stato degli oggetti tra una room e l'altra

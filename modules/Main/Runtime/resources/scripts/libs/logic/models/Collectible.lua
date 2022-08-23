@@ -11,6 +11,7 @@ dependencies = {
     'libs/backend/HPMSFacade.lua',
     'libs/thirdparty/Inspect.lua',
     'libs/logic/gameplay/InventoryHelper.lua',
+    'libs/logic/gameplay/EquipmentHelper.lua',
     'libs/logic/managers/EventQueueManager.lua'
 }
 
@@ -24,7 +25,7 @@ function collectible:ret(path, id, amount)
 
     local ret = game_item:ret(path, id)
     local id = 'collectible/' .. id
-    local this = context:inst():get_object(id, true,
+    local this = context_get_object(id, true,
     function()
         log_debug('New collectible object ' .. id)
 
@@ -136,19 +137,24 @@ function collectible:ret(path, id, amount)
     function collectible:event(tpf, evtInfo)
         -- Process standard events.
         local cbks = { }
-        local dropped = false
         cbks[k.item_actions.DROP] = function()
+            remove_if_equipped(evtInfo.player, self.serializable.id)
             local queuedEvent = {
                 id = k.queued_events.DROP_ITEMS,
                 condition = nil,
                 action = function() remove_from_inventory(evtInfo.player, self.serializable.id, true, evtInfo.room_id) end
             }
             eqm:push(queuedEvent)
-            local allEvents = context:get_all_events()
             evtInfo.response = {
                 quit_inventory = true
             }
-            dropped = true
+        end
+
+        cbks[k.item_actions.EQUIP] = function()
+            equip(evtInfo.player, self)
+            evtInfo.response = {
+                quit_inventory = true
+            }
         end
 
         if cbks[evtInfo.action] ~= nil then
@@ -165,7 +171,9 @@ function collectible:ret(path, id, amount)
         self.metainfo.override.game_item.kill_instance(self)
     end
 
-    context:put_full_ref_obj(this)
+    context_put_full_ref_obj(this)
+    log_warn('collectible put full ref')
+    log_warn(this.serializable.id)
 
     return this
 end

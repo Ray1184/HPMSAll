@@ -11,6 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <Ogre.h>
+#include <OgreTagpoint.h>
 #include <core/HPMSOgreContext.h>
 #include <vector>
 #include <map>
@@ -61,7 +62,7 @@ namespace hpms
 
         virtual void
         AttachObjectToBone(const std::string& boneName, hpms::ActorAdapter* object, const glm::vec3& offsetPosition,
-                           const glm::quat& offsetOrientation) override;
+                           const glm::quat& offsetOrientation, const glm::vec3& scale) override;
 
         virtual void
         DetachObjectFromBone(const std::string& boneName, hpms::ActorAdapter* object) override;

@@ -23,7 +23,7 @@ function game_item:ret(path, id)
     local id = 'game_item/' .. id
     local ret = abstract_object:ret(id)
 
-    local this = context:inst():get_object(id, false,
+    local this = context_get_object(id, false,
     function()
         log_debug('New game_item object ' .. id)
 

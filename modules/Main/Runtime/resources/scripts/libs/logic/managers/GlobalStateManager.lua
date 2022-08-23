@@ -28,16 +28,16 @@ function global_state_manager:new()
     end
 
     function global_state_manager:get_session_var(name)
-        return context:get_state(name)
+        return context_get_state(name)
     end
 
     function global_state_manager:put_session_var(name, val)
-        context:put_state(name, val)
+        context_put_state(name, val)
     end
 
     function global_state_manager:put_session_var_if_nil(name, val)
-        if context:get_state(name) == nil then
-            context:put_state(name, val)
+        if context_get_state(name) == nil then
+            context_put_state(name, val)
         end
     end
 
@@ -46,7 +46,7 @@ function global_state_manager:new()
             version = k.HPMS_VERSION,
             current_room = saveInfo.room_id,
             current_player_id = self:get_session_var(k.session_vars.CURRENT_PLAYER_ID),
-            data = context:get_serializable_data()
+            data = context_get_serializable_data()
         }
         local saveDataJson = json.encode(saveData)
         lib.write_file(fileName, saveDataJson)
@@ -57,7 +57,7 @@ function global_state_manager:new()
     function global_state_manager:load_data(fileName)
         local loadDataJson = lib.load_file(fileName)
         local loadData = json.decode(loadDataJson)
-        context:set_serializable_data(loadData.data)
+        context_set_serializable_data(loadData.data)
         log_info('Game loaded from ' .. fileName)
         return loadData
     end

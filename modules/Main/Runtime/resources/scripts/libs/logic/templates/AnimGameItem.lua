@@ -24,7 +24,7 @@ function anim_game_item:ret(path, id)
     local id = 'anim_game_item/' .. id
     local ret = game_item:ret(path, id)
 
-    local this = context:inst():get_object(id, false, 
+    local this = context_get_object(id, false, 
     function()
         log_debug('New anim_game_item object ' .. id)
 

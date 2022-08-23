@@ -8,7 +8,7 @@
 backend = { }
 
 function backend:get()
-    if context:inst():is_dummy() then
+    if context_is_dummy() then
         log_debug('Using DUMMY functions')
         return {
 
@@ -63,6 +63,18 @@ function backend:get()
 
             set_node_entity = function(n, e)
                 log_debug('Attaching entity ' .. e.dummy_id .. ' to node ' .. n.dummy_id)
+            end,
+
+            detach_node_entity = function(n, e)
+                log_debug('Detaching entity ' .. e.dummy_id .. ' from node ' .. n.dummy_id)
+            end,
+
+            attach_to_entity_bone = function(b, ea, eo, oPos, oRot, oScale)
+                log_debug('Attaching entity ' .. ea.dummy_id .. ' to bone ' .. b .. ' owned by entity ' .. eo.dummy_id)
+            end,
+
+            detach_from_entity_bone = function(b, ea, eo)
+                log_debug('Detaching entity ' .. ea.dummy_id .. ' from bone ' .. b .. ' owned by entity ' .. eo.dummy_id)
             end,
 
             add_node_to_scene = function(n, scene)
@@ -314,6 +326,9 @@ function backend:get()
             make_node_collisor = hpms.make_node_collisor,
             delete_collisor = hpms.delete_collisor,
             set_node_entity = hpms.set_node_entity,
+            detach_node_entity = hpms.detach_node_entity,
+            attach_to_entity_bone = hpms.attach_to_entity_bone,
+            detach_from_entity_bone = hpms.detach_from_entity_bone,
             add_node_to_scene = hpms.add_node_to_scene,
             make_overlay = hpms.make_overlay,
             delete_overlay = hpms.delete_overlay,

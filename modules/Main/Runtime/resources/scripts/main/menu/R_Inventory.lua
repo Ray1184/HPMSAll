@@ -38,7 +38,7 @@ scene = {
 
         scnMgr = scene_manager:new(scene.name, cam)
         actorsMgr = actors_manager:new(scnMgr)
-        inputPrf = input_profile:new(context:get_input_profile())
+        inputPrf = input_profile:new(context_get_input_profile())
         eqm = event_queue_manager:new()
 
         wk = workflow:new(scnMgr)
@@ -323,7 +323,7 @@ function update_view(inventory, redraw)
         local rndIndex = 0
         for i = from, to do
             local id = inventory.objects[i].id
-            local currObject = context:get_full_ref(id)
+            local currObject = context_get_full_ref(id)
             local invLabel = bm:msg(currObject:get_properties().name)
             table.insert(slots, create_text_label('inv_item_' .. rndIndex, invLabel, lib, 12, 57 +(16 * rndIndex)))
             rndIndex = rndIndex + 1
@@ -331,7 +331,7 @@ function update_view(inventory, redraw)
 
         -- Model
         local id = inventory.objects[selectedIndex].id
-        selectedItem = context:get_full_ref(id)
+        selectedItem = context_get_full_ref(id)
         if selectedModel ~= nil then
             selectedModel:delete_transient_data()
         end
@@ -413,7 +413,7 @@ function update_view(inventory, redraw)
             local rndIndex = 0
             for i = from, to do
                 local id = inventory.objects[i].id
-                local currObject = context:get_full_ref(id)
+                local currObject = context_get_full_ref(id)
                 local invLabel = bm:msg(currObject:get_properties().name)
                 table.insert(slots, create_text_label('inv_item_' .. rndIndex, invLabel, lib, 12, 57 +(16 * rndIndex)))
                 rndIndex = rndIndex + 1
@@ -424,7 +424,7 @@ function update_view(inventory, redraw)
 
 
         -- Model
-        selectedItem = context:get_full_ref(pickedItemId)
+        selectedItem = context_get_full_ref(pickedItemId)
         if selectedModel ~= nil then
             selectedModel:delete_transient_data()
         end

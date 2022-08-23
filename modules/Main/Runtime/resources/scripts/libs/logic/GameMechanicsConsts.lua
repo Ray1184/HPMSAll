@@ -132,6 +132,7 @@ function game_mechanics_consts:get()
             FIGHT = 'Fight',
             DIE = 'Die'
         },
+
         item_actions =
         {
             USE = 'actions_use',
@@ -185,12 +186,16 @@ function game_mechanics_consts:get()
         queued_events =
         {
             DROP_ITEMS = 'evt_drop_items',
+            EQUIP_ITEMS = 'evt_equip_items'
         },
         inventory_scope =
         {
             SCOPE_LIST = 1,
             SCOPE_ACTIONS = 2,
             SCOPE_PICK = 3
+        },
+        attachable_bones = {
+            HAND = 'Hand.R'
         }
 
 

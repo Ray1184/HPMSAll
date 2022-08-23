@@ -19,7 +19,7 @@ scene = {
         log_info("STARTING TEST STAGE")
         -- Init function callback.
         enable_debug()
-        context:inst():disable_dummy()
+        context_disable_dummy()
 
         lib = backend:get()
 

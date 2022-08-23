@@ -68,7 +68,7 @@ function actors_manager:new(sceneManager)
 
     function actors_manager:create_player(playerId)
         if self.loaded_player == nil then
-            self.loaded_player = context:get_instance(k.inst_cat.ACTORS, playerId)
+            self.loaded_player = context_get_instance(k.inst_cat.ACTORS, playerId)
             self.loaded_player:fill_transient_data(self.scene_manager:get_walkmap())
             if not self.loaded_player.serializable.expired then
                 lib.add_collisor_to_env(self.scene_manager:get_collision_env(), playerId, self.loaded_player.transient.collisor)
@@ -79,7 +79,7 @@ function actors_manager:new(sceneManager)
 
     function actors_manager:create_actor(actorId)
         local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.actors)
-        local actor = context:get_instance(k.inst_cat.ACTORS, actorId, idSuffix)
+        local actor = context_get_instance(k.inst_cat.ACTORS, actorId, idSuffix)
         self.loaded_actors[actor.serializable.id] = actor
         self.loaded_actors[actor.serializable.id]:fill_transient_data(self.scene_manager:get_walkmap())
         if not self.loaded_actors[actor.serializable.id].serializable.expired then
@@ -91,7 +91,7 @@ function actors_manager:new(sceneManager)
 
     function actors_manager:create_item(itemId, amount)
         local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.collectibles)
-        local item = context:get_instance(k.inst_cat.COLLECTIBLES, itemId, idSuffix, amount)
+        local item = context_get_instance(k.inst_cat.COLLECTIBLES, itemId, idSuffix, amount)
         local roomState = room_state:ret(self.scene_manager:get_scene_name())
         if not roomState:has_item(item.serializable.id) then
             log_debug('Item with id ' .. item.serializable.id .. ' not present in room state for ' .. self.scene_manager:get_scene_name())
@@ -99,7 +99,7 @@ function actors_manager:new(sceneManager)
         else
             log_debug('Item with id ' .. item.serializable.id .. ' already stored in room state for ' .. self.scene_manager:get_scene_name())
             item.serializable = roomState:get_item(item.serializable.id)
-            context:update_serializable_data_obj(item.serializable)
+            context_update_serializable_data_obj(item.serializable)
         end
         self.loaded_collectibles[item.serializable.id] = item
         self.collectibles = self.collectibles + 1

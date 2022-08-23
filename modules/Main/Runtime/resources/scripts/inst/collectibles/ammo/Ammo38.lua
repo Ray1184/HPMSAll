@@ -5,16 +5,16 @@ dependencies = {
     'inst/GameplayConsts.lua'
 }
 
-mag_44_ap = { }
+ammo_38 = { }
 
 
-function mag_44_ap:ret(idSuffix, amount)
+function ammo_38:ret(idSuffix, amount)
     k = game_mechanics_consts:get()
     g = game_consts:get()
     insp = inspector:get()
 
-    local path = g.res_refs.collectibles.MAG_44_AP.PATH
-    local id = g.res_refs.collectibles.MAG_44_AP.ID .. '/' .. idSuffix
+    local path = g.res_refs.collectibles.AMMO_38.PATH
+    local id = g.res_refs.collectibles.AMMO_38.ID .. '/' .. idSuffix
 
     local amount = amount or 1
     local properties = {
@@ -22,18 +22,32 @@ function mag_44_ap:ret(idSuffix, amount)
         scene_drop_position_offset = { x = 0, y = 0, z = 0 },
         inventory_rotation_offset = { x = 0, y = 0, z = 0 },
         inventory_scale_offset = { x = 0.12, y = 0.12, z = 0.12 },
-        name = 'items_misc_mag_44_ap_name',
-        description = 'items_misc_mag_44_ap_description',
-        item_type = k.item_types.MISC,
+        name = 'items_misc_ammo_38_name',
+        description = 'items_misc_ammo_38_description',
+        item_type = k.item_types.AMMO,
         item_license = k.item_license.NONE,
         space_used = 1,
         show_amount = true,
-        price = 200,
+        price = 0.1,
         allowed_actions =
         {
             k.item_actions.USE,
             k.item_actions.CHECK,
             k.item_actions.DROP
+        },
+        ammo_properties =
+        {
+            max_per_slot = 12,
+            base_damage = 2,
+            stopping = false,
+            spread = false,
+            poison = false,
+            sleep = false,
+            paralysis = false,
+            fire = false,
+            explosive = false,
+            radiation = false,
+            piercing = false
         }
     }
 

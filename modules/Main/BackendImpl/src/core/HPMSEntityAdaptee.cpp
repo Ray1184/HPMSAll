@@ -141,14 +141,17 @@ hpms::AnimationAdapter* hpms::EntityAdaptee::GetAnimationByName(const std::strin
 }
 
 void hpms::EntityAdaptee::AttachObjectToBone(const std::string& boneName, hpms::ActorAdapter* object,
-                                             const glm::vec3& offsetPosition, const glm::quat& offsetOrientation)
+                                             const glm::vec3& offsetPosition, const glm::quat& offsetOrientation,
+                                             const glm::vec3& scale)
 {
     Check(ogreEntity);
     Ogre::Vector3 posOff(offsetPosition.x, offsetPosition.y, offsetPosition.z);
     Ogre::Quaternion rotOff(offsetOrientation.w, offsetOrientation.x, offsetOrientation.y, offsetOrientation.z);
+    Ogre::Vector3 scal(scale.x, scale.y, scale.z);
     if (auto* a = dynamic_cast<AttachableItem*>(object))
     {
-        ogreEntity->attachObjectToBone(boneName, a->GetNative(), rotOff, posOff);
+        auto* bone = ogreEntity->attachObjectToBone(boneName, a->GetNative(), rotOff, posOff);
+        bone->scale(scal);
     }
 }
 

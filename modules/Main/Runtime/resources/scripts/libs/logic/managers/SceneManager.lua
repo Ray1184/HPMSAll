@@ -11,6 +11,9 @@ dependencies = {
 
 scene_manager = { }
 
+SIMPLE_BACKGROUND = 1
+ANIMATED_BACKGROUND = 2
+
 function scene_manager:new(sceneName, camera)
     lib = backend:get()
     insp = inspector:get()
@@ -24,7 +27,8 @@ function scene_manager:new(sceneName, camera)
         loaded_walkmap = nil,
         loaded_env = lib.make_collision_env(),
         loaded_images = { },
-        paused = false
+        paused = false,
+        timer = 9999
     }
     log_debug('Creating scene module for room ' .. sceneName)
     setmetatable(this, self)
@@ -79,6 +83,14 @@ function scene_manager:new(sceneName, camera)
     end
 
     function scene_manager:sample_view_by_callback(condition, background, position, rotation)
+        if background.sequences ~= nil then
+            self:sample_view_by_callback_animated(condition, background, position, rotation)
+        else
+            self:sample_view_by_callback_simple(condition, background, position, rotation)
+        end
+    end
+
+    function scene_manager:sample_view_by_callback_simple(condition, background, position, rotation)
         if self.loaded_images[background] == nil then
             self.loaded_images[background] = lib.make_background(background)
         end
@@ -86,6 +98,7 @@ function scene_manager:new(sceneName, camera)
             condition = condition,
             settings =
             {
+                mode = SIMPLE_BACKGROUND,
                 background = self.loaded_images[background],
                 position = position,
                 rotation = rotation
@@ -94,7 +107,31 @@ function scene_manager:new(sceneName, camera)
         table.insert(self.views_map, sample)
     end
 
-    function scene_manager:poll_events()
+    function scene_manager:sample_view_by_callback_animated(condition, background, position, rotation)
+
+        for i = 1, #background.sequences do
+            self.loaded_images[background.sequences[i]] = lib.make_background(background.sequences[i])
+        end
+        local sample = {
+            condition = condition,
+            settings =
+            {
+                mode = ANIMATED_BACKGROUND,
+                backgrounds = { },
+                frame_duration = background.frame_duration,
+                loop = background.loop,
+                index = 1,
+                position = position,
+                rotation = rotation
+            }
+        }
+        for i = 1, #background.sequences do
+            sample.settings.backgrounds[i] = self.loaded_images[background.sequences[i]]
+        end
+        table.insert(self.views_map, sample)
+    end
+
+    function scene_manager:poll_events(tpf)
         if self.paused then
             return
         end
@@ -109,13 +146,32 @@ function scene_manager:new(sceneName, camera)
             return
         end
 
-        for i = 1, #self.views_map do
-            self.views_map[i].settings.background.visible = false
+        for k, v in pairs(self.loaded_images) do
+            v.visible = false
         end
 
-        settings_to_apply.background.visible = true
+
+
         self.camera.position = settings_to_apply.position
         self.camera.rotation = settings_to_apply.rotation
+
+        if settings_to_apply.mode == SIMPLE_BACKGROUND then
+            settings_to_apply.background.visible = true
+        else
+            if self.timer < settings_to_apply.frame_duration then
+                self.timer = self.timer + tpf
+            else
+                self.timer = 0
+
+                if settings_to_apply.index < #settings_to_apply.backgrounds then
+                    settings_to_apply.index = settings_to_apply.index + 1
+                elseif settings_to_apply.loop then
+                    settings_to_apply.index = 1
+                end                
+            end
+            settings_to_apply.backgrounds[settings_to_apply.index].visible = true
+        end
+
     end
 
     return this

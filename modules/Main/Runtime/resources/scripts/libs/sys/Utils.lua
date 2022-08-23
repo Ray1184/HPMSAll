@@ -48,9 +48,17 @@ function merge_tables(orig, new)
     return orig
 end
 
+function remove_serializable_by_id(array, id)
+    for i = 1, #array do
+        if array[i].id == id then
+            array[i].id = nil
+        end
+    end
+end
+
 local function remove_by_key(tab, val)
     for i, v in ipairs(tab) do
-        if (v.id == val) then
+        if v.id == val then
             tab[i] = nil
         end
     end
@@ -100,6 +108,15 @@ function random_string(length)
     if not length or length <= 0 then return '' end
     math.randomseed(os.clock() ^ 5)
     return random_string(length - 1) .. charset[math.random(1, #charset)]
+end
+
+local function is_array(t)
+    local i = 0
+    for _ in pairs(t) do
+        i = i + 1
+        if t[i] == nil then return false end
+    end
+    return true
 end
 
 local function log(msg)

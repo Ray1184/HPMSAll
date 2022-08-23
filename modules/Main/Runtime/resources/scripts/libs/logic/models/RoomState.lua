@@ -21,7 +21,7 @@ function room_state:ret(id)
     local id = 'room_state/' .. id
     local ret = abstract_object:ret(id)
 
-    local this = context:inst():get_object(id, true,
+    local this = context_get_object(id, true,
     function()
         log_debug('New room_state object ' .. id)
 
@@ -85,19 +85,25 @@ function room_state:ret(id)
         table.insert(self.serializable.collectibles, ser)
     end
 
-    function room_state:load_dropped_collectibles()
+    function room_state:remove_collectible(ser)
+        remove_serializable_by_id(self.serializable.collectibles, ser.id)
+    end
+
+    function room_state:load_dropped_collectibles(player)
         for i = 1, #self.serializable.collectibles do
-            context:get_full_ref(self.serializable.collectibles[i].id):fill_transient_data()
+            local fullRef = context_get_full_ref(self.serializable.collectibles[i].id)
+            fullRef:fill_transient_data()            
         end
     end
 
     function room_state:delete_dropped_collectibles()
         for i = 1, #self.serializable.collectibles do
-            context:get_full_ref(self.serializable.collectibles[i].id):delete_transient_data()
+            local fullRef = context_get_full_ref(self.serializable.collectibles[i].id)
+            fullRef:delete_transient_data()
         end
     end
 
-    context:put_full_ref_obj(this)
+    context_put_full_ref_obj(this)
 
     return this
 end

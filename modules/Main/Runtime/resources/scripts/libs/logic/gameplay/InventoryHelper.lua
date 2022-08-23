@@ -23,8 +23,17 @@ function add_to_inventory(player, item)
     table.insert(invSlots, item.serializable)
 end
 
+function remove_if_equipped(player, itemId)
+    log_warn('remove_if_equipped')
+    log_warn(player.serializable.equip)
+    log_warn(itemId)
+    if player.serializable.equip == itemId then
+        player.serializable.equip = nil
+    end
+end
+
 function remove_from_inventory(player, itemId, drop, roomId)
-    local item = context:get_full_ref(itemId)
+    local item = context_get_full_ref(itemId)
     local invSlots = player:get_inventory().objects
     local newInvSlots = { }
     local insp = inspector.get()
@@ -44,6 +53,7 @@ function remove_from_inventory(player, itemId, drop, roomId)
         item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
         local roomState = room_state:ret(roomId)
         roomState:add_collectible(item.serializable)
+
     end
     return item
 end

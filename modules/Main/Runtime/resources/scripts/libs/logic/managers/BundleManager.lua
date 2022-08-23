@@ -28,12 +28,12 @@ function bundle_manager:new()
     end
 
     function bundle_manager:register_dictionary(dict)
-        context:set_bundles(merge_tables(context:get_bundles(), dict))
+        context_set_bundles(merge_tables(context_get_bundles(), dict))
     end
 
     function bundle_manager:msg(key)
-        local lang = context:get_lang()
-        local message = context:get_bundles()[lang][key]
+        local lang = context_get_lang()
+        local message = context_get_bundles()[lang][key]
         if message == nil then
             log_warn('No message bundle found for key ' .. tostring(key))
             return key

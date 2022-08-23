@@ -27,7 +27,7 @@ scene = {
     setup = function()
         -- TODOBATCH-BEGIN g.res_refs.actors.DUMMY_PLAYER.ID
 
-        context:inst():disable_dummy()
+        context_disable_dummy()
         disable_debug()
         -- TODOBATCH-END
 
@@ -43,7 +43,7 @@ scene = {
         gsm = global_state_manager:new()
 
 
-        input_prf = input_profile:new(context:get_input_profile())
+        input_prf = input_profile:new(context_get_input_profile())
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
         wk = workflow:new(scn_mgr)
@@ -75,9 +75,7 @@ scene = {
         mask_node = lib.make_node("DummyMaskNode")
         lib.set_node_entity(mask_node, mask)
 
-        gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.actors.DUMMY_PLAYER.ID)
-        player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
-        gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
+
 
         -- actor_action_mode.PUSH
         chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
@@ -99,14 +97,16 @@ scene = {
         obj8a = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 1)
         obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
         obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
-        rev = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_REVOLVER.ID, 6)
-        --mag44ap = actors_mgr:create_item(g.res_refs.collectibles.MAG_44_AP.ID, 3)
+        rev = actors_mgr:create_item(g.res_refs.collectibles.REVOLVER_38.ID, 6)
+        -- mag44ap = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 3)
 
+        gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.actors.DUMMY_PLAYER.ID)
+        player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
+        gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
 
         if not room_st:get_var('init') then
 
             add_to_inventory(player, rev)
-            --add_to_inventory(player, mag44ap)
             add_to_inventory(player, obj1)
             add_to_inventory(player, obj2)
             add_to_inventory(player, obj3)
@@ -117,7 +117,7 @@ scene = {
             add_to_inventory(player, obj8a)
             add_to_inventory(player, obj8b)
             add_to_inventory(player, obj8c)
-             
+
 
             log_warn('FIRST TIME IN ROOM')
             player:set_action_mode(7)
@@ -138,8 +138,8 @@ scene = {
 
 
 
-
-        room_st:load_dropped_collectibles()
+        eqm:consume_all()
+        room_st:load_dropped_collectibles(player)
         actors_mgr:init_events()
 
         -- log_warn(insp.inspect(player))
@@ -159,6 +159,15 @@ scene = {
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_03' else return false end end, 'R_Debug_01/CM_03.png', lib.vec3(0.0, 12.0, 3.5), lib.quat(8.921578142917497e-08, -4.213227988714152e-09, -0.5735764503479004, -0.8191520571708679))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
         scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
+
+        local animBack = {
+            sequences = { 'R_Debug_01/CM_06_01.png', 'R_Debug_01/CM_06_02.png', 'R_Debug_01/CM_06_03.png', 'R_Debug_01/CM_06_04.png' },
+            loop = true,
+            frame_duration = 0.3
+        }
+
+        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_06' else return false end end, animBack, lib.vec3(-6.351622581481934, -11.026840209960938, -0.13639304041862488), lib.quat(0.641304, 0.652595, -0.287829, -0.282849))
+
 
         wk:add_workflow( {
             seq:fade_out(0)
@@ -204,7 +213,7 @@ scene = {
         -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
         -- scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'SG_01' else return false end end, background_cm_01, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
         -- scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
-        eqm:consume_all()
+
         -- Entity EY_DummyAnim setup
         -- entity_ey_dummyanim = lib.make_entity('EY_DummyAnim.mesh')
         -- entity_node_ey_dummyanim = lib.make_node('EY_DummyAnimNode')
@@ -346,7 +355,7 @@ scene = {
             scene.next = 'main/menu/R_Inventory.lua'
             scene.finished = true
         end
-        --if input_prf:action_done_once(k.input_actions.ACTION_3) then
+        -- if input_prf:action_done_once(k.input_actions.ACTION_3) then
         --    gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_PICK)
         --    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
         --    gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
@@ -354,7 +363,7 @@ scene = {
         --    gsm:put_session_var(k.session_vars.PICKED_ITEM_AMOUNT, 1)
         --    scene.next = 'main/menu/R_Inventory.lua'
         --    scene.finished = true
-        --end
+        -- end
 
 
         -- TODOBATCH-END

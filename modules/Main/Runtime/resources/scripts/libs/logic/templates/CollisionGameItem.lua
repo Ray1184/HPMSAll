@@ -24,7 +24,7 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
     local id = 'collision_game_item/' .. id
     local ret = game_item:ret(path, id)
 
-    local this = context:inst():get_object(id, false,
+    local this = context_get_object(id, false,
     function()
         log_debug('New collision_game_item object ' .. id)
 

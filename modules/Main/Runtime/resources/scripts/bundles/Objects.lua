@@ -21,10 +21,10 @@ function get_bundle_set_items()
             items_misc_dummy_item_7_description = 'Questo è un oggetto di test (G) utilizzato per vedere se funziona tutto correttamente',
             items_misc_dummy_item_8_name = 'Oggetto di test H',
             items_misc_dummy_item_8_description = 'Questo è un oggetto di test (H) utilizzato per vedere se funzionano istanze multiple',
-            items_misc_dummy_revolver_name = 'Revolver Dummy',
-            items_misc_dummy_revolver_description = 'Questa è un\'arma di prova, per testare le funzioni di sparo ed equipaggiamento',
-            items_misc_mag_44_ap_name = '44 Perforanti',
-            items_misc_mag_44_ap_description = 'Proiettili calibro 44 speciali con penetratore all\'uranio. Perforano fino a due pollici di acciaio'
+            items_misc_revolver_38_name = 'Revolver',
+            items_misc_revolver_38_description = 'Rivoltella calibro 38 con tamburo a 6 colpi. Un\'arma semplice ma efficace',
+            items_misc_ammo_38_name = 'Cal. 38',
+            items_misc_ammo_38_description = 'Pallottole calibro 38, dimentico sempre di farne la scorta'
 
 
         }

@@ -5,254 +5,240 @@
 -- DO NOT INCLUDE THIS!!!
 --
 
-context = { }
+local context = { dummy = false }
 
+local cats = {
+    STATE = 'state',
+    EVENTS = 'events',
+    SERIALIZABLES = 'serializables',
+    INSTANCES = 'instances',
+    FULL_REFS = 'full_refs',
+    BUNDLES = 'bundles',
 
-
-function context:new()
-
-    cats = {
-        STATE = 'state',
-        EVENTS = 'events',
-        SERIALIZABLES = 'serializables',
-        INSTANCES = 'instances',
-        FULL_REFS = 'full_refs',
-        BUNDLES = 'bundles',
-
-    }
-
-    local ctx = { dummy = false }
+}
+local function init_lua_context()
     log_info('Creating context with categories:')
     for kc, v in pairs(cats) do
-        ctx[v] = { }
+        context[v] = { }
         log_info('- ' .. v)
     end
-    setmetatable(ctx, self)
-    self.__index = self
-    return ctx
 end
 
-function context:set_serializable_data(data)
-    self.instance[cats.SERIALIZABLES] = data
+init_lua_context() 
+
+function context_set_serializable_data(data)
+    context[cats.SERIALIZABLES] = data
 end
 
-function context:update_serializable_data_obj(data)
-    self.instance:update_serializable_data(data.id, data)
+function context_update_serializable_data_obj(data)
+    context_update_serializable_data(data.id, data)
 end
 
-function context:update_serializable_data(id, data)
-    self.instance[cats.SERIALIZABLES][id] = data
+function context_update_serializable_data(id, data)
+    context[cats.SERIALIZABLES][id] = data
 end
 
-function context:update_full_ref_data(id, data)
-    if self.instance:get_full_ref(id) ~= nil then
-        local oldFullRef = self.instance:get_full_ref(id)
+function context_update_full_ref_data(id, data)
+    if context_get_full_ref(id) ~= nil then
+        local oldFullRef = context_get_full_ref(id)
         oldFullRef.serializable = data
-        self.instance:put_full_ref(oldFullRef)
+        context_put_full_ref(oldFullRef)
     end
 end
 
-function context:get_serializable_data()
-    return self.instance[cats.SERIALIZABLES]
+function context_get_serializable_data()
+    return context[cats.SERIALIZABLES]
 end
 
-function context:set_bundles(data)
-    self.instance[cats.BUNDLES] = data
+function context_set_bundles(data)
+    context[cats.BUNDLES] = data
 end
 
-function context:get_bundles()
-    return self.instance[cats.BUNDLES]
+function context_get_bundles()
+    return context[cats.BUNDLES]
 end
 
-function context:set_coord_system_blender()
-    self.instance.coord_system = 'blender'
+function context_set_coord_system_blender()
+    context.coord_system = 'blender'
 end
 
-function context:set_coord_system_gl()
-    self.instance.coord_system = 'gl'
+function context_set_coord_system_gl()
+    context.coord_system = 'gl'
 end
 
-function context:is_coord_system_blender()
-    return self.instance.mode == 'blender'
+function context_is_coord_system_blender()
+    return context.mode == 'blender'
 end
 
-function context:is_coord_system_gl()
-    return self.instance.mode == 'gl'
+function context_is_coord_system_gl()
+    return context.mode == 'gl'
 end
 
-function context:set_mode_r25d()
-    self.instance.mode = 'r25d'
+function context_set_mode_r25d()
+    context.mode = 'r25d'
 end
 
-function context:set_mode_3d()
-    self.instance.mode = '3d'
+function context_set_mode_3d()
+    context.mode = '3d'
 end
 
-function context:set_mode_gui()
-    self.instance.mode = 'gui'
+function context_set_mode_gui()
+    context.mode = 'gui'
 end
 
-function context:is_mode_r25d()
-    return self.instance.mode == 'r25d'
+function context_is_mode_r25d()
+    return context.mode == 'r25d'
 end
 
-function context:is_mode_3d()
-    return self.instance.mode == '3d'
+function context_is_mode_3d()
+    return context.mode == '3d'
 end
 
-function context:is_mode_gui()
-    return self.instance.mode == 'gui'
+function context_is_mode_gui()
+    return context.mode == 'gui'
 end
 
-function context:set_scene(s)
-    self.instance.scene = s
+function context_set_scene(s)
+    context.scene = s
 end
 
-function context:get_scene()
-    if self.instance.scene == nil then
+function context_get_scene()
+    if context.scene == nil then
         log_warn('Scene is nil in context')
     end
-    return self.instance.scene
+    return context.scene
 end
 
-function context:set_camera(c)
-    self.instance.camera = c
+function context_set_camera(c)
+    context.camera = c
 end
 
-function context:get_camera()
-    if self.instance.camera == nil then
+function context_get_camera()
+    if context.camera == nil then
         log_warn('Camera is nil in context')
     end
-    return self.instance.camera
+    return context.camera
 end
 
-function context:set_input_profile(prof)
-    self.instance.input_profile = prof
+function context_set_input_profile(prof)
+    context.input_profile = prof
 end
 
-function context:get_input_profile()
-    if self.instance.input_profile == nil then
-        self.instance.input_profile = 'default'
+function context_get_input_profile()
+    if context.input_profile == nil then
+        context.input_profile = 'default'
     end
-    return self.instance.input_profile
+    return context.input_profile
 end
 
-function context:set_lang(lang)
-    self.instance.lang = lang
+function context_set_lang(lang)
+    context.lang = lang
 end
 
-function context:get_lang()
-    if self.instance.lang == nil then
-        self.instance.lang = 'it'
+function context_get_lang()
+    if context.lang == nil then
+        context.lang = 'it'
     end
-    return self.instance.lang
+    return context.lang
 end
 
-function context:enable_dummy()
+function context_enable_dummy()
     log_debug('Dummy mode ENABLED')
-    self.instance.dummy = true
+    context.dummy = true
 end
 
-function context:disable_dummy()
+function context_disable_dummy()
     log_debug('Dummy mode DISABLED')
-    self.instance.dummy = false
+    context.dummy = false
 end
 
-function context:is_dummy()
-    return self.instance.dummy == true
+function context_is_dummy()
+    return context.dummy == true
 end
 
-function context:inst()
-    if self.instance == nil then
-        log_info('New context created')
-        self.instance = self:new()
-    end
-    return self.instance
+function context_put_full_ref_obj(obj)
+    context_put_full_ref(obj.serializable.id, obj)
 end
 
-function context:put_full_ref_obj(obj)
-    self.instance:put_full_ref(obj.serializable.id, obj)
-end
-
-function context:put_full_ref(key, obj)
+function context_put_full_ref(key, obj)
     if key == nil then
         log_warn('Key cannot be nil')
         return
     end
-    self.instance[cats.FULL_REFS][key] = obj
+    context[cats.FULL_REFS][key] = obj
 end
 
-function context:get_full_ref(key)
+function context_get_full_ref(key)
     if key == nil then
         log_error('Key cannot be nil')
         return nil
     end
-    if self.instance[cats.FULL_REFS][key] == nil then
+    if context[cats.FULL_REFS][key] == nil then
         log_warn('FullRef object ' .. key .. ' is nil in context')
         return nil
     end
-    return self.instance[cats.FULL_REFS][key]
+    return context[cats.FULL_REFS][key]
 end
 
-function context:put_state(key, obj)
+function context_put_state(key, obj)
     if key == nil then
         log_warn('Key cannot be nil')
         return
     end
-    self.instance[cats.STATE][key] = obj
+    context[cats.STATE][key] = obj
 end
 
-function context:get_state(key)
+function context_get_state(key)
     if key == nil then
         log_error('Key cannot be nil')
         return nil
     end
-    if self.instance[cats.STATE][key] == nil then
+    if context[cats.STATE][key] == nil then
         log_warn('State object ' .. key .. ' is nil in context')
         return nil
     end
-    return self.instance[cats.STATE][key]
+    return context[cats.STATE][key]
 end
 
 
-function context:put_event(key, obj)
+function context_put_event(key, obj)
     if key == nil then
         log_warn('Key cannot be nil')
         return
     end
-    self.instance[cats.EVENTS][key] = obj
+    context[cats.EVENTS][key] = obj
 end
 
-function context:get_all_events()
-    return self.instance[cats.EVENTS]
+function context_get_all_events()
+    return context[cats.EVENTS]
 end
 
-function context:get_event(key)
+function context_get_event(key)
     if key == nil then
         log_error('Key cannot be nil')
         return nil
     end
-    if self.instance[cats.EVENTS][key] == nil then
+    if context[cats.EVENTS][key] == nil then
         log_warn('Event object ' .. key .. ' is nil in context')
         return nil
     end
-    return self.instance[cats.EVENTS][key]
+    return context[cats.EVENTS][key]
 end
 
-function context:remove_event(key)
+function context_remove_event(key)
     if key == nil then
         log_error('Key cannot be nil')
         return nil
     end
-    self.instance[cats.EVENTS][key] = nil
+    context[cats.EVENTS][key] = nil
 end
 
-function context:register_instance(subcat, id, retrieveCallback)
-    self.instance[cats.INSTANCES][subcat .. '/' .. id] = retrieveCallback
+function context_register_instance(subcat, id, retrieveCallback)
+    context[cats.INSTANCES][subcat .. '/' .. id] = retrieveCallback
 end
 
-function context:get_instance(subcat, id, ...)
-    local inst = self.instance[cats.INSTANCES][subcat .. '/' .. id]
+function context_get_instance(subcat, id, ...)
+    local inst = context[cats.INSTANCES][subcat .. '/' .. id]
     if inst ~= nil then
         return inst(...)
     end
@@ -260,8 +246,8 @@ function context:get_instance(subcat, id, ...)
     return nil
 end
 
-function context:put_object(key, obj)
-    if self.instance[cats.SERIALIZABLES] == nil then
+function context_put_object(key, obj)
+    if context[cats.SERIALIZABLES] == nil then
         log_warn('Cannot put in context object: ' .. tostring(cat) .. ' category unknown')
         return
     end
@@ -275,24 +261,24 @@ function context:put_object(key, obj)
         log_warn('For put object in context this must have a serializable block')
         return
     end
-    self.instance[cats.SERIALIZABLES][key] = obj.serializable
+    context[cats.SERIALIZABLES][key] = obj.serializable
 end
 
-function context:get_object(key, persist, supplierCallback)
+function context_get_object(key, persist, supplierCallback)
     if not persist then
         return supplierCallback()
     end
-    if self.instance[cats.SERIALIZABLES][key] == nil then
+    if context[cats.SERIALIZABLES][key] == nil then
 
         if key == nil then
             log_warn('Cannot get object from context with nil key')
             return nil
         else
             log_debug('Object with key ' .. tostring(key) .. ' NOT found/created in context')
-            self.instance:put_object(key, supplierCallback())
+            context_put_object(key, supplierCallback())
         end
     end
     local obj = { }
-    obj.serializable = self.instance[cats.SERIALIZABLES][key]
+    obj.serializable = context[cats.SERIALIZABLES][key]
     return obj
 end

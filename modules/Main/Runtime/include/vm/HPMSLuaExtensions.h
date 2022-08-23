@@ -324,9 +324,14 @@ namespace hpms
 			node->DetachObject(obj);
 		}
 
-		static inline void LSetBoneNode(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner, const glm::vec3& offsetPosition = glm::vec3(), const glm::quat& offsetRotation = glm::quat())
+		static inline void LAttachToEntityBone(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner, const glm::vec3& offsetPosition = glm::vec3(), const glm::quat& offsetRotation = glm::quat(), const glm::vec3& scale = glm::vec3())
 		{
-			boneOwner->AttachObjectToBone(boneNode, objToAttach, offsetPosition, offsetRotation);
+			boneOwner->AttachObjectToBone(boneNode, objToAttach, offsetPosition, offsetRotation, scale);
+		}
+
+		static inline void LDetachFromEntityBone(const std::string& boneNode, EntityAdapter* objToAttach, EntityAdapter* boneOwner)
+		{
+			boneOwner->DetachObjectFromBone(boneNode, objToAttach);
 		}
 
 		static inline hpms::WalkmapAdapter* AMCreateWalkMap(const std::string& name)
