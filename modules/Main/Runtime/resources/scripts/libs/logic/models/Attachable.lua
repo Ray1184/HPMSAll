@@ -9,7 +9,6 @@
 dependencies = {
     'libs/logic/templates/EntityItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/thirdparty/Inspect.lua',
     'libs/logic/gameplay/InventoryHelper.lua',
     'libs/logic/gameplay/EquipmentHelper.lua',
     'libs/logic/managers/EventQueueManager.lua'

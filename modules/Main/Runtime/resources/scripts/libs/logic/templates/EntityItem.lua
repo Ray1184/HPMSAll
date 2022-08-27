@@ -8,8 +8,7 @@
 dependencies = {
     'libs/utils/TransformsCommon.lua',
     'libs/logic/templates/AbstractObject.lua',
-    'libs/backend/HPMSFacade.lua',
-    'libs/thirdparty/Inspect.lua'
+    'libs/backend/HPMSFacade.lua'
 }
 
 entity_item = { }

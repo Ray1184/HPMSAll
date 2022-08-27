@@ -45,7 +45,7 @@ scene = {
         wkModels = workflow:new(scnMgr)
         seq = workflow_sequences:new()
 
-        player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)
+        player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)        
 
         lamp = lib.make_light(lib.vec3(2, 2, 2))
         lamp.position = lib.vec3(-0.675, -2, 0.55)

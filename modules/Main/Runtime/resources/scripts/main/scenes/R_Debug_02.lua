@@ -1,4 +1,4 @@
--- R_Debug_01
+-- R_Debug_02
 -- Generated with Blend2HPMS batch on date 2021/09/12
 
 dependencies = {
@@ -19,7 +19,7 @@ dependencies = {
 }
 
 scene = {
-    name = 'R_Debug_01',
+    name = 'R_Debug_02',
     version = '1.0',
     quit = false,
     finished = false,
@@ -51,9 +51,8 @@ scene = {
         eqm = event_queue_manager:new()
 
 
-        -- Collision map R_Debug_01 setup
+        -- Collision map R_Debug_02 setup
         -- walkmap_r_debug_01 = lib.make_walkmap('Dummy_Scene.walkmap')
-
 
         action = false
 
@@ -75,65 +74,13 @@ scene = {
         mask_node = lib.make_node("DummyMaskNode")
         lib.set_node_entity(mask_node, mask)
 
-        chest = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-        chest2 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-        chest3 = actors_mgr:create_actor(g.res_refs.actors.DUMMY_CHEST.ID)
-
-        -- actor_action_mode.PUSH
-
-        -- mag44ap = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 3)
-
-        gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.actors.DUMMY_PLAYER.ID)
         player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
         gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
 
-        if not room_st:get_var('init') then
+        recover_inventory_items(player, actors_mgr)
 
 
-            obj1 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_1.ID, 8)
-            obj2 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_2.ID, 0)
-            obj3 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_3.ID, 2)
-            obj4 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_4.ID, 20)
-            obj5 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_5.ID, 200)
-            obj6 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_6.ID, 5)
-            obj7 = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_7.ID, 76)
-            obj8a = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 1)
-            obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
-            obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
-            rev = actors_mgr:create_item(g.res_refs.collectibles.REVOLVER_38.ID, 6)
 
-            add_to_inventory(player, rev)
-            add_to_inventory(player, obj1)
-            add_to_inventory(player, obj2)
-            add_to_inventory(player, obj3)
-            add_to_inventory(player, obj4)
-            add_to_inventory(player, obj5)
-            add_to_inventory(player, obj6)
-            add_to_inventory(player, obj7)
-            add_to_inventory(player, obj8a)
-            add_to_inventory(player, obj8b)
-            add_to_inventory(player, obj8c)
-
-
-            log_warn('FIRST TIME IN ROOM')
-            player:set_action_mode(7)
-            player.serializable.performing_action = true
-            player:set_position(0, -3, 0)
-            chest:set_position(2, 1, 0)
-            chest2:set_position(-2, -1, 0)
-            chest3:set_position(0, -1, 0)
-            chest3:scale(0.5, 0.5, 0.5)
-            invSlots = player:get_inventory().objects
-
-
-            room_st:set_var('init', true)
-
-        else
-            log_warn('RETURN BACK IN ROOM')
-            recover_inventory_items(player, actors_mgr)
-        end
-
-        --
 
         eqm:consume_all()
         room_st:load_dropped_collectibles(player, actors_mgr)
@@ -151,14 +98,14 @@ scene = {
         json = json_helper:get()
         -- log_debug(player)
         nextPressed = false
-        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_01' else return false end end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
-        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_02' else return false end end, 'R_Debug_01/CM_02.png', lib.vec3(0.0, 5.838781833648682, 1.5), lib.quat(-3.467857823125087e-08, -2.6609807690647358e-08, 0.6087614297866821, 0.7933533191680908))
-        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_03' else return false end end, 'R_Debug_01/CM_03.png', lib.vec3(0.0, 12.0, 3.5), lib.quat(8.921578142917497e-08, -4.213227988714152e-09, -0.5735764503479004, -0.8191520571708679))
-        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_01/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
-        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_01/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
+        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_01' else return false end end, 'R_Debug_02/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
+        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_02' else return false end end, 'R_Debug_02/CM_02.png', lib.vec3(0.0, 5.838781833648682, 1.5), lib.quat(-3.467857823125087e-08, -2.6609807690647358e-08, 0.6087614297866821, 0.7933533191680908))
+        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_03' else return false end end, 'R_Debug_02/CM_03.png', lib.vec3(0.0, 12.0, 3.5), lib.quat(8.921578142917497e-08, -4.213227988714152e-09, -0.5735764503479004, -0.8191520571708679))
+        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_04' else return false end end, 'R_Debug_02/CM_04.png', lib.vec3(5.5, 15.0, 3.0), lib.quat(-0.13912473618984222, -0.16580234467983246, -0.6275509595870972, -0.7478861212730408))
+        scn_mgr:sample_view_by_callback( function() if current_sector ~= nil then return current_sector.id == 'S_05' else return false end end, 'R_Debug_02/CM_05.png', lib.vec3(5.627859115600586, 6.149685859680176, 3.0989725589752197), lib.quat(-0.48958826065063477, -0.4014081358909607, -0.4459995925426483, -0.6326603889465332))
 
         local animBack = {
-            sequences = { 'R_Debug_01/CM_06_01.png', 'R_Debug_01/CM_06_02.png', 'R_Debug_01/CM_06_03.png', 'R_Debug_01/CM_06_04.png' },
+            sequences = { 'R_Debug_02/CM_06_01.png', 'R_Debug_02/CM_06_02.png', 'R_Debug_02/CM_06_03.png', 'R_Debug_02/CM_06_04.png' },
             loop = true,
             frame_duration = 0.3
         }
@@ -174,20 +121,13 @@ scene = {
             seq:fade_in(1)
         } , nil, false, 'fade in')
 
-        wk:add_workflow( {
-            seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
-            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
-            seq:wait(2),
-            seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
-            seq:pipe( function(tpf) chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
-        } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
-
+   
         wk:add_workflow( {
             seq:pipe( function(tpf) gsm:save_data('data/save/savedata00.json', { room_id = scene.name }) end),
             seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true)
         } , function() return input_prf:action_done_once(k.input_actions.ACTION_3) end, true, 'save_data_flow')
 
-
+      
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
         lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
@@ -209,9 +149,9 @@ scene = {
         lamp_04.position = lib.vec3(-4.067772388458252, 0.02561706304550171, 1.5122439861297607)
 
         -- View CM_01 setup
-        -- background_cm_01 = lib.make_background('R_Debug_01/CM_01.png')
+        -- background_cm_01 = lib.make_background('R_Debug_02/CM_01.png')
         -- scn_mgr:sample_view_by_callback(function() if current_sector ~= nil then return current_sector.id == 'SG_01' else return false end end, background_cm_01, lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
-        -- scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_01/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
+        -- scn_mgr:sample_view_by_callback( function() return true end, 'R_Debug_02/CM_01.png', lib.vec3(0.0, -4.699999809265137, 1.5), lib.quat(0.7933533787727356, 0.6087613701820374, 0.0, -0.0))
 
         -- Entity EY_DummyAnim setup
         -- entity_ey_dummyanim = lib.make_entity('EY_DummyAnim.mesh')
@@ -355,14 +295,12 @@ scene = {
             scene.finished = true
         end
 
-        -- SWITCH ROOM TEST
+          -- SWITCH ROOM TEST
         if input_prf:action_done_once(k.input_actions.PAUSE) then
             gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-            scene.next = 'main/scenes/R_Debug_02.lua'
+            scene.next = 'main/scenes/R_Debug_01.lua'
             scene.finished = true
         end
-
-        -- current_sector.id == 'S_05'
         -- if input_prf:action_done_once(k.input_actions.ACTION_3) then
         --    gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_PICK)
         --    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
@@ -414,7 +352,7 @@ scene = {
         scn_mgr:delete_all()
         seq:delete_all()
 
-        -- Collision map R_Debug_01 delete
+        -- Collision map R_Debug_02 delete
         -- lib.delete_walkmap(walkmap_r_debug_01)
 
         -- Base scene delete

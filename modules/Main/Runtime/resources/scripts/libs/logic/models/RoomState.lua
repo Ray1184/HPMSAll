@@ -9,7 +9,7 @@
 dependencies = {
     'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/thirdparty/Inspect.lua'
+    'libs/logic/gameplay/CollectibleHelper.lua'
 }
 
 room_state = { }
@@ -89,9 +89,12 @@ function room_state:ret(id)
         remove_serializable_by_id(self.serializable.collectibles, ser.id)
     end
 
-    function room_state:load_dropped_collectibles(player)
-        for i = 1, #self.serializable.collectibles do
+    function room_state:load_dropped_collectibles(player, actorsMgr)
+        for i = 1, #self.serializable.collectibles do            
             local fullRef = context_get_full_ref(self.serializable.collectibles[i].id)
+            if fullRef == nil then
+                fullRef = recover_item(self.serializable.collectibles[i].id, self.serializable.collectibles[i].amount, actorsMgr)
+            end
             fullRef:fill_transient_data()            
         end
     end

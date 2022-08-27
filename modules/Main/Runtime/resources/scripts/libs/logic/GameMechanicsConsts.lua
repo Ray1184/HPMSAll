@@ -41,7 +41,8 @@ function game_mechanics_consts:get()
             EXIT = 'EXIT',
             ACTION_1 = 'ACTION_1',
             ACTION_2 = 'ACTION_2',
-            ACTION_3 = 'ACTION_3'
+            ACTION_3 = 'ACTION_3',
+            PAUSE = 'PAUSE'
         },
 
         anim_modes =

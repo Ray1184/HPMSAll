@@ -174,10 +174,10 @@ function context_get_full_ref(key)
         return nil
     end
     if context[cats.FULL_REFS][key] == nil then
-        log_warn('FullRef object ' .. key .. ' is nil in context')
+        log_info('FullRef object ' .. key .. ' is nil in context')
         return nil
     end
-    return context[cats.FULL_REFS][key]
+    return context[cats.FULL_REFS][key]    
 end
 
 function context_put_state(key, obj)

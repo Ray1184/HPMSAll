@@ -9,7 +9,6 @@ dependencies = {
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/utils/TransformsCommon.lua',
-    'libs/thirdparty/Inspect.lua',
     'libs/logic/GameMechanicsConsts.lua'
 }
 

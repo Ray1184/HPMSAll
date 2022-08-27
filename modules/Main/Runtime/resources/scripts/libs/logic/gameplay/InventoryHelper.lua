@@ -10,7 +10,8 @@ dependencies = {
     'libs/logic/GameMechanicsConsts.lua',
     'libs/logic/models/Player.lua',
     'libs/logic/models/Collectible.lua',
-    'libs/logic/models/RoomState.lua'
+    'libs/logic/models/RoomState.lua',
+    'libs/logic/gameplay/CollectibleHelper.lua'
 }
 
 function add_to_inventory(player, item)
@@ -24,9 +25,6 @@ function add_to_inventory(player, item)
 end
 
 function remove_if_equipped(player, itemId)
-    log_warn('remove_if_equipped')
-    log_warn(player.serializable.equip)
-    log_warn(itemId)
     if player.serializable.equip == itemId then
         player.serializable.equip = nil
     end
@@ -98,4 +96,15 @@ function calculate_cursor_and_offset(cursorIndex, cursorSize, repositorySize)
         }
     end
 
+end
+
+
+-- After load game I need to recover transient data for all items picked before.
+function recover_inventory_items(player, actorsMgr)
+    local inventory = player:get_inventory()
+    for i = 1, #inventory.objects do
+        local objFullId = inventory.objects[i].id
+        local amount = inventory.objects[i].amount
+        recover_item(objFullId, amount, actorsMgr)
+    end
 end

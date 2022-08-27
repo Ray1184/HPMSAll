@@ -89,8 +89,7 @@ function actors_manager:new(sceneManager)
         return self.loaded_actors[actor.serializable.id]
     end
 
-    function actors_manager:create_item(itemId, amount)
-        local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.collectibles)
+    function actors_manager:create_item_sfx(itemId, amount, idSuffix)
         local item = context_get_instance(k.inst_cat.COLLECTIBLES, itemId, idSuffix, amount)
         local roomState = room_state:ret(self.scene_manager:get_scene_name())
         if not roomState:has_item(item.serializable.id) then
@@ -104,6 +103,11 @@ function actors_manager:new(sceneManager)
         self.loaded_collectibles[item.serializable.id] = item
         self.collectibles = self.collectibles + 1
         return self.loaded_collectibles[item.serializable.id]
+    end
+
+    function actors_manager:create_item(itemId, amount)
+        local idSuffix = self.scene_manager:get_scene_name() .. '/' .. tostring(self.collectibles)
+        return self:create_item_sfx(itemId, amount, idSuffix)
     end
 
     function actors_manager:init_events()

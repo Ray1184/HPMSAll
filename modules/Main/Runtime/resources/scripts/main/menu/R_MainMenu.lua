@@ -37,6 +37,8 @@ scene = {
         seq = workflow_sequences:new()
         input_prf = input_profile:new('default')
 
+        register_all_instances()
+
         callback = function(tpf, timer)
             if input_prf:action_done_once(k.input_actions.ACTION_1) then
                 scene.next = 'main/scenes/R_Debug_01.lua'

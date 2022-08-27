@@ -8,8 +8,7 @@
 dependencies = {
     'libs/utils/TransformsCommon.lua',
     'libs/logic/templates/AbstractObject.lua',
-    'libs/backend/HPMSFacade.lua',
-    'libs/thirdparty/Inspect.lua'
+    'libs/backend/HPMSFacade.lua'
 }
 
 game_item = { }
@@ -75,7 +74,8 @@ function game_item:ret(path, id)
         if self.serializable.expired then
             return
         end
-        local node = self.transient.node
+        log_warn(self.serializable.id)
+        local node = self.transient.node        
         node.position = lib.vec3(x, y, z)
         self.serializable.visual_info.position = { x = node.position.x, y = node.position.y, z = node.position.z }
     end

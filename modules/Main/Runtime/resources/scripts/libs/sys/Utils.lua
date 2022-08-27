@@ -5,6 +5,10 @@
 -- DO NOT INCLUDE THIS!!!
 --
 
+dependencies = {
+    'libs/thirdparty/Inspect.lua'
+}
+
 local charset = { }  
 do
     -- [0-9a-zA-Z]
@@ -86,6 +90,15 @@ function safe_string(str)
     return ret
 end
 
+function string_split(str, sep)
+    local result = { }
+    local regex =("([^%s]+)"):format(sep)
+    for each in str:gmatch(regex) do
+        table.insert(result, each)
+    end
+    return result
+end
+
 function array_contains(array, val)
     for i = 1, #array do
         if array[i] == val then
@@ -138,6 +151,24 @@ function log_error(msg)
     log('Exit: -2')
     os.exit(-2, true)
 
+end
+
+function obj_to_str(o)
+    insp = inspector:get()
+    if o == nil then
+        return 'nil'
+    else
+        return insp.inspect(o)
+    end
+end
+
+function get_full_id_parts(fullId)
+    local token = string_split(fullId, '/')
+    local id = token[2]
+    local room = token[3]
+    local index = token[4]
+    local suffix = room .. '/' .. index
+    return id, suffix
 end
 
 function filename()

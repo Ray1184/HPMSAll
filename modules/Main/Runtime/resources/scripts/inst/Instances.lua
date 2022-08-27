@@ -33,18 +33,18 @@ function register_all_instances()
     context_register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_PLAYER.ID, function() return dummy_player:ret() end)
     
     -- Scene.
-    context_register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_CHEST.ID, function(id_suffix) return dummy_chest:ret(id_suffix) end)
+    context_register_instance(k.inst_cat.ACTORS, g.res_refs.actors.DUMMY_CHEST.ID, function(idSuffix) return dummy_chest:ret(idSuffix) end)
 
     -- Inventory.
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_1.ID, function(id_suffix, amount) return dummy_item_1:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_2.ID, function(id_suffix, amount) return dummy_item_2:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_3.ID, function(id_suffix, amount) return dummy_item_3:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_4.ID, function(id_suffix, amount) return dummy_item_4:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_5.ID, function(id_suffix, amount) return dummy_item_5:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_6.ID, function(id_suffix, amount) return dummy_item_6:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_7.ID, function(id_suffix, amount) return dummy_item_7:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_8.ID, function(id_suffix, amount) return dummy_item_8:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.REVOLVER_38.ID, function(id_suffix, amount) return revolver_38:ret(id_suffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.AMMO_38.ID, function(id_suffix, amount) return ammo_38:ret(id_suffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_1.ID, function(idSuffix, amount) return dummy_item_1:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_2.ID, function(idSuffix, amount) return dummy_item_2:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_3.ID, function(idSuffix, amount) return dummy_item_3:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_4.ID, function(idSuffix, amount) return dummy_item_4:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_5.ID, function(idSuffix, amount) return dummy_item_5:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_6.ID, function(idSuffix, amount) return dummy_item_6:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_7.ID, function(idSuffix, amount) return dummy_item_7:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_8.ID, function(idSuffix, amount) return dummy_item_8:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.REVOLVER_38.ID, function(idSuffix, amount) return revolver_38:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.AMMO_38.ID, function(idSuffix, amount) return ammo_38:ret(idSuffix, amount) end)
 
 end

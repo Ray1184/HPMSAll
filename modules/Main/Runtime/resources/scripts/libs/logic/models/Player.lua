@@ -204,6 +204,10 @@ function player:ret(path, id, rad, rect, ghost)
         end
         if self.serializable.equip ~= nil then
             local weapon = context_get_full_ref(self.serializable.equip)
+            if weapon == nil then
+                local id, suffix = get_full_id_parts(self.serializable.equip)
+                weapon = context_get_instance(k.inst_cat.COLLECTIBLES, id, suffix, 1)
+            end
             local attachTo = weapon:get_properties().weapon_properties.attach_to
             local parentEntity = self.transient.entity
 

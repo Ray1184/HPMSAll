@@ -10,8 +10,7 @@ dependencies = {
     --'libs/utils/Utils.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/templates/CollisionGameItem.lua',
-    'libs/logic/templates/AnimGameItem.lua',
-    'libs/thirdparty/Inspect.lua'
+    'libs/logic/templates/AnimGameItem.lua'
 }
 
 anim_collision_game_item = { }
