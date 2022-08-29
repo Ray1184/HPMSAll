@@ -93,6 +93,12 @@ float hpms::AnimationAdaptee::GetLength() const
     return ogreAnim->getLength();
 }
 
+const std::string& hpms::AnimationAdaptee::GetName() const
+{
+    Check(ogreAnim);
+    return ogreAnim->getAnimationName();
+}
+
 
 hpms::AnimationAdaptee::AnimationAdaptee(Ogre::AnimationState* ogreAnim) : AdapteeCommon(nullptr),
                                                                            normalizedTime(0.0f),

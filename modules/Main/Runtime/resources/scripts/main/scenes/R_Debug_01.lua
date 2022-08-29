@@ -187,6 +187,14 @@ scene = {
             seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true)
         } , function() return input_prf:action_done_once(k.input_actions.ACTION_3) end, true, 'save_data_flow')
 
+        wk:add_workflow( {
+            seq:pipe( function(tpf)
+                gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+                scene.next = 'main/scenes/R_Debug_02.lua'
+                scene.finished = true
+            end )
+        } , function() return input_prf:action_done_once(k.input_actions.PAUSE) end, true, 'switch_room')
+
 
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
@@ -355,12 +363,7 @@ scene = {
             scene.finished = true
         end
 
-        -- SWITCH ROOM TEST
-        if input_prf:action_done_once(k.input_actions.PAUSE) then
-            gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-            scene.next = 'main/scenes/R_Debug_02.lua'
-            scene.finished = true
-        end
+
 
         -- current_sector.id == 'S_05'
         -- if input_prf:action_done_once(k.input_actions.ACTION_3) then

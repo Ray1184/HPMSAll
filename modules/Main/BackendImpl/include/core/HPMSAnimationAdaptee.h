@@ -49,6 +49,8 @@ namespace hpms
 
 		virtual float GetLength() const override;
 
+		virtual const std::string& GetName() const override;
+
 	};
 }
 

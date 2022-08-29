@@ -29,4 +29,7 @@ POSSIBILI SOLUZIONI:
 
 La prima soluzione sembrerebbe la più semplice e robusta, ma sarebbe il caso di creare un oggetto nell'api.
 
-UPDATE: la soluzione funziona correttamente, ora bisogna capire in generale come mantenere lo stato degli oggetti tra una room e l'altra
+UPDATE: la soluzione funziona correttamente, ora bisogna capire in generale come mantenere lo stato degli oggetti tra una room e l'altra e dopo il load game
+
+UPDATE 2: risolto, quando si caricano i dropped collectibles, nel caso non sono stati appena creati vanno reinizializzati i transient,
+          lo stesso vale per gli oggetti in inventario e per le armi equipaggiate.

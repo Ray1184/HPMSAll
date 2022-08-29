@@ -46,5 +46,7 @@ namespace hpms
 		virtual void SetWeight(float weight) = 0;
 
 		virtual float GetLength() const = 0;
+
+		virtual const std::string& GetName() const = 0;
 	};
 }

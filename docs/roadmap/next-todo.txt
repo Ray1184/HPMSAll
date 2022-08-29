@@ -6,4 +6,16 @@ Eliminare ogni errore                                                           
 Capire dove viene impostato il bounding circle                                          | 100%
 Far funzionare il nuovo sistema di collisioni                                           | 100%
 Capire se al delete dei nodi c'è qualche SIGSEV                                         | 100%
-Sistemare il glitch quando l'animazione cambia velocemente								| 0%
+Sistemare il glitch quando l'animazione cambia velocemente								| 100%
+Persistenza oggetti durante cambio stati save / load                                    | 90%
+Sistema combattimento mani nude / arma bianca                                           | 0%
+Sistema combattimento armi da fuoco                                                     | 0%
+Sistemi particellari                                                                    | 0%
+Helper quest                                                                            | 0%
+Helper puzzles                                                                          | 0%
+Gestione statistiche giocatore                                                          | 0%
+Crafting                                                                                | 0%
+Shop system                                                                             | 0%
+Minigames                                                                               | 0%
+Audio                                                                                   | 0%
+

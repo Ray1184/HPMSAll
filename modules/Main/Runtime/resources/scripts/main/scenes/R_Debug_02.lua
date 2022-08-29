@@ -121,13 +121,21 @@ scene = {
             seq:fade_in(1)
         } , nil, false, 'fade in')
 
-   
+
         wk:add_workflow( {
             seq:pipe( function(tpf) gsm:save_data('data/save/savedata00.json', { room_id = scene.name }) end),
             seq:message_box('Game saved', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true)
         } , function() return input_prf:action_done_once(k.input_actions.ACTION_3) end, true, 'save_data_flow')
 
-      
+        wk:add_workflow( {
+            seq:pipe( function(tpf)
+                gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+                scene.next = 'main/scenes/R_Debug_01.lua'
+                scene.finished = true
+            end )
+        } , function() return input_prf:action_done_once(k.input_actions.PAUSE) end, true, 'switch_room')
+
+
 
         lamp = lib.make_light(lib.vec3(0.3, 0.3, 0.3))
         lamp.position = lib.vec3(-0.0026106834411621094, 0.02561706304550171, 1.5122439861297607)
@@ -295,12 +303,6 @@ scene = {
             scene.finished = true
         end
 
-          -- SWITCH ROOM TEST
-        if input_prf:action_done_once(k.input_actions.PAUSE) then
-            gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-            scene.next = 'main/scenes/R_Debug_01.lua'
-            scene.finished = true
-        end
         -- if input_prf:action_done_once(k.input_actions.ACTION_3) then
         --    gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_PICK)
         --    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
