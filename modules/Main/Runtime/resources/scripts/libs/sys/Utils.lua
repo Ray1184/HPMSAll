@@ -55,7 +55,7 @@ end
 function remove_serializable_by_id(array, id)
     for i = 1, #array do
         if array[i].id == id then
-            array[i].id = nil
+            array[i] = nil
         end
     end
 end

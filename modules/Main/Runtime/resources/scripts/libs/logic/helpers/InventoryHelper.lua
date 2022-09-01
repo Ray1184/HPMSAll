@@ -11,10 +11,10 @@ dependencies = {
     'libs/logic/models/Player.lua',
     'libs/logic/models/Collectible.lua',
     'libs/logic/models/RoomState.lua',
-    'libs/logic/gameplay/CollectibleHelper.lua'
+    'libs/logic/helpers/CollectibleHelper.lua'
 }
 
-function add_to_inventory(player, item)
+function add_to_inventory(player, item, roomId)
     if item.serializable.picked then
         log_warn('Item ' .. item.serializable.id .. ' already present in inventory')
         return
@@ -22,6 +22,10 @@ function add_to_inventory(player, item)
     local invSlots = player:get_inventory().objects
     item.serializable.picked = true
     table.insert(invSlots, item.serializable)
+    if roomId ~= nil then
+        local roomState = room_state:ret(roomId)
+        roomState:remove_collectible(item.serializable)
+    end
 end
 
 function remove_if_equipped(player, itemId)

@@ -7,7 +7,7 @@
 
 dependencies = {
     'libs/logic/GameMechanicsConsts.lua',
-    'libs/logic/gameplay/Workflow.lua',
+    'libs/logic/helpers/Workflow.lua',
     'libs/gui/OutputText2D.lua',
     'libs/backend/HPMSFacade.lua'
 }

@@ -21,6 +21,8 @@ function game_mechanics_consts:get()
 
         DEFAULT_MIN_PUSH_DISTANCE = 0.1,
 
+        DEFAULT_MIN_PICK_DISTANCE = 0.3,
+
         DEFAULT_ANIM_TRANSITION_TIME = 4,
 
         DEFAULT_GAVITY = 0.98,

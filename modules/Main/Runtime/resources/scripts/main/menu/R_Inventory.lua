@@ -3,13 +3,13 @@ dependencies = {
     'libs/utils/TransformsCommon.lua',
     'libs/gui/Image2D.lua',
     'libs/gui/OutputText2D.lua',
-    'libs/logic/gameplay/TextHelper.lua',
+    'libs/logic/helpers/TextHelper.lua',
     'libs/logic/templates/AbstractObject.lua',
     'libs/backend/HPMSFacade.lua',
     'libs/logic/managers/GlobalStateManager.lua',
     'libs/thirdparty/Inspect.lua',
     'libs/logic/managers/BundleManager.lua',
-    'libs/logic/gameplay/InventoryHelper.lua',
+    'libs/logic/helpers/InventoryHelper.lua',
     'libs/logic/managers/EventQueueManager.lua',
     'Framework.lua'
 }
@@ -129,7 +129,7 @@ scene = {
                 cbks[k.inventory_scope.SCOPE_PICK] = function()
                     if canPick then
                         if pickChoice == 0 then
-                            add_to_inventory(player, selectedItem)
+                            add_to_inventory(player, selectedItem, gsm:get_session_var(k.session_vars.LAST_ROOM))
                             scope = k.inventory_scope.SCOPE_LIST
                             go_back(scene)
                         else

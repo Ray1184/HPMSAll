@@ -170,7 +170,7 @@ end
 
 function context_get_full_ref(key)
     if key == nil then
-        log_error('Key cannot be nil')
+        log_warn('Key cannot be nil')
         return nil
     end
     if context[cats.FULL_REFS][key] == nil then
@@ -190,7 +190,7 @@ end
 
 function context_get_state(key)
     if key == nil then
-        log_error('Key cannot be nil')
+        log_warn('Key cannot be nil')
         return nil
     end
     if context[cats.STATE][key] == nil then
@@ -215,7 +215,7 @@ end
 
 function context_get_event(key)
     if key == nil then
-        log_error('Key cannot be nil')
+        log_warn('Key cannot be nil')
         return nil
     end
     if context[cats.EVENTS][key] == nil then
@@ -227,7 +227,7 @@ end
 
 function context_remove_event(key)
     if key == nil then
-        log_error('Key cannot be nil')
+        log_warn('Key cannot be nil')
         return nil
     end
     context[cats.EVENTS][key] = nil

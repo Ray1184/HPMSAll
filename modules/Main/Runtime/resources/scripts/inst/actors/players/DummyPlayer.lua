@@ -86,7 +86,7 @@ function dummy_player:ret()
     }
 
     local this = player:ret(path, id, rad, rect, ghost)
-
+    this.serializable.inventory.size = 20
     this:set_anagr(anagr)
     this:set_stats(stats)
 

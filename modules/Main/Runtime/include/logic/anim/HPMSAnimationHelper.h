@@ -27,7 +27,7 @@ namespace hpms
 			auto* activeAnimation = entity->GetAnimationByName(activeAnimationName);
 
 			if (activeAnimation->GetWeight() < 1.0) {
-				float activeAnimWeight = activeAnimation->GetWeight() + (draw);
+				float activeAnimWeight = activeAnimation->GetWeight() + draw;
 				if (activeAnimWeight >= 1) {
 					activeAnimWeight = 1.0f;
 				}
@@ -38,7 +38,7 @@ namespace hpms
 			{
 				if (anim->GetName() != activeAnimationName)
 				{
-					float otherAnimWeight = anim->GetWeight() - (draw);
+					float otherAnimWeight = anim->GetWeight() - draw / 2;
 					if (otherAnimWeight <= 0) {
 						otherAnimWeight = 0.0f;
 					}

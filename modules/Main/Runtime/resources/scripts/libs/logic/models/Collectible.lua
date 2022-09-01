@@ -9,8 +9,8 @@
 dependencies = {
     'libs/logic/templates/GameItem.lua',
     'libs/backend/HPMSFacade.lua',
-    'libs/logic/gameplay/InventoryHelper.lua',
-    'libs/logic/gameplay/EquipmentHelper.lua',
+    'libs/logic/helpers/InventoryHelper.lua',
+    'libs/logic/helpers/EquipmentHelper.lua',
     'libs/logic/managers/EventQueueManager.lua'
 }
 
@@ -171,8 +171,6 @@ function collectible:ret(path, id, amount)
     end
 
     context_put_full_ref_obj(this)
-    log_warn('collectible put full ref')
-    log_warn(this.serializable.id)
 
     return this
 end

@@ -7,8 +7,7 @@
 
 dependencies = {
     'libs/backend/HPMSFacade.lua',
-    'libs/logic/GameMechanicsConsts.lua',
-    'libs/logic/managers/ActorsEventsHelper.lua'
+    'libs/logic/GameMechanicsConsts.lua'
 }
 
 function actor_event(tpf, actor, event, lib)

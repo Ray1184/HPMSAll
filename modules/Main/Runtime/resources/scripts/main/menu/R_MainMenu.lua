@@ -7,8 +7,8 @@ dependencies = {
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
-    'libs/logic/gameplay/Workflow.lua',
-    'libs/logic/gameplay/WorkflowSequences.lua',
+    'libs/logic/helpers/Workflow.lua',
+    'libs/logic/helpers/WorkflowSequences.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua'

@@ -8,8 +8,8 @@
 dependencies = {
     'libs/backend/HPMSFacade.lua',
     'libs/logic/GameMechanicsConsts.lua',
-    'libs/logic/managers/ActorsHelper.lua',
-    'libs/logic/managers/ActorsEventsHelper.lua',
+    'libs/logic/helpers/ActorsHelper.lua',
+    'libs/logic/helpers/ActorsEventsHelper.lua',
     'libs/logic/models/RoomState.lua'
 }
 
@@ -134,7 +134,7 @@ function actors_manager:new(sceneManager)
             local pushing = actor.serializable.pushable
             pushing = pushing and self.loaded_player.serializable.action_mode == k.actor_action_mode.PUSH
             pushing = pushing and self.loaded_player.serializable.performing_action
-            if pushing and collision_actor_actor_custom(self.loaded_player, actor, lib, k.DEFAULT_MIN_PUSH_DISTANCE) then
+            if pushing and collision_actor_actor_custom(self.loaded_player, actor, lib, k.DEFAULT_MIN_PUSH_DISTANCE, true) then
                 local evts_info = get_push_events(self.loaded_player, actor)
                 actor_event(tpf, self.loaded_player, evts_info.evt_info_2, lib)
             end

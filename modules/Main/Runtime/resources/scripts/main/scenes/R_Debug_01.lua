@@ -9,9 +9,10 @@ dependencies = {
     'libs/input/InputProfile.lua',
     'libs/thirdparty/JsonHelper.lua',
     'libs/thirdparty/Inspect.lua',
-    'libs/logic/gameplay/Workflow.lua',
-    'libs/logic/gameplay/WorkflowSequences.lua',
-    'libs/logic/gameplay/InventoryHelper.lua',
+    'libs/logic/helpers/Workflow.lua',
+    'libs/logic/helpers/WorkflowSequences.lua',
+    'libs/logic/helpers/InventoryHelper.lua',
+    'libs/logic/helpers/CollectibleHelper.lua',
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua',
@@ -194,6 +195,21 @@ scene = {
                 scene.finished = true
             end )
         } , function() return input_prf:action_done_once(k.input_actions.PAUSE) end, true, 'switch_room')
+
+        wk:add_workflow( {
+            seq:pipe( function(tpf)
+                local picked = item_can_be_picked(room_st:get_items(), player, lib)
+                if picked ~= nil then
+                    gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_PICK)
+                    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
+                    gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+                    gsm:put_session_var(k.session_vars.PICKED_ITEM_ID, picked.serializable.id)
+                    gsm:put_session_var(k.session_vars.PICKED_ITEM_AMOUNT, 1)
+                    scene.next = 'main/menu/R_Inventory.lua'
+                    scene.finished = true
+                end
+            end )
+        } , function() return input_prf:action_done_once(k.input_actions.ACTION_1) end, true, 'pick_item')
 
 
 

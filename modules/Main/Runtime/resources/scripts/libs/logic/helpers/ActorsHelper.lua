@@ -63,10 +63,13 @@ function collision_actor_actor(i1, i2, lib)
     return collState ~= nil and collState.second == 'node_' .. i1.serializable.id
 end
 
-function collision_actor_actor_custom(i1, i2, lib, threshold)
+function collision_actor_actor_custom(i1, i2, lib, threshold, useRad)
     local p1 = i1:get_position()
     local p2 = i2:get_position()
-    local minDist = i1:get_scaled_rad() + i2:get_scaled_rad()
+    local minDist = 0
+    if useRad then
+        minDist = i1:get_scaled_rad() + i2:get_scaled_rad()
+    end
     local v1 = lib.vec2(p1.x, p1.y)
     local v2 = lib.vec2(p2.x, p2.y)
     return lib.vec2_dist(v1, v2) <(minDist +(threshold or 0))
