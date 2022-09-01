@@ -93,15 +93,12 @@ function game_mechanics_consts:get()
         {
             SEARCH = 0,
             COMBAT = 1,
-            EQUIP_HANDGUN = 2,
-            EQUIP_SHOTGUN = 3,
-            EQUIP_MG = 4,
-            EQUIP_RIFLE = 5,
-            EQUIP_THROWABLE = 6,
-            PUSH = 7,
-            STEALTH = 8,
-            SWIM = 9,
-            JUMP = 10
+            EQUIP = 2,
+            PUSH = 3,
+            STEALTH = 4,
+            SWIM = 5,
+            JUMP = 6,
+            CROWL = 7
         },
         menu_modes =
         {
@@ -125,16 +122,7 @@ function game_mechanics_consts:get()
             NEEDED = 1,
             FORBIDDEN = 2
         },
-        default_animations =
-        {
-            IDLE = 'Idle',
-            WALK_FORWARD = 'Walk_Forward',
-            WALK_BACK = 'Walk_Back',
-            RUN = 'Run',
-            PUSH = 'Push',
-            FIGHT = 'Fight',
-            DIE = 'Die'
-        },
+
 
         item_actions =
         {
@@ -147,6 +135,7 @@ function game_mechanics_consts:get()
             RELOAD = 'actions_reload',
             READ = 'actions_read'
         },
+
         item_events =
         {
             PICK = 0,
@@ -197,8 +186,50 @@ function game_mechanics_consts:get()
             SCOPE_ACTIONS = 2,
             SCOPE_PICK = 3
         },
-        attachable_bones = {
+        attachable_bones =
+        {
             HAND = 'Hand.R'
+        },
+        default_animations =
+        {
+            IDLE = 'Idle',
+            WALK_FORWARD = 'Walk_Forward',
+            WALK_BACK = 'Walk_Back',
+            RUN = 'Run',
+            PUSH = 'Push',
+            DIE = 'Die',
+            FIGHT_POSITION = 'Fight_Position',
+            FIGHT_KICK = 'Fight_Kick',
+            FIGHT_LEFT_PUNCH = 'Fight_Left_Punch',
+            FIGHT_RIGHT_PUNCH = 'Fight_Right_Punch',
+            EQUIP_KNIFE = 'Equip_Knife',
+            HIT_KNIFE = 'Hit_Knife',
+            EQUIP_BAT = 'Equip_Bat',
+            HIT_BAT = 'Hit_Bat',
+            EQUIP_SWORD = 'Equip_Sword',
+            HIT_SWORD = 'Hit_Sword',
+            EQUIP_HANDGUN_1 = 'Equip_Handgun_1',
+            FIRE_HANDGUN_1 = 'Fire_Handgun_1',
+            EQUIP_HANDGUN_2 = 'Equip_Handgun_2',
+            FIRE_HANDGUN_2 = 'Fire_Handgun_2',
+            EQUIP_RIFLE_1 = 'Equip_Rifle_1',
+            FIRE_RIFLE_1 = 'Fire_Rifle_1',
+            EQUIP_RIFLE_2 = 'Equip_Rifle_2',
+            FIRE_RIFLE_2 = 'Fire_Rifle_2',
+            EQUIP_RIFLE_3 = 'Equip_Rifle_3',
+            FIRE_RIFLE_3 = 'Fire_Rifle_3',
+            EQUIP_SINGLE_SHOT_RIFLE = 'Equip_Single_Shot_Rifle',
+            FIRE_SINGLE_SHOT_RIFLE = 'Fire_Single_Shot_Rifle',
+            EQUIP_SMG = 'Equip_SMG',
+            FIRE_SMG = 'Fire_SMG',
+            EQUIP_LMG = 'Equip_LMG',
+            FIRE_LMG = 'Fire_LMG',
+            EQUIP_NO_RECOIL_HANDGUN = 'Equip_No_Recoil_Handgun',
+            FIRE_NO_RECOIL_HANDGUN = 'Fire_No_Recoil_Handgun',
+            EQUIP_NO_RECOIL_RIFLE = 'Equip_No_Recoil_Rifle',
+            FIRE_NO_RECOIL_RIFLE = 'Fire_No_Recoil_Rifle',
+            EQUIP_THROWABLE = 'Equip_Throwable',
+            THROW = 'Throw'
         }
 
 

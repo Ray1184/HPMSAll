@@ -7,7 +7,7 @@ Capire dove viene impostato il bounding circle                                  
 Far funzionare il nuovo sistema di collisioni                                           | 100%
 Capire se al delete dei nodi c'è qualche SIGSEV                                         | 100%
 Sistemare il glitch quando l'animazione cambia velocemente								| 100%
-Persistenza oggetti durante cambio stati save / load                                    | 90%
+Persistenza oggetti durante cambio stati save / load                                    | 100%
 Sistema combattimento mani nude / arma bianca                                           | 0%
 Sistema combattimento armi da fuoco                                                     | 0%
 Sistemi particellari                                                                    | 0%

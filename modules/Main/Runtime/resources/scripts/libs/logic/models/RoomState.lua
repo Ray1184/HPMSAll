@@ -90,7 +90,7 @@ function room_state:ret(id)
     end
 
     function room_state:remove_collectible(ser)
-        remove_serializable_by_id(self.serializable.collectibles, ser.id)
+        self.serializable.collectibles = array_filter(self.serializable.collectibles, function(element) return element.id ~= ser.id end)
     end
 
     function room_state:load_dropped_collectibles(player, actorsMgr)

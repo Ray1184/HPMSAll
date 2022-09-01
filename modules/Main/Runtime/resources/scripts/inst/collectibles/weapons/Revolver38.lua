@@ -38,7 +38,8 @@ function revolver_38:ret(idSuffix, amount)
         },
         weapon_properties =
         {
-            anim_type = k.actor_action_mode.EQUIP_HANDGUN,
+            equip_anim = k.default_animations.EQUIP_HANDGUN_1,
+            fire_anim = k.default_animations.FIRE_HANDGUN_1,
             attach_to = k.attachable_bones.HAND,
             range = 2,
             ratio = 2,

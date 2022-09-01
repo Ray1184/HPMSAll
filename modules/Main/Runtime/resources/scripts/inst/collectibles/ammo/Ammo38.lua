@@ -39,6 +39,7 @@ function ammo_38:ret(idSuffix, amount)
         {
             max_per_slot = 12,
             base_damage = 2,
+            speed = 5,
             stopping = false,
             spread = false,
             poison = false,

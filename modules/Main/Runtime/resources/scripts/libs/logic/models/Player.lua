@@ -147,13 +147,10 @@ function player:ret(path, id, rad, rect, ghost)
 
         moveRatioByAction[k.actor_action_mode.SEARCH] = 0
         moveRatioByAction[k.actor_action_mode.COMBAT] = 0
-        moveRatioByAction[k.actor_action_mode.EQUIP_HANDGUN] = 0
-        moveRatioByAction[k.actor_action_mode.EQUIP_SHOTGUN] = 0
-        moveRatioByAction[k.actor_action_mode.EQUIP_MG] = 0
-        moveRatioByAction[k.actor_action_mode.EQUIP_RIFLE] = 0
-        moveRatioByAction[k.actor_action_mode.EQUIP_THROWABLE] = 0
+        moveRatioByAction[k.actor_action_mode.EQUIP] = 0
         moveRatioByAction[k.actor_action_mode.PUSH] = k.actor_move_ratio.SLOW
         moveRatioByAction[k.actor_action_mode.STEALTH] = k.actor_move_ratio.SLOWER
+        moveRatioByAction[k.actor_action_mode.CROWL] = k.actor_move_ratio.SLOWER
         moveRatioByAction[k.actor_action_mode.SWIM] = k.actor_move_ratio.SLOW
         moveRatioByAction[k.actor_action_mode.JUMP] = 0
 

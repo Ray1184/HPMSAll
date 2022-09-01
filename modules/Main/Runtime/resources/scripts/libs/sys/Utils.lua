@@ -52,12 +52,14 @@ function merge_tables(orig, new)
     return orig
 end
 
-function remove_serializable_by_id(array, id)
+function array_filter(array, filterCallback) 
+    local newArray = { }
     for i = 1, #array do
-        if array[i].id == id then
-            array[i] = nil
+        if filterCallback(array[i]) then
+            table.insert(newArray, array[i])
         end
     end
+    return newArray;
 end
 
 local function remove_by_key(tab, val)

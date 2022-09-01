@@ -313,30 +313,30 @@ scene = {
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
-        if walk == 1 then
-            walkRatio = walkRatio + tpf * 10
-            if walkRatio > 1 then
-                walkRatio = 1
-            end
-        elseif walk == -1 then
-            walkRatio = walkRatio - tpf * 10
-            if walkRatio < -1 then
-                walkRatio = -1
-            end
-        else
-            if walkRatio > 0 then
-                walkRatio = walkRatio - tpf * 10
-                if walkRatio < 0 then
-                    walkRatio = 0
-                end
-            else
-                walkRatio = walkRatio + tpf * 10
-                if walkRatio > 0 then
-                    walkRatio = 0
-                end
-            end
-
-        end
+      --  if walk == 1 then
+      --      walkRatio = walkRatio + tpf * 10
+      --      if walkRatio > 1 then
+      --          walkRatio = 1
+      --      end
+      --  elseif walk == -1 then
+      --      walkRatio = walkRatio - tpf * 10
+      --      if walkRatio < -1 then
+      --          walkRatio = -1
+      --      end
+      --  else
+      --      if walkRatio > 0 then
+      --          walkRatio = walkRatio - tpf * 10
+      --          if walkRatio < 0 then
+      --              walkRatio = 0
+      --          end
+      --      else
+      --          walkRatio = walkRatio + tpf * 10
+      --          if walkRatio > 0 then
+      --              walkRatio = 0
+      --          end
+      --      end
+      --
+      --  end
         turn = rotate ~= 0
         walkF = walk > 0
         walkB = walk < 0
@@ -367,7 +367,7 @@ scene = {
         if not action then
             player:rotate(0, 0, 50 * tpf * rotate)
         end
-        player:move_dir(tpf * walkRatio * 1)
+        player:move_dir(tpf * walk * 1)
         -- player:update(tpf)
 
         -- INVENTORY PICK TEST
