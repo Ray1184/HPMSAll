@@ -16,6 +16,7 @@ dependencies = {
     'inst/Instances.lua',
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua',
+    'libs/logic/managers/PlayerActionsManager.lua',
     'libs/logic/managers/EventQueueManager.lua'
 }
 
@@ -47,9 +48,12 @@ scene = {
         input_prf = input_profile:new(context_get_input_profile())
         scn_mgr = scene_manager:new(scene.name, cam)
         actors_mgr = actors_manager:new(scn_mgr)
+        
         wk = workflow:new(scn_mgr)
         seq = workflow_sequences:new()
         eqm = event_queue_manager:new()
+
+
 
 
         -- Collision map R_Debug_01 setup
@@ -87,6 +91,8 @@ scene = {
         gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.actors.DUMMY_PLAYER.ID)
         player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
         gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
+
+        playerMgr = player_actions_manager:new(player, room_st, scn_mgr)
 
         if not room_st:get_var('init') then
 
@@ -255,7 +261,10 @@ scene = {
     end,
     input = function(keys, mouse_buttons, x, y)
 
+        playerMgr:poll_inputs(keys, mouse_buttons)
+
         input_prf:poll_inputs(keys, mouse_buttons)
+
         if not interactive then
             return
         end
@@ -270,11 +279,11 @@ scene = {
             --    debug_console_exec()
             -- end
 
-            if lib.key_action_performed(keys, 'S', 1) then
-                nextPressed = true
-            else
-                nextPressed = false
-            end
+            --if lib.key_action_performed(keys, 'S', 1) then
+            --    nextPressed = true
+            --else
+            --    nextPressed = false
+            --end
 
             if lib.key_action_performed(keys, 'P', 1) then
                 -- player:delete_transient_data()
@@ -283,27 +292,27 @@ scene = {
                 -- log_debug('JSON --> ' .. json.encode(player.serializable))
             end
 
-            if lib.key_action_performed(keys, k.input_actions.UP, 2) then
-                walk = 1
-            elseif lib.key_action_performed(keys, k.input_actions.DOWN, 2) then
-                walk = -1
-            else
-                walk = 0
-            end
-
-            if lib.key_action_performed(keys, 'SPACE', 2) then
-                action = true
-            else
-                action = false
-            end
-
-            if lib.key_action_performed(keys, k.input_actions.RIGHT, 2) then
-                rotate = -2
-            elseif lib.key_action_performed(keys, k.input_actions.LEFT, 2) then
-                rotate = 2
-            else
-                rotate = 0
-            end
+            --if lib.key_action_performed(keys, k.input_actions.UP, 2) then
+            --    walk = 1
+            --elseif lib.key_action_performed(keys, k.input_actions.DOWN, 2) then
+            --    walk = -1
+            --else
+            --    walk = 0
+            --end
+            --
+            --if lib.key_action_performed(keys, 'SPACE', 2) then
+            --    action = true
+            --else
+            --    action = false
+            --end
+            --
+            --if lib.key_action_performed(keys, k.input_actions.RIGHT, 2) then
+            --    rotate = -2
+            --elseif lib.key_action_performed(keys, k.input_actions.LEFT, 2) then
+            --    rotate = 2
+            --else
+            --    rotate = 0
+            --end
         end
         -- CUSTOM CODE STOPS HERE, DO NOT REMOVE THIS LINE [input]
 
@@ -313,61 +322,62 @@ scene = {
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
-      --  if walk == 1 then
-      --      walkRatio = walkRatio + tpf * 10
-      --      if walkRatio > 1 then
-      --          walkRatio = 1
-      --      end
-      --  elseif walk == -1 then
-      --      walkRatio = walkRatio - tpf * 10
-      --      if walkRatio < -1 then
-      --          walkRatio = -1
-      --      end
-      --  else
-      --      if walkRatio > 0 then
-      --          walkRatio = walkRatio - tpf * 10
-      --          if walkRatio < 0 then
-      --              walkRatio = 0
-      --          end
-      --      else
-      --          walkRatio = walkRatio + tpf * 10
-      --          if walkRatio > 0 then
-      --              walkRatio = 0
-      --          end
-      --      end
-      --
-      --  end
-        turn = rotate ~= 0
-        walkF = walk > 0
-        walkB = walk < 0
-        player.serializable.performing_action = false
-        if interactive then
-            if action then
-                player:set_anim('Push')
-                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-                player.serializable.performing_action = true
-            elseif walkF or(walkF and turn) then
-                player:set_anim('Walk_Forward')
-                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-            elseif walkB or(walkB and turn) then
-                player:set_anim('Walk_Back')
-                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-            elseif turn then
-                player:set_anim('Idle')
-                player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
-                -- lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
-
-                -- player.serializable.performing_action = true
-            else
-                -- player.serializable.performing_action = false
-                player:set_anim('Idle')
-                player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
-            end
-        end
-        if not action then
-            player:rotate(0, 0, 50 * tpf * rotate)
-        end
-        player:move_dir(tpf * walk * 1)
+        playerMgr:update(tpf)
+       --if walk == 1 then
+       --    walkRatio = walkRatio + tpf * 10
+       --    if walkRatio > 1 then
+       --        walkRatio = 1
+       --    end
+       --elseif walk == -1 then
+       --    walkRatio = walkRatio - tpf * 10
+       --    if walkRatio < -1 then
+       --        walkRatio = -1
+       --    end
+       --else
+       --    if walkRatio > 0 then
+       --        walkRatio = walkRatio - tpf * 10
+       --        if walkRatio < 0 then
+       --            walkRatio = 0
+       --        end
+       --    else
+       --        walkRatio = walkRatio + tpf * 10
+       --        if walkRatio > 0 then
+       --            walkRatio = 0
+       --        end
+       --    end
+       --
+       --end
+       -- turn = rotate ~= 0
+       -- walkF = walk > 0
+       -- walkB = walk < 0
+       -- player.serializable.performing_action = false
+       -- if interactive then
+       --     if action then
+       --         player:set_anim('Push')
+       --         player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+       --         player.serializable.performing_action = true
+       --     elseif walkF or(walkF and turn) then
+       --         player:set_anim('Walk_Forward')
+       --         player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+       --     elseif walkB or(walkB and turn) then
+       --         player:set_anim('Walk_Back')
+       --         player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+       --     elseif turn then
+       --         player:set_anim('Idle')
+       --         player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+       --         -- lib.look_collisor_at(player.transient.collisor, lib.vec3(0, 0, 0), 0.5)
+       --
+       --         -- player.serializable.performing_action = true
+       --     else
+       --         -- player.serializable.performing_action = false
+       --         player:set_anim('Idle')
+       --         player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
+       --     end
+       -- end
+       -- if not action then
+       --     player:rotate(0, 0, 50 * tpf * rotate)
+       -- end
+       -- player:move_dir(tpf * walk * 1)
         -- player:update(tpf)
 
         -- INVENTORY PICK TEST
