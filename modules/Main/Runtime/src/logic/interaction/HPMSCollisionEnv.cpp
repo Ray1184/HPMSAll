@@ -66,15 +66,22 @@ void hpms::CollisionEnv::Update(float tpf, bool ignoreCollisions)
 			}
 
 		}
-		if (collStateWalkmap.skipCorrection || collStateCollisor.skipCorrection)
+
+		bool collisionWalkmap = collStateWalkmap.collision;
+		bool collisionCollisor = collStateCollisor.collision;
+
+		// In case of walkmap and collisor collision in the same time is better to keep the current collisor
+		// in the original position, otherwise the correction given by walkmap can cause an interpenetration into the collisor
+		// (or vice versa).
+		if (collStateWalkmap.skipCorrection || collStateCollisor.skipCorrection || (collisionWalkmap && collisionCollisor))
 		{
 			currentCollisor->GetActor()->SetPosition(originalPosition);
 		}
-		else if (collStateWalkmap.collision)
+		else if (collisionWalkmap)
 		{
 			currentCollisor->GetActor()->SetPosition(collStateWalkmap.nextPosition);
 		}
-		else if (collStateCollisor.collision)
+		else if (collisionCollisor)
 		{
 			currentCollisor->GetActor()->SetPosition(collStateCollisor.nextPosition);
 		}
