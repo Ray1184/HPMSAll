@@ -13,3 +13,4 @@ docs/Simulations/build
 .vs
 modules/Main/Runtime/resources/scripts.config
 modules/Main/Runtime/resources/scripts.luaproj
+_Debug
