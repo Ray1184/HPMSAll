@@ -72,7 +72,8 @@ void hpms::AnimationAdaptee::SetSliceFactor(int sliceFactor)
 
 bool hpms::AnimationAdaptee::CycleTerminated()
 {
-    return cycleTerminated;
+    Check(ogreAnim);
+    return cycleTerminated && ogreAnim->getWeight() == 1;
 }
 
 float hpms::AnimationAdaptee::GetWeight() const

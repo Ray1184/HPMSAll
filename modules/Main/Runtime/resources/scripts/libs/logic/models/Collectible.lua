@@ -34,7 +34,8 @@ function collectible:ret(path, id, amount)
                 id = id,
                 selected = false,
                 amount = amount or 1,
-                picked = false
+                picked = false,
+                properties = { }
             }
         }
 
@@ -80,6 +81,14 @@ function collectible:ret(path, id, amount)
     self.__index = self
     self.__tostring = function(o)
         return insp.inspect(o)
+    end
+
+    function collectible:set_serializable_properties(properties)
+        self.serializable.properties = properties
+    end
+
+    function collectible:get_serializable_properties()
+        return self.serializable.properties
     end
 
     function collectible:set_properties(properties)

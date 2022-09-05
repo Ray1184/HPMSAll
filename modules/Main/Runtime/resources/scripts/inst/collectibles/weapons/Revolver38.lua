@@ -17,11 +17,29 @@ function revolver_38:ret(idSuffix, amount)
     local id = g.res_refs.collectibles.REVOLVER_38.ID .. '/' .. idSuffix
 
     local amount = amount or 1
+
+    local serProperties = {
+        weapon_properties =
+        {
+            -- More is better
+            range = 2,
+            -- Less is better
+            ratio = 2,
+            -- Less is better (range 0-1)
+            precision = 0,
+            -- More is better
+            damage_multiplier = 1,
+            ammo_loaded = nil
+        }
+    }
+
     local properties = {
         inventory_position_offset = { x = - 0.1, y = 0, z = 0.625 },
-        scene_drop_position_offset = { x = 0, y = 0, z = 0 },
         inventory_rotation_offset = { x = 90, y = 0, z = 0 },
         inventory_scale_offset = { x = 0.05, y = 0.05, z = 0.05 },
+        scene_drop_position_offset = { x = 0, y = 0, z = 0 },
+        scene_drop_rotation_offset = { x = 90, y = 0, z = - 90 },
+        scene_drop_scale_offset = { x = 0.035, y = 0.035, z = 0.035 },
         name = 'items_misc_revolver_38_name',
         description = 'items_misc_revolver_38_description',
         item_type = k.item_types.WEAPON,
@@ -41,19 +59,17 @@ function revolver_38:ret(idSuffix, amount)
             equip_anim = k.default_animations.EQUIP_HANDGUN_1,
             fire_anim = k.default_animations.FIRE_HANDGUN_1,
             attach_to = k.attachable_bones.HAND,
-            range = 2,
-            ratio = 2,
-            damage_multiplier = 1,
-            ammo_loaded = g.res_refs.collectibles.REVOLVER_38.ID,
-            ammo_amount = 6,
+            ammo_allowed = { g.res_refs.collectibles.REVOLVER_38.ID },
+            ammo_max_amount = 6,
             equip_position_offset = { x = 0, y = 0.2, z = 0.07 },
-            equip_rotation_offset = { x = 90, y = 0, z = -90 },
+            equip_rotation_offset = { x = 90, y = 0, z = - 90 },
             equip_scale = { x = 0.035, y = 0.035, z = 0.035 }
         }
     }
 
     local this = collectible:ret(path, id, amount)
     this:set_properties(properties)
+    this:set_serializable_properties(serProperties)
 
     self.__tostring = function(o)
         return insp.inspect(o)

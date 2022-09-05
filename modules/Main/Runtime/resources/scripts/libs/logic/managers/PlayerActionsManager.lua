@@ -21,6 +21,9 @@ function player_actions_manager:new(player, roomState, sceneMgr)
         module_name = 'player_actions_manager',
         interactive = true,
         input_prf = input_profile:new(context_get_input_profile()),
+        anim_timer = 0,
+        init_timer = false,
+        recoil_anim = false,
         actions =
         {
             walk = 0,
@@ -31,7 +34,15 @@ function player_actions_manager:new(player, roomState, sceneMgr)
             action_3_once = false,
             action_1_doing = false,
             action_2_doing = false,
-            action_3_doing = false
+            action_3_doing = false,
+            double_action_up_once = false,
+            double_action_up_doing = false,
+            double_action_down_once = false,
+            double_action_down_doing = false,
+            double_action_left_once = false,
+            double_action_left_doing = false,
+            double_action_right_once = false,
+            double_action_right_doing = false
         }
     }
     log_debug('Creating player actions manager module')
@@ -101,6 +112,54 @@ function player_actions_manager:new(player, roomState, sceneMgr)
                 self.actions.action_3_doing = false
             end
 
+            if self.actions.action_2_doing and self.input_prf:action_done_once(k.input_actions.UP) then
+                self.actions.double_action_up_once = true
+            else
+                self.actions.double_action_up_once = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_doing(k.input_actions.UP) then
+                self.actions.double_action_up_doing = true
+            else
+                self.actions.double_action_up_doing = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_done_once(k.input_actions.DOWN) then
+                self.actions.double_action_down_once = true
+            else
+                self.actions.double_action_down_once = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_doing(k.input_actions.DOWN) then
+                self.actions.double_action_down_doing = true
+            else
+                self.actions.double_action_down_doing = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_done_once(k.input_actions.LEFT) then
+                self.actions.double_action_left_once = true
+            else
+                self.actions.double_action_left_once = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_doing(k.input_actions.LEFT) then
+                self.actions.double_action_left_doing = true
+            else
+                self.actions.double_action_left_doing = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_done_once(k.input_actions.RIGHT) then
+                self.actions.double_action_right_once = true
+            else
+                self.actions.double_action_right_once = false
+            end
+
+            if self.actions.action_2_doing and self.input_prf:action_doing(k.input_actions.RIGHT) then
+                self.actions.double_action_right_doing = true
+            else
+                self.actions.double_action_right_doing = false
+            end
+
 
 
         end
@@ -135,6 +194,7 @@ function player_actions_manager:new(player, roomState, sceneMgr)
         local walkF = self.actions.walk > 0
         local walkB = self.actions.walk < 0
         player.serializable.performing_action = false
+        local canTurnWhileAction = false
         if self.interactive then
             if self.actions.action_2_doing then
                 player.serializable.performing_action = true
@@ -146,16 +206,39 @@ function player_actions_manager:new(player, roomState, sceneMgr)
                 end
 
                 cbks[k.actor_action_mode.COMBAT] = function()
-
+                    player:set_anim(k.default_animations.FIGHT_POSITION)
+                    player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                    canTurnWhileAction = true
                 end
 
                 cbks[k.actor_action_mode.EQUIP] = function()
+                    if player.serializable.equip == nil then
+                        log_debug('Cannot enable equip mode without any equipped weapon')
+                        player.serializable.action_mode = k.actor_action_mode.COMBAT
+                        return
+                    end
+                    local equippedWeapon = context_get_full_ref(player.serializable.equip)
+                    local ratio = equippedWeapon:get_properties().weapon_properties.ratio
+                    if (self.actions.double_action_up_doing and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
+                        local fireAnim = equippedWeapon:get_properties().weapon_properties.fire_anim
+                        self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
+                        self.init_timer = true
+                        player:set_anim(fireAnim)
+                        player:play(k.anim_modes.ANIM_MODE_LOOP, 0.15)
+                        self.anim_timer = 0
+                    else
+                        local equipAnim = equippedWeapon:get_properties().weapon_properties.equip_anim
+                        player:set_anim(equipAnim)
+                        player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                    end
+                    canTurnWhileAction = true
 
                 end
 
                 cbks[k.actor_action_mode.PUSH] = function()
                     player:set_anim(k.default_animations.PUSH)
                     player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                    canTurnWhileAction = false
                 end
 
                 cbks[k.actor_action_mode.STEALTH] = function()
@@ -190,10 +273,16 @@ function player_actions_manager:new(player, roomState, sceneMgr)
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
             end
         end
-        if not self.actions.action_2_doing then
+        if not player.serializable.performing_action or canTurnWhileAction then
             player:rotate(0, 0, 150 * tpf * self.actions.rotate)
         end
         player:move_dir(tpf * self.actions.walkRatio)
+
+        if self.anim_timer < k.DEFAULT_ANIM_TIMER_LIMIT then
+            self.anim_timer = self.anim_timer + tpf
+        else
+            self.anim_timer = 0
+        end
     end
 
     function player_actions_manager:set_interactive(flag)

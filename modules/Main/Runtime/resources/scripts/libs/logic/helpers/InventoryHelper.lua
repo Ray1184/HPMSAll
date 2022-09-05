@@ -51,8 +51,12 @@ function remove_from_inventory(player, itemId, drop, roomId)
     if drop then
         item.serializable.picked = false
         local offset = item.not_serializable.properties.scene_drop_position_offset
+        local rot = item.not_serializable.properties.scene_drop_rotation_offset
+        local scale = item.not_serializable.properties.scene_drop_scale_offset
         local playerPos = player:get_position()
         item:set_position(playerPos.x + offset.x, playerPos.y + offset.y, playerPos.z + offset.z)
+        item:rotate(rot.x, rot.y, rot.z)
+        item:scale(scale.x, scale.y, scale.z)
         local roomState = room_state:ret(roomId)
         roomState:add_collectible(item.serializable)
 

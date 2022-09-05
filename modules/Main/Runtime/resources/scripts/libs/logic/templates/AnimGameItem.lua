@@ -35,6 +35,7 @@ function anim_game_item:ret(path, id)
                 {
                     channel_name = k.default_animations.IDLE,
                     mode = k.anim_modes.ANIM_MODE_LOOP,
+                    blend = true,
                     playing = false,
                     changed = true,
                     slowdown = 1,
@@ -114,6 +115,7 @@ function anim_game_item:ret(path, id)
         {
             channel_name = k.default_animations.IDLE,
             mode = k.anim_modes.ANIM_MODE_LOOP,
+            blend = true,
             playing = false,
             changed = true,
             slowdown = 1,
@@ -139,7 +141,7 @@ function anim_game_item:ret(path, id)
             end
 
             time = tpf / self.serializable.anim_data.slowdown
-            lib.update_anim(self.transient.entity, time, true, k.DEFAULT_ANIM_TRANSITION_TIME)
+            lib.update_anim(self.transient.entity, time, self.serializable.anim_data.blend or true, k.DEFAULT_ANIM_TRANSITION_TIME)
 
             if self.serializable.anim_data.mode == k.anim_modes.ANIM_MODE_FRAME then
                 self.serializable.anim_data.playing = false

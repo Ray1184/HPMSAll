@@ -80,7 +80,7 @@ namespace hpms
 
 	public:
 		inline static void UpdateInterpolate(hpms::EntityAdapter* entity, float tpf, bool blend, float transitionTimeRatio)
-		{
+		{			
 			std::string activeAnimationName = entity->GetActiveAnimation();
 			std::string lastAnimationName = entity->GetLastAnimation();
 			if (activeAnimationName == NO_ANIM)
@@ -94,13 +94,19 @@ namespace hpms
 			{
 				activeAnimation->SetPlaying(true);
 			}
-			bool terminating = Terminating(entity);
-			if ((blend && activeAnimationName != lastAnimationName && lastAnimationName != NO_ANIM) || terminating)
-			{				
-				float draw = transitionTimeRatio * tpf;
 
-				CompleteCycles(entity, transitionTimeRatio * tpf);
+			if (blend)
+			{
+				bool terminating = Terminating(entity);
+				if ((activeAnimationName != lastAnimationName && lastAnimationName != NO_ANIM) || terminating)
+				{
+					float draw = transitionTimeRatio * tpf;
+
+					CompleteCycles(entity, transitionTimeRatio * tpf);
+				}
 			}
+
+			
 
 			activeAnimation->Update(tpf);
 

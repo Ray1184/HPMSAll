@@ -12,12 +12,14 @@ function game_mechanics_consts:get()
     return {
 
         HPMS_VERSION = 1.0,
-
-        DEFAULT_GLOBAL_TIMER_LIMIT = 320000,
         -- 100 hours
+        DEFAULT_GLOBAL_TIMER_LIMIT = 320000,
 
-        DEFAULT_WORKFLOW_TIMER_LIMIT = 3200,
         -- 1 hour
+        DEFAULT_WORKFLOW_TIMER_LIMIT = 3200,
+
+        -- 1 minute
+        DEFAULT_ANIM_TIMER_LIMIT = 60,
 
         DEFAULT_MIN_PUSH_DISTANCE = 0.1,
 
