@@ -34,6 +34,7 @@ function revolver_38:ret(idSuffix, amount)
     }
 
     local properties = {
+        keep_if_empty = true,
         inventory_position_offset = { x = - 0.1, y = 0, z = 0.625 },
         inventory_rotation_offset = { x = 90, y = 0, z = 0 },
         inventory_scale_offset = { x = 0.05, y = 0.05, z = 0.05 },

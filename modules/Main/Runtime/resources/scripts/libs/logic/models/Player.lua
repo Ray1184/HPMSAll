@@ -218,6 +218,13 @@ function player:ret(path, id, rad, rect, ghost)
 
     function player:update(tpf)
         self.metainfo.override.scene_actor.update(self, tpf)
+        local invSlots = player:get_inventory().objects
+        for i = 1, #invSlots do
+            if invSlots[i].expired then
+                invSlots[i].visual_info.visible = false                
+                remove_from_inventory(self, invSlots[i].id, false)
+            end
+        end
     end
 
     function player:set_anim(name)

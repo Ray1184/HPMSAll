@@ -43,7 +43,7 @@ void hpms::Collisor::CollidesWalkmap(float tpf)
 
 void hpms::Collisor::CollidesCollisor(float tpf, Collisor* other)
 {
-	if (!GetConfig().active || !other->GetConfig().active || IsStopped())
+	if (!GetConfig().active || !other->GetConfig().active || IsStopped() || ignore || other->IsIgnore())
 	{
 		ApplyHeight(&nextPosition, tpf);
 		collisionState = NO_COLLISION(nextPosition, GetName());

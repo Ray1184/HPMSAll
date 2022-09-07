@@ -104,7 +104,17 @@ namespace hpms
 		{
 			// Not implemented.
 			LOG_WARN("Cannot set sampled triangle inside script");
-		}				
+		}	
+
+		inline void SetIgnore(bool flag)
+		{
+			ignore = flag;
+		}
+
+		inline bool IsIgnore() const
+		{
+			return ignore;
+		}
 
 		inline const CollisionInfo& GetCollisionState() const
 		{

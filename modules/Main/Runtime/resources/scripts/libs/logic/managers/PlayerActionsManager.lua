@@ -24,6 +24,7 @@ function player_actions_manager:new(player, roomState, sceneMgr)
         anim_timer = 0,
         init_timer = false,
         recoil_anim = false,
+        shot_ready = true,
         actions =
         {
             walk = 0,
@@ -218,15 +219,20 @@ function player_actions_manager:new(player, roomState, sceneMgr)
                         return
                     end
                     local equippedWeapon = context_get_full_ref(player.serializable.equip)
-                    local ratio = equippedWeapon:get_properties().weapon_properties.ratio
-                    if (self.actions.double_action_up_doing and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
+                    local ratio = equippedWeapon:get_serializable_properties().weapon_properties.ratio
+                    if (equippedWeapon.serializable.amount > 0 and self.actions.double_action_up_doing and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
                         local fireAnim = equippedWeapon:get_properties().weapon_properties.fire_anim
                         self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
+                        if self.shot_ready then
+                            equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
+                            self.shot_ready = false
+                        end
                         self.init_timer = true
                         player:set_anim(fireAnim)
                         player:play(k.anim_modes.ANIM_MODE_LOOP, 0.15)
                         self.anim_timer = 0
                     else
+                        self.shot_ready = equippedWeapon.serializable.amount > 0
                         local equipAnim = equippedWeapon:get_properties().weapon_properties.equip_anim
                         player:set_anim(equipAnim)
                         player:play(k.anim_modes.ANIM_MODE_LOOP, 1)

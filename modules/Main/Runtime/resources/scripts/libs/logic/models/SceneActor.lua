@@ -166,6 +166,9 @@ function scene_actor:ret(path, id, rad, rect, ghost, template)
     end
 
     function scene_actor:event(tpf, evtInfo)
+        if self.serializable.expired then
+            return
+        end
         if self.metainfo.evt_callback ~= nil then
             self.metainfo.evt_callback(tpf, evtInfo)
         end

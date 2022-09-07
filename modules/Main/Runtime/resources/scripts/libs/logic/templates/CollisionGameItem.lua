@@ -48,7 +48,7 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
             }
         }
     }
-   
+
     notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
     this = merge_tables(this, notSer)
 
@@ -164,6 +164,7 @@ function collision_game_item:ret(path, id, bounding_radius, bounding_rect, ghost
     end
 
     function collision_game_item:kill_instance()
+        self.transient.collisor.ignore_collisions = true
         self.metainfo.override.game_item.kill_instance(self)
     end
 

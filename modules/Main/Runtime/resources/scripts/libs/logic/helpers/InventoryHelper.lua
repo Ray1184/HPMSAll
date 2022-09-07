@@ -14,13 +14,17 @@ dependencies = {
     'libs/logic/helpers/CollectibleHelper.lua'
 }
 
-function add_to_inventory(player, item, roomId)
+function add_to_inventory(player, item, roomId)    
     if item.serializable.picked then
         log_warn('Item ' .. item.serializable.id .. ' already present in inventory')
         return
     end
     local invSlots = player:get_inventory().objects
     item.serializable.picked = true
+    -- If item is expired mark in any case as picked, to make not visible
+    if item.serializable.expired then
+        return
+    end
     table.insert(invSlots, item.serializable)
     if roomId ~= nil then
         local roomState = room_state:ret(roomId)

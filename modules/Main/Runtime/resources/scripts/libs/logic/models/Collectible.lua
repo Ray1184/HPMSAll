@@ -11,6 +11,7 @@ dependencies = {
     'libs/backend/HPMSFacade.lua',
     'libs/logic/helpers/InventoryHelper.lua',
     'libs/logic/helpers/EquipmentHelper.lua',
+    'libs/logic/helpers/CollectibleHelper.lua',
     'libs/logic/managers/EventQueueManager.lua'
 }
 
@@ -43,7 +44,8 @@ function collectible:ret(path, id, amount)
     end )
 
     local notSer = {
-        not_serializable = { }
+        not_serializable =
+        { }
     }
 
     notSer.not_serializable = merge_tables(notSer.not_serializable, ret.not_serializable)
@@ -131,6 +133,7 @@ function collectible:ret(path, id, amount)
     end
 
     function collectible:update()
+        item_set_expired_if_empty(self)
         if self.serializable.expired then
             return
         end
@@ -143,6 +146,9 @@ function collectible:ret(path, id, amount)
     end
 
     function collectible:event(tpf, evtInfo)
+        if self.serializable.expired then
+            return
+        end
         -- Process standard events.
         local cbks = { }
         cbks[k.item_actions.DROP] = function()

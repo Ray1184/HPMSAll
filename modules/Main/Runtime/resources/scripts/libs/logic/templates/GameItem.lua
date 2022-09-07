@@ -74,7 +74,6 @@ function game_item:ret(path, id)
         if self.serializable.expired then
             return
         end
-        log_warn(self.serializable.id)
         local node = self.transient.node        
         node.position = lib.vec3(x, y, z)
         self.serializable.visual_info.position = { x = node.position.x, y = node.position.y, z = node.position.z }
@@ -162,7 +161,8 @@ function game_item:ret(path, id)
 
     function game_item:kill_instance()
         -- WARNING, here change state forever after call.
-        self:update()
+        self.serializable.visual_info.visible = false
+        self.transient.entity.visible = self.serializable.visual_info.visible
         self.serializable.expired = true
     end
 

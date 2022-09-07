@@ -15,7 +15,7 @@ dependencies = {
     'libs/logic/models/RoomState.lua'
 }
 
-function recover_item(objFullId, amount, actorsMgr)    
+function recover_item(objFullId, amount, actorsMgr)
     local id, suffix = get_full_id_parts(objFullId)
     return actorsMgr:create_item_sfx(id, amount, suffix)
 end
@@ -29,5 +29,12 @@ function item_can_be_picked(roomColls, player, lib)
         end
     end
     return nil
+end
+
+function item_set_expired_if_empty(item)
+    if not item.serializable.expired and item.serializable.amount == 0 and not item:get_properties().keep_if_empty then
+        item:kill_instance()
+        log_warn(item.serializable.expired)
+    end
 end
 

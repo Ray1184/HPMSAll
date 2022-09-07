@@ -111,6 +111,7 @@ scene = {
             ammo = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 6)
             ammo_load(rev, ammo)
             add_to_inventory(player, rev)
+            add_to_inventory(player, ammo)
             add_to_inventory(player, obj1)
             add_to_inventory(player, obj2)
             add_to_inventory(player, obj3)
@@ -187,7 +188,7 @@ scene = {
             seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
             seq:wait(2),
             seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
-            seq:pipe( function(tpf) chest3.serializable.visual_info.visible = false chest3:kill_instance() end)
+            seq:pipe( function(tpf) chest3:kill_instance() end)
         } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
 
         wk:add_workflow( {
