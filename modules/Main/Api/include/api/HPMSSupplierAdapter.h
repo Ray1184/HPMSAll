@@ -12,6 +12,7 @@
 #include <api/HPMSOverlayTextAreaAdapter.h>
 #include <api/HPMSCameraAdapter.h>
 #include <api/HPMSLightAdapter.h>
+#include <api/HPMSParticleAdapter.h>
 #include <api/HPMSWalkmapAdapter.h>
 #include <string>
 
@@ -51,6 +52,8 @@ namespace hpms
         virtual hpms::CameraAdapter* GetCamera() = 0;
 
         virtual hpms::LightAdapter* CreateLight(float r, float g, float b) = 0;
+
+        virtual hpms::ParticleAdapter* CreateParticleSystem(const std::string& name, const std::string& templateName) = 0;
 
         virtual hpms::BackgroundImageAdapter* CreateBackgroundImage(const std::string& path) = 0;
 

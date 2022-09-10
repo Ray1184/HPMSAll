@@ -105,6 +105,14 @@ function backend:get()
                 log_debug('Deleting ' .. l.dummy_id)
             end,
 
+            make_particle_system = function(name, template)
+                return { dummy_id = 'ParticleSystem[' .. name .. ',' .. template .. ']' }
+            end,
+
+            delete_particle_system = function(p)
+                log_debug('Deleting ' .. p.name)
+            end,
+
             make_background = function(path)
                 return { dummy_id = 'Background[' .. path .. ']' }
             end,
@@ -336,6 +344,8 @@ function backend:get()
             delete_textarea = hpms.delete_textarea,
             make_light = hpms.make_light,
             delete_light = hpms.delete_light,
+            make_particle_system = hpms.make_particle_system,
+            delete_particle_system = hpms.delete_particle_system,
             make_background = hpms.make_background,
             delete_background = hpms.delete_background,
             make_walkmap = hpms.make_walkmap,

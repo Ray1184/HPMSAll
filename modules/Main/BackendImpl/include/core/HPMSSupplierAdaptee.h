@@ -7,6 +7,7 @@
 #include <api/HPMSSupplierAdapter.h>
 #include <core/HPMSCameraAdaptee.h>
 #include <core/HPMSLightAdaptee.h>
+#include <core/HPMSParticleAdaptee.h>
 #include <core/HPMSEntityAdaptee.h>
 #include <core/HPMSSceneNodeAdaptee.h>
 #include <vector>
@@ -33,6 +34,8 @@ namespace hpms
         virtual hpms::CameraAdapter* GetCamera() override;
 
         virtual hpms::LightAdapter* CreateLight(float r, float g, float b) override;
+
+        virtual hpms::ParticleAdapter* CreateParticleSystem(const std::string& name, const std::string& templateName) override;
 
         virtual BackgroundImageAdapter*
         CreateBackgroundImage(const std::string& path) override;

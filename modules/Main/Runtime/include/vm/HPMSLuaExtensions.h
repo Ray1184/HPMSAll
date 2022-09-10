@@ -344,6 +344,16 @@ namespace hpms
 			hpms::SafeDelete(walkMap);
 		}
 
+		static inline hpms::ParticleAdapter* AMCreateParticleSystem(const std::string& name, const std::string& templateName)
+		{
+			return hpms::GetSupplier()->CreateParticleSystem(name, templateName);
+		}
+
+		static inline void AMDeleteParticleSystem(ParticleAdapter* ps)
+		{
+			hpms::SafeDelete(ps);
+		}
+
 		static inline hpms::Collisor* AMCreateEntityCollisor(EntityAdapter* entity, WalkmapAdapter* walkMap, const hpms::CollisorConfig& config)
 		{
 			auto* c = hpms::SafeNew<hpms::Collisor>(entity, walkMap, config);

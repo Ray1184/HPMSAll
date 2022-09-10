@@ -13,7 +13,7 @@ dependencies = {
 
 player_actions_manager = { }
 
-function player_actions_manager:new(player, roomState, sceneMgr)
+function player_actions_manager:new(player, roomState, actorsMgr)
     lib = backend:get()
     insp = inspector:get()
     k = game_mechanics_consts:get()
@@ -22,6 +22,7 @@ function player_actions_manager:new(player, roomState, sceneMgr)
         interactive = true,
         input_prf = input_profile:new(context_get_input_profile()),
         anim_timer = 0,
+        actors_manager = actorsMgr,
         init_timer = false,
         recoil_anim = false,
         shot_ready = true,
@@ -225,6 +226,7 @@ function player_actions_manager:new(player, roomState, sceneMgr)
                         self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
                         if self.shot_ready then
                             equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
+                            init_round(player, equippedWeapon, self.actors_manager)
                             self.shot_ready = false
                         end
                         self.init_timer = true
@@ -289,6 +291,9 @@ function player_actions_manager:new(player, roomState, sceneMgr)
         else
             self.anim_timer = 0
         end
+
+        update_rounds(self.actors_manager.scene_manager, tpf)
+
     end
 
     function player_actions_manager:set_interactive(flag)

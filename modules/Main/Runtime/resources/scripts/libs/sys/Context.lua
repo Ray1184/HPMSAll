@@ -13,6 +13,7 @@ local cats = {
     SERIALIZABLES = 'serializables',
     INSTANCES = 'instances',
     FULL_REFS = 'full_refs',
+    VOLATILES = 'volatiles',
     BUNDLES = 'bundles',
 
 }
@@ -22,6 +23,7 @@ local function init_lua_context()
         context[v] = { }
         log_info('- ' .. v)
     end
+    context.global_counter = 0
 end
 
 init_lua_context() 
@@ -177,7 +179,7 @@ function context_get_full_ref(key)
         log_info('FullRef object ' .. key .. ' is nil in context')
         return nil
     end
-    return context[cats.FULL_REFS][key]    
+    return context[cats.FULL_REFS][key]
 end
 
 function context_put_state(key, obj)
@@ -281,4 +283,46 @@ function context_get_object(key, persist, supplierCallback)
     local obj = { }
     obj.serializable = context[cats.SERIALIZABLES][key]
     return obj
+end
+
+function increase_and_get_global_counter()
+    context.global_counter = context.global_counter + 1
+    return context.global_counter
+end
+
+local function context_reset_global_counter_if_empty()
+    if table_empty(context[cats.VOLATILES]) then
+        context.global_counter = 0
+    end
+end
+
+function context_put_and_init_volatile(vol)
+    local id = 'volatile/' .. tostring(increase_and_get_global_counter())
+    vol.not_serializable.id = id
+    vol:fill_transient_data()
+    context[cats.VOLATILES][id] = vol
+end
+
+function context_foreach_alive_volatile(filter, callback)
+    for i, v in pairs(context[cats.VOLATILES]) do
+        if v ~= nil and filter(v) then
+            callback(v)
+        end
+    end
+end
+
+function context_delete_all_volatile()
+    for i, v in pairs(context[cats.VOLATILES]) do
+        if v ~= nil then
+            v:delete_transient_data()
+        end
+    end
+    context.global_counter = 0
+    context[cats.VOLATILES] = { }
+end
+
+function context_remove_and_delete_volatile(vol)
+    vol:delete_transient_data()
+    context[cats.VOLATILES][vol.not_serializable.id] = nil
+    context_reset_global_counter_if_empty()
 end

@@ -13,14 +13,13 @@ dependencies = {
 
 volatile_game_item = { }
 
-function volatile_game_item:ret(path, id)
+function volatile_game_item:ret(path)
     lib = backend:get()
     trx = transform:get()
     insp = inspector:get()
 
     local transientDataInit = false
-    local id = 'volatile_game_item/' .. id
-    local ret = abstract_object:ret(id)
+    local ret = abstract_volatile_object:ret()
 
     local this = { }
 
@@ -94,7 +93,7 @@ function volatile_game_item:ret(path, id)
         if self.transientDataInit then
             return
         end
-        local controlNode = lib.make_node('ctrl_node_' .. id)
+        local controlNode = lib.make_node('ctrl_node_vol_' .. self.not_serializable.id)
         local ent = nil
         if path ~= nil then
             ent = lib.make_entity(path)
@@ -105,7 +104,7 @@ function volatile_game_item:ret(path, id)
             {
                 entity = ent,
                 ctrl_node = controlNode,
-                node = lib.make_child_node('node_' .. id,controlNode)
+                node = lib.make_child_node('node_vol_' .. self.not_serializable.id,controlNode)
 
             }
         }

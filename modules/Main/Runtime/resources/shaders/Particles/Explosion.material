@@ -1,0 +1,71 @@
+vertex_program ExplodeVertexProgram unified
+{
+	delegate ExplodeVertexProgramHLSL
+	delegate ExplodeVertexProgramGLSL
+}
+
+fragment_program ExplodeFragmentProgram unified
+{
+	delegate ExplodeFragmentProgramHLSL
+	delegate ExplodeFragmentProgramGLSL
+}
+
+vertex_program ExplodeVertexProgramGLSL glsl
+{
+	source Particles/Explosion.vert
+}
+
+fragment_program ExplodeFragmentProgramGLSL glsl
+{
+	source Particles/Explosion.frag
+	default_params
+	{
+		param_named tex int 0
+	}
+}
+
+vertex_program ExplodeVertexProgramHLSL hlsl
+{
+	source Particles/Explosion.hlsl
+	entry_point main_vp
+	target vs_2_0
+}
+
+fragment_program ExplodeFragmentProgramHLSL hlsl
+{
+	source Particles/Explosion.hlsl
+	entry_point main_fp
+	target ps_2_0
+}
+
+
+
+material Particles/Explosion
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend add
+			depth_write off
+			
+			vertex_program_ref ExplodeVertexProgram
+			{
+				param_named_auto worldViewProj worldviewproj_matrix
+			}
+			
+			fragment_program_ref ExplodeFragmentProgram
+			{
+			}
+
+			// texture unit 0 - our volume texture
+			texture_unit
+			{
+				texture Particles/Explosion.png
+				tex_address_mode clamp
+				filtering linear linear none
+			}
+		}
+	}
+}

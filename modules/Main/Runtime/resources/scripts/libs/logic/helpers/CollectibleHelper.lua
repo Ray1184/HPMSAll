@@ -32,9 +32,13 @@ function item_can_be_picked(roomColls, player, lib)
 end
 
 function item_set_expired_if_empty(item)
-    if not item.serializable.expired and item.serializable.amount == 0 and not item:get_properties().keep_if_empty then
-        item:kill_instance()
-        log_warn(item.serializable.expired)
+    if not item.serializable.expired and item.serializable.amount <= 0 and not item:get_properties().keep_if_empty then
+        if item.serializable.amount_in_weapon ~= nil and item.serializable.amount_in_weapon <= 0 then
+            item:kill_instance()
+        else
+            item.serializable.visual_info.visible = false
+            item.transient.entity.visible = item.serializable.visual_info.visible
+        end
     end
 end
 

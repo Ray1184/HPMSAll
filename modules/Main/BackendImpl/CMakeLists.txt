@@ -133,6 +133,7 @@ set(SOURCES
         src/core/HPMSBackgroundImageAdaptee.cpp
         src/core/HPMSOverlayImageAdaptee.cpp
         src/core/HPMSLightAdaptee.cpp
+        src/core/HPMSParticleAdaptee.cpp
         src/core/HPMSSupplierAdaptee.cpp
         src/core/HPMSSimulatorAdaptee.cpp
         src/core/HPMSWalkmapAdaptee.cpp

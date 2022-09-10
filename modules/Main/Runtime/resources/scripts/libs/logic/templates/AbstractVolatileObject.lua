@@ -15,9 +15,9 @@
 -- }
 --
 
-abstract_object = { }
+abstract_volatile_object = { }
 
-function abstract_object:ret(id)
+function abstract_volatile_object:ret()
     local this = {        
     }
 

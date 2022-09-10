@@ -16,22 +16,7 @@ function revolver_38:ret(idSuffix, amount)
     local path = g.res_refs.collectibles.REVOLVER_38.PATH
     local id = g.res_refs.collectibles.REVOLVER_38.ID .. '/' .. idSuffix
 
-    local amount = amount or 1
-
-    local serProperties = {
-        weapon_properties =
-        {
-            -- More is better
-            range = 2,
-            -- Less is better
-            ratio = 2,
-            -- Less is better (range 0-1)
-            precision = 0,
-            -- More is better
-            damage_multiplier = 1,
-            ammo_loaded = nil
-        }
-    }
+    local amount = amount or 1  
 
     local properties = {
         keep_if_empty = true,
@@ -70,7 +55,6 @@ function revolver_38:ret(idSuffix, amount)
 
     local this = collectible:ret(path, id, amount)
     this:set_properties(properties)
-    this:set_serializable_properties(serProperties)
 
     self.__tostring = function(o)
         return insp.inspect(o)

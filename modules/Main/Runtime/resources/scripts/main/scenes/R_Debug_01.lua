@@ -92,7 +92,9 @@ scene = {
         player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
         gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
 
-        playerMgr = player_actions_manager:new(player, room_st, scn_mgr)
+        playerMgr = player_actions_manager:new(player, room_st, actors_mgr)
+
+        testParticle = lib.make_particle_system('explosion', 'Explosion')
 
         if not room_st:get_var('init') then
 
@@ -108,7 +110,22 @@ scene = {
             obj8b = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 10)
             obj8c = actors_mgr:create_item(g.res_refs.collectibles.DUMMY_ITEM_8.ID, 99)
             rev = actors_mgr:create_item(g.res_refs.collectibles.REVOLVER_38.ID, 0)
+
+            local wp = {
+                weapon_properties =
+                {
+                    range = 2,
+                    ratio = 2,
+                    precision = 0,
+                    damage_multiplier = 1
+                }
+            }
+
+            rev:set_serializable_properties(wp)
+
             ammo = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 6)
+
+       
             ammo_load(rev, ammo)
             add_to_inventory(player, rev)
             add_to_inventory(player, ammo)
@@ -440,6 +457,7 @@ scene = {
         -- lib.delete_entity(entity_ey_dummyanim)
 
         -- View CM_01 delete
+        context_delete_all_volatile()
         room_st:delete_dropped_collectibles()
         actors_mgr:delete_all()
         scn_mgr:delete_all()

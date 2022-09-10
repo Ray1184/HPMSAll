@@ -52,7 +52,7 @@ function merge_tables(orig, new)
     return orig
 end
 
-function array_filter(array, filterCallback) 
+function array_filter(array, filterCallback)
     local newArray = { }
     for i = 1, #array do
         if filterCallback(array[i]) then
@@ -62,12 +62,13 @@ function array_filter(array, filterCallback)
     return newArray;
 end
 
-local function remove_by_key(tab, val)
-    for i, v in ipairs(tab) do
-        if v.id == val then
-            tab[i] = nil
+function table_empty(tab)
+    for i, v in pairs(tab) do
+        if v ~= nil then
+            return false
         end
     end
+    return true
 end
 
 function safe_string(str)

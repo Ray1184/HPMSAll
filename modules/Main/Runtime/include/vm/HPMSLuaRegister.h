@@ -49,6 +49,8 @@ namespace hpms
 				.addFunction("delete_light", &hpms::LuaExtensions::AMDeleteLight)
 				.addFunction("make_walkmap", &hpms::LuaExtensions::AMCreateWalkMap)
 				.addFunction("delete_walkmap", &hpms::LuaExtensions::AMDeleteWalkMap)
+				.addFunction("make_particle_system", &hpms::LuaExtensions::AMCreateParticleSystem)
+				.addFunction("delete_particle_system", &hpms::LuaExtensions::AMDeleteParticleSystem)
 				.addFunction("make_node_collisor", &hpms::LuaExtensions::AMCreateNodeCollisor)
 				.addFunction("make_entity_collisor", &hpms::LuaExtensions::AMCreateEntityCollisor)
 				.addFunction("delete_collisor", &hpms::LuaExtensions::AMDeleteCollisor)
@@ -390,6 +392,16 @@ namespace hpms
 				.beginClass<AnimationAdapter>("animation")
 				.addProperty("slice", &hpms::AnimationAdapter::GetSliceFactor, &hpms::AnimationAdapter::SetSliceFactor)
 				.endClass()
+				.endNamespace();
+		}
+
+		inline static void RegisterParticleSystem(lua_State* state)
+		{
+			getGlobalNamespace(state)
+				.beginNamespace("hpms")
+				.beginClass<ParticleAdapter>("particle_system")
+				.addProperty("position", &hpms::ParticleAdapter::GetPosition, &hpms::ParticleAdapter::SetPosition)
+				.addProperty("visible", &hpms::ParticleAdapter::IsVisible, &hpms::ParticleAdapter::SetVisible).endClass()
 				.endNamespace();
 		}
 

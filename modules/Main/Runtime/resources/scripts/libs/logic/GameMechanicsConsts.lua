@@ -35,6 +35,8 @@ function game_mechanics_consts:get()
 
         ACTIONS_DISPLAY_LIST_SIZE = 3,
 
+        BULLET_TTL = 2,
+
         input_actions =
         {
             INVENTORY = 'INVENTORY',
@@ -232,6 +234,9 @@ function game_mechanics_consts:get()
             FIRE_NO_RECOIL_RIFLE = 'Fire_No_Recoil_Rifle',
             EQUIP_THROWABLE = 'Equip_Throwable',
             THROW = 'Throw'
+        },
+        volatile_types = {
+            BULLET = 'bullet'
         }
 
 
