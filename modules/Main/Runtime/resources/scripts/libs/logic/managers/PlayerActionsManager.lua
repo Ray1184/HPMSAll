@@ -226,7 +226,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
                         self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
                         if self.shot_ready then
                             equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
-                            init_round(player, equippedWeapon, self.actors_manager)
+                            init_round(player, equippedWeapon, self.actors_manager, lib)
                             self.shot_ready = false
                         end
                         self.init_timer = true
@@ -292,7 +292,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
             self.anim_timer = 0
         end
 
-        update_rounds(self.actors_manager.scene_manager, tpf)
+        update_rounds(self.actors_manager.scene_manager, tpf, lib)
 
     end
 

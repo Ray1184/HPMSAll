@@ -414,6 +414,8 @@ namespace hpms
 				.addFunction("set_node_camera", &hpms::LuaExtensions::LSetNodeCamera)
 				.addFunction("attach_to_entity_bone", &hpms::LuaExtensions::LAttachToEntityBone)
 				.addFunction("detach_from_entity_bone", &hpms::LuaExtensions::LDetachFromEntityBone)
+				.addFunction("attach_particle_to_entity_bone", &hpms::LuaExtensions::LPSAttachToEntityBone)
+				.addFunction("detach_particle_from_entity_bone", &hpms::LuaExtensions::LPSDetachFromEntityBone)
 				.addFunction("set_ambient", &hpms::LuaExtensions::LSetAmbient)
 				.addFunction("get_camera", &hpms::LuaExtensions::LGetCamera)
 				.addFunction("camera_lookat", &hpms::LuaExtensions::LCameraLookAt)

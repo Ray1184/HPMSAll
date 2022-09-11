@@ -25,7 +25,7 @@ function revolver_38:ret(idSuffix, amount)
         inventory_scale_offset = { x = 0.05, y = 0.05, z = 0.05 },
         scene_drop_position_offset = { x = 0, y = 0, z = 0 },
         scene_drop_rotation_offset = { x = 90, y = 0, z = - 90 },
-        scene_drop_scale_offset = { x = 0.035, y = 0.035, z = 0.035 },
+        scene_drop_scale_offset = { x = 0.035, y = 0.035, z = 0.035 },        
         name = 'items_misc_revolver_38_name',
         description = 'items_misc_revolver_38_description',
         item_type = k.item_types.WEAPON,
@@ -49,7 +49,9 @@ function revolver_38:ret(idSuffix, amount)
             ammo_max_amount = 6,
             equip_position_offset = { x = 0, y = 0.2, z = 0.07 },
             equip_rotation_offset = { x = 90, y = 0, z = - 90 },
-            equip_scale = { x = 0.035, y = 0.035, z = 0.035 }
+            equip_scale = { x = 0.035, y = 0.035, z = 0.035 },
+            fx_position_offset = { x = 0, y = 0.2, z = 0.07 },
+            fire_fx_position_offset = { x = 0, y = 0, z = 0 }
         }
     }
 

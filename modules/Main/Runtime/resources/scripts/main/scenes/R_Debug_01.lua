@@ -94,8 +94,8 @@ scene = {
 
         playerMgr = player_actions_manager:new(player, room_st, actors_mgr)
 
-        testParticle = lib.make_particle_system('explosion', 'Explosion')
-
+        --testParticle = lib.make_particle_system('explosion', 'GunFX/ShotFire1')
+        --testParticle.position = lib.vec3(0, 0, 1)
         if not room_st:get_var('init') then
 
 
@@ -123,7 +123,7 @@ scene = {
 
             rev:set_serializable_properties(wp)
 
-            ammo = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 6)
+            ammo = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 12)
 
        
             ammo_load(rev, ammo)

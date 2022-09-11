@@ -334,6 +334,16 @@ namespace hpms
 			boneOwner->DetachObjectFromBone(boneNode, objToAttach);
 		}
 
+		static inline void LPSAttachToEntityBone(const std::string& boneNode, ParticleAdapter* objToAttach, EntityAdapter* boneOwner, const glm::vec3& offsetPosition = glm::vec3(), const glm::quat& offsetRotation = glm::quat(), const glm::vec3& scale = glm::vec3())
+		{
+			boneOwner->AttachObjectToBone(boneNode, objToAttach, offsetPosition, offsetRotation, scale);
+		}
+
+		static inline void LPSDetachFromEntityBone(const std::string& boneNode, ParticleAdapter* objToAttach, EntityAdapter* boneOwner)
+		{
+			boneOwner->DetachObjectFromBone(boneNode, objToAttach);
+		}
+
 		static inline hpms::WalkmapAdapter* AMCreateWalkMap(const std::string& name)
 		{
 			return hpms::GetSupplier()->CreateWalkmap(name);
@@ -344,9 +354,9 @@ namespace hpms
 			hpms::SafeDelete(walkMap);
 		}
 
-		static inline hpms::ParticleAdapter* AMCreateParticleSystem(const std::string& name, const std::string& templateName)
+		static inline hpms::ParticleAdapter* AMCreateParticleSystem(const std::string& name, const std::string& templateName, bool createNode)
 		{
-			return hpms::GetSupplier()->CreateParticleSystem(name, templateName);
+			return hpms::GetSupplier()->CreateParticleSystem(name, templateName, createNode);
 		}
 
 		static inline void AMDeleteParticleSystem(ParticleAdapter* ps)

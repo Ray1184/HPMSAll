@@ -77,21 +77,27 @@ void hpms::ParticleAdaptee::GoToTime(float time)
     ogrePS->fastForward(time);
 }
 
-hpms::ParticleAdaptee::ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName) : AdapteeCommon(ctx)
+hpms::ParticleAdaptee::ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName, bool createNode) : AdapteeCommon(ctx), createNode(createNode)
 {
-    Check();
-    auto* psNode = ctx->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
+    Check();    
     ogrePS = (ctx)->GetSceneManager()->createParticleSystem(name, templateName);
-    psNode->attachObject(ogrePS);
+    if (createNode)
+    {
+        auto* psNode = ctx->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
+        psNode->attachObject(ogrePS);
+    }
 }
 
 hpms::ParticleAdaptee::~ParticleAdaptee()
 {
     Check();
-    auto* psNode = ogrePS->getParentSceneNode();
-    if (psNode)
+    if (createNode)
     {
-       (ctx)->GetSceneManager()->destroySceneNode(psNode);
+        auto* psNode = ogrePS->getParentSceneNode();
+        if (psNode)
+        {
+            (ctx)->GetSceneManager()->destroySceneNode(psNode);
+        }
     }
     (ctx)->GetSceneManager()->destroyParticleSystem(ogrePS);
 }

@@ -91,7 +91,7 @@ material 44_Mag_AP {
             }
 
             texture_unit {
-                texture MAG_AP.PNG
+                texture MAG_AP.png
                 tex_address_mode wrap
                 colour_op modulate
             }

@@ -25,6 +25,7 @@ function create_ammo_properties(ammo, weapon)
     local weaponProp = weapon:get_serializable_properties().weapon_properties
     return {
         id = ammo.serializable.id,
+        fire_fx_name = ammoProp.fire_fx_name,
         damage = ammoProp.base_damage * weaponProp.damage_multiplier,
         speed = ammoProp.speed,
         stopping = ammoProp.stopping,
@@ -62,11 +63,12 @@ end
 
 
 
-function init_round(player, weapon, actorsMgr)
+function init_round(player, weapon, actorsMgr, lib)
     k = game_mechanics_consts:get()
     local serProps = weapon:get_serializable_properties().weapon_properties
     local props = weapon:get_properties().weapon_properties
     local offset = props.equip_position_offset
+    local fxOffset = props.fx_position_offset
     local pos = player:get_position()
 
     local shot = volatile_game_item:ret()
@@ -81,9 +83,29 @@ function init_round(player, weapon, actorsMgr)
     shot.not_serializable.properties = merge_tables(properties, serProps.ammo_loaded)
     context_put_and_init_volatile(shot)
     shot:set_position(pos.x + offset.x, pos.y + offset.y, pos.z + offset.z)
+    if shot.not_serializable.properties.fire_fx_name ~= nil then
+        local fxTemplate = shot.not_serializable.properties.fire_fx_name
+        local id = shot.not_serializable.id
+        local attachTo = props.attach_to
+        local parentEntity = player.transient.entity
+        local dummyRot = lib.from_euler(0, 0, 0)
+        local dummyScale = lib.vec3(1, 1, 1)
+        shot:add_secondary_transient_data(
+        function()
+            shot.transient.additional_data.fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate, false)
+            lib.attach_particle_to_entity_bone(attachTo, shot.transient.additional_data.fx, parentEntity, lib.vec3(fxOffset.x, fxOffset.y, fxOffset.z), dummyRot, dummyScale)
+        end ,
+        function(tpf) end,
+        function()
+            lib.detach_particle_from_entity_bone(attachTo, shot.transient.additional_data.fx, parentEntity)
+            lib.delete_particle_system(shot.transient.additional_data.fx)
+        end
+        )
+
+    end
 end
 
-function update_rounds(sceneMgr, tpf)
+function update_rounds(sceneMgr, tpf, lib)
     context_foreach_alive_volatile(
     function(v) return v.not_serializable.properties.vtype == k.volatile_types.BULLET end,
     function(round)

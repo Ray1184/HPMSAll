@@ -192,7 +192,9 @@ function game_mechanics_consts:get()
         },
         attachable_bones =
         {
-            HAND = 'Hand.R'
+            HAND = 'Hand.R',
+            WEAPON_BARREL_ROUND = 'Weapon_Barrel_Round',
+            WEAPON_BARREL_FX = 'Weapon_Barrel_FX'
         },
         default_animations =
         {
