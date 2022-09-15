@@ -60,7 +60,7 @@ namespace hpms
 
 		virtual SceneNodeAdapter* RemoveChild(const std::string& name) override;
 
-		virtual SceneNodeAdapter* GetParent() override;
+		virtual SceneNodeAdapter* GetParent() override;		
 
 		virtual std::vector<EntityAdapter*> GetAttachedEntities() override;
 

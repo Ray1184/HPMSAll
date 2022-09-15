@@ -133,12 +133,13 @@ function collectible:ret(path, id, amount)
     end
 
     function collectible:update()
+        self.metainfo.override.game_item.update(self)
         item_set_expired_if_empty(self)
         if self.serializable.expired then
             return
         end
         self.serializable.visual_info.visible = not self.serializable.picked
-        self.metainfo.override.game_item.update(self)
+
     end
 
     function collectible:set_event_callback(evtCallback)

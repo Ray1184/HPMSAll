@@ -34,7 +34,7 @@ namespace hpms
         virtual SceneNodeAdapter* RemoveChild(const std::string& name) = 0;
 
         virtual SceneNodeAdapter* GetParent() = 0;
-
+               
         virtual void SetPosition(const glm::vec3& position) override = 0;
 
         virtual glm::vec3 GetPosition() const override = 0;

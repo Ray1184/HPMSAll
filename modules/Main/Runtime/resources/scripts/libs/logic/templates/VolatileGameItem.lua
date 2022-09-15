@@ -79,11 +79,7 @@ function volatile_game_item:ret(path)
     function volatile_game_item:delete_transient_data()
         if not self.transientDataInit then
             return
-        end
-        self.transientDataInit = false
-        for i = 1, #self.transient.additional_data_callbacks do
-            self.transient.additional_data_callbacks[i].delete()
-        end
+        end       
         lib.delete_node(self.transient.node)
         lib.delete_node(self.transient.ctrl_node)
         if self.transient.entity ~= nil then
@@ -107,9 +103,7 @@ function volatile_game_item:ret(path)
             {
                 entity = ent,
                 ctrl_node = controlNode,
-                node = lib.make_child_node('node_vol_' .. self.not_serializable.id,controlNode),
-                additional_data_callbacks = { },
-                additional_data = { }
+                node = lib.make_child_node('node_vol_' .. self.not_serializable.id,controlNode)               
             }
         }
         self = merge_tables(self, tra)
@@ -121,11 +115,6 @@ function volatile_game_item:ret(path)
 
     end
 
-    function volatile_game_item:add_secondary_transient_data(initCallback, updateCallback, deleteCallback)
-        table.insert(self.transient.additional_data_callbacks, { update = updateCallback, delete = deleteCallback })
-        initCallback()
-    end
-
     function volatile_game_item:update(tpf)
 
         if self.transient.entity ~= nil then
@@ -133,10 +122,6 @@ function volatile_game_item:ret(path)
         end
         local node = self.transient.node
         local rot = lib.to_euler(node.rotation)
-
-        for i = 1, #self.transient.additional_data_callbacks do
-            self.transient.additional_data_callbacks[i].update(tpf)
-        end
     end
 
     function volatile_game_item:set_event_callback(evt_callback)

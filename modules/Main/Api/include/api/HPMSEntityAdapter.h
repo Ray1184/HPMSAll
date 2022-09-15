@@ -55,6 +55,13 @@ namespace hpms
 
         virtual void SetActiveAnimation(const std::string& activeAnimation) = 0;
 
+        virtual glm::vec3 GetWorldPosition() const = 0;
+
+        inline virtual void SetWorldPosition(const glm::vec3& v)
+        {
+            // Not implemented.
+        }
+
         virtual void SetPosition(const glm::vec3& position) override = 0;
 
         virtual glm::vec3 GetPosition() const override = 0;

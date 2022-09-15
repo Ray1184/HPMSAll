@@ -24,18 +24,18 @@ std::string hpms::EntityAdaptee::GetName() const
 void hpms::EntityAdaptee::SetPosition(const glm::vec3& position)
 {
     Check(ogreEntity);
-    if (ogreEntity->getParentSceneNode() != nullptr)
+    if (ogreEntity->getParentNode() != nullptr)
     {
-        ogreEntity->getParentSceneNode()->setPosition(position.x, position.y, position.z);
+        ogreEntity->getParentNode()->setPosition(position.x, position.y, position.z);
     }
 }
 
 glm::vec3 hpms::EntityAdaptee::GetPosition() const
 {
     Check(ogreEntity);
-    if (ogreEntity->getParentSceneNode() != nullptr)
+    if (ogreEntity->getParentNode() != nullptr)
     {
-        auto oVec = ogreEntity->getParentSceneNode()->getPosition();
+        auto oVec = ogreEntity->getParentNode()->getPosition();
         return glm::vec3(oVec.x, oVec.y, oVec.z);
     }
     return glm::vec3();
@@ -44,18 +44,18 @@ glm::vec3 hpms::EntityAdaptee::GetPosition() const
 void hpms::EntityAdaptee::SetRotation(const glm::quat& rot)
 {
     Check(ogreEntity);
-    if (ogreEntity->getParentSceneNode() != nullptr)
+    if (ogreEntity->getParentNode() != nullptr)
     {
-        ogreEntity->getParentSceneNode()->setOrientation(rot.w, rot.x, rot.y, rot.z);
+        ogreEntity->getParentNode()->setOrientation(rot.w, rot.x, rot.y, rot.z);
     }
 }
 
 glm::quat hpms::EntityAdaptee::GetRotation() const
 {
     Check(ogreEntity);
-    if (ogreEntity->getParentSceneNode() != nullptr)
+    if (ogreEntity->getParentNode() != nullptr)
     {
-        auto oQuatc = ogreEntity->getParentSceneNode()->getOrientation();
+        auto oQuatc = ogreEntity->getParentNode()->getOrientation();
         return glm::quat(oQuatc.w, oQuatc.x, oQuatc.y, oQuatc.z);
     }
     return glm::quat();
@@ -64,18 +64,18 @@ glm::quat hpms::EntityAdaptee::GetRotation() const
 void hpms::EntityAdaptee::SetScale(const glm::vec3& scale)
 {
     Check(ogreEntity);
-    if (ogreEntity->getParentSceneNode() != nullptr)
+    if (ogreEntity->getParentNode() != nullptr)
     {
-        ogreEntity->getParentSceneNode()->setScale(scale.x, scale.y, scale.z);
+        ogreEntity->getParentNode()->setScale(scale.x, scale.y, scale.z);
     }
 }
 
 glm::vec3 hpms::EntityAdaptee::GetScale() const
 {
     Check(ogreEntity);
-    if (ogreEntity->getParentSceneNode() != nullptr)
+    if (ogreEntity->getParentNode() != nullptr)
     {
-        auto oVec = ogreEntity->getParentSceneNode()->getScale();
+        auto oVec = ogreEntity->getParentNode()->getScale();
         return glm::vec3(oVec.x, oVec.y, oVec.z);
     }
     return glm::vec3();
@@ -183,6 +183,19 @@ void hpms::EntityAdaptee::SetActiveAnimation(const std::string& activeAnimation)
 {
     hpms::EntityAdaptee::lastAnimation = hpms::EntityAdaptee::activeAnimation;
     hpms::EntityAdaptee::activeAnimation = activeAnimation;
+}
+
+glm::vec3 hpms::EntityAdaptee::GetWorldPosition() const
+{
+    Check(ogreEntity);
+    if (ogreEntity->getParentNode() != nullptr)
+    {
+        auto* parent = ogreEntity->getParentNode();
+        std::string name = parent->getName();
+        auto oVec = parent->_getDerivedPosition();
+        return glm::vec3(oVec.x, oVec.y, oVec.z);
+    }
+    return glm::vec3();
 }
 
 

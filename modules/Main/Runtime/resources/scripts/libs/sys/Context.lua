@@ -296,10 +296,9 @@ local function context_reset_global_counter_if_empty()
     end
 end
 
-function context_put_and_init_volatile(vol)
+function context_put_volatile(vol)
     local id = 'volatile/' .. tostring(increase_and_get_global_counter())
     vol.not_serializable.id = id
-    vol:fill_transient_data()
     context[cats.VOLATILES][id] = vol
 end
 
@@ -321,8 +320,7 @@ function context_delete_all_volatile()
     context[cats.VOLATILES] = { }
 end
 
-function context_remove_and_delete_volatile(vol)
-    vol:delete_transient_data()
+function context_remove_volatile(vol)
     context[cats.VOLATILES][vol.not_serializable.id] = nil
     context_reset_global_counter_if_empty()
 end

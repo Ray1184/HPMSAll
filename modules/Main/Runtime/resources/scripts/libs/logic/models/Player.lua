@@ -122,6 +122,10 @@ function player:ret(path, id, rad, rect, ghost)
         return self.serializable.inventory
     end
 
+    function player:get_attached_weapon()
+        return self.not_serializable.equip_attachable
+    end
+
     function player:get_anagr()
         return self.not_serializable.anagr
     end

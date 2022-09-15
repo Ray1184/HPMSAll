@@ -69,6 +69,7 @@ namespace hpms
 				.addProperty("scale", &hpms::EntityAdapter::GetScale, &hpms::EntityAdapter::SetScale)
 				.addProperty("rotation", &hpms::EntityAdapter::GetRotation, &hpms::EntityAdapter::SetRotation)
 				.addProperty("visible", &hpms::EntityAdapter::IsVisible, &hpms::EntityAdapter::SetVisible)
+				.addProperty("world_position", &hpms::EntityAdapter::GetWorldPosition, &hpms::EntityAdapter::SetWorldPosition)
 				.endClass()
 				.endNamespace();
 		}

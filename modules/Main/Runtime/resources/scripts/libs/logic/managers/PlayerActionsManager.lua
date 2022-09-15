@@ -209,7 +209,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
 
                 cbks[k.actor_action_mode.COMBAT] = function()
                     player:set_anim(k.default_animations.FIGHT_POSITION)
-                    player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                    player:play(k.anim_modes.ANIM_MODE_LOOP, 1.5)
                     canTurnWhileAction = true
                 end
 
@@ -221,12 +221,14 @@ function player_actions_manager:new(player, roomState, actorsMgr)
                     end
                     local equippedWeapon = context_get_full_ref(player.serializable.equip)
                     local ratio = equippedWeapon:get_serializable_properties().weapon_properties.ratio
-                    if (equippedWeapon.serializable.amount > 0 and self.actions.double_action_up_doing and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
+                    local equipAnim = equippedWeapon:get_properties().weapon_properties.equip_anim
+                    local equipDone = lib.anim_finished(player.transient.entity, equipAnim)
+                    if (equippedWeapon.serializable.amount > 0 and self.actions.double_action_up_doing and equipDone and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
                         local fireAnim = equippedWeapon:get_properties().weapon_properties.fire_anim
                         self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
                         if self.shot_ready then
                             equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
-                            init_round(player, equippedWeapon, self.actors_manager, lib)
+                            init_round(player)
                             self.shot_ready = false
                         end
                         self.init_timer = true
@@ -234,10 +236,9 @@ function player_actions_manager:new(player, roomState, actorsMgr)
                         player:play(k.anim_modes.ANIM_MODE_LOOP, 0.15)
                         self.anim_timer = 0
                     else
-                        self.shot_ready = equippedWeapon.serializable.amount > 0
-                        local equipAnim = equippedWeapon:get_properties().weapon_properties.equip_anim
+                        self.shot_ready = equippedWeapon.serializable.amount > 0                       
                         player:set_anim(equipAnim)
-                        player:play(k.anim_modes.ANIM_MODE_LOOP, 1)
+                        player:play(k.anim_modes.ANIM_MODE_LOOP, 0.5)
                     end
                     canTurnWhileAction = true
 
@@ -292,7 +293,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
             self.anim_timer = 0
         end
 
-        update_rounds(self.actors_manager.scene_manager, tpf, lib)
+        update_rounds(self.actors_manager, tpf, lib)
 
     end
 
