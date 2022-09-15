@@ -56,8 +56,8 @@ function volatile_game_item:ret(path)
     end
 
     function volatile_game_item:get_position()
-        local pos = node.position
-        return { pos.x, pos.y, pos.z }
+        local pos = self.transient.node.position
+        return { x = pos.x, y = pos.y, z = pos.z }
     end
 
     function volatile_game_item:move_dir(ratio, dir)
@@ -79,7 +79,7 @@ function volatile_game_item:ret(path)
     function volatile_game_item:delete_transient_data()
         if not self.transientDataInit then
             return
-        end       
+        end
         lib.delete_node(self.transient.node)
         lib.delete_node(self.transient.ctrl_node)
         if self.transient.entity ~= nil then
@@ -103,7 +103,7 @@ function volatile_game_item:ret(path)
             {
                 entity = ent,
                 ctrl_node = controlNode,
-                node = lib.make_child_node('node_vol_' .. self.not_serializable.id,controlNode)               
+                node = lib.make_child_node('node_vol_' .. self.not_serializable.id,controlNode)
             }
         }
         self = merge_tables(self, tra)

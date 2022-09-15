@@ -201,8 +201,12 @@ namespace hpms
 			return hpms::PointInsideCircle(point, t, radius);
 		}
 
-		static inline bool MCPointInsidePolygon(const glm::vec2& point, glm::vec2& t, const std::vector<glm::vec2>& data) {
+		static inline bool MCPointInsidePolygon(const glm::vec2& point, const glm::vec2& t, const std::vector<glm::vec2>& data) {
 			return hpms::PointInsidePolygon(point, t, data);
+		}
+
+		static inline bool MCCircleIntersectLine(const glm::vec2& a, const glm::vec2& b, const glm::vec2& center, float radius) {
+			return hpms::CircleLineIntersect(a, b, center, radius);
 		}
 
 
@@ -511,6 +515,11 @@ namespace hpms
 		static inline void LUpdateAnimation(hpms::EntityAdapter* entity, float tpf, bool blend, float transitionTimeRatio)
 		{
 			hpms::AnimationHelper::UpdateInterpolate(entity, tpf, blend, transitionTimeRatio);
+		}
+
+		static inline bool LPointInsideWalkmap(hpms::WalkmapAdapter* walkmap, const glm::vec3& point)
+		{
+			return walkmap->SampleTriangle(point, 0) != nullptr;
 		}
 
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)

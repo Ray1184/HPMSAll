@@ -174,6 +174,14 @@ function backend:get()
                 log_debug('Updating active animation for actor ' .. player)
             end,
 
+            point_inside_walkmap = function(walkmap, point)
+                log_debug('Checking point inside walkmap ' .. walkmap)
+            end,
+
+            circle_intersect_line = function(a, b, center, radius)
+                log_debug('Checking line intersect circle of center ' .. center)
+            end,
+
             add_anim = function(a, name, from, to)
                 log_debug('Adding anim ' .. name .. ' to ' .. a.dummy_id)
             end,
@@ -375,6 +383,7 @@ function backend:get()
             slice_anim = hpms.slice_anim,
             play_anim = hpms.play_anim,
             update_anim = hpms.update_anim,
+            point_inside_walkmap = hpms.point_inside_walkmap,
             add_anim = hpms.add_anim,
             set_anim = hpms.set_anim,
             rewind_anim = hpms.rewind_anim,
@@ -406,6 +415,7 @@ function backend:get()
             point_inside_circle = hpms.point_inside_circle,
             point_inside_polygon = hpms.point_inside_polygon,
             circle_inside_polygon = hpms.circle_inside_polygon,
+            circle_intersect_line = hpms.circle_intersect_line,
 
             -- Input.
             current_key_code = hpms.current_key_code,

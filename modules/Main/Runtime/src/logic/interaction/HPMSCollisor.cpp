@@ -166,6 +166,10 @@ bool hpms::Collisor::CorrectAndRetryWalkmap(const hpms::SingleCollisionResponse&
 
 void hpms::Collisor::ApplyHeight(glm::vec3* nextPos, float tpf)
 {
+	if (GetConfig().maxStepHeight == 0)
+	{
+		return;
+	}
 
 	if (!baseHeightDefined)
 	{

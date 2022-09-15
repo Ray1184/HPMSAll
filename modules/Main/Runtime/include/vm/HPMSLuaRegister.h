@@ -143,6 +143,7 @@ namespace hpms
 				.addFunction("to_degrees", &hpms::LuaExtensions::MCToDegrees)
 				.addFunction("point_inside_circle", &hpms::LuaExtensions::MCPointInsideCircle)
 				.addFunction("point_inside_polygon", &hpms::LuaExtensions::MCPointInsidePolygon)
+				.addFunction("circle_intersect_line", &hpms::LuaExtensions::MCCircleIntersectLine)
 				.endNamespace();
 
 		}
@@ -436,6 +437,7 @@ namespace hpms
 				.addFunction("stop_rewind_anim", &hpms::LuaExtensions::LStopRewindAnimation)
 				.addFunction("anim_finished", &hpms::LuaExtensions::LAnimationFinished)
 				.addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
+				.addFunction("point_inside_walkmap", &hpms::LuaExtensions::LPointInsideWalkmap)
 				.addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
 				.addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
 				.endNamespace();

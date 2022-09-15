@@ -79,11 +79,3 @@ function update_rounds(actorsMgr, tpf, lib)
     end
     )
 end
-
-function out_of_walkmap(round, walkmap)
-end
-
-function collides_actor(round, actors)
-    return false
-end
-

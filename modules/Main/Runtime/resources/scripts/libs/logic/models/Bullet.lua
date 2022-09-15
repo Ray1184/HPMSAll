@@ -9,6 +9,7 @@
 dependencies = {
     'libs/logic/templates/VolatileGameItem.lua',
     'libs/backend/HPMSFacade.lua',
+    'libs/utils/MathUtils.lua'
 }
 
 bullet = { }
@@ -87,16 +88,16 @@ function bullet:ret(shooterActor, path)
         end
         local attachTo = k.attachable_bones.WEAPON_BARREL_FX
         lib.detach_particle_from_entity_bone(attachTo, self.transient.fx, parentEntity)
-        lib.delete_particle_system(self.transient.fx)        
+        lib.delete_particle_system(self.transient.fx)
         self.metainfo.override.volatile_game_object.delete_transient_data(self)
         context_remove_volatile(self)
     end
 
-    function bullet:fill_transient_data()
+    function bullet:fill_transient_data(walkmap)
         context_put_volatile(self)
         self.metainfo.override.volatile_game_object.fill_transient_data(self)
         local properties = self.not_serializable.properties
-        -- TODO set collisor position
+        self.metainfo.override.volatile_game_object.set_position(self, properties.current_position.x, properties.current_position.y, properties.current_position.z)
         if self.not_serializable.properties.fire_fx_name ~= nil then
             local fxTemplate = self.not_serializable.properties.fire_fx_name
             local id = self.not_serializable.id
@@ -109,18 +110,47 @@ function bullet:ret(shooterActor, path)
     end
 
     function bullet:update(tpf, allSceneActors, walkmap)
-        self.metainfo.override.volatile_game_object.update(self)      
+        self.metainfo.override.volatile_game_object.update(self)
         local props = self.not_serializable.properties
         props.previus_position = props.current_position
-        -- TODO move collisor and update props.current_position
-        -- TODO collisions.
-        local kill = props.life > props.ttl
-        -- or out_of_walkmap(round, walkmap) or collides_actor(round, actorsMgr.loaded_actors)
-        if kill then
+        self.metainfo.override.volatile_game_object.move_dir(self, tpf * props.speed, props.direction)
+        props.current_position = self.metainfo.override.volatile_game_object.get_position(self)
+
+        if bullet_collision(shooterActor, self, allSceneActors, walkmap, tpf) then
             self:delete_transient_data()
         end
         props.life = props.life + tpf
     end
 
     return this
+end
+
+function bullet_collision(shooterActor, bullet, allSceneActors, walkmap, tpf)
+    local props = bullet.not_serializable.properties
+    local collision = false
+    collision = collision or props.life > props.ttl
+    collision = collision or not lib.point_inside_walkmap(walkmap, lib.vec3(props.current_position.x, props.current_position.y, props.current_position.z))
+    for i = 1, #allSceneActors do
+        collision = collision or bullet_actor_collision(shooterActor, bullet, allSceneActors[i], tpf)
+    end
+    return collision
+end
+
+function bullet_actor_collision(shooterActor, bullet, actor, tpf)
+    local bulletProps = bullet.not_serializable.properties
+    local actorStats = actor:get_stats()
+    if shooterActor.serializable.id == actor.serializable.id or not actor.serializable.hittable then
+        return false
+    end
+    if circle_intersect_line(bulletProps.previus_position, bulletProps.current_position, actor:get_position(), actor:get_scaled_rad()) then
+        local evt =
+        {
+            name = k.actor_events.HIT,
+            bullet = bullet
+        }
+        actor:event(tpf, evt)
+        local amored = actorStats.armor[1] or actorStats.invincibility[1]
+        return armored or not bulletProps.piercing
+
+    end
 end
