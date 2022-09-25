@@ -318,12 +318,22 @@ namespace hpms
 			node->AttachObject(obj);
 		}
 
+		static inline void LSetNodeParticle(SceneNodeAdapter* node, ParticleAdapter* obj)
+		{
+			node->AttachObject(obj);
+		}
+
 		static inline void LSetNodeCamera(SceneNodeAdapter* node, CameraAdapter* cam)
 		{
 			node->AttachObject(cam);
 		}
 
 		static inline void LSRemoveNodeEntity(SceneNodeAdapter* node, EntityAdapter* obj)
+		{
+			node->DetachObject(obj);
+		}
+
+		static inline void LSRemoveNodeParticle(SceneNodeAdapter* node, ParticleAdapter* obj)
 		{
 			node->DetachObject(obj);
 		}
@@ -358,9 +368,9 @@ namespace hpms
 			hpms::SafeDelete(walkMap);
 		}
 
-		static inline hpms::ParticleAdapter* AMCreateParticleSystem(const std::string& name, const std::string& templateName, bool createNode)
+		static inline hpms::ParticleAdapter* AMCreateParticleSystem(const std::string& name, const std::string& templateName)
 		{
-			return hpms::GetSupplier()->CreateParticleSystem(name, templateName, createNode);
+			return hpms::GetSupplier()->CreateParticleSystem(name, templateName);
 		}
 
 		static inline void AMDeleteParticleSystem(ParticleAdapter* ps)
@@ -520,6 +530,14 @@ namespace hpms
 		static inline bool LPointInsideWalkmap(hpms::WalkmapAdapter* walkmap, const glm::vec3& point)
 		{
 			return walkmap->SampleTriangle(point, 0) != nullptr;
+		}
+
+		static inline bool LCircleInsideWalkmap(hpms::WalkmapAdapter* walkmap, const glm::vec3& point, float radius)
+		{
+			CollisionResponse collisionResponse;
+			walkmap->Collides(point, radius, &collisionResponse);
+			bool outOfWalkmap = collisionResponse.AnyCollision();
+			return !outOfWalkmap;
 		}
 
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)

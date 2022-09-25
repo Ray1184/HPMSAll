@@ -1,6 +1,6 @@
  TASK                                                                                   | STATUS
 ------------------------------------------------------------------------------------------------------
-Modificare l'HPMSCollisor usando il sistema di collisioni gestito nel walkmpa adapter   | 100%
+Modificare l'HPMSCollisor usando il sistema di collisioni gestito nel walkmap adapter   | 100%
 Sistemare camera agganciandola a nodo di scena (manipolazione diretta deprecata)        | 100%
 Eliminare ogni errore                                                                   | 100%
 Capire dove viene impostato il bounding circle                                          | 100%
@@ -9,8 +9,8 @@ Capire se al delete dei nodi c'è qualche SIGSEV                                 
 Sistemare il glitch quando l'animazione cambia velocemente								| 100%
 Persistenza oggetti durante cambio stati save / load                                    | 100%
 Sistema combattimento mani nude / arma bianca                                           | 0%
-Sistema combattimento armi da fuoco                                                     | 0%
-Sistemi particellari                                                                    | 0%
+Sistema combattimento armi da fuoco                                                     | 80%
+Sistemi particellari                                                                    | 80%
 Helper quest                                                                            | 0%
 Helper puzzles                                                                          | 0%
 Gestione statistiche giocatore                                                          | 0%

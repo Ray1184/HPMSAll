@@ -38,10 +38,10 @@ hpms::LightAdapter* hpms::SupplierAdaptee::CreateLight(float r, float g, float b
 	return light;
 }
 
-hpms::ParticleAdapter* hpms::SupplierAdaptee::CreateParticleSystem(const std::string& name, const std::string& templateName, bool createNode)
+hpms::ParticleAdapter* hpms::SupplierAdaptee::CreateParticleSystem(const std::string& name, const std::string& templateName)
 {
 	Check();
-	auto* ps = hpms::SafeNew<hpms::ParticleAdaptee>(ctx, name, templateName, createNode);
+	auto* ps = hpms::SafeNew<hpms::ParticleAdaptee>(ctx, name, templateName);
 	return ps;
 }
 

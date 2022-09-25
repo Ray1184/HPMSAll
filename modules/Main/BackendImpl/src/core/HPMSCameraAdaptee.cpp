@@ -15,9 +15,9 @@ std::string hpms::CameraAdaptee::GetName() const
 void hpms::CameraAdaptee::SetPosition(const glm::vec3 &position)
 {
     Check(ogreCamera);
-    if (ogreCamera->getParentSceneNode())
+    if (ogreCamera->getParentNode())
     {
-        ogreCamera->getParentSceneNode()->setPosition(position.x, position.y, position.z);
+        ogreCamera->getParentNode()->setPosition(position.x, position.y, position.z);
     }
     else
     {
@@ -29,9 +29,9 @@ void hpms::CameraAdaptee::SetPosition(const glm::vec3 &position)
 glm::vec3 hpms::CameraAdaptee::GetPosition() const
 {
     Check(ogreCamera);
-    if (ogreCamera->getParentSceneNode())
+    if (ogreCamera->getParentNode())
     {
-        auto ogrePos = ogreCamera->getParentSceneNode()->getPosition();
+        auto ogrePos = ogreCamera->getParentNode()->getPosition();
         return glm::vec3(ogrePos.x, ogrePos.y, ogrePos.z);
     }
     else
@@ -45,9 +45,9 @@ glm::vec3 hpms::CameraAdaptee::GetPosition() const
 void hpms::CameraAdaptee::SetRotation(const glm::quat &rotation)
 {
     Check(ogreCamera);
-    if (ogreCamera->getParentSceneNode())
+    if (ogreCamera->getParentNode())
     {
-        ogreCamera->getParentSceneNode()->setOrientation(rotation.w, rotation.x, rotation.y, rotation.z);
+        ogreCamera->getParentNode()->setOrientation(rotation.w, rotation.x, rotation.y, rotation.z);
     }
     else
     {
@@ -59,9 +59,9 @@ void hpms::CameraAdaptee::SetRotation(const glm::quat &rotation)
 glm::quat hpms::CameraAdaptee::GetRotation() const
 {
     Check(ogreCamera);
-    if (ogreCamera->getParentSceneNode() != nullptr)
+    if (ogreCamera->getParentNode() != nullptr)
     {
-        auto oQuatc = ogreCamera->getParentSceneNode()->getOrientation();
+        auto oQuatc = ogreCamera->getParentNode()->getOrientation();
         return glm::quat(oQuatc.w, oQuatc.x, oQuatc.y, oQuatc.z);
     }
     else

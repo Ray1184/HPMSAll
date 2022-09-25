@@ -13,9 +13,9 @@ std::string hpms::LightAdaptee::GetName() const
 void hpms::LightAdaptee::SetPosition(const glm::vec3& position)
 {
     Check();
-    if (ogreLight->getParentSceneNode() != nullptr)
+    if (ogreLight->getParentNode() != nullptr)
     {
-        ogreLight->getParentSceneNode()->setPosition(position.x, position.y, position.z);
+        ogreLight->getParentNode()->setPosition(position.x, position.y, position.z);
     } else
     {
         LOG_ERROR("Direct light manipulation has been removed because deprecated. You need to attach light to a node");

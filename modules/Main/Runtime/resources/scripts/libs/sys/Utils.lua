@@ -17,6 +17,12 @@ do
     for c = 97, 122 do table.insert(charset, string.char(c)) end
 end
 
+local numbers = { }  
+do
+    -- [0-9a-zA-Z]
+    for i = 0, 9 do table.insert(numbers, i) end
+end
+
 local debug_flag = false
 
 function enable_debug()
@@ -124,6 +130,11 @@ function random_string(length)
     if not length or length <= 0 then return '' end
     math.randomseed(os.clock() ^ 5)
     return random_string(length - 1) .. charset[math.random(1, #charset)]
+end
+
+function random_range(min, max)
+    math.randomseed(os.clock() ^ 5)
+    return math.random(min, max)
 end
 
 local function is_array(t)

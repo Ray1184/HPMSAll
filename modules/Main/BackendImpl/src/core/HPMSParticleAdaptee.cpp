@@ -13,7 +13,7 @@ std::string hpms::ParticleAdaptee::GetName() const
 void hpms::ParticleAdaptee::SetPosition(const glm::vec3& position)
 {
     Check();
-    if (ogrePS->getParentSceneNode() != nullptr)
+    if (ogrePS->getParentNode() != nullptr)
     {
         ogrePS->getParentSceneNode()->setPosition(position.x, position.y, position.z);
     } else
@@ -25,6 +25,12 @@ void hpms::ParticleAdaptee::SetPosition(const glm::vec3& position)
 
 glm::vec3 hpms::ParticleAdaptee::GetPosition() const
 {
+    Check();
+    if (ogrePS->getParentNode() != nullptr)
+    {
+        auto oVec = ogrePS->getParentNode()->getPosition();
+        return glm::vec3(oVec.x, oVec.y, oVec.z);
+    }
     return glm::vec3();
 }
 
@@ -77,28 +83,15 @@ void hpms::ParticleAdaptee::GoToTime(float time)
     ogrePS->fastForward(time);
 }
 
-hpms::ParticleAdaptee::ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName, bool createNode) : AdapteeCommon(ctx), createNode(createNode)
+hpms::ParticleAdaptee::ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName) : AdapteeCommon(ctx)
 {
     Check();    
-    ogrePS = (ctx)->GetSceneManager()->createParticleSystem(name, templateName);
-    if (createNode)
-    {
-        auto* psNode = ctx->GetSceneManager()->getRootSceneNode()->createChildSceneNode();
-        psNode->attachObject(ogrePS);
-    }
+    ogrePS = (ctx)->GetSceneManager()->createParticleSystem(name, templateName);    
 }
 
 hpms::ParticleAdaptee::~ParticleAdaptee()
 {
-    Check();
-    if (createNode)
-    {
-        auto* psNode = ogrePS->getParentSceneNode();
-        if (psNode)
-        {
-            (ctx)->GetSceneManager()->destroySceneNode(psNode);
-        }
-    }
+    Check();   
     (ctx)->GetSceneManager()->destroyParticleSystem(ogrePS);
 }
 

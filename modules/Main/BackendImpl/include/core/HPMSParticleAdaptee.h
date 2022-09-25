@@ -17,7 +17,7 @@ namespace hpms
         Ogre::ParticleSystem* ogrePS;
         bool createNode;
     public:
-        ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName, bool createNode);
+        ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName);
 
         virtual ~ParticleAdaptee();
         

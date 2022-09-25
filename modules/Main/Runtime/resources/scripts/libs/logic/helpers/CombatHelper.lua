@@ -27,6 +27,9 @@ function create_ammo_properties(ammo, weapon)
     return {
         id = ammo.serializable.id,
         fire_fx_name = ammoProp.fire_fx_name,
+        bullet_fx_name = ammoProp.bullet_fx_name,
+        collision_fx_name = ammoProp.collision_fx_name,
+        blast_radius = ammoProp.blast_radius,
         damage = ammoProp.base_damage * weaponProp.damage_multiplier,
         speed = ammoProp.speed,
         stopping = ammoProp.stopping,

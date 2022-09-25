@@ -35,7 +35,7 @@ namespace hpms
 
         virtual hpms::LightAdapter* CreateLight(float r, float g, float b) override;
 
-        virtual hpms::ParticleAdapter* CreateParticleSystem(const std::string& name, const std::string& templateName, bool createNode) override;
+        virtual hpms::ParticleAdapter* CreateParticleSystem(const std::string& name, const std::string& templateName) override;
 
         virtual BackgroundImageAdapter*
         CreateBackgroundImage(const std::string& path) override;

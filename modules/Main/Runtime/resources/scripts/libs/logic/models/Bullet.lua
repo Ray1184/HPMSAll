@@ -41,7 +41,9 @@ function bullet:ret(shooterActor, path)
                 previus_position = { x = pos.x + offset.x, y = pos.y + offset.y, z = pos.z + offset.z },
                 direction = lib.get_direction(shooterActor.transient.node.rotation,lib.vec3(0,- 1,0)),
                 ttl = k.BULLET_TTL,
-                life = 0
+                life = 0,
+                collided = false,
+                collision_countdown = k.AFTER_COLLISION_TTL
             }
         }
     }
@@ -86,9 +88,22 @@ function bullet:ret(shooterActor, path)
         if not self.transientDataInit then
             return
         end
-        local attachTo = k.attachable_bones.WEAPON_BARREL_FX
-        lib.detach_particle_from_entity_bone(attachTo, self.transient.fx, parentEntity)
-        lib.delete_particle_system(self.transient.fx)
+        if self.not_serializable.properties.fire_fx_name ~= nil then
+            local attachTo = k.attachable_bones.WEAPON_BARREL_FX
+            lib.detach_particle_from_entity_bone(attachTo, self.transient.fire_fx, parentEntity)
+            lib.delete_particle_system(self.transient.fire_fx)
+        end
+
+        if self.not_serializable.properties.bullet_fx_name ~= nil then
+            lib.delete_particle_system(self.transient.bullet_fx)
+        end
+
+        -- Collision fx could be not initialized yet
+        if self.not_serializable.properties.collision_fx_name ~= nil and self.transient.collision_fx ~= nil then
+            lib.delete_particle_system(self.transient.collision_fx)
+            self.transient.collision_fx = nil
+        end
+
         self.metainfo.override.volatile_game_object.delete_transient_data(self)
         context_remove_volatile(self)
     end
@@ -100,36 +115,71 @@ function bullet:ret(shooterActor, path)
         self.metainfo.override.volatile_game_object.set_position(self, properties.current_position.x, properties.current_position.y, properties.current_position.z)
         if self.not_serializable.properties.fire_fx_name ~= nil then
             local fxTemplate = self.not_serializable.properties.fire_fx_name
-            local id = self.not_serializable.id
+            local id = 'fire_' .. self.not_serializable.id
             local attachTo = k.attachable_bones.WEAPON_BARREL_FX
             local dummyRot = lib.from_euler(0, 0, 0)
             local dummyScale = lib.vec3(1, 1, 1)
-            self.transient.fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate, false)
-            lib.attach_particle_to_entity_bone(attachTo, self.transient.fx, parentEntity, lib.vec3(props.fx_position_offset.x, props.fx_position_offset.y, props.fx_position_offset.z), dummyRot, dummyScale)
+            self.transient.fire_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
+            lib.attach_particle_to_entity_bone(attachTo, self.transient.fire_fx, parentEntity, lib.vec3(props.fx_position_offset.x, props.fx_position_offset.y, props.fx_position_offset.z), dummyRot, dummyScale)
+        end
+        if self.not_serializable.properties.bullet_fx_name ~= nil then
+            local fxTemplate = self.not_serializable.properties.bullet_fx_name
+            local id = 'bullet_' .. self.not_serializable.id
+            local dummyRot = lib.from_euler(0, 0, 0)
+            local dummyScale = lib.vec3(1, 1, 1)
+            self.transient.bullet_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
+            lib.set_node_particle(self.transient.node, self.transient.bullet_fx)
         end
     end
 
     function bullet:update(tpf, allSceneActors, walkmap)
         self.metainfo.override.volatile_game_object.update(self)
         local props = self.not_serializable.properties
+        if props.collided then
+            props.collision_countdown = props.collision_countdown - tpf
+            if props.collision_countdown <= 0 then
+                self:delete_transient_data()
+            end
+            return
+        end
         props.previus_position = props.current_position
         self.metainfo.override.volatile_game_object.move_dir(self, tpf * props.speed, props.direction)
         props.current_position = self.metainfo.override.volatile_game_object.get_position(self)
 
-        if bullet_collision(shooterActor, self, allSceneActors, walkmap, tpf) then
-            self:delete_transient_data()
+        props.collided = bullet_collision(shooterActor, self, allSceneActors, walkmap, tpf)
+
+        if props.collided then
+            collision_fx(self, props.current_position)
         end
+
         props.life = props.life + tpf
     end
 
     return this
 end
 
+function collision_fx(bullet, pos)
+    if bullet.not_serializable.properties.collision_fx_name ~= nil then
+        if bullet.transient.bullet_fx ~= nil then
+            bullet.transient.bullet_fx.visible = false
+        end
+        local fxTemplate = bullet.not_serializable.properties.collision_fx_name
+        local id = 'bullet_collision_' .. bullet.not_serializable.id
+        local dummyRot = lib.from_euler(0, 0, 0)
+        local dummyScale = lib.vec3(1, 1, 1)
+        bullet.transient.collision_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
+        lib.set_node_particle(bullet.transient.node, bullet.transient.collision_fx)
+    end
+end
+
 function bullet_collision(shooterActor, bullet, allSceneActors, walkmap, tpf)
     local props = bullet.not_serializable.properties
     local collision = false
     collision = collision or props.life > props.ttl
-    collision = collision or not lib.point_inside_walkmap(walkmap, lib.vec3(props.current_position.x, props.current_position.y, props.current_position.z))
+    collision = collision or not lib.circle_inside_walkmap(walkmap, lib.vec3(props.previus_position.x, props.current_position.y, props.current_position.z), props.blast_radius or 0.5)
+    if collision then
+        return true
+    end
     for i = 1, #allSceneActors do
         collision = collision or bullet_actor_collision(shooterActor, bullet, allSceneActors[i], tpf)
     end
@@ -153,4 +203,5 @@ function bullet_actor_collision(shooterActor, bullet, actor, tpf)
         return armored or not bulletProps.piercing
 
     end
+    return false
 end

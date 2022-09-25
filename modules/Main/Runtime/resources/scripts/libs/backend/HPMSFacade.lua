@@ -65,8 +65,16 @@ function backend:get()
                 log_debug('Attaching entity ' .. e.dummy_id .. ' to node ' .. n.dummy_id)
             end,
 
+            set_node_particle = function(n, e)
+                log_debug('Attaching particle ' .. e.dummy_id .. ' to node ' .. n.dummy_id)
+            end,
+
             detach_node_entity = function(n, e)
                 log_debug('Detaching entity ' .. e.dummy_id .. ' from node ' .. n.dummy_id)
+            end,
+
+            detach_node_particle = function(n, e)
+                log_debug('Detaching particle ' .. e.dummy_id .. ' from node ' .. n.dummy_id)
             end,
 
             attach_to_entity_bone = function(b, ea, eo, oPos, oRot, oScale)
@@ -176,6 +184,10 @@ function backend:get()
 
             point_inside_walkmap = function(walkmap, point)
                 log_debug('Checking point inside walkmap ' .. walkmap)
+            end,
+
+            circle_inside_walkmap = function(walkmap, point, radius)
+                log_debug('Checking circle inside walkmap ' .. walkmap)
             end,
 
             circle_intersect_line = function(a, b, center, radius)
@@ -350,7 +362,9 @@ function backend:get()
             make_node_collisor = hpms.make_node_collisor,
             delete_collisor = hpms.delete_collisor,
             set_node_entity = hpms.set_node_entity,
+            set_node_particle = hpms.set_node_particle,
             detach_node_entity = hpms.detach_node_entity,
+            detach_node_particle = hpms.detach_node_particle,
             attach_to_entity_bone = hpms.attach_to_entity_bone,
             detach_from_entity_bone = hpms.detach_from_entity_bone,
             attach_particle_to_entity_bone = hpms.attach_particle_to_entity_bone,
@@ -384,6 +398,7 @@ function backend:get()
             play_anim = hpms.play_anim,
             update_anim = hpms.update_anim,
             point_inside_walkmap = hpms.point_inside_walkmap,
+            circle_inside_walkmap = hpms.circle_inside_walkmap,
             add_anim = hpms.add_anim,
             set_anim = hpms.set_anim,
             rewind_anim = hpms.rewind_anim,

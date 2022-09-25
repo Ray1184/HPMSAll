@@ -35,7 +35,9 @@ function game_mechanics_consts:get()
 
         ACTIONS_DISPLAY_LIST_SIZE = 3,
 
-        BULLET_TTL = 2,
+        BULLET_TTL = 100,
+
+        AFTER_COLLISION_TTL = 2,
 
         input_actions =
         {

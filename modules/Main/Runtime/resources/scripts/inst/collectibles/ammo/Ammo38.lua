@@ -40,9 +40,12 @@ function ammo_38:ret(idSuffix, amount)
         ammo_properties =
         {
             fire_fx_name = 'GunFX/ShotFire1',
+            bullet_fx_name = 'GunFX/ShotBullet1',
+            collision_fx_name = 'GunFX/ShotExplosion1',
+            blast_radius = 0.5,
             max_per_slot = 12,
             base_damage = 2,
-            speed = 5,
+            speed = 50,
             stopping = false,
             spread = false,
             poison = false,

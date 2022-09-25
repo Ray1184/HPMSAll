@@ -413,6 +413,8 @@ namespace hpms
 				.beginNamespace("hpms")
 				.addFunction("set_node_entity", &hpms::LuaExtensions::LSetNodeEntity)
 				.addFunction("detach_node_entity", &hpms::LuaExtensions::LSRemoveNodeEntity)
+				.addFunction("set_node_particle", &hpms::LuaExtensions::LSetNodeParticle)
+				.addFunction("detach_node_particle", &hpms::LuaExtensions::LSRemoveNodeParticle)
 				.addFunction("set_node_camera", &hpms::LuaExtensions::LSetNodeCamera)
 				.addFunction("attach_to_entity_bone", &hpms::LuaExtensions::LAttachToEntityBone)
 				.addFunction("detach_from_entity_bone", &hpms::LuaExtensions::LDetachFromEntityBone)
@@ -438,6 +440,7 @@ namespace hpms
 				.addFunction("anim_finished", &hpms::LuaExtensions::LAnimationFinished)
 				.addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
 				.addFunction("point_inside_walkmap", &hpms::LuaExtensions::LPointInsideWalkmap)
+				.addFunction("circle_inside_walkmap", &hpms::LuaExtensions::LCircleInsideWalkmap)
 				.addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
 				.addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
 				.endNamespace();
