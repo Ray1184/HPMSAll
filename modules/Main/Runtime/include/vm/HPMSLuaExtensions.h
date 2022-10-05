@@ -545,6 +545,21 @@ namespace hpms
 			overlayImage->SetAlpha(alpha);
 		}
 
+		static inline void LParticleGoToTime(hpms::ParticleAdapter* particles, float time)
+		{
+			particles->GoToTime(time);
+		}
+
+		static inline void InitAnimatedParticle(hpms::ParticleAdapter* particles, const std::string& textureBaseName)
+		{
+			particles->InitAnimatedParticle(textureBaseName);
+		}
+
+		static inline void UpdateNoLoopAnimatedParticle(hpms::ParticleAdapter* particles, const std::string& textureBaseName)
+		{
+			particles->UpdateNoLoopAnimatedParticle(textureBaseName);
+		}
+
 		// System Logic.     
 		static inline void SLLogMessage(const std::string& logMsg)
 		{

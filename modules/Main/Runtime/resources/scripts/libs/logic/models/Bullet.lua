@@ -121,6 +121,7 @@ function bullet:ret(shooterActor, path)
             local dummyScale = lib.vec3(1, 1, 1)
             self.transient.fire_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
             lib.attach_particle_to_entity_bone(attachTo, self.transient.fire_fx, parentEntity, lib.vec3(props.fx_position_offset.x, props.fx_position_offset.y, props.fx_position_offset.z), dummyRot, dummyScale)
+            lib.particle_go_to_time(self.transient.fire_fx, 1.0)
         end
         if self.not_serializable.properties.bullet_fx_name ~= nil then
             local fxTemplate = self.not_serializable.properties.bullet_fx_name
@@ -129,12 +130,13 @@ function bullet:ret(shooterActor, path)
             local dummyScale = lib.vec3(1, 1, 1)
             self.transient.bullet_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
             lib.set_node_particle(self.transient.node, self.transient.bullet_fx)
+            lib.particle_go_to_time(self.transient.bullet_fx, 1.0)
         end
     end
 
     function bullet:update(tpf, allSceneActors, walkmap)
         self.metainfo.override.volatile_game_object.update(self)
-        local props = self.not_serializable.properties
+        local props = self.not_serializable.properties       
         if props.collided then
             props.collision_countdown = props.collision_countdown - tpf
             if props.collision_countdown <= 0 then
@@ -151,6 +153,7 @@ function bullet:ret(shooterActor, path)
         if props.collided then
             collision_fx(self, props.current_position)
         end
+        
 
         props.life = props.life + tpf
     end
@@ -169,6 +172,7 @@ function collision_fx(bullet, pos)
         local dummyScale = lib.vec3(1, 1, 1)
         bullet.transient.collision_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
         lib.set_node_particle(bullet.transient.node, bullet.transient.collision_fx)
+        lib.particle_go_to_time(bullet.transient.collision_fx, 1.0)
     end
 end
 

@@ -44,6 +44,9 @@ namespace hpms
 
         virtual void GoToTime(float time) = 0;
 
+        virtual void InitAnimatedParticle(const std::string& textureBaseName) = 0;
+
+        virtual void UpdateNoLoopAnimatedParticle(const std::string& textureBaseName) = 0;
 
     };
 }

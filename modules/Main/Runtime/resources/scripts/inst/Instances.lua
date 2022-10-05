@@ -14,7 +14,7 @@ dependencies = {
     'inst/actors/scene/DummyChest.lua',
     'inst/collectibles/misc/DummyItem.lua',
     'inst/collectibles/weapons/Revolver38.lua',
-    'inst/collectibles/ammo/Ammo38.lua',
+    'inst/collectibles/ammo/Ammo38Explosive.lua',
     'bundles/Objects.lua',
     'bundles/Menu.lua'
 }
@@ -45,6 +45,6 @@ function register_all_instances()
     context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_7.ID, function(idSuffix, amount) return dummy_item_7:ret(idSuffix, amount) end)
     context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.DUMMY_ITEM_8.ID, function(idSuffix, amount) return dummy_item_8:ret(idSuffix, amount) end)
     context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.REVOLVER_38.ID, function(idSuffix, amount) return revolver_38:ret(idSuffix, amount) end)
-    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.AMMO_38.ID, function(idSuffix, amount) return ammo_38:ret(idSuffix, amount) end)
+    context_register_instance(k.inst_cat.COLLECTIBLES, g.res_refs.collectibles.AMMO_38_EXPLOSIVE.ID, function(idSuffix, amount) return ammo_38_explosive:ret(idSuffix, amount) end)
 
 end

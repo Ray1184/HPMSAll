@@ -258,6 +258,18 @@ function backend:get()
                 log_debug('Setting alpha ' .. a .. ' for overlay ' .. o.dummy_id)
             end,
 
+            particle_go_to_time = function(p, t)
+                log_debug('Setting time ' .. t .. ' for particle ' .. p.dummy_id)
+            end,
+
+             particle_init_animated = function(p, t)
+                log_debug('Setting init animated particle ' .. p.dummy_id)
+            end,
+
+             particle_update_noloop_animated = function(p, t)
+                log_debug('Setting update noloop animated particle ' .. p.dummy_id)
+            end,
+
             -- Math functions.
             vec3 = function(x, y, z)
                 return { }
@@ -387,6 +399,9 @@ function backend:get()
             get_collisor_config = hpms.get_collisor_config,
             stream_text = hpms.stream_text,
             overlay_alpha = hpms.overlay_alpha,
+            particle_go_to_time = hpms.particle_go_to_time,
+            particle_init_animated = hpms.particle_init_animated,
+            particle_update_noloop_animated = hpms.particle_update_noloop_animated,
 
             -- Logic.
             get_camera = hpms.get_camera,

@@ -15,6 +15,7 @@ namespace hpms
     {
     private:
         Ogre::ParticleSystem* ogrePS;
+        Ogre::MaterialPtr instanceMaterial;
         bool createNode;
     public:
         ParticleAdaptee(hpms::OgreContext* ctx, const std::string& name, const std::string& templateName);
@@ -44,5 +45,9 @@ namespace hpms
         virtual void GoToTime(float time) override;
 
         virtual Ogre::MovableObject* GetNative() override;
+
+        virtual void InitAnimatedParticle(const std::string& textureBaseName) override;
+
+        virtual void UpdateNoLoopAnimatedParticle(const std::string& textureBaseName) override;
     };
 }

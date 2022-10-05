@@ -443,6 +443,9 @@ namespace hpms
 				.addFunction("circle_inside_walkmap", &hpms::LuaExtensions::LCircleInsideWalkmap)
 				.addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
 				.addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
+				.addFunction("particle_go_to_time", &hpms::LuaExtensions::LParticleGoToTime)
+				.addFunction("particle_init_animated", &hpms::LuaExtensions::InitAnimatedParticle)
+				.addFunction("particle_update_noloop_animated", &hpms::LuaExtensions::UpdateNoLoopAnimatedParticle)
 				.endNamespace();
 		}
 

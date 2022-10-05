@@ -23,8 +23,8 @@ function get_bundle_set_items()
             items_misc_dummy_item_8_description = 'Questo è un oggetto di test (H) utilizzato per vedere se funzionano istanze multiple',
             items_misc_revolver_38_name = 'Revolver',
             items_misc_revolver_38_description = 'Rivoltella calibro 38 con tamburo a 6 colpi. Un\'arma semplice ma efficace',
-            items_misc_ammo_38_name = 'Cal. 38',
-            items_misc_ammo_38_description = 'Pallottole calibro 38, dimentico sempre di farne la scorta'
+            items_misc_ammo_38_explosive_name = 'Cal. 38 Esplosive',
+            items_misc_ammo_38_explosive_description = 'Pallottole calibro 38 speciali, contengono esplosivo ad alto potenziale'
 
 
         }

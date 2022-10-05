@@ -6,12 +6,28 @@ material FX/Flare
 		{
 			lighting off
 			scene_blend add
-			depth_write off
-			diffuse vertexcolour
 
 			texture_unit
 			{
 				texture Materials/Flare.png
+			}
+		}
+	}
+}
+
+material FX/Explosion
+{
+	technique
+	{
+		pass
+		{
+			lighting off
+			scene_blend add
+			depth_write off
+
+			texture_unit
+			{
+				anim_texture Materials/E.png 16 0.5
 			}
 		}
 	}

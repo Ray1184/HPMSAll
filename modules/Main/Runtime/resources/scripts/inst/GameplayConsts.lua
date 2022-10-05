@@ -30,7 +30,7 @@ function game_consts:get()
                 DUMMY_ITEM_7 = { ID = 'dummy_item_7', PATH = 'DummyChest.mesh' },
                 DUMMY_ITEM_8 = { ID = 'dummy_item_8', PATH = 'DummyChest.mesh' },
                 REVOLVER_38 = { ID = 'revolver_38', PATH = 'Revolver.mesh' },
-                AMMO_38 = { ID = 'ammo_38', PATH = 'MAG_AP.mesh' }
+                AMMO_38_EXPLOSIVE = { ID = 'ammo_38_explosive', PATH = 'MAG_AP.mesh' }
             }
         },
         ammo_names =

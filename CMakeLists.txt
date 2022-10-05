@@ -12,18 +12,21 @@ endif ()
 
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
 
-message(STATUS "Ogre build path: $ENV{OGRE_BUILD}")
-message(STATUS "Ogre src path: $ENV{OGRE_SRC}")
+set(OGRE_BUILD "C:/Users/stron/projects/ogre/Release")
+set(OGRE_SRC "C:/Users/stron/projects/ogre")
 
-if ($ENV{OGRE_BUILD} STREQUAL "")
-    message(FATAL_ERROR "OGRE_BUILD environment variable must be set to build HPMS.")
-endif ()
+message(STATUS "Ogre build path: ${OGRE_BUILD}")
+message(STATUS "Ogre src path: ${OGRE_SRC}")
 
-if ($ENV{OGRE_SRC} STREQUAL "")
-    message(FATAL_ERROR "OGRE_SRC environment variable must be set to build HPMS.")
-endif ()
+#if ($ENV{OGRE_BUILD} STREQUAL "")
+#    message(FATAL_ERROR "OGRE_BUILD environment variable must be set to build HPMS.")
+#endif ()
+#
+#if ($ENV{OGRE_SRC} STREQUAL "")
+#    message(FATAL_ERROR "OGRE_SRC environment variable must be set to build HPMS.")
+#endif ()
 
-set(OGRE_ROOT $ENV{OGRE_ROOT})
+set(OGRE_ROOT ${OGRE_ROOT})
 
 add_definitions(-DCROSS_BUILD)
 add_definitions(-DCOORD_SYSTEM_BLENDER)

@@ -86,7 +86,7 @@ scene = {
 
         -- actor_action_mode.PUSH
 
-        -- mag44ap = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 3)
+        -- mag44ap = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38_EXPLOSIVE.ID, 3)
 
         gsm:put_session_var_if_nil(k.session_vars.CURRENT_PLAYER_ID, g.res_refs.actors.DUMMY_PLAYER.ID)
         player = actors_mgr:create_player(gsm:get_session_var(k.session_vars.CURRENT_PLAYER_ID))
@@ -123,7 +123,7 @@ scene = {
 
             rev:set_serializable_properties(wp)
 
-            ammo = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38.ID, 12)
+            ammo = actors_mgr:create_item(g.res_refs.collectibles.AMMO_38_EXPLOSIVE.ID, 12)
 
        
             ammo_load(rev, ammo)
