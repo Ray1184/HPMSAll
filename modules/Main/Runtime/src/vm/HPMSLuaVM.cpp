@@ -73,6 +73,7 @@ void hpms::LuaVM::RegisterAll()
     hpms::LuaRegister::RegisterCollisor(state);
     hpms::LuaRegister::RegisterCollisionEnv(state);
     hpms::LuaRegister::RegisterCollisionState(state);
+    hpms::LuaRegister::RegisterIntersectInfo(state);
     hpms::LuaRegister::RegisterCollisorConfig(state);
     hpms::LuaRegister::RegisterAnimation(state);
     hpms::LuaRegister::RegisterParticleSystem(state);

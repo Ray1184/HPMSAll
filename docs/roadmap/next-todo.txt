@@ -1,21 +1,23 @@
- TASK                                                                                   | STATUS
-------------------------------------------------------------------------------------------------------
-Modificare l'HPMSCollisor usando il sistema di collisioni gestito nel walkmap adapter   | 100%
-Sistemare camera agganciandola a nodo di scena (manipolazione diretta deprecata)        | 100%
-Eliminare ogni errore                                                                   | 100%
-Capire dove viene impostato il bounding circle                                          | 100%
-Far funzionare il nuovo sistema di collisioni                                           | 100%
-Capire se al delete dei nodi c'è qualche SIGSEV                                         | 100%
-Sistemare il glitch quando l'animazione cambia velocemente								| 100%
-Persistenza oggetti durante cambio stati save / load                                    | 100%
-Sistema combattimento mani nude / arma bianca                                           | 0%
-Sistema combattimento armi da fuoco                                                     | 80%
-Sistemi particellari                                                                    | 80%
-Helper quest                                                                            | 0%
-Helper puzzles                                                                          | 0%
-Gestione statistiche giocatore                                                          | 0%
-Crafting                                                                                | 0%
-Shop system                                                                             | 0%
-Minigames                                                                               | 0%
-Audio                                                                                   | 0%
+ TASK                                                                                           | STATUS
+----------------------------------------------------------------------------------------        --------------
+Modificare l'HPMSCollisor usando il sistema di collisioni gestito nel walkmap adapter           | 100%
+Sistemare camera agganciandola a nodo di scena (manipolazione diretta deprecata)                | 100%
+Eliminare ogni errore                                                                           | 100%
+Capire dove viene impostato il bounding circle                                                  | 100%
+Far funzionare il nuovo sistema di collisioni                                                   | 100%
+Capire se al delete dei nodi c'è qualche SIGSEV                                                 | 100%
+Sistemare il glitch quando l'animazione cambia velocemente								        | 100%
+Persistenza oggetti durante cambio stati save / load                                            | 100%
+Sistema combattimento mani nude / arma bianca                                                   | 0%
+Sistema combattimento armi da fuoco                                                             | 80%
+Sistemi particellari                                                                            | 80%
+Aggiungere bounding radius per azioni diverse e bloccare l'azione se il radius previsto collide | 0%
+Migliorare le collisioni tra proiettili e limite walkmap                                        | 0%
+Helper quest                                                                                    | 0%
+Helper puzzles                                                                                  | 0%
+Gestione statistiche giocatore                                                                  | 0%
+Crafting                                                                                        | 0%
+Shop system                                                                                     | 0%
+Minigames                                                                                       | 0%
+Audio                                                                                           | 0%
 

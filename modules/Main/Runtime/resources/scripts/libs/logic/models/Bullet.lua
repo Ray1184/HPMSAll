@@ -178,9 +178,11 @@ end
 
 function bullet_collision(shooterActor, bullet, allSceneActors, walkmap, tpf)
     local props = bullet.not_serializable.properties
-    local collision = false
+    local collision = false    
+    local walkmapCollision = lib.line_intersect_walkmap(walkmap, lib.vec2(props.previus_position.x, props.previus_position.y), lib.vec2(props.current_position.x, props.current_position.y))
     collision = collision or props.life > props.ttl
-    collision = collision or not lib.circle_inside_walkmap(walkmap, lib.vec3(props.previus_position.x, props.current_position.y, props.current_position.z), props.blast_radius or 0.5)
+    collision = walkmapCollision.intersect
+    --collision = collision or not lib.circle_inside_walkmap(walkmap, lib.vec3(props.previus_position.x, props.current_position.y, props.current_position.z), props.blast_radius or 0.5)
     if collision then
         return true
     end

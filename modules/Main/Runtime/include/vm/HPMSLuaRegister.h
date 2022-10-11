@@ -387,6 +387,17 @@ namespace hpms
 				.endNamespace();
 		}
 
+		inline static void RegisterIntersectInfo(lua_State* state)
+		{
+			getGlobalNamespace(state)
+				.beginNamespace("hpms")
+				.beginClass<IntersectInfo>("intersect_info")	
+				.addData("intersect", &hpms::IntersectInfo::intersect)
+				.addData("intersection_point", &hpms::IntersectInfo::intersectionPoint)
+				.endClass()
+				.endNamespace();
+		}
+
 		inline static void RegisterAnimation(lua_State* state)
 		{
 			getGlobalNamespace(state)
@@ -441,6 +452,7 @@ namespace hpms
 				.addFunction("update_anim", &hpms::LuaExtensions::LUpdateAnimation)
 				.addFunction("point_inside_walkmap", &hpms::LuaExtensions::LPointInsideWalkmap)
 				.addFunction("circle_inside_walkmap", &hpms::LuaExtensions::LCircleInsideWalkmap)
+				.addFunction("line_intersect_walkmap", &hpms::LuaExtensions::LLineIntersectsWalkmap)
 				.addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
 				.addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
 				.addFunction("particle_go_to_time", &hpms::LuaExtensions::LParticleGoToTime)

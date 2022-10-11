@@ -12,6 +12,7 @@
 #include <vector>
 
 #define HPMS_EPSILON 0.0001f
+#define CCW(A, B, C) ((C.y-A.y) * (B.x-A.x) > (B.y-A.y) * (C.x-A.x))
 
 namespace hpms
 {
@@ -100,6 +101,12 @@ namespace hpms
 		OUTSIDE
 	};
 
+	struct IntersectInfo
+	{
+		bool intersect{ false };
+		glm::vec2 intersectionPoint;
+	};
+
 	float
 		IntersectRayLineSegment(float originX, float originY, float dirX, float dirY, float aX, float aY, float bX,
 			float bY);
@@ -164,6 +171,29 @@ namespace hpms
 	inline float DistanceVec2(const glm::vec2& v1, const glm::vec2& v2)
 	{
 		return std::sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
+	}
+
+	inline void IntersectBetweenVectors(const glm::vec2& start1, const glm::vec2& end1, const glm::vec2& start2, const glm::vec2& end2, IntersectInfo* intersectInfo)
+	{
+		float a1 = end1.y - start1.y;
+		float b1 = start1.x - end1.x;
+		float c1 = a1 * start1.x + b1 * start1.y;
+		
+		float a2 = end2.y - start2.y;
+		float b2 = start2.x - end2.x;
+		float c2 = a2 * start2.x + b2 * start2.y;
+
+		float det = a1 * b2 - a2 * b1;
+		if (det == 0) 
+		{
+			return;
+		}
+
+		float x = (b2 * c1 - b1 * c2) / det;
+		float y = (a1 * c2 - a2 * c1) / det;
+
+		intersectInfo->intersect = true;
+		intersectInfo->intersectionPoint = glm::vec2(x, y);
 	}
 
 }

@@ -32,16 +32,7 @@ void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2 
 {
     Check(walkmap.get());
     int size = walkmap->GetData()->GetPerimeter().GetData().size();
-    for (int i = 0; i < size - 1; i++)
-    {
-        glm::vec2 first = walkmap->GetData()->GetPerimeter().GetData()[i];
-        glm::vec2 second = walkmap->GetData()->GetPerimeter().GetData()[i + 1];
-        bool exit = visitor(first, second);
-        if (exit)
-        {
-            return;
-        }
-    }
+
 
     for (auto& obstacle : walkmap->GetData()->GetObstacles())
     {
@@ -56,6 +47,18 @@ void hpms::WalkmapAdaptee::ForEachSide(const std::function<bool(const glm::vec2 
             }
         }
     }
+
+    for (int i = 0; i < size - 1; i++)
+    {
+        glm::vec2 first = walkmap->GetData()->GetPerimeter().GetData()[i];
+        glm::vec2 second = walkmap->GetData()->GetPerimeter().GetData()[i + 1];
+        bool exit = visitor(first, second);
+        if (exit)
+        {
+            return;
+        }
+    }
+
     
 }
 

@@ -540,6 +540,18 @@ namespace hpms
 			return !outOfWalkmap;
 		}
 
+		static inline IntersectInfo LLineIntersectsWalkmap(hpms::WalkmapAdapter* walkmap, const glm::vec2& a, const glm::vec2& b)
+		{
+			IntersectInfo intersectInfo;
+			auto checkIntersection = [&](const glm::vec2& sideAPos, const glm::vec2& sideBPos)
+			{
+				hpms::IntersectBetweenVectors(sideAPos, sideBPos, a, b, &intersectInfo);
+				return intersectInfo.intersect;
+			};
+			walkmap->ForEachSide(checkIntersection);
+			return intersectInfo;
+		}
+
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)
 		{
 			overlayImage->SetAlpha(alpha);

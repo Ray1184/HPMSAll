@@ -194,6 +194,10 @@ function backend:get()
                 log_debug('Checking line intersect circle of center ' .. center)
             end,
 
+            line_intersect_walkmap = function(w, a, b)
+                log_debug('Checking line intersect walkmap ' .. w)
+            end,
+
             add_anim = function(a, name, from, to)
                 log_debug('Adding anim ' .. name .. ' to ' .. a.dummy_id)
             end,
@@ -414,6 +418,7 @@ function backend:get()
             update_anim = hpms.update_anim,
             point_inside_walkmap = hpms.point_inside_walkmap,
             circle_inside_walkmap = hpms.circle_inside_walkmap,
+            line_intersect_walkmap = hpms.line_intersect_walkmap,
             add_anim = hpms.add_anim,
             set_anim = hpms.set_anim,
             rewind_anim = hpms.rewind_anim,
