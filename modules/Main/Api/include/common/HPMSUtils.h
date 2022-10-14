@@ -98,7 +98,7 @@ namespace hpms
 		}
 		else if (leaks > 0)
 		{
-			dump << "WARNING, potential memory leaks detected! " << leaks << " allocations not set free." << std::endl;
+			dump << "ERROR, potential memory leaks detected! " << leaks << " allocations not set free." << std::endl;
 		}
 		else
 		{

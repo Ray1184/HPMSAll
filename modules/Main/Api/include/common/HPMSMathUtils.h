@@ -173,27 +173,29 @@ namespace hpms
 		return std::sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 	}
 
-	inline void IntersectBetweenVectors(const glm::vec2& start1, const glm::vec2& end1, const glm::vec2& start2, const glm::vec2& end2, IntersectInfo* intersectInfo)
+	inline void IntersectBetweenVectors(const glm::vec2& A, const glm::vec2& B, const glm::vec2& C, const glm::vec2& D, IntersectInfo* intersectInfo)
 	{
-		float a1 = end1.y - start1.y;
-		float b1 = start1.x - end1.x;
-		float c1 = a1 * start1.x + b1 * start1.y;
-		
-		float a2 = end2.y - start2.y;
-		float b2 = start2.x - end2.x;
-		float c2 = a2 * start2.x + b2 * start2.y;
-
-		float det = a1 * b2 - a2 * b1;
-		if (det == 0) 
+		float a = B.y - A.y;
+		float b = A.x - B.x;
+		float c = a * (A.x) + b * (A.y);
+		float a1 = D.y - C.y;
+		float b1 = C.x - D.x;
+		float c1 = a1 * (C.x) + b1 * (C.y);
+		float det = a * b1 - a1 * b;
+		if (det == 0)
 		{
 			return;
 		}
 
-		float x = (b2 * c1 - b1 * c2) / det;
-		float y = (a1 * c2 - a2 * c1) / det;
+		float x = (b1 * c - b * c1) / det;
+		float y = (a * c1 - a1 * c) / det;
 
-		intersectInfo->intersect = true;
-		intersectInfo->intersectionPoint = glm::vec2(x, y);
+
+		if (IsBetween(A, B, glm::vec2(x, y)) && IsBetween(C, D, glm::vec2(x, y)))
+		{
+			intersectInfo->intersect = true;
+			intersectInfo->intersectionPoint = glm::vec2(x, y);
+		}
 	}
 
 }

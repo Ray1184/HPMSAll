@@ -136,7 +136,7 @@ function bullet:ret(shooterActor, path)
 
     function bullet:update(tpf, allSceneActors, walkmap)
         self.metainfo.override.volatile_game_object.update(self)
-        local props = self.not_serializable.properties       
+        local props = self.not_serializable.properties
         if props.collided then
             props.collision_countdown = props.collision_countdown - tpf
             if props.collision_countdown <= 0 then
@@ -148,12 +148,14 @@ function bullet:ret(shooterActor, path)
         self.metainfo.override.volatile_game_object.move_dir(self, tpf * props.speed, props.direction)
         props.current_position = self.metainfo.override.volatile_game_object.get_position(self)
 
-        props.collided = bullet_collision(shooterActor, self, allSceneActors, walkmap, tpf)
+        local collisionInfo = bullet_collision(shooterActor, self, allSceneActors, walkmap, tpf)
+
+        props.collided = collisionInfo.collision
+        props.collision_point = collisionInfo.collision_point
 
         if props.collided then
-            collision_fx(self, props.current_position)
+            collision_fx(self)
         end
-        
 
         props.life = props.life + tpf
     end
@@ -161,7 +163,7 @@ function bullet:ret(shooterActor, path)
     return this
 end
 
-function collision_fx(bullet, pos)
+function collision_fx(bullet)
     if bullet.not_serializable.properties.collision_fx_name ~= nil then
         if bullet.transient.bullet_fx ~= nil then
             bullet.transient.bullet_fx.visible = false
@@ -170,7 +172,13 @@ function collision_fx(bullet, pos)
         local id = 'bullet_collision_' .. bullet.not_serializable.id
         local dummyRot = lib.from_euler(0, 0, 0)
         local dummyScale = lib.vec3(1, 1, 1)
+        local bulletProps = bullet.not_serializable.properties
+        local pos = bulletProps.collision_point
+        local dir = bulletProps.direction
+        local blastRadius = bulletProps.blast_radius
         bullet.transient.collision_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
+        bullet.transient.node.position = lib.vec3(pos.x, pos.y, bullet.transient.node.position.z)      
+        bullet.metainfo.override.volatile_game_object.move_dir(bullet, -blastRadius, dir)
         lib.set_node_particle(bullet.transient.node, bullet.transient.collision_fx)
         lib.particle_go_to_time(bullet.transient.collision_fx, 1.0)
     end
@@ -178,18 +186,19 @@ end
 
 function bullet_collision(shooterActor, bullet, allSceneActors, walkmap, tpf)
     local props = bullet.not_serializable.properties
-    local collision = false    
+    local collision = false
     local walkmapCollision = lib.line_intersect_walkmap(walkmap, lib.vec2(props.previus_position.x, props.previus_position.y), lib.vec2(props.current_position.x, props.current_position.y))
     collision = collision or props.life > props.ttl
     collision = walkmapCollision.intersect
-    --collision = collision or not lib.circle_inside_walkmap(walkmap, lib.vec3(props.previus_position.x, props.current_position.y, props.current_position.z), props.blast_radius or 0.5)
     if collision then
-        return true
+        return { collision = true, collision_point = walkmapCollision.intersection_point }
     end
+    local collisionPoint = nil
     for i = 1, #allSceneActors do
         collision = collision or bullet_actor_collision(shooterActor, bullet, allSceneActors[i], tpf)
+        collisionPoint = allSceneActors[i]:get_position()
     end
-    return collision
+    return { collision = collision, collision_point = collisionPoint }
 end
 
 function bullet_actor_collision(shooterActor, bullet, actor, tpf)

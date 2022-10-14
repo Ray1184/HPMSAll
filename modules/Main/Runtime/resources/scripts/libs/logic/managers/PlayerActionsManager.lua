@@ -227,7 +227,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
                         local fireAnim = equippedWeapon:get_properties().weapon_properties.fire_anim
                         self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
                         if self.shot_ready then
-                            equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
+                            --equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
                             init_round(player)
                             self.shot_ready = false
                         end

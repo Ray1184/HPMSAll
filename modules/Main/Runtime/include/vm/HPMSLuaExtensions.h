@@ -17,6 +17,7 @@
 #include <logic/anim/HPMSAnimationHelper.h>
 #include <debug/HPMSDebugUtils.h>
 #include <LuaBridge/Vector.h>
+#include <limits>
 
 namespace hpms
 {
@@ -543,12 +544,29 @@ namespace hpms
 		static inline IntersectInfo LLineIntersectsWalkmap(hpms::WalkmapAdapter* walkmap, const glm::vec2& a, const glm::vec2& b)
 		{
 			IntersectInfo intersectInfo;
+			std::vector<glm::vec2> intersections;
 			auto checkIntersection = [&](const glm::vec2& sideAPos, const glm::vec2& sideBPos)
 			{
 				hpms::IntersectBetweenVectors(sideAPos, sideBPos, a, b, &intersectInfo);
-				return intersectInfo.intersect;
+				if (intersectInfo.intersect)
+				{
+					intersections.push_back(intersectInfo.intersectionPoint);
+				}
+				return false;
 			};
 			walkmap->ForEachSide(checkIntersection);
+			float minDistance = std::numeric_limits<float>::max();
+			for (auto& point : intersections)
+			{
+				float dist = hpms::DistanceVec2(point, a);
+				if (dist < minDistance)
+				{
+					minDistance = dist;
+					intersectInfo.intersect = true;
+					intersectInfo.intersectionPoint = point;
+
+				}
+			}
 			return intersectInfo;
 		}
 
