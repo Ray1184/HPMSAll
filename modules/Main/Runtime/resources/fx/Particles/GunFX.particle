@@ -1,27 +1,26 @@
 particle_system GunFX/ShotFire1
 {
-	material FX/Explosion
-	particle_width 0.4
-	particle_height 0.4
+	material FX/Flare
+	particle_width 1
+	particle_height 1
 	cull_each true
 	quota 1
-	billboard_type point
+	billboard_type point	
 
 	emitter Point
 	{
 	    angle 180
-	    duration 0.2
+	    duration 0.05
     	emission_rate 1
-    	time_to_live 0.2
+    	time_to_live 0.05
 		direction 0 0 0
         velocity 0
 	}
-	
 }
 
 particle_system GunFX/ShotBullet1
 {
-	material FX/Explosion
+	material FX/Flare
 	particle_width 0.05
 	particle_height 0.05
 	cull_each true

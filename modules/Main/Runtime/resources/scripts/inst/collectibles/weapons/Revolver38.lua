@@ -51,7 +51,8 @@ function revolver_38:ret(idSuffix, amount)
             equip_rotation_offset = { x = 0, y = 0, z = - 90 },
             equip_scale = { x = 0.07, y = 0.07, z = 0.07 },
             fx_position_offset = { x = 0, y = 0.2, z = 0.07 },
-            fire_fx_position_offset = { x = 0, y = 0, z = 0 }
+            fire_fx_position_offset = { x = 0, y = 0, z = 0 },
+            bounding_radius = g.res_refs.collectibles.REVOLVER_38.B_RAD
         }
     }
 

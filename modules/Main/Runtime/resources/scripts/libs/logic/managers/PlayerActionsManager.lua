@@ -26,6 +26,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
         init_timer = false,
         recoil_anim = false,
         shot_ready = true,
+        weapon_can_aim = true,
         actions =
         {
             walk = 0,
@@ -223,11 +224,11 @@ function player_actions_manager:new(player, roomState, actorsMgr)
                     local ratio = equippedWeapon:get_serializable_properties().weapon_properties.ratio
                     local equipAnim = equippedWeapon:get_properties().weapon_properties.equip_anim
                     local equipDone = lib.anim_finished(player.transient.entity, equipAnim)
-                    if (equippedWeapon.serializable.amount > 0 and self.actions.double_action_up_doing and equipDone and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
+                    if (self.shot_ready and self.actions.double_action_up_doing and equipDone and(self.anim_timer > ratio / 2 or not self.init_timer)) or self.recoil_anim then
                         local fireAnim = equippedWeapon:get_properties().weapon_properties.fire_anim
                         self.recoil_anim = not lib.anim_finished(player.transient.entity, fireAnim)
                         if self.shot_ready then
-                            --equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
+                            equippedWeapon.serializable.amount = equippedWeapon.serializable.amount - 1
                             init_round(player)
                             self.shot_ready = false
                         end
@@ -236,9 +237,22 @@ function player_actions_manager:new(player, roomState, actorsMgr)
                         player:play(k.anim_modes.ANIM_MODE_LOOP, 0.15)
                         self.anim_timer = 0
                     else
-                        self.shot_ready = equippedWeapon.serializable.amount > 0                       
-                        player:set_anim(equipAnim)
-                        player:play(k.anim_modes.ANIM_MODE_LOOP, 0.5)
+                        -- Collision management for weapon against wall
+                        local weaponEntity = player:get_attached_weapon().transient.entity
+                        local weaponPos = weaponEntity.world_position
+                        local playerPos = lib.vec2(player:get_position().x, player:get_position().y)
+                        local walkmap = self.actors_manager.scene_manager:get_walkmap()
+                        local walkmapCollision = lib.line_intersect_walkmap(walkmap, playerPos, lib.vec2(weaponPos.x, weaponPos.y))                       
+                        if walkmapCollision.intersect then
+                            player:set_anim(k.default_animations.IDLE)
+                            player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
+                            self.shot_ready = false   
+                            self.weapon_can_aim = false
+                        elseif self.weapon_can_aim then
+                            player:set_anim(equipAnim)
+                            player:play(k.anim_modes.ANIM_MODE_LOOP, 0.5)
+                            self.shot_ready = equippedWeapon.serializable.amount > 0
+                        end
                     end
                     canTurnWhileAction = true
 
@@ -280,6 +294,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
             else
                 player:set_anim(k.default_animations.IDLE)
                 player:play(k.anim_modes.ANIM_MODE_LOOP, 2, 1)
+                self.weapon_can_aim = true
             end
         end
         if not player.serializable.performing_action or canTurnWhileAction then
