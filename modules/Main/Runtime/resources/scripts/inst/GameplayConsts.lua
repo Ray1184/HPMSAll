@@ -16,8 +16,8 @@ function game_consts:get()
 
             actors =
             {
-                DUMMY_PLAYER = { ID = 'dummy_player', PATH = 'DummyAnim.mesh', B_RAD = 0.3098, B_RECT = { x = 0.439, y = 0.439 }, GHOST = false },
-                DUMMY_CHEST = { ID = 'dummy_chest', PATH = 'DummyChest.mesh', B_RAD = 0.6410, B_RECT = { x = 0.909, y = 0.909 }, GHOST = false }
+                DUMMY_PLAYER = { ID = 'dummy_player', PATH = 'DummyAnim.mesh', B_RAD = 0.4, B_RECT = { x = 0.439, y = 0.439 }, GHOST = false },
+                DUMMY_CHEST = { ID = 'dummy_chest', PATH = 'DummyChest.mesh', B_RAD = 0.7, B_RECT = { x = 0.909, y = 0.909 }, GHOST = false }
             },
             collectibles =
             {
@@ -32,11 +32,6 @@ function game_consts:get()
                 REVOLVER_38 = { ID = 'revolver_38', PATH = 'Revolver.mesh', B_RAD = 0.2 },
                 AMMO_38_EXPLOSIVE = { ID = 'ammo_38_explosive', PATH = 'MAG_AP.mesh' }
             }
-        },
-        ammo_names =
-        {
-            DUMMY_NORMAL = 0,
-            DUMMY_SUPER = 1
         }
     }
 end

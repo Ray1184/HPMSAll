@@ -2,7 +2,7 @@ plugins {
     id 'java'
 }
 
-group 'org.ray1184.hpms.extra.batch'
+group 'org.ray1184.hpms.extra.pngmapper'
 version '1.0-SNAPSHOT'
 
 repositories {
