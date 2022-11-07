@@ -42,8 +42,8 @@ particle_system GunFX/ShotBullet1
 particle_system GunFX/ShotExplosion1
 {
 	material FX/Explosion
-	particle_width 1.5
-	particle_height 1.5
+	particle_width 1
+	particle_height 1
 	cull_each true
 	quota 1
 	billboard_type point

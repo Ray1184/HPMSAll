@@ -15,14 +15,8 @@ std::string hpms::OverlayImageAdaptee::GetName() const
 void hpms::OverlayImageAdaptee::SetPosition(const glm::vec3& position)
 {
 	Check();
-	Check(ogrePanel);
-	int z = (int)ogrePanel->getZOrder();
 	ogrePanel->setPosition(position.x, position.y);
-	if (z != (int)position.z)
-	{
-		overlay->setZOrder((unsigned int)position.z);
-	}
-
+ 	overlay->setZOrder((unsigned int)position.z);
 
 }
 
@@ -126,8 +120,8 @@ void hpms::OverlayImageAdaptee::RemoveNode(hpms::SceneNodeAdapter* node)
 
 
 hpms::OverlayImageAdaptee::OverlayImageAdaptee(const std::string& imagePath, int x, int y, int zOrder, OgreContext* ctx) : AdapteeCommon(ctx),
-																														   ogrePanel(nullptr),
-																														   overlay(nullptr)
+ogrePanel(nullptr),
+overlay(nullptr)
 {
 	Check();
 	name = imagePath + "_" + std::to_string(x) + std::to_string(y) + std::to_string(zOrder);

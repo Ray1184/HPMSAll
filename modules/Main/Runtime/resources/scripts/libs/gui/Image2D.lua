@@ -21,7 +21,11 @@ function image_2d:new(type, data, x, y, image, order)
     local ret = area_2d:new(type, data, x, y)
     local new = {
         overlay = lib.make_overlay(image,x,y,order),
+        id = image,
         order = order,
+        attached = false,
+        locked = false,
+        last_coords = { x = 0, y = 0 },
         override_area_2d =
         {
             point_inside = ret.point_inside,
@@ -42,8 +46,17 @@ function image_2d:new(type, data, x, y, image, order)
         self.overlay.position = lib.vec3(dx, dy, self.order)
     end
 
+    function image_2d:get_position()
+        return { x = self.overlay.position.x, y = self.overlay.position.y }
+    end
+
     function image_2d:set_visible(flag)
         self.overlay.visible = flag
+    end
+
+    function image_2d:set_order(order)
+        self.overlay.position = lib.vec3(self.overlay.position.x, self.overlay.position.y, order)
+        self.order = order
     end
 
     function image_2d:delete()

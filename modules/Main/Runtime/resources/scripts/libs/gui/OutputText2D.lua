@@ -60,7 +60,7 @@ function output_text_2d:new(data, x, y, image, order, id, font_name, font_size, 
     end
 
     function output_text_2d:alpha(a)
-        self.override_image_2d.alpha(a)
+        lib.text_alpha(self.textarea, a)
     end
 
     return this

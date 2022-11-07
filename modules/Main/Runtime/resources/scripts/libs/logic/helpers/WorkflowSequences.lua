@@ -33,16 +33,17 @@ function workflow_sequences:new()
     }
 
     this.tmp_vars['CURRENT_ALPHA'] = 0
+    this.tmp_vars['MSG_ALPHA'] = 1
 
     this.text_style[k.diplay_msg_styles.MSG_BOX] = {
-        renderer = output_text_2d:new(msgBox,0,0,'default/Console_Empty.png',100,'MessageBoxArea','Alagard',16,lib.vec4(1.0,0.8,0.0,1.0),4),
-        renderer_shadow = output_text_2d:new(msgBox,0,0,'default/Console_Empty.png',99,'MessageBoxAreaShadow','Alagard',16,lib.vec4(0.0,0.0,0.0,0.5),4)
+        renderer = output_text_2d:new(msgBox,0,0,'default/Console_Empty.png',200,'MessageBoxArea','Alagard',16,lib.vec4(1.0,0.8,0.0,1.0),4),
+        renderer_shadow = output_text_2d:new(msgBox,0,0,'default/Console_Empty.png',199,'MessageBoxAreaShadow','Alagard',16,lib.vec4(0.0,0.0,0.0,0.5),4)
     }
     this.text_style[k.diplay_msg_styles.BOOK] = {
-        renderer = output_text_2d:new(bookBox,0,0,'default/Console_Empty.png',98,'BookArea','Alagard',16,lib.vec4(0.0,0.0,0.0,1.0),12),
-        renderer_shadow = output_text_2d:new(bookBox,0,0,'default/Console_Empty.png',97,'BookAreaShadow','Alagard',16,lib.vec4(1.0,1.0,1.0,0.5),12)
+        renderer = output_text_2d:new(bookBox,0,0,'default/Console_Empty.png',198,'BookArea','Alagard',16,lib.vec4(0.0,0.0,0.0,1.0),12),
+        renderer_shadow = output_text_2d:new(bookBox,0,0,'default/Console_Empty.png',197,'BookAreaShadow','Alagard',16,lib.vec4(1.0,1.0,1.0,0.5),12)
     }
-    this.shade_overlays[k.overlay_colors.BLACK] = image_2d:new(POLYGONS, fullBox, 0, 0, 'default/Black.png', 150)
+    this.shade_overlays[k.overlay_colors.BLACK] = image_2d:new(POLYGONS, fullBox, 0, 0, 'default/Black.png', 195)
     this.shade_overlays[k.overlay_colors.BLACK]:alpha(this.tmp_vars['CURRENT_ALPHA'])
 
     this.text_style[k.diplay_msg_styles.MSG_BOX].renderer:set_visible(false)
@@ -117,28 +118,29 @@ function workflow_sequences:new()
                 what(tpf, args)
             end,
             complete_on = function(tpf, timer)
-                return not (loop or false)
+                return not(loop or false)
             end
         }
     end
 
-    function workflow_sequences:message_box(text, proceedCallback, style, drawShadow)
+    function workflow_sequences:message_box(text, proceedCallback, style, drawShadow, fadeOut)
+        local alpha = alpha or false
         local textRend = self.text_style[style or k.diplay_msg_styles.MSG_BOX]
         return {
             action = function(tpf, timer)
-                local currentText = self.tmp_vars['MSG.CURRENT_TEXT']
+                local currentText = self.tmp_vars['MSG_CURRENT_TEXT']
                 if currentText == nil then
                     textRend.renderer:set_visible(true)
-                    self.tmp_vars['MSG.CURRENT_TEXT'] = textRend.renderer:stream(safe_string(text))
+                    self.tmp_vars['MSG_CURRENT_TEXT'] = textRend.renderer:stream(safe_string(text))
                     if drawShadow then
                         textRend.renderer_shadow:set_visible(true)
                         textRend.renderer_shadow:stream(safe_string(text))
                     end
                 elseif proceedCallback(tpf, timer) then
                     if currentText == nil or currentText == '' then
-                        self.tmp_vars['MSG.FINISHED'] = true
+                        self.tmp_vars['MSG_FINISHED'] = true
                     else
-                        self.tmp_vars['MSG.CURRENT_TEXT'] = textRend.renderer:stream(currentText)
+                        self.tmp_vars['MSG_CURRENT_TEXT'] = textRend.renderer:stream(currentText)
                         if drawShadow then
                             textRend.renderer_shadow:stream(currentText)
                         end
@@ -146,14 +148,34 @@ function workflow_sequences:new()
                 end
             end,
             complete_on = function(tpf, timer)
-                local currentText = self.tmp_vars['MSG.CURRENT_TEXT']
-                local finished = self.tmp_vars['MSG.FINISHED']
+                local currentText = self.tmp_vars['MSG_CURRENT_TEXT']
+                local finished = self.tmp_vars['MSG_FINISHED']
                 if finished then
-                    self.tmp_vars['MSG.CURRENT_TEXT'] = nil
-                    self.tmp_vars['MSG.FINISHED'] = nil
-                    textRend.renderer:set_visible(false)
-                    if drawShadow then
-                        textRend.renderer_shadow:set_visible(false)
+                    if not fadeOut then
+                        self.tmp_vars['MSG_CURRENT_TEXT'] = nil
+                        self.tmp_vars['MSG_FINISHED'] = nil
+                        textRend.renderer:set_visible(false)
+                        if drawShadow then
+                            textRend.renderer_shadow:set_visible(false)
+                        end
+                    else
+                        self.tmp_vars['MSG_ALPHA'] = self.tmp_vars['MSG_ALPHA'] - tpf
+                        local txtAlpha = self.tmp_vars['MSG_ALPHA']
+                        if txtAlpha >= 0 then
+                            textRend.renderer:alpha(txtAlpha)
+                            if drawShadow then
+                                textRend.renderer_shadow:alpha(txtAlpha / 2)
+                            end
+                            return false
+                        else
+                            self.tmp_vars['MSG_CURRENT_TEXT'] = nil
+                            self.tmp_vars['MSG_FINISHED'] = nil
+                            textRend.renderer:set_visible(false)
+                            if drawShadow then
+                                textRend.renderer_shadow:set_visible(false)
+                            end
+                        end
+
                     end
                     return true
                 else

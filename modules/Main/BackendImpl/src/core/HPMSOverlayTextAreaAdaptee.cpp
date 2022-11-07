@@ -113,6 +113,13 @@ void hpms::OverlayTextAreaAdaptee::SetColor(const glm::vec4& color)
     textArea->setColour(Ogre::ColourValue(color.x, color.y, color.z, color.w));
 }
 
+glm::vec4 hpms::OverlayTextAreaAdaptee::GetColor() const
+{
+    Check();
+    auto ogreColor = textArea->getColour();
+    return glm::vec4(ogreColor.r, ogreColor.g, ogreColor.b, ogreColor.a);
+}
+
 
 void hpms::OverlayTextAreaAdaptee::SetFont(const std::string& fontName)
 {

@@ -259,6 +259,18 @@ namespace hpms
 
 		}
 
+		inline static void RegisterData2D(lua_State* state)
+		{
+			getGlobalNamespace(state)
+				.beginNamespace("hpms")
+				.beginClass<std::vector<glm::vec2>>("data_2d")
+				.addConstructor < void(*)
+				(void) >()
+				.endClass()
+				.addFunction("add_2d_data", &hpms::LuaExtensions::Add2dData)
+				.endNamespace();
+		}
+
 		inline static void RegisterKeyEvent(lua_State* state)
 		{
 			getGlobalNamespace(state)
@@ -280,6 +292,7 @@ namespace hpms
 				.addFunction("key_action_performed", &hpms::LuaExtensions::KHKeyAction)
 				.endNamespace();
 		}
+
 
 		inline static void RegisterMouseEvent(lua_State* state)
 		{
@@ -391,7 +404,7 @@ namespace hpms
 		{
 			getGlobalNamespace(state)
 				.beginNamespace("hpms")
-				.beginClass<IntersectInfo>("intersect_info")	
+				.beginClass<IntersectInfo>("intersect_info")
 				.addData("intersect", &hpms::IntersectInfo::intersect)
 				.addData("intersection_point", &hpms::IntersectInfo::intersectionPoint)
 				.endClass()
@@ -455,6 +468,7 @@ namespace hpms
 				.addFunction("line_intersect_walkmap", &hpms::LuaExtensions::LLineIntersectsWalkmap)
 				.addFunction("stream_text", &hpms::LuaExtensions::LStreamText)
 				.addFunction("overlay_alpha", &hpms::LuaExtensions::LOverlayAlpha)
+				.addFunction("text_alpha", &hpms::LuaExtensions::LTextOverlayAlpha)
 				.addFunction("particle_go_to_time", &hpms::LuaExtensions::LParticleGoToTime)
 				.addFunction("particle_init_animated", &hpms::LuaExtensions::InitAnimatedParticle)
 				.addFunction("particle_update_noloop_animated", &hpms::LuaExtensions::UpdateNoLoopAnimatedParticle)

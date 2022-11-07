@@ -17,7 +17,8 @@ dependencies = {
     'inst/GameplayConsts.lua',
     'libs/logic/managers/GlobalStateManager.lua',
     'libs/logic/managers/PlayerActionsManager.lua',
-    'libs/logic/managers/EventQueueManager.lua'
+    'libs/logic/managers/EventQueueManager.lua',
+    'libs/logic/helpers/SceneHelper.lua'
 }
 
 scene = {
@@ -215,9 +216,7 @@ scene = {
 
         wk:add_workflow( {
             seq:pipe( function(tpf)
-                gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-                scene.next = 'main/scenes/R_Debug_02.lua'
-                scene.finished = true
+                go_to_puzzle(gsm, scene, 'P_Debug_01')
             end )
         } , function() return input_prf:action_done_once(k.input_actions.PAUSE) end, true, 'switch_room')
 
@@ -226,12 +225,10 @@ scene = {
                 local picked = item_can_be_picked(room_st:get_items(), player, lib)
                 if picked ~= nil then
                     gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_PICK)
-                    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
-                    gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
+                    gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)                   
                     gsm:put_session_var(k.session_vars.PICKED_ITEM_ID, picked.serializable.id)
                     gsm:put_session_var(k.session_vars.PICKED_ITEM_AMOUNT, 1)
-                    scene.next = 'main/menu/R_Inventory.lua'
-                    scene.finished = true
+                    go_to_menu(gsm, scene, 'R_Inventory')
                 end
             end )
         } , function() return input_prf:action_done_once(k.input_actions.ACTION_1) end, true, 'pick_item')
@@ -403,9 +400,7 @@ scene = {
         if input_prf:action_done_once(k.input_actions.INVENTORY) then
             gsm:put_session_var(k.session_vars.INV_ACTION, k.inventory_scope.SCOPE_LIST)
             gsm:put_session_var(k.session_vars.CURRENT_PLAYER_REF, player)
-            gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-            scene.next = 'main/menu/R_Inventory.lua'
-            scene.finished = true
+            go_to_menu(gsm, scene, 'R_Inventory')
         end
 
 

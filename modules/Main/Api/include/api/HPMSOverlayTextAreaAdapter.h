@@ -44,17 +44,15 @@ namespace hpms
 
         virtual void SetColor(const glm::vec4& color) = 0;
 
+        virtual glm::vec4 GetColor() const = 0;
+
         virtual std::string SetText(const std::string& text, int maxWidth, unsigned int maxLines) = 0;
 
         inline std::string GetText() const {
             // Not used.
             return std::string();
         }
-
-        inline glm::vec4 GetColor() const {
-            // Not used.
-            return glm::vec4();
-        }
+              
 
         virtual void SetFont(const std::string& fontName) = 0;
 

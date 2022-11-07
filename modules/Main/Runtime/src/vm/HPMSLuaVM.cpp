@@ -55,6 +55,7 @@ void hpms::LuaVM::RegisterAll()
     hpms::LuaRegister::RegisterVector3(state);
     hpms::LuaRegister::RegisterVector4(state);
     hpms::LuaRegister::RegisterMatrix4(state);
+    hpms::LuaRegister::RegisterData2D(state);
     hpms::LuaRegister::RegisterKeyEvent(state);
     hpms::LuaRegister::RegisterKeyList(state);
     hpms::LuaRegister::RegisterMouseEvent(state);

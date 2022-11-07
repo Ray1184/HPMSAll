@@ -25,7 +25,9 @@ function input_profile:new(profile)
         module_name = 'input_profile',
         keys_map = { },
         profile = profile,
-        state = { }
+        state = { },
+        mouse_pressed_once = false,
+        mouse_pressed = false
 
     }
     log_debug('Creating input mapping from ' .. actions_path .. ' with profile \'' .. profile .. '\'')
@@ -62,7 +64,7 @@ function input_profile:new(profile)
         return false
     end
 
-    function input_profile:poll_inputs(keys, mouse_buttons)
+    function input_profile:poll_inputs(keys, mouseButtons)
         self.state = { }
         if keys ~= nil then
             for kc, v in pairs(self.keys_map[self.profile]) do
@@ -79,6 +81,9 @@ function input_profile:new(profile)
                 end
             end
         end
+        --mbutton_action_performed
+        self.mouse_pressed_once = lib.mbutton_action_performed(mouseButtons, 'LEFT', 1)
+        self.mouse_pressed = lib.mbutton_action_performed(mouseButtons, 'LEFT', 2)
     end
 
     return this

@@ -10,6 +10,7 @@ dependencies = {
     'libs/thirdparty/Inspect.lua',
     'libs/logic/managers/BundleManager.lua',
     'libs/logic/helpers/InventoryHelper.lua',
+    'libs/logic/helpers/SceneHelper.lua',
     'libs/logic/managers/EventQueueManager.lua',
     'Framework.lua'
 }
@@ -45,7 +46,7 @@ scene = {
         wkModels = workflow:new(scnMgr)
         seq = workflow_sequences:new()
 
-        player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)        
+        player = gsm:get_session_var(k.session_vars.CURRENT_PLAYER_REF)
 
         lamp = lib.make_light(lib.vec3(2, 2, 2))
         lamp.position = lib.vec3(-0.675, -2, 0.55)
@@ -73,21 +74,21 @@ scene = {
 
         wk:add_workflow( {
             seq:fade_out(0)
-        } , nil, false, 'Inventory fade out')
+        } , nil, false, scene.name .. ' fade out')
 
         wk:add_workflow( {
             seq:fade_in(1)
-        } , nil, false, 'Inventory fade in')
+        } , nil, false, scene.name .. ' fade in')
 
         wk:add_workflow( {
             seq:pipe( function(tpf)
 
                 local cbks = { }
                 cbks[k.inventory_scope.SCOPE_LIST] = function()
-                    go_back(scene)
+                    go_back(gsm, scene)
                 end
                 cbks[k.inventory_scope.SCOPE_PICK] = function()
-                    go_back(scene)
+                    go_back(gsm, scene)
                 end
                 cbks[k.inventory_scope.SCOPE_ACTIONS] = function()
                     scope = k.inventory_scope.SCOPE_LIST
@@ -120,7 +121,7 @@ scene = {
                     selectedItem:event(tpf, evt)
                     evt.response = evt.response or { }
                     if evt.response.quit_inventory then
-                        go_back(scene)
+                        go_back(gsm, scene)
                     else
                         scope = k.inventory_scope.SCOPE_LIST
                         update_view(player:get_inventory(), false)
@@ -131,12 +132,12 @@ scene = {
                         if pickChoice == 0 then
                             add_to_inventory(player, selectedItem, gsm:get_session_var(k.session_vars.LAST_ROOM))
                             scope = k.inventory_scope.SCOPE_LIST
-                            go_back(scene)
+                            go_back(gsm, scene)
                         else
-                            go_back(scene)
+                            go_back(gsm, scene)
                         end
                     else
-                        go_back(scene)
+                        go_back(gsm, scene)
                     end
                 end
                 cbks[scope]()
@@ -277,7 +278,7 @@ scene = {
     end
 }
 
-function clear_item_list(slots)    
+function clear_item_list(slots)
     for i = 1, #slots do
         delete_text_label(slots[i])
         slots[i] = nil
@@ -505,9 +506,3 @@ function display_current_info(item, scope, inventory)
     cbks[scope]()
 end
 
-function go_back(scene)
-    local lastRoom = gsm:get_session_var(k.session_vars.LAST_ROOM)
-    gsm:put_session_var(k.session_vars.LAST_ROOM, scene.name)
-    scene.next = 'main/scenes/' .. lastRoom .. '.lua'
-    scene.finished = true
-end

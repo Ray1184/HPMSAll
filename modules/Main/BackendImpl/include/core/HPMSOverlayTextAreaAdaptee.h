@@ -65,6 +65,8 @@ namespace hpms
 
         virtual void SetColor(const glm::vec4& color) override;
 
+        virtual glm::vec4 GetColor() const override;
+
         virtual std::string SetText(const std::string& text, int maxWidth, unsigned int maxLines) override;
 
         std::string ProcessLine(const std::string& text, float maxWidth, const Ogre::FontPtr& font, unsigned int* finished);

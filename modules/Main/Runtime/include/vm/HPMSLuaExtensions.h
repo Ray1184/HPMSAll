@@ -186,6 +186,11 @@ namespace hpms
 			return v[i][j];
 		}
 
+		static inline void Add2dData(std::vector<glm::vec2>& v, const glm::vec2& data)
+		{
+			v.push_back(data);
+		}
+
 
 		// Math calc utils.
 		static inline float MCToRadians(float degrees)
@@ -573,6 +578,12 @@ namespace hpms
 		static inline void LOverlayAlpha(hpms::OverlayImageAdapter* overlayImage, float alpha)
 		{
 			overlayImage->SetAlpha(alpha);
+		}
+
+		static inline void LTextOverlayAlpha(hpms::GuiText* overlayText, float alpha)
+		{
+			auto color = overlayText->GetColor();
+			overlayText->SetColor(glm::vec4(color.x, color.y, color.z, alpha));
 		}
 
 		static inline void LParticleGoToTime(hpms::ParticleAdapter* particles, float time)

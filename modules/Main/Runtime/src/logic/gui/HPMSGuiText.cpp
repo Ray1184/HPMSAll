@@ -54,8 +54,13 @@ bool hpms::GuiText::IsVisible() const
 
 void hpms::GuiText::SetColor(const glm::vec4& color)
 {
-
+    textArea->SetColor(color);
 }
+
+glm::vec4 hpms::GuiText::GetColor() const {
+    return textArea->GetColor();
+}
+
 
 
 

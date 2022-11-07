@@ -33,16 +33,14 @@ namespace hpms
 
         void SetColor(const glm::vec4& color);
 
+        glm::vec4 GetColor() const;
+
         inline std::string GetText() const {
             // Not used.
             return std::string();
         }
 
-        inline glm::vec4 GetColor() const {
-            // Not used.
-            return glm::vec4();
-        }
-
+        
         inline const std::string Name() const override
         {
             return "GuiText";

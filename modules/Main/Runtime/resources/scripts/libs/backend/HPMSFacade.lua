@@ -262,15 +262,19 @@ function backend:get()
                 log_debug('Setting alpha ' .. a .. ' for overlay ' .. o.dummy_id)
             end,
 
+            text_alpha = function(o, a)
+                log_debug('Setting alpha ' .. a .. ' for text ' .. o.dummy_id)
+            end,
+
             particle_go_to_time = function(p, t)
                 log_debug('Setting time ' .. t .. ' for particle ' .. p.dummy_id)
             end,
 
-             particle_init_animated = function(p, t)
+            particle_init_animated = function(p, t)
                 log_debug('Setting init animated particle ' .. p.dummy_id)
             end,
 
-             particle_update_noloop_animated = function(p, t)
+            particle_update_noloop_animated = function(p, t)
                 log_debug('Setting update noloop animated particle ' .. p.dummy_id)
             end,
 
@@ -315,6 +319,10 @@ function backend:get()
                 return { }
             end,
 
+            data_2d = function()
+                return { }
+            end,
+
             -- Calcs.
             to_radians = function(a)
                 return { }
@@ -335,6 +343,8 @@ function backend:get()
             circle_inside_polygon = function(x, y, cx, cy, data, radius)
                 return true
             end,
+
+            add_2d_data = function(v, d) end,
 
             -- Input.
             current_key_code = function(keys)
@@ -403,6 +413,7 @@ function backend:get()
             get_collisor_config = hpms.get_collisor_config,
             stream_text = hpms.stream_text,
             overlay_alpha = hpms.overlay_alpha,
+            text_alpha = hpms.text_alpha,
             particle_go_to_time = hpms.particle_go_to_time,
             particle_init_animated = hpms.particle_init_animated,
             particle_update_noloop_animated = hpms.particle_update_noloop_animated,
@@ -443,6 +454,7 @@ function backend:get()
             quat_mul = hpms.quat_mul,
             get_direction = hpms.get_direction,
             vec2_dist = hpms.vec2_dist,
+            data_2d = hpms.data_2d,
 
             -- Calc functions.
             to_radians = hpms.to_radians,
@@ -451,6 +463,7 @@ function backend:get()
             point_inside_polygon = hpms.point_inside_polygon,
             circle_inside_polygon = hpms.circle_inside_polygon,
             circle_intersect_line = hpms.circle_intersect_line,
+            add_2d_data = hpms.add_2d_data,
 
             -- Input.
             current_key_code = hpms.current_key_code,
