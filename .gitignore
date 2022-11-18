@@ -14,3 +14,5 @@ docs/Simulations/build
 modules/Main/Runtime/resources/scripts.config
 modules/Main/Runtime/resources/scripts.luaproj
 _Debug
+modules/Extra/PngCoordsMapper/.gradle
+modules/Extra/PngCoordsMapper/build

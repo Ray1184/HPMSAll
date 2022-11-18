@@ -13,6 +13,7 @@ dependencies = {
     'libs/logic/managers/PuzzleManager.lua',
     'libs/logic/managers/GlobalStateManager.lua',
     'libs/logic/helpers/SceneHelper.lua',
+    'libs/logic/managers/EventQueueManager.lua',
     'libs/logic/GameMechanicsConsts.lua'
 }
 
@@ -36,6 +37,7 @@ scene = {
         wk = workflow:new(scnMgr)
         seq = workflow_sequences:new()
         gsm = global_state_manager:new()
+        eqm = event_queue_manager:new()
         inputPrf = input_profile:new(context_get_input_profile())
         interactive = true
         completed = false
@@ -50,7 +52,6 @@ scene = {
         } , nil, false, scene.name .. ' fade in')
 
         wk:add_workflow( {
-            seq:message_box('Bene, così dovrebbe andare...', function(tpf, timer) return timer > 2 end,k.diplay_msg_styles.MSG_BOX,true,true),
             seq:wait(1),
             seq:pipe( function(tpf) go_back(gsm, scene) end)
         } , function() return completed end, false, 'exit puzzle')
@@ -104,13 +105,22 @@ scene = {
                 },
                 on_complete = function()
                     completed = not dragging
+                    if completed then
+                        local queuedEvent = {
+                            id = k.queued_events.ROOM_EVENT,
+                            condition = nil,
+                            action = function()
+                                wk:add_workflow( {
+                                    seq:wait(0.25),
+                                    seq:message_box('Bene, così dovrebbe andare...', function(tpf, timer) return timer > 2 end,k.diplay_msg_styles.MSG_BOX,true)
+                                } , nil, false, 'exit puzzle')
+                            end
+                        }
+                        eqm:push(queuedEvent)
+                    end
                 end
             }
-
-
         }
-
-
 
 
         puzzleManager = puzzle_manager:new(scene.name, puzzle)

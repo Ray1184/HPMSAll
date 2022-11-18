@@ -2,8 +2,8 @@
 ------------------------------------------------------------------------------------------------------
 Gestione menù/inventario																| 80%
 Gestione azioni base (cerca, prendi, spingi ecc...)										| 50%
-Gestione combattimenti e armi															| 70%
+Gestione combattimenti e armi															| 90%
 Gestione stati giocatore																| 0%
 Gestione crafting																		| 0%
 Gestione ai/pathfinding																	| 0%
-Gestione minigames																		| 0%
+Gestione minigames																		| 50%

@@ -124,7 +124,7 @@ function workflow_sequences:new()
     end
 
     function workflow_sequences:message_box(text, proceedCallback, style, drawShadow, fadeOut)
-        local alpha = alpha or false
+        local fadeOut = fadeOut or true
         local textRend = self.text_style[style or k.diplay_msg_styles.MSG_BOX]
         return {
             action = function(tpf, timer)

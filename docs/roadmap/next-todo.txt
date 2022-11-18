@@ -14,7 +14,7 @@ Sistemi particellari                                                            
 Aggiungere bounding radius per azioni diverse e bloccare l'azione se il radius previsto collide | 100%
 Migliorare le collisioni tra proiettili e limite walkmap                                        | 100%
 Helper quest                                                                                    | 0%
-Helper puzzles                                                                                  | 0%
+Helper puzzles                                                                                  | 70%
 Gestione statistiche giocatore                                                                  | 0%
 Crafting                                                                                        | 0%
 Shop system                                                                                     | 0%

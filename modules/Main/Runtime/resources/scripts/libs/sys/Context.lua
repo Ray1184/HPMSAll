@@ -9,6 +9,7 @@ local context = { dummy = false }
 
 local cats = {
     STATE = 'state',
+    PROGRESS_STATE = 'progress_state',
     EVENTS = 'events',
     SERIALIZABLES = 'serializables',
     INSTANCES = 'instances',
@@ -213,6 +214,14 @@ end
 
 function context_get_all_events()
     return context[cats.EVENTS]
+end
+
+function context_get_progress_state()
+    return context[cats.PROGRESS_STATE]
+end
+
+function context_set_progress_state(ps)
+    context[cats.PROGRESS_STATE] = ps
 end
 
 function context_get_event(key)

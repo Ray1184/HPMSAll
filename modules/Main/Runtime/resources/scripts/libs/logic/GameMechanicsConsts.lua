@@ -179,12 +179,14 @@ function game_mechanics_consts:get()
             CURRENT_PLAYER_ID = 'var_current_player_id',
             CURRENT_PLAYER_REF = 'var_current_player_ref',
             PICKED_ITEM_ID = 'var_picked_item_id',
-            PICKED_ITEM_AMOUNT = 'var_picked_item_amount'
+            PICKED_ITEM_AMOUNT = 'var_picked_item_amount',
+            GAME_DIFFICULTY = 'var_game_diff'
         },
         queued_events =
         {
             DROP_ITEMS = 'evt_drop_items',
-            EQUIP_ITEMS = 'evt_equip_items'
+            EQUIP_ITEMS = 'evt_equip_items',
+            ROOM_EVENT = 'evt_room_event'
         },
         inventory_scope =
         {

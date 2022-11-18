@@ -47,6 +47,7 @@ function global_state_manager:new()
             current_room = saveInfo.room_id,
             current_player_id = self:get_session_var(k.session_vars.CURRENT_PLAYER_ID),
             data = context_get_serializable_data()
+            progress = context_get_progress_state()
         }
         local saveDataJson = json.encode(saveData)
         lib.write_file(fileName, saveDataJson)
@@ -58,6 +59,7 @@ function global_state_manager:new()
         local loadDataJson = lib.load_file(fileName)
         local loadData = json.decode(loadDataJson)
         context_set_serializable_data(loadData.data)
+        context_set_progress_state(loadedData.progress)
         self:put_session_var(k.session_vars.CURRENT_PLAYER_ID, loadData.current_player_id)
         log_info('Game loaded from ' .. fileName)
         return loadData

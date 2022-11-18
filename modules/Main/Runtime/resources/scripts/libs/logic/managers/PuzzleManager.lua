@@ -46,9 +46,9 @@ function puzzle_manager:new(sceneName, puzzle)
         local zIndex = 1
         for k, v in pairs(self.data_2d) do
             self.work_area.transient.images[k] = image_2d:new(TYPE_POLYGON, v.shape, self.work_area[k].x, self.work_area[k].y, v.path, zIndex)
+            self.work_area.transient.images[k]:set_position(self.work_area[k].x, self.work_area[k].y) -- Needed to reset every time.
             zIndex = zIndex + 1
         end
-
     end
 
     function puzzle_manager:poll_events(tpf, mx, my)
