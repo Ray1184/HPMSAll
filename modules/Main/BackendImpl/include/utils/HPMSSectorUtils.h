@@ -15,4 +15,5 @@ namespace hpms
     glm::vec2 GetSideCoordFromSideIndex(const hpms::Triangle* tri, unsigned int idx);
 
     std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(const hpms::Triangle* tri, const hpms::Side* side);
+
 }

@@ -28,7 +28,7 @@
 namespace hpms
 {
 
-    class Side
+    class Side : public hpms::Object
     {
 
     public:
@@ -66,9 +66,14 @@ namespace hpms
         {
             return !(rhs == *this);
         }
+
+        virtual const std::string Name() const override
+        {
+            return "Side";
+        }
     };
 
-    class Triangle
+    class Triangle : public hpms::Object
     {
     private:
         std::string sectorId;
@@ -169,9 +174,14 @@ namespace hpms
         {
             return !(rhs == *this);
         }
+
+        virtual const std::string Name() const override
+        {
+            return "Triangle";
+        }
     };
 
-    class Sector
+    class Sector : public hpms::Object
     {
     private:
         std::string id;
@@ -231,6 +241,64 @@ namespace hpms
         bool operator!=(const Sector &rhs) const
         {
             return !(rhs == *this);
+        }
+
+        virtual const std::string Name() const override
+        {
+            return "Sector";
+        }
+    };
+
+    class PathStep : public hpms::Object
+    {
+    private:
+        std::string id;
+        glm::vec2 coord;
+        std::vector<std::string> linked;
+
+    public:
+        PODS_SERIALIZABLE(
+            1,
+            PODS_OPT(coord.x),
+            PODS_OPT(coord.y),
+            PODS_OPT(id),
+            PODS_OPT(linked)
+
+        );
+
+
+        const glm::vec2& GetCoords() const
+        {
+            return coord;
+        }
+
+        void SetCoord(const glm::vec2& coord)
+        {
+            PathStep::coord = coord;
+        }
+
+        const std::string& GetId() const
+        {
+            return id;
+        }
+
+        void SetId(const std::string& id)
+        {
+            PathStep::id = id;
+        }
+
+        inline void Bind(const PathStep& path)
+        {
+            linked.push_back(path.id);
+        }
+
+        inline bool IsBound(const PathStep& path)
+        {
+            return std::find(linked.begin(), linked.end(), path.id) != linked.end();
+        }
+        virtual const std::string Name() const override
+        {
+            return "PathStep";
         }
     };
 
@@ -348,6 +416,7 @@ namespace hpms
         std::vector<Sector> sectors;
         Polygon perimeter;
         std::vector<Polygon> obstacles;
+        std::vector<PathStep> paths;
         std::string id;
 
     public:
@@ -356,7 +425,8 @@ namespace hpms
             PODS_OPT(id),
             PODS_OPT(sectors),
             PODS_OPT(perimeter),
-            PODS_OPT(obstacles)
+            PODS_OPT(obstacles),
+            PODS_OPT(paths)
 
         );
 
@@ -405,6 +475,17 @@ namespace hpms
         {
             WalkmapData::obstacles = obstacles;
         }
+
+        const std::vector<PathStep>& GetPaths() const
+        {
+            return paths;
+        }
+
+        void SetPaths(const std::vector<PathStep>& paths)
+        {
+            WalkmapData::paths = paths;
+        }
+
 
         const std::string &GetId() const
         {

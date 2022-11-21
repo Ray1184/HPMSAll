@@ -241,6 +241,10 @@ function game_mechanics_consts:get()
             EQUIP_THROWABLE = 'Equip_Throwable',
             THROW = 'Throw'
         },
+        game_difficulties = {
+            SIMPLIFIED = 'S',
+            REALISTIC = 'R'
+        },
         volatile_types = {
             BULLET = 'bullet'
         }

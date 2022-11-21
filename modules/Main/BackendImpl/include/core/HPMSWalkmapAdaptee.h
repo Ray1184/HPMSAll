@@ -54,6 +54,14 @@ namespace hpms
         }
     };
 
+    struct PathStepHash
+    {
+        std::size_t operator()(const PathStep& k) const
+        {
+            return std::hash<std::string>()(k.GetId());
+        }
+    };
+
     class TriangleAdaptee : public TriangleAdapter
     {
     private:
@@ -92,11 +100,29 @@ namespace hpms
 
     };
 
+    class PathStepAdaptee : public PathStepAdapter
+    {
+    private:
+        hpms::PathStep pathData;
+    public:  
+
+        explicit PathStepAdaptee(const PathStep& pathStep);
+
+        virtual ~PathStepAdaptee() override;
+
+        virtual std::string GetId() override;
+
+        virtual bool IsBound(PathStepAdapter* path) override;
+
+        virtual glm::vec2 GetCoords() override;
+    };
+
     class WalkmapAdaptee : public WalkmapAdapter, public AdapteeCommon
     {
     private:
         hpms::WalkmapPtr walkmap;
         std::unordered_map<hpms::Triangle, TriangleAdaptee*, TriangleHash> triangles;
+        std::unordered_map<hpms::PathStep, PathStepAdaptee*, PathStepHash> paths;
     public:
         WalkmapAdaptee(const std::string& mapName);
 
@@ -111,6 +137,8 @@ namespace hpms
         virtual void ForEachTriangle(const std::function<bool(TriangleAdapter* tri)>& visitor) override;
 
         virtual void ForEachSide(const std::function<bool(const glm::vec2& sizeAPos, const glm::vec2& sizeBPos)>& visitor) override;
+
+        virtual void ForEachPathStep(const std::function<bool(PathStepAdapter* path)>& visitor) override;
 
         virtual std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side) override;
     };

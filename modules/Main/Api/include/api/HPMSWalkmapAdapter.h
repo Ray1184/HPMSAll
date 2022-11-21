@@ -95,6 +95,27 @@ namespace hpms
         virtual std::string GetId() = 0;
     };
 
+    class PathStepAdapter : public Object
+    {
+    public:
+
+        inline const std::string Name() const override
+        {
+            return "PathStepAdapter";
+        }
+
+        inline virtual ~PathStepAdapter()
+        {
+
+        }
+
+        virtual std::string GetId() = 0;
+
+        virtual bool IsBound(PathStepAdapter* path) = 0;
+
+        virtual glm::vec2 GetCoords() = 0;
+    };
+
     class WalkmapAdapter : public Object
     {
 
@@ -119,6 +140,8 @@ namespace hpms
         virtual void ForEachTriangle(const std::function<bool(TriangleAdapter* tri)>& visitor) = 0;
 
         virtual void ForEachSide(const std::function<bool(const glm::vec2& sizeAPos, const glm::vec2& sizeBPos)>& visitor) = 0;
+
+        virtual void ForEachPathStep(const std::function<bool(PathStepAdapter* path)>& visitor) = 0;
 
         virtual std::pair<glm::vec2, glm::vec2> GetSideCoordsFromTriangle(hpms::TriangleAdapter* tri, hpms::SideAdapter* side) = 0;
 

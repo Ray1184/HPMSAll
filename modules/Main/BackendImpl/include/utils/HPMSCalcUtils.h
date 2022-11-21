@@ -17,6 +17,8 @@ namespace hpms
     std::vector<hpms::Side>
     CalculatePerimetralSides(const hpms::Triangle& t, const std::vector<hpms::Triangle>& triangles);
 
+    glm::vec2 CalculateCentroid(const hpms::Triangle* tri);
+
 
 
 }

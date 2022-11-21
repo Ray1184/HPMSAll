@@ -28,20 +28,27 @@ function quest_manager:new(sceneName)
 
     function quest_manager:trigger_event(condition, action, ...)
         table.insert(events, { condition = condition, action = action, args = ...})
+        local progress = context_get_progress_state()
+        if progress.game_state.rooms[sceneName] == nil then
+            progress.game_state.rooms[sceneName] = {}
+        end
     end
 
     function quest_manager:poll_events(tpf)
+        local progress = context_get_progress_state()
+        local sharedState = progress.game_state.shared
+        local roomState = progress.game_state.rooms[sceneName]
         for i = 1, #self.events do
             local evt = events[i]
-            if evt.condition(evt.args) then
-                evt.action(evt.args)
+            if evt.condition(sharedState, roomState, tpf, evt.args) then
+                evt.action(sharedState, roomState, tpf, evt.args)
             end
         end
     end
 
 
     function quest_manager:delete_all()
-
+        -- Nothing to delete.
     end
 
     return this

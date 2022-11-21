@@ -9,19 +9,24 @@
 #include <sstream>
 #include <array>
 #include <functional>
+#include <map>
 
 hpms::WalkmapData *hpms::WalkmapConverter::LoadWalkmap(const std::string &path)
 {
     std::vector<hpms::Sector> sectors;
     Polygon perimeter;
     std::vector<hpms::Polygon> obstacles;
+    std::vector<hpms::PathStep> paths;
     std::string basePath = path;
     std::string perimeterPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".perimeter.obj");
     basePath = path;
     std::string obstaclesPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".obstacles.obj");
+    basePath = path;
+    std::string pathsPath = basePath.replace(basePath.find(".walkmap.obj"), basePath.size(), ".paths.obj");
     ProcessSectors(sectors, path);
     ProcessPerimeter(&perimeter, perimeterPath);
     ProcessObstacles(obstacles, obstaclesPath);
+    ProcessPaths(paths, pathsPath);
     std::string roomName = hpms::GetFileName(path);
     auto *map = hpms::SafeNew<WalkmapData>(roomName, sectors, perimeter, obstacles);
     
@@ -139,6 +144,51 @@ void hpms::WalkmapConverter::ProcessObstacles(std::vector<Polygon> &obstacles, c
         return;
     }
     ProcessPolygons(obstacles, path);
+}
+
+void hpms::WalkmapConverter::ProcessPaths(std::vector<PathStep>& paths, const std::string& path)
+{
+    if (!hpms::FileExists(path))
+    {
+        LOG_WARN("PathSteps data not found");
+        return;
+    }
+    std::vector<Sector> sectors;
+    std::vector<Triangle> tris;
+    ProcessSectors(sectors, path);
+
+    for (auto& sector : sectors)
+    {
+        for (auto& tri : sector.GetTriangles())
+        {
+            tris.push_back(tri);
+        }
+    }
+
+    unsigned int index = 0;
+    std::map<std::string, Triangle> refs;
+    for (auto& tri : tris)
+    {
+        PathStep ps;
+        ps.SetCoord(hpms::CalculateCentroid(&tri));
+        ps.SetId(std::to_string(index++));
+        refs[ps.GetId()] = tri;
+    }
+
+    for (auto& path : paths)
+    {
+        Triangle pathTri = refs[path.GetId()];
+        for (auto& testPath : paths)
+        {
+            Triangle testPathTri = refs[path.GetId()];
+            if (hpms::TestSidesOverlap(pathTri, testPathTri, 0) ||
+                hpms::TestSidesOverlap(pathTri, testPathTri, 1) ||
+                hpms::TestSidesOverlap(pathTri, testPathTri, 2))
+            {
+                path.Bind(testPath);
+            }
+        }
+    }
 }
 
 void hpms::WalkmapConverter::ProcessPolygons(std::vector<Polygon> &polys, const std::string &path)
