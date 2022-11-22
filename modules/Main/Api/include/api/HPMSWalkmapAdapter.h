@@ -109,9 +109,13 @@ namespace hpms
 
         }
 
-        virtual std::string GetId() = 0;
+        virtual int GetId() = 0;
+
+        virtual TriangleAdapter* GetTriangle() = 0;
 
         virtual bool IsBound(PathStepAdapter* path) = 0;
+
+        virtual std::vector<int> GetAllLinked() = 0;
 
         virtual glm::vec2 GetCoords() = 0;
     };
@@ -134,6 +138,8 @@ namespace hpms
         virtual std::string GetId() = 0;
 
         virtual TriangleAdapter* SampleTriangle(const glm::vec3& pos, float tolerance) = 0;
+
+        virtual PathStepAdapter* SamplePath(const glm::vec3& pos, float tolerance) = 0;
 
         virtual void Collides(const glm::vec3& pos, float radius, CollisionResponse* response) = 0;
 

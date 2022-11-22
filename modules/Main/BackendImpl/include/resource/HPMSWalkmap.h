@@ -252,9 +252,10 @@ namespace hpms
     class PathStep : public hpms::Object
     {
     private:
-        std::string id;
+        int id;
         glm::vec2 coord;
-        std::vector<std::string> linked;
+        std::vector<int> linked;
+        Triangle tri;
 
     public:
         PODS_SERIALIZABLE(
@@ -262,9 +263,22 @@ namespace hpms
             PODS_OPT(coord.x),
             PODS_OPT(coord.y),
             PODS_OPT(id),
-            PODS_OPT(linked)
+            PODS_OPT(linked),
+            PODS_OPT(tri)
 
         );
+
+        inline PathStep()
+        {
+        }
+
+        inline PathStep(const PathStep& path)
+        {
+            PathStep::coord = path.coord;
+            PathStep::id = path.id;
+            PathStep::linked = path.linked;
+            PathStep::tri = path.tri;
+        }
 
 
         const glm::vec2& GetCoords() const
@@ -277,14 +291,29 @@ namespace hpms
             PathStep::coord = coord;
         }
 
-        const std::string& GetId() const
+        const Triangle& GetTriangle() const
+        {
+            return tri;
+        }
+
+        void SetTriangle(const Triangle& tri)
+        {
+            PathStep::tri = tri;
+        }
+
+        int GetId() const
         {
             return id;
         }
 
-        void SetId(const std::string& id)
+        void SetId(int id)
         {
             PathStep::id = id;
+        }
+
+        std::vector<int> GetLinked()
+        {
+            return linked;
         }
 
         inline void Bind(const PathStep& path)

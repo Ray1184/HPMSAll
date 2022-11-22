@@ -75,12 +75,22 @@ void hpms::WalkmapAdaptee::ForEachPathStep(const std::function<bool(PathStepAdap
 	}
 }
 
+
+
 hpms::TriangleAdapter* hpms::WalkmapAdaptee::SampleTriangle(const glm::vec3& pos, float tolerance)
 {
 	Check(walkmap.get());
 	Triangle sampled;
 	hpms::SampleTriangle(pos, walkmap, tolerance, &sampled);
 	return triangles[sampled];
+}
+
+hpms::PathStepAdapter* hpms::WalkmapAdaptee::SamplePath(const glm::vec3& pos, float tolerance)
+{
+	Check(walkmap.get());
+	Triangle sampled;
+	hpms::SampleTriangle(pos, walkmap, tolerance, &sampled);
+	return pathsByTriangles[sampled];
 }
 
 void hpms::WalkmapAdaptee::Collides(const glm::vec3& pos, float radius, CollisionResponse* response)
@@ -123,6 +133,7 @@ hpms::WalkmapAdaptee::WalkmapAdaptee(const std::string& mapName) : AdapteeCommon
 	{
 		auto* ad = hpms::SafeNew<PathStepAdaptee>(path);
 		paths[path] = ad;
+		pathsByTriangles[path.GetTriangle()] = ad;
 	}
 }
 
@@ -139,6 +150,7 @@ hpms::WalkmapAdaptee::~WalkmapAdaptee()
 		auto* ad = entry.second;
 		hpms::SafeDelete(ad);
 	}
+
 }
 
 float hpms::TriangleAdaptee::X1()
@@ -249,13 +261,15 @@ const hpms::Side& hpms::SideAdaptee::GetSideData() const
 
 hpms::PathStepAdaptee::PathStepAdaptee(const PathStep& pathStep) : pathData(pathStep)
 {
+	triangle = hpms::SafeNew<TriangleAdaptee>(pathData.GetTriangle());
 }
 
 hpms::PathStepAdaptee::~PathStepAdaptee()
 {
+	hpms::SafeDelete(triangle);
 }
 
-std::string hpms::PathStepAdaptee::GetId()
+int hpms::PathStepAdaptee::GetId()
 {
 	return pathData.GetId();
 }
@@ -266,7 +280,18 @@ bool hpms::PathStepAdaptee::IsBound(PathStepAdapter* path)
 	return pathData.IsBound(adaptee->pathData);
 }
 
+std::vector<int> hpms::PathStepAdaptee::GetAllLinked()
+{
+	return pathData.GetLinked();
+}
+
+
 glm::vec2 hpms::PathStepAdaptee::GetCoords()
 {
 	return pathData.GetCoords();
+}
+
+hpms::TriangleAdapter* hpms::PathStepAdaptee::GetTriangle()
+{
+	return triangle;
 }

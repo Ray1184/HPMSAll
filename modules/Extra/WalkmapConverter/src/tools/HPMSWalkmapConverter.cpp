@@ -166,12 +166,13 @@ void hpms::WalkmapConverter::ProcessPaths(std::vector<PathStep>& paths, const st
     }
 
     unsigned int index = 0;
-    std::map<std::string, Triangle> refs;
+    std::map<int, Triangle> refs;
     for (auto& tri : tris)
     {
         PathStep ps;
         ps.SetCoord(hpms::CalculateCentroid(&tri));
-        ps.SetId(std::to_string(index++));
+        ps.SetTriangle(tri);
+        ps.SetId(index++);
         refs[ps.GetId()] = tri;
     }
 

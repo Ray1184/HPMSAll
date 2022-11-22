@@ -58,7 +58,7 @@ namespace hpms
     {
         std::size_t operator()(const PathStep& k) const
         {
-            return std::hash<std::string>()(k.GetId());
+            return std::hash<int>()(k.GetId());
         }
     };
 
@@ -104,15 +104,20 @@ namespace hpms
     {
     private:
         hpms::PathStep pathData;
+        hpms::TriangleAdapter* triangle;
     public:  
 
         explicit PathStepAdaptee(const PathStep& pathStep);
 
         virtual ~PathStepAdaptee() override;
 
-        virtual std::string GetId() override;
+        virtual int GetId() override;
+
+        virtual TriangleAdapter* GetTriangle() override;
 
         virtual bool IsBound(PathStepAdapter* path) override;
+
+        virtual std::vector<int> GetAllLinked() override;
 
         virtual glm::vec2 GetCoords() override;
     };
@@ -123,6 +128,7 @@ namespace hpms
         hpms::WalkmapPtr walkmap;
         std::unordered_map<hpms::Triangle, TriangleAdaptee*, TriangleHash> triangles;
         std::unordered_map<hpms::PathStep, PathStepAdaptee*, PathStepHash> paths;
+        std::unordered_map<hpms::Triangle, PathStepAdaptee*, TriangleHash> pathsByTriangles;
     public:
         WalkmapAdaptee(const std::string& mapName);
 
@@ -131,6 +137,8 @@ namespace hpms
         virtual std::string GetId() override;
 
         virtual TriangleAdapter* SampleTriangle(const glm::vec3& pos, float tolerance) override;
+
+        virtual PathStepAdapter* SamplePath(const glm::vec3& pos, float tolerance) override;
 
         virtual void Collides(const glm::vec3& pos, float radius, CollisionResponse* response) override;
 
