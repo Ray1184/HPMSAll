@@ -12,12 +12,12 @@
 #include <pods/pods.h>
 #ifdef USE_PODS_MSG_PACK
 #include <pods/msgpack.h>
-#define  POD_SERIALIZER pods::MsgPackSerializer
-#define  POD_DESERIALIZER pods::MsgPackDeserializer
+#define POD_SERIALIZER pods::MsgPackSerializer
+#define POD_DESERIALIZER pods::MsgPackDeserializer
 #else
 #include <pods/binary.h>
-#define  POD_SERIALIZER pods::BinarySerializer
-#define  POD_DESERIALIZER pods::BinaryDeserializer
+#define POD_SERIALIZER pods::BinarySerializer
+#define POD_DESERIALIZER pods::BinaryDeserializer
 #endif
 #include <pods/buffers.h>
 #include <common/HPMSCoordSystem.h>
@@ -130,7 +130,7 @@ namespace hpms
         Triangle() : sectorId(UNDEFINED_SECTOR)
         {
         }
-
+      
         bool IsPerimetral() const
         {
             return !perimetralSides.empty();
@@ -272,31 +272,31 @@ namespace hpms
         {
         }
 
-        inline PathStep(const PathStep& path)
+        inline PathStep(const PathStep &path)
         {
             PathStep::coord = path.coord;
             PathStep::id = path.id;
             PathStep::linked = path.linked;
             PathStep::tri = path.tri;
         }
+       
 
-
-        const glm::vec2& GetCoords() const
+        const glm::vec2 &GetCoords() const
         {
             return coord;
         }
 
-        void SetCoord(const glm::vec2& coord)
+        void SetCoord(const glm::vec2 &coord)
         {
             PathStep::coord = coord;
         }
 
-        const Triangle& GetTriangle() const
+        const Triangle &GetTriangle() const
         {
             return tri;
         }
 
-        void SetTriangle(const Triangle& tri)
+        void SetTriangle(const Triangle &tri)
         {
             PathStep::tri = tri;
         }
@@ -316,15 +316,26 @@ namespace hpms
             return linked;
         }
 
-        inline void Bind(const PathStep& path)
+        inline void Bind(const PathStep &path)
         {
             linked.push_back(path.id);
         }
 
-        inline bool IsBound(const PathStep& path)
+        inline bool IsBound(const PathStep &path)
         {
             return std::find(linked.begin(), linked.end(), path.id) != linked.end();
         }
+
+        bool operator==(const PathStep &rhs) const
+        {
+            return PathStep::id == rhs.id;
+        }
+
+        bool operator!=(const PathStep &rhs) const
+        {
+            return !(rhs == *this);
+        }
+
         virtual const std::string Name() const override
         {
             return "PathStep";
@@ -399,21 +410,21 @@ namespace hpms
         }
 
         // FIXME: find better solution
-        inline void BeforeSerialization() 
+        inline void BeforeSerialization()
         {
-            for (auto& v : data)
+            for (auto &v : data)
             {
-                dataSerializable.emplace_back(v);            
+                dataSerializable.emplace_back(v);
             }
         }
 
         // FIXME: find better solution
         inline void AfterDeSerialization()
         {
-            for (auto& v : dataSerializable)
+            for (auto &v : dataSerializable)
             {
                 glm::vec2 v2 = v.GetData();
-                data.push_back(v2);            
+                data.push_back(v2);
             }
         }
 
@@ -505,16 +516,15 @@ namespace hpms
             WalkmapData::obstacles = obstacles;
         }
 
-        const std::vector<PathStep>& GetPaths() const
+        const std::vector<PathStep> &GetPaths() const
         {
             return paths;
         }
 
-        void SetPaths(const std::vector<PathStep>& paths)
+        void SetPaths(const std::vector<PathStep> &paths)
         {
             WalkmapData::paths = paths;
         }
-
 
         const std::string &GetId() const
         {

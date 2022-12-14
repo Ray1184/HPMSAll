@@ -21,6 +21,7 @@
 #include <ctime>
 #include <algorithm>
 #include <glm/glm.hpp>
+#include <stdexcept>
 
 #define LOG_ERROR(msg) hpms::ErrorHandler(__FILE__, __LINE__, msg)
 #define LOG_WARN(msg) hpms::MsgHandler("HPMS-WARN ", msg)
@@ -130,7 +131,7 @@ namespace hpms
 #ifdef HPMS_DEBUG
 		hpms::MemoryDump();
 #endif
-		throw std::exception("Forced quit");
+		throw std::runtime_error("Forced quit");
 	}
 
 	inline void MsgHandler(const char* desc, const char* message)

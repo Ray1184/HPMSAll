@@ -9,7 +9,7 @@ hpms::PathFinder::PathFinder(hpms::WalkmapAdapter* walkmap, float tolerance) : w
 {
 	auto checkPath = [&](PathStepAdapter* pathStep)
 	{
-		auto& bounds = pathStep->GetAllLinked();
+		auto bounds = pathStep->GetAllLinked();
 		adjacencies[pathStep->GetId()] = bounds;
 		pathById[pathStep->GetId()] = pathStep;
 		v++;

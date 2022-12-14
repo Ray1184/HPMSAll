@@ -11,7 +11,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/quaternion.hpp>
 #include <Ogre.h>
-#include <OgreTagpoint.h>
+#include <OgreTagPoint.h>
 #include <core/HPMSOgreContext.h>
 #include <vector>
 #include <map>

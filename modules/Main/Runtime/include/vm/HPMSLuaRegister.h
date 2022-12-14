@@ -267,7 +267,7 @@ namespace hpms
 				.addConstructor < void(*)
 				(void) >()
 				.endClass()
-				.addFunction("add_2d_data", &hpms::LuaExtensions::Add2dData)
+				//.addFunction("add_2d_data", &hpms::LuaExtensions::Add2dData)
 				.endNamespace();
 		}
 

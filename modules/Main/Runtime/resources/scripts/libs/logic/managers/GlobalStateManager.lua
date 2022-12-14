@@ -46,7 +46,7 @@ function global_state_manager:new()
             version = k.HPMS_VERSION,
             current_room = saveInfo.room_id,
             current_player_id = self:get_session_var(k.session_vars.CURRENT_PLAYER_ID),
-            data = context_get_serializable_data()
+            data = context_get_serializable_data(),
             progress = context_get_progress_state()
         }
         local saveDataJson = json.encode(saveData)

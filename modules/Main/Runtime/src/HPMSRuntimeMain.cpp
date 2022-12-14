@@ -1,5 +1,4 @@
 #include <sstream>
-#include <windows.h>
 #include <api/HPMSSimulatorAdapter.h>
 #include <facade/HPMSEngineFacade.h>
 #include <states/HPMSLuaLogic.h>
@@ -12,6 +11,7 @@
 #define HEIGHT 200 * RATIO
 
 #if defined(_WIN32) || defined(WIN32)
+#include <windows.h>
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance, _In_ HINSTANCE hPrevInstance, _In_ LPWSTR lpCmdLine, _In_ int nCmdShow)
 #else
 int main(int argc, char* argv[])

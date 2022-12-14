@@ -54,17 +54,16 @@ add_custom_command(TARGET HPMSWalkmapConverter
         POST_BUILD
         # Copy Ogre dlls.
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/ext/
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/ext/
+        #COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/${BUILD_TYPE_LOWER}/ ${CMAKE_BINARY_DIR}/bin/ext/
         COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN_2}/ ${CMAKE_BINARY_DIR}/bin/ext/
         # Copy main exe.
         #COMMAND ${CMAKE_COMMAND} -E copy ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${EXECUTABLE} ${CMAKE_BINARY_DIR}/bin/ext/
         # Delete folders and files.
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/debug
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/release
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/minsizerel
-        COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/relwithdebinfo
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/resources.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/samples.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/plugins.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/tests.cfg
+        #COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/debug
+        #COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/release
+        #COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/minsizerel
+        #COMMAND ${CMAKE_COMMAND} -E rm -Rf ${CMAKE_BINARY_DIR}/bin/ext/relwithdebinfo
+        #COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/resources.cfg
+        #COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/samples.cfg
+        #COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/ext/plugins.cfg
         )

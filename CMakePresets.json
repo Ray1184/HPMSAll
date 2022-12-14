@@ -1,0 +1,23 @@
+{
+    "version": 2,
+    "configurePresets": [
+        {
+            "name": "Debug",
+            "displayName": "Configure preset using toolchain file",
+            "description": "Sets Ninja generator, build and install directory",
+            "generator": "Ninja",
+            "binaryDir": "${sourceDir}/${presetName}",
+            "cacheVariables": {
+                "CMAKE_BUILD_TYPE": "Debug",
+                "CMAKE_TOOLCHAIN_FILE": "",
+                "CMAKE_INSTALL_PREFIX": "${sourceDir}/${presetName}"
+            },
+            "environment": {
+                "OGRE_SRC": "/home/nick/projects/ogre-13",
+                "OGRE_BUILD": "/home/nick/projects/ogre-13/${presetName}"
+                
+            }
+
+        }
+    ]
+}

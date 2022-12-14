@@ -37,7 +37,7 @@ message(STATUS "OGRE_BIN:" ${OGRE_BIN})
 message(STATUS "OGRE_LIB:" ${OGRE_LIB})
 
 find_library(OGRE_MAIN
-        NAMES OgreMain libOgreMain OgreMain.dll libOgreMain.dll OgreMain_d libOgreMain_d OgreMain_d.dll libOgreMain_d.dll
+        NAMES OgreMain libOgreMain OgreMain.dll libOgreMain.dll  OgreMain_d libOgreMain_d OgreMain_d.dll libOgreMain_d.dll
         PATHS ${OGRE_LIB}
         REQUIRED)
 
@@ -46,18 +46,13 @@ find_library(OGRE_OVERLAY
         PATHS ${OGRE_LIB}
         REQUIRED)
 
-find_library(OGRE_PROPERTY
-        NAMES OgreProperty libOgreProperty OgreProperty.dll libOgreProperty.dll OgreProperty_d libOgreProperty_d OgreProperty_d.dll libOgreProperty_d.dll
-        PATHS ${OGRE_LIB}
-        REQUIRED)
-
-find_library(OGRE_CODEC
-        NAMES Codec_STBI libCodec_STBI Codec_STBI.dll libCodec_STBI.dll Codec_STBI_d libCodec_STBI_d Codec_STBI_d.dll libCodec_STBI_d.dll
+        find_library(OGRE_CODEC
+        NAMES Codec_STBI.so Codec_STBI libCodec_STBI Codec_STBI.dll libCodec_STBI.dll Codec_STBI_d libCodec_STBI_d Codec_STBI_d.dll libCodec_STBI_d.dll
         PATHS ${OGRE_LIB}
         REQUIRED)
 
 find_library(OGRE_RS
-        NAMES RenderSystem_GL libRenderSystem_GL RenderSystem_GL.dll libRenderSystem_GL.dll RenderSystem_GL_d libRenderSystem_GL_d RenderSystem_GL_d.dll libRenderSystem_GL_d.dll
+        NAMES RenderSystem_GL.so RenderSystem_GL libRenderSystem_GL RenderSystem_GL.dll libRenderSystem_GL.dll RenderSystem_GL_d libRenderSystem_GL_d RenderSystem_GL_d.dll libRenderSystem_GL_d.dll
         PATHS ${OGRE_LIB}
         REQUIRED)
 
@@ -79,12 +74,12 @@ find_library(OGRE_SDL2MAIN
 find_library(OGRE_ZLIB
         NAMES zlib libzlib zlib.dll libzlib.dll zlibd libzlibd zlibd.dll libzlibd.dll
         PATHS ${OGRE_LIB}
-        REQUIRED)
+        )
 
 find_library(OGRE_ZLIBSTATIC
         NAMES zlibstatic libzlibstatic zlibstatic.dll libzlibstatic.dll zlibstaticd libzlibstaticd zlibstaticd.dll libzlibstaticd.dll
         PATHS ${OGRE_LIB}
-        REQUIRED)
+        )
 
 if (MINGW)
     find_library(OGRE_ZZIP
@@ -160,5 +155,4 @@ add_custom_command(TARGET HPMSBackendImpl
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/resources.cfg
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/samples.cfg
         COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/plugins.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/tests.cfg
         )

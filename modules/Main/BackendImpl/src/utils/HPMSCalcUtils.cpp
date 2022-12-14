@@ -83,7 +83,7 @@ hpms::CalculatePerimetralSides(const hpms::Triangle& t, const std::vector<hpms::
     return sides;
 }
 
-glm::vec2 CalculateCentroid(const hpms::Triangle* tri)
+glm::vec2 hpms::CalculateCentroid(const hpms::Triangle* tri)
 {
     float x = 0.0;
     float y = 0.0;
