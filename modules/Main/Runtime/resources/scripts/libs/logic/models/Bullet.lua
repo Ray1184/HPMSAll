@@ -85,12 +85,13 @@ function bullet:ret(shooterActor, path)
     end
 
     function bullet:delete_transient_data()
+        
         if not self.transientDataInit then
             return
         end
         if self.not_serializable.properties.fire_fx_name ~= nil then
             local attachTo = k.attachable_bones.WEAPON_BARREL_FX
-            lib.detach_particle_from_entity_bone(attachTo, self.transient.fire_fx, parentEntity)
+            --lib.detach_particle_from_entity_bone(attachTo, self.transient.fire_fx, parentEntity)
             lib.delete_particle_system(self.transient.fire_fx)
         end
 
@@ -120,7 +121,7 @@ function bullet:ret(shooterActor, path)
             local dummyRot = lib.from_euler(0, 0, 0)
             local dummyScale = lib.vec3(1, 1, 1)
             self.transient.fire_fx = lib.make_particle_system('fx/' .. fxTemplate .. '/' .. id, fxTemplate)
-            lib.attach_particle_to_entity_bone(attachTo, self.transient.fire_fx, parentEntity, lib.vec3(props.fx_position_offset.x, props.fx_position_offset.y, props.fx_position_offset.z), dummyRot, dummyScale)
+            lib.set_node_particle(self.transient.node, self.transient.fire_fx)
             lib.particle_go_to_time(self.transient.fire_fx, 1.0)
         end
         if self.not_serializable.properties.bullet_fx_name ~= nil then

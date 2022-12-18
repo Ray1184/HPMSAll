@@ -59,7 +59,7 @@ function global_state_manager:new()
         local loadDataJson = lib.load_file(fileName)
         local loadData = json.decode(loadDataJson)
         context_set_serializable_data(loadData.data)
-        context_set_progress_state(loadedData.progress)
+        context_set_progress_state(loadData.progress)
         self:put_session_var(k.session_vars.CURRENT_PLAYER_ID, loadData.current_player_id)
         log_info('Game loaded from ' .. fileName)
         return loadData

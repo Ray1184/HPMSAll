@@ -18,7 +18,7 @@ endif ()
 # Other libraries setup.
 install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
-install_from_repo(https://github.com/mtrempoltsev/pods.git PODS ${PODS_VERSION} FALSE /include/)
+install_from_repo(https://github.com/museghost/pods.git PODS ${PODS_VERSION} FALSE /include/)
 
 ogre_include($ENV{OGRE_SRC} $ENV{OGRE_BUILD})
 

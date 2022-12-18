@@ -18,13 +18,6 @@ set(OGRE_SRC $ENV{OGRE_SRC})
 message(STATUS "Ogre build path: ${OGRE_BUILD}")
 message(STATUS "Ogre src path: ${OGRE_SRC}")
 
-#if ($ENV{OGRE_BUILD} STREQUAL "")
-#    message(FATAL_ERROR "OGRE_BUILD environment variable must be set to build HPMS.")
-#endif ()
-#
-#if ($ENV{OGRE_SRC} STREQUAL "")
-#    message(FATAL_ERROR "OGRE_SRC environment variable must be set to build HPMS.")
-#endif ()
 
 add_definitions(-DCROSS_BUILD)
 add_definitions(-DCOORD_SYSTEM_BLENDER)
@@ -32,6 +25,7 @@ add_definitions(-DCOORD_SYSTEM_BLENDER)
 if (NOT ${CMAKE_BUILD_TYPE} EQUAL "Release")
     add_definitions(-DFORCE_DEBUG_LOG)
 endif ()
+
 
 add_subdirectory(modules/Main)
 add_subdirectory(modules/Extra)

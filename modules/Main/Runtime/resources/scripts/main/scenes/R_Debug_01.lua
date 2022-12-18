@@ -203,9 +203,9 @@ scene = {
 
         wk:add_workflow( {
             seq:motion_path_with_look_at(chest3, function(tpf, timer) return { x = player:get_position().x, y = player:get_position().y, z = player:get_position().z } end,false,1,1,0.6),
-            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai più scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
+            seq:message_box('MUAHAHWHAWHHAHAHAHAHA Ora non avrai piu scampo dalla mia tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda tremenda VENDETTAAAAA!!!!', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
             seq:wait(2),
-            seq:message_box('Anzi no... ora muoio... così', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
+            seq:message_box('Anzi no... ora muoio... cosi... PUFFF!!', function(tpf, timer) return input_prf:action_done_once(k.input_actions.ACTION_1) end,k.diplay_msg_styles.MSG_BOX,true),
             seq:pipe( function(tpf) chest3:kill_instance() end)
         } , function() return not chest3.serializable.expired end, true, 'test_message_flow')
 
@@ -471,6 +471,8 @@ scene = {
         lib.delete_entity(mask)
 
         lib.cleanup_pending()
+
+        log_warn('CLEANUP DONE')
 
 
     end

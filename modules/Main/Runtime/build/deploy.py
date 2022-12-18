@@ -17,17 +17,17 @@ def add_resource(res, resources, bin_path):
     res_name = ntpath.basename(res).capitalize()
     entry = 'Zip=data/packs/' + res_name + '.zip'
     resources.append(entry)
-    shutil.make_archive(
-        bin_path + '/bin/rt/data/packs/' + res_name, 'zip', res)
-    echo('Adding ' + res + ' to data/packs/' + res_name + '.zip.')
+    shutil.make_archive(bin_path + '/bin/rt/data/packs/' + res_name, 'zip', res)
+    os.rename(bin_path + '/bin/rt/data/packs/' + res_name + '.zip', bin_path + '/bin/rt/data/packs/' + res_name + '.zip')
+    echo('Adding ' + res + ' to data/packs/' + res_name + '.zip')
 
 
 def deploy():
     echo('Resource deploy started.')
 
-    parser = argparse.ArgumentParser(description='HPMS deploy args.')
+    parser = argparse.ArgumentParser(description='HPMS deploy args')
     parser.add_argument('paths', metavar='N', type=str,
-                        nargs='+', help='Deploy paths.')
+                        nargs='+', help='Deploy paths')
 
     args = parser.parse_args()
 
@@ -52,7 +52,7 @@ def deploy():
             f.write(res_entry)
             f.write('\n')
         f.write('\n')
-    echo('Resource deploy finished.')
+    echo('Resource deploy finished')
 
 
 try:

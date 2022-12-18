@@ -16,7 +16,7 @@ include(../../../cmake/Shared.cmake)
 include(../../../cmake/OgreUtils.cmake)
 
 # Other libraries setup.
-install_from_repo(https://github.com/LuaDist/lua.git LUA ${LUA_VERSION} FALSE /src/)
+install_from_repo(https://github.com/LuaDist/lua.git LUA ${LUA_VERSION} TRUE /src/)
 
 # Lua configuration copy
 if (NOT DEFINED DEP_PATH)
@@ -28,7 +28,7 @@ set(LUA_SRC_PATH ${DEP_PATH}/lua-src/src)
 configure_file(${LUA_BUILD_PATH}/luaconf.h ${LUA_SRC_PATH}/luaconf.h COPYONLY)
 
 # Other libraries setup.
-install_from_repo(https://github.com/mtrempoltsev/pods.git PODS ${PODS_VERSION} FALSE /include/)
+install_from_repo(https://github.com/museghost/pods.git PODS ${PODS_VERSION} FALSE /include/)
 
 install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
@@ -53,7 +53,8 @@ set(SOURCES
         src/states/HPMSLuaLogic.cpp
         src/states/HPMSGameState.cpp
         src/logic/gui/HPMSGuiText.cpp 
-        src/logic/interaction/HPMSCollisionEnv.cpp "src/logic/ai/HPMSPathFinder.cpp")
+        src/logic/interaction/HPMSCollisionEnv.cpp 
+        src/logic/ai/HPMSPathFinder.cpp)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin/rt/)
 
@@ -67,13 +68,22 @@ endif ()
 target_link_libraries(HPMSRuntime liblua LuaBridge HPMSBackendImpl)
 
 # Resources installation through python.
-find_package(Python COMPONENTS Interpreter Development)
-set(BUILD_MODULE ${PROJECT_SOURCE_DIR}/build/deploy.py)
-message(STATUS "Running external build module: ${BUILD_MODULE} using Python: ${Python_EXECUTABLE}")
+if (UNIX)
+    set(BUILD_MODULE ${PROJECT_SOURCE_DIR}/build/deploy.sh)
+    message(STATUS "Running sh ${BUILD_MODULE} python3 ${PROJECT_SOURCE_DIR}/../../../")
+    execute_process(
+           COMMAND ./${BUILD_MODULE} python3 ${PROJECT_SOURCE_DIR}/../../../
+    )
+else ()
+    find_package(Python COMPONENTS Interpreter Development)
+    set(BUILD_MODULE ${PROJECT_SOURCE_DIR}/build/deploy.py)
+    message(STATUS "Running external build module: ${BUILD_MODULE} using Python: ${Python_EXECUTABLE}")
 
-execute_process(
-        COMMAND ${Python_EXECUTABLE} ${BUILD_MODULE} ${PROJECT_SOURCE_DIR} ${CMAKE_BINARY_DIR}
-)
+    execute_process(
+           COMMAND ${Python_EXECUTABLE} ${BUILD_MODULE} ${PROJECT_SOURCE_DIR} ${CMAKE_BINARY_DIR}
+    )
+
+endif ()
 
 if (WIN32)
     set(EXECUTABLE HPMSRuntime.exe)

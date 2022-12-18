@@ -16,7 +16,7 @@
                 "OGRE_SRC": "/home/nick/projects/ogre-13",
                 "OGRE_BUILD": "/home/nick/projects/ogre-13/${presetName}"
                 
-            }
+            }            
 
         }
     ]

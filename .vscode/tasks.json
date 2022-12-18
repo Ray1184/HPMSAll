@@ -2,9 +2,9 @@
     "version": "2.0.0",
     "tasks": [       
         {
-            "label": "deploy-assets",
+            "label": "deploy-assets-debug",
             "command": "${workspaceFolder}/modules/Main/Runtime/build/deploy.sh",
-            "args": ["${workspaceFolder}", "C:/Users/nicco/AppData/Local/Programs/Python/Python39/python.exe"],
+            "args": ["python3", "${workspaceFolder}", "Debug"],
             "type": "shell"
         }
     ]

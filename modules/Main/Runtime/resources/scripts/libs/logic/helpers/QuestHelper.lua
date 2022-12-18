@@ -25,7 +25,7 @@ function init_progress(progress)
     progress.init = true
     progress.statistics = {
         play_time = 0,
-        game_difficulty = context_get_state(k.session_vars.GAME_DIFFICULTY)
+        game_difficulty = context_get_state(k.session_vars.GAME_DIFFICULTY),
         save_amount = 0,
         kills = 0,
         solved_puzzles = 0,

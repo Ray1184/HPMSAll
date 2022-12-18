@@ -23,7 +23,7 @@ include(../../../cmake/Shared.cmake)
 include(../../../cmake/OgreUtils.cmake)
 
 # Other libraries setup.
-install_from_repo(https://github.com/mtrempoltsev/pods.git PODS ${PODS_VERSION} FALSE /include/)
+install_from_repo(https://github.com/museghost/pods.git PODS ${PODS_VERSION} FALSE /include/)
 
 install_from_repo(https://github.com/g-truc/glm.git GLM ${GLM_VERSION} TRUE /)
 
@@ -71,15 +71,17 @@ find_library(OGRE_SDL2MAIN
         PATHS ${OGRE_LIB}
         REQUIRED)
 
-find_library(OGRE_ZLIB
-        NAMES zlib libzlib zlib.dll libzlib.dll zlibd libzlibd zlibd.dll libzlibd.dll
-        PATHS ${OGRE_LIB}
-        )
+if (NOT UNIX)
+        find_library(OGRE_ZLIB
+                NAMES zlib libzlib zlib.dll libzlib.dll zlibd libzlibd zlibd.dll libzlibd.dll
+                PATHS ${OGRE_LIB}
+                REQUIRED)
 
-find_library(OGRE_ZLIBSTATIC
-        NAMES zlibstatic libzlibstatic zlibstatic.dll libzlibstatic.dll zlibstaticd libzlibstaticd zlibstaticd.dll libzlibstaticd.dll
-        PATHS ${OGRE_LIB}
-        )
+        find_library(OGRE_ZLIBSTATIC
+                NAMES zlibstatic libzlibstatic zlibstatic.dll libzlibstatic.dll zlibstaticd libzlibstaticd zlibstaticd.dll libzlibstaticd.dll
+                PATHS ${OGRE_LIB}
+                REQUIRED)
+endif()
 
 if (MINGW)
     find_library(OGRE_ZZIP
@@ -149,10 +151,6 @@ target_link_libraries(HPMSBackendImpl HPMSApi ${OGRE_MAIN} ${OGRE_OVERLAY} ${OGR
 string(TOLOWER ${CMAKE_BUILD_TYPE} BUILD_TYPE_LOWER)
 add_custom_command(TARGET HPMSBackendImpl
         POST_BUILD
-        # Copy Ogre dll files.
-        COMMAND ${CMAKE_COMMAND} -E copy_directory ${OGRE_BIN}/ ${CMAKE_BINARY_DIR}/bin/rt/
-        # Delete folders and files.
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/resources.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/samples.cfg
-        COMMAND ${CMAKE_COMMAND} -E rm ${CMAKE_BINARY_DIR}/bin/rt/plugins.cfg
+        # Copy required Ogre files.
+        COMMAND ${CMAKE_COMMAND} -E copy_directory $ENV{OGRE_BUILD}/staging ${CMAKE_BINARY_DIR}/bin/rt/
         )
