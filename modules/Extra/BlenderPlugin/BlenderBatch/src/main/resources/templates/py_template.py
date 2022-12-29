@@ -4,6 +4,7 @@ import sys
 import datetime
 import bmesh
 import os
+import traceback
 
 LOG_LEVEL = $LOG_LEVEL
 TRACE = {'label': 'TRACE', 'val': 5}
@@ -64,6 +65,10 @@ def resume_logging(old):
     os.dup(old)
     os.close(old)
 
+def delete_log():
+    if os.path.isfile('logs/blender.log'):
+        os.remove('logs/blender.log')
+
 def log(level, msg):
     date = datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S')
     if level['val'] <= LOG_LEVEL:
@@ -75,5 +80,5 @@ $PY_CODE
 if __name__ == '__main__':
     try:
         main()
-    except Exception as e:
-        log(ERROR, str(e))
+    except Exception:
+        log(ERROR, str(traceback.format_exc()))

@@ -15,11 +15,11 @@ def echo(msg):
 
 def add_resource(res, resources, bin_path):
     res_name = ntpath.basename(res).capitalize()
-    entry = 'Zip=data/packs/' + res_name + '.zip'
+    entry = 'Zip=data/packs/' + res_name + '.hpak'
     resources.append(entry)
     shutil.make_archive(bin_path + '/bin/rt/data/packs/' + res_name, 'zip', res)
-    os.rename(bin_path + '/bin/rt/data/packs/' + res_name + '.zip', bin_path + '/bin/rt/data/packs/' + res_name + '.zip')
-    echo('Adding ' + res + ' to data/packs/' + res_name + '.zip')
+    os.rename(bin_path + '/bin/rt/data/packs/' + res_name + '.zip', bin_path + '/bin/rt/data/packs/' + res_name + '.hpak')
+    echo('Adding ' + res + ' to data/packs/' + res_name + '.hpak')
 
 
 def deploy():

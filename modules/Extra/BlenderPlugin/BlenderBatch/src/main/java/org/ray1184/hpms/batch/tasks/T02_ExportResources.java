@@ -35,7 +35,7 @@ public class T02_ExportResources implements HPMSTask {
                 .forEach(r -> {
                     Integer res = RET_CODE_OK;
                     params.getSessionParams().put("CURRENT_ROOM", r.getName());
-                    res += exportSectors(params, SceneObject.filter(r, SceneObject.SECTOR));
+                    res += exportSectors(params, SceneObject.filter(r, SceneObject.PERIMETER));
                     res += exportEntities(params, SceneObject.filter(r, SceneObject.ENTITY));
                     res += exportCollisionData(params, SceneObject.filter(r, SceneObject.COLLISION_DATA));
                     res += exportDepthData(params, SceneObject.filter(r, SceneObject.DEPTH_DATA));

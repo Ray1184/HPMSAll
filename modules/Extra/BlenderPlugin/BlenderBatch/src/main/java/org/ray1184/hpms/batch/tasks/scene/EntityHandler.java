@@ -24,7 +24,7 @@ public class EntityHandler {
         COLLISOR("collisor") {
             @Override
             public void handleSetupPre(SceneDataResponse.RoomInfo roomInfo, LuaStatementBuilder scriptBuilder, SceneDataResponse.RoomInfo.ObjectInfo e) {
-                Optional<SceneDataResponse.RoomInfo.ObjectInfo> sectorInfoOpt = SceneObject.filter(roomInfo, SceneObject.SECTOR).stream().findFirst();
+                Optional<SceneDataResponse.RoomInfo.ObjectInfo> sectorInfoOpt = SceneObject.filter(roomInfo, SceneObject.PERIMETER).stream().findFirst();
                 if (sectorInfoOpt.isEmpty()) {
                     throw new RuntimeException("Cannot create collisors without sector map");
                 }
@@ -37,7 +37,7 @@ public class EntityHandler {
 
             @Override
             public void handleCleanupPost(SceneDataResponse.RoomInfo roomInfo, LuaStatementBuilder scriptBuilder, SceneDataResponse.RoomInfo.ObjectInfo e) {
-                Optional<SceneDataResponse.RoomInfo.ObjectInfo> sectorInfoOpt = SceneObject.filter(roomInfo, SceneObject.SECTOR).stream().findFirst();
+                Optional<SceneDataResponse.RoomInfo.ObjectInfo> sectorInfoOpt = SceneObject.filter(roomInfo, SceneObject.PERIMETER).stream().findFirst();
                 if (sectorInfoOpt.isEmpty()) {
                     throw new RuntimeException("Cannot delete collisors without sector map");
                 }

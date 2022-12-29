@@ -14,6 +14,7 @@ public enum HPMSCommands {
 
     // @formatter:off
     BL_VERSION          (BlenderInfoResponse.class   ,    "py/bl_info.py"              ,  "Retrieve installed blender version"     ),
+    CLEAR_LOG           (CommandResponse.class       ,    "py/clear_log.py"            ,  "Clear old blender log"                  ),
     SCENE_DATA          (SceneDataResponse.class     ,    "py/scene_data.py"           ,  "Retrieve info for current scene"        ),
     EXPORT_OGRE         (ExportResponse.class        ,    "py/export_ogre.py"          ,  "Export models in OGRE format"           ),
     EXPORT_AGGR_OBJ     (ExportResponse.class        ,    "py/export_aggr_obj.py"      ,  "Aggregate and export in OBJ format"     ),

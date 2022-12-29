@@ -15,31 +15,31 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class BlenderCommandTest {
 
 
-//    @Test
-//    public void testBlenderVersion() {
-//        initBlenderContext();
-//        testing("Blender Version");
-//        CommandResponse proc = HPMSCommands.BL_VERSION.exec();
-//        log.info("Test output: {}", proc.toString());
-//        assertEquals(0, (int) proc.getReturnCode());
-//    }
+   @Test
+   public void testBlenderVersion() {
+       initBlenderContext();
+       testing("Blender Version");
+       CommandResponse proc = HPMSCommands.BL_VERSION.exec();
+       log.info("Test output: {}", proc.toString());
+       assertEquals(0, (int) proc.getReturnCode());
+   }
 
-//    @Test
-//    public void testSceneData() {
-//        initBlenderContext();
-//        testing("Scene Data");
-//        CommandResponse proc = HPMSCommands.SCENE_DATA.exec();
-//        log.info("Test output: {}", proc.toString());
-//        assertEquals(0, (int) proc.getReturnCode());
-//    }
+   @Test
+   public void testSceneData() {
+       initBlenderContext();
+       testing("Scene Data");
+       CommandResponse proc = HPMSCommands.SCENE_DATA.exec();
+       log.info("Test output: {}", proc.toString());
+       assertEquals(0, (int) proc.getReturnCode());
+   }
 
     @Test
     public void testRendering() {
         initBlenderContext();
         testing("Rendering");
         CommandResponse proc = HPMSCommands.RENDERING//
-                .param("CAMS_TO_RENDER", "CAM_01,CAM_02,CAM_03")//
-                .param("BASE_PATH", "C:/tmp/render")//
+                .param("CAMS_TO_RENDER", "CAM_01")//
+                .param("OUTPUT_PATH", "/home/nick/renders/HPMS")//
                 .exec();
         log.info("Test output: {}", proc.toString());
         assertEquals(0, (int) proc.getReturnCode());
@@ -47,14 +47,15 @@ public class BlenderCommandTest {
 
     @SneakyThrows
     private void initBlenderContext() {
-        URL res = getClass().getClassLoader().getResource("blend/HPMSScene.blend");
-        assert res != null;
-        File file = Paths.get(res.toURI()).toFile();
-        String absolutePath = file.getAbsolutePath();
+        //URL res = getClass().getClassLoader().getResource("blend/HPMSScene.blend");
+        //assert res != null;
+        //File file = Paths.get(res.toURI()).toFile();
+        String absolutePath = "/home/nick/projects/HPMSDesign/Media/World/Debug/ShootingRange.blend";
         BlenderContext ctx = BlenderContext.getInstance();
         ctx.setBlenderSourcePath(absolutePath);
-        ctx.setBlenderExecPath("C:/Program Files/Blender Foundation/Blender 2.93/blender.exe");
-        ctx.setBlenderVersion("2.93.1");
+        ctx.setBlenderExecPath("blender");
+        ctx.setBlenderVersion("3.4.1");
+        HPMSCommands.CLEAR_LOG.exec();
     }
 
     private void testing(String testName) {

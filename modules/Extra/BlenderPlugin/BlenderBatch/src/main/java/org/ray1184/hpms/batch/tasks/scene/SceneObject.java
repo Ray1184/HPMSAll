@@ -11,12 +11,13 @@ import java.util.stream.Collectors;
 
 public enum SceneObject {
     // @formatter:off
-    CAMERA              (0  , "CAMERA"    , null                    , new CameraBehavior()),
-    SECTOR              (1  , "SECTOR"    , null                    , new SectorBehavior()),
+    CAMERA              (0  , "CAMERA"    , null                    , null),
+    PERIMETER           (1  , "PERIMETER" , null                    , new PerimeterBehavior()),
+    OBSTACLE            (1  , "OBSTACLE"  , null                    , null),
     VIEW_ACTIVATOR      (2  , "SECTOR"    , "ACTIVATE_CAM"          , new ViewActivatorBehavior()),
     ENTITY              (3  , "ENTITY"    , null                    , new EntityBehavior()),
     ENTITY_DESCRIPTORS  (4  , "ENTITY"    , "ENTITY_DESCRIPTORS"    , new EntityDescriptorsBehavior()),
-    COLLISION_DATA      (5  , "COLLISION" , null                    , new CollisionDataBehavior()),
+    COLLISION_DATA      (5  , "COLLISION" , null                    , null),
     DEPTH_DATA          (6  , "DEPTH"     , null                    , new DepthDataBehavior()),
     TRIGGER_POS         (7  , "TRIGGER"   , "BY_POSITION"           , new TriggerPosBehavior());
     // @formatter:on
@@ -34,7 +35,9 @@ public enum SceneObject {
         this.type = type;
         this.event = event;
         this.behavior = behavior;
-        this.behavior.setSceneObject(this);
+        if (this.behavior != null) {
+            this.behavior.setSceneObject(this);
+        }
     }
 
     public static List<SceneObject> sortedValues(boolean ascSorting) {

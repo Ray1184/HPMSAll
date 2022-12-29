@@ -102,7 +102,7 @@ def process():
         if cam.name in cam_names:
             config_cam(cam)
     for cam_name in cam_names:
-        cam_obj = [obj for obj in bpy.data.objects if obj.fieldType == 'CAMERA' and obj.name == cam_name][0]
+        cam_obj = [obj for obj in bpy.data.objects if obj is not None and obj.type == 'CAMERA' and obj.name == cam_name][0]
         bpy.context.scene.camera = cam_obj
         log(INFO, 'Rendering cam: ' + cam_name + '.png')
         data['outputs'].append(render_image(OUTPUT_PATH, cam_name))

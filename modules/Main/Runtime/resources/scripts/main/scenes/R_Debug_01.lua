@@ -338,7 +338,7 @@ scene = {
         -- lib.update_collisor(collisor_ey_dummyanim)
         -- current_sector = collisor_ey_dummyanim.sector
         hpms.debug_draw_clear()
-        playerMgr:update(tpf)
+        playerMgr:poll_events(tpf)
         -- if walk == 1 then
         --    walkRatio = walkRatio + tpf * 10
         --    if walkRatio > 1 then

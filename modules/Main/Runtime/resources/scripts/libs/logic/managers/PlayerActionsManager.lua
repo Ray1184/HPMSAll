@@ -168,7 +168,7 @@ function player_actions_manager:new(player, roomState, actorsMgr)
         end
     end
 
-    function player_actions_manager:update(tpf)
+    function player_actions_manager:poll_events(tpf)
         if self.actions.walk == 1 then
             self.actions.walkRatio = self.actions.walkRatio + tpf * 10
             if self.actions.walkRatio > 1 then
