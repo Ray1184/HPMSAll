@@ -15,8 +15,9 @@ ERROR = {'label': 'ERROR', 'val': 1}
 
 
 def main():
+    result = json.dumps(process())
     sys.stdout.write('@@begin@@')
-    sys.stdout.write(json.dumps(process()))
+    sys.stdout.write(result)
     sys.stdout.write('@@end@@')
 
 
@@ -28,6 +29,9 @@ def unselect_all():
     for obj in bpy.data.objects:
         obj.select_set(False)
 
+def rename(from_file, to_file):
+    if os.path.isfile(from_file) and from_file != to_file:
+        os.rename(from_file, to_file)
 
 def triangulate_object(obj):
     me = obj.to_mesh()

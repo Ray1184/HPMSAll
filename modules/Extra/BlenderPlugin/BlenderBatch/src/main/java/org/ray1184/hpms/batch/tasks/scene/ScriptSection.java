@@ -98,10 +98,10 @@ public enum ScriptSection {
             // Base scene cleanup
             builder.expr("-- Base scene delete").newLine()
                     .expr("context_delete_all_volatile()").newLine()//
-                    .expr("roomState:delete_dropped_collectibles()")//
-                    .expr("actorsManager:delete_all()")//
-                    .expr("sceneManager:delete_all()")//
-                    .expr("sequence:delete_all()");
+                    .expr("roomState:delete_dropped_collectibles()").newLine()//
+                    .expr("actorsManager:delete_all()").newLine()//
+                    .expr("sceneManager:delete_all()").newLine()//
+                    .expr("sequence:delete_all()").newLine().newLine();
 
             return builder.build();
         }

@@ -30,4 +30,8 @@ public interface HPMSTask {
         params.getSessionParams().computeIfAbsent(cacheKey, k -> command.exec(finalArgs));
         return (CommandResponse) params.getSessionParams().get(cacheKey);
     }
+
+    default CommandResponse execCommand(HPMSCommands command, Map<String, Object> args) {
+        return command.exec(args);
+    }
 }

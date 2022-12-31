@@ -5,9 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.ray1184.hpms.batch.HPMSParams;
 import org.zeroturnaround.exec.ProcessExecutor;
+import org.zeroturnaround.exec.ProcessResult;
 import org.zeroturnaround.exec.stream.slf4j.Slf4jStream;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @Slf4j
 public enum NativeConverter {
@@ -27,9 +31,7 @@ public enum NativeConverter {
 		public boolean convert(HPMSParams params, Object... args) {
 			String exe = buildExePath(params, params.getIniParam(HPMSParams.IniParam.NATIVE_OGRE_CONVERTER));
 			String input = (String) args[0];
-			String output = input.replace(".mesh.xml", ".mesh");
-			output = output.replace(".skeleton.xml", ".skeleton");
-			return exec(exe, () -> FileUtils.deleteQuietly(new File(input)), input, output);
+			return exec(exe, () -> FileUtils.deleteQuietly(new File(input)), input);
 		}
 	};
 	// @formatter:on
@@ -38,21 +40,20 @@ public enum NativeConverter {
 
 	@SneakyThrows
 	private static boolean exec(String exe, ResultCallback onSuccessCallback, String... args) {
-		String[] commandsToken = new String[args.length + 1];
-		commandsToken[0] = exe;
-		if (args.length - 1 >= 0) {
-			System.arraycopy(args, 0, commandsToken, 1, args.length - 1);
-		}
-		String output = new ProcessExecutor().command(commandsToken)//
+		List<String> commandsTokenList = new ArrayList<>();
+		commandsTokenList.add(exe);
+		commandsTokenList.addAll(Arrays.asList(args));
+		ProcessResult res = new ProcessExecutor()//
+				.command(commandsTokenList)//
 				.redirectError(Slf4jStream.of(NativeConverter.class).asError())//
 				.readOutput(true)//
-				.execute()//
-				.outputUTF8();
-		if (output.equals("0")) {
+				.execute();
+		log.debug("Process {} output: {}", exe, res.outputUTF8());
+		if (res.getExitValue() == 0) {
 			onSuccessCallback.apply();
 			return true;
 		}
-		log.error("Problem executing command {}, returning code {}", exe, output);
+		log.error("Native conversion finished with errors");
 		return false;
 	}
 

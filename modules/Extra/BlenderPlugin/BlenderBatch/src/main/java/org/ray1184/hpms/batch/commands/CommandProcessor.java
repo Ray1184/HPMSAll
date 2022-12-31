@@ -59,7 +59,7 @@ public class CommandProcessor {
 
     private CommandResponse getBlenderResponse(CommandRequest req, String scriptContent, String commandName) throws Exception {
         BlenderProcess process = new BlenderProcess();
-        BlenderProcess.ProcessResponse out = process.run(scriptContent, req.getClass().getSimpleName());
+        BlenderProcess.ProcessResponse out = process.run(scriptContent, req.getScriptName() + "-");
         if (out.getRetCode() == BlenderProcess.RETURN_OK) {
             log.debug("OUT <--- Response command {} {}", commandName, out.getContent());
         } else {

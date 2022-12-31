@@ -94,7 +94,7 @@ def render_image(path, cam_name):
 
 
 def process():
-    data = {'outputs': []}
+    data = {'outputs': [], 'returnCode': 0}
     log(INFO, 'Rendering started')
     configure_renderer(PREVIEW)
     cam_names = CAMS_TO_RENDER.split(',')

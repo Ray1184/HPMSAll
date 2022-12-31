@@ -19,16 +19,17 @@ def export(path, file_name):
 
 
 def process():
-    data = {'outputs': []}
+    data = {'outputs': [], 'returnCode': 0}
     obj_names = ITEMS_TO_AGGREGATE.split(',')
     objects = [obj for obj in get_objects(COLLECTION_NAME) if obj.name in obj_names]
+    if not objects:
+        log(WARN, 'No objects match the export criteria')
+        return data
     for object in objects:
         triangulate_object(object)
         object.select_set(True)
     log(INFO, 'Exporting OBJ ' + FILE_NAME)
-    old = stop_logging()
     exported = export(OUTPUT_PATH, FILE_NAME)
-    resume_logging(old)
     data['outputs'].append(exported)
     log(INFO, 'Exporting OBJ done')
     return data

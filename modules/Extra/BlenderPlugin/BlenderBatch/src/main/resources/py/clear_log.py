@@ -1,6 +1,6 @@
-# Retrieve blender runtime info
+# Delete old logs
 
 def process():
-    data = {}
+    data = {'returnCode': 0}
     delete_log()
     return data

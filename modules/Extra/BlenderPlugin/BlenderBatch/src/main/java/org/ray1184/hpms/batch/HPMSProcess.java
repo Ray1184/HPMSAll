@@ -53,7 +53,7 @@ public class HPMSProcess implements Callable<Integer> {
                 log.info("Task finished with code: {}", ret);
                 retCode.setObject(ret);
             } catch (Exception e) {
-                log.error(e.toString());
+                log.error("Batch error:", e);
                 retCode.setObject(RET_CODE_ERROR);
             }
         });

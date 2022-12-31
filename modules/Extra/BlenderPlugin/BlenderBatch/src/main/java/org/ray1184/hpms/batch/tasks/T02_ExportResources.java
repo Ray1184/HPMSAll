@@ -26,6 +26,7 @@ public class T02_ExportResources implements HPMSTask {
     @Override
     public Integer execute(HPMSParams params) {
         log.debug("Retrieving scene data from {}", params.getBlendFilePath());
+        execCachedCommand(params, HPMSCommands.CLEAR_LOG);
         SceneDataResponse sceneInfo = (SceneDataResponse) execCachedCommand(params, HPMSCommands.SCENE_DATA);
         if (sceneInfo.getReturnCode() != RET_CODE_OK) {
             return RET_CODE_ERROR;
@@ -47,7 +48,21 @@ public class T02_ExportResources implements HPMSTask {
     }
 
     private Integer exportDepthData(HPMSParams params, List<SceneDataResponse.RoomInfo.ObjectInfo> objs) {
-        return RET_CODE_OK;
+        Map<String, Object> args = new HashMap<>();
+        String outputPath = FileSystem.getInstance().toPythonPath(FileSystem.Asset.MASKS);
+        args.put("OUTPUT_PATH", outputPath);
+        args.put("OBJECTS", StringUtils.join(objs.stream().map(SceneDataResponse.RoomInfo.ObjectInfo::getName).collect(Collectors.toList()), ","));
+        ExportResponse exportResponse = (ExportResponse) execCachedCommand(params, HPMSCommands.EXPORT_OGRE, args);
+        if (exportResponse.getReturnCode() != RET_CODE_OK) {
+            return RET_CODE_ERROR;
+        }
+        FinalObjectWrapper<Boolean> resWrapper = new FinalObjectWrapper<>();
+        resWrapper.setObject(true);
+        exportResponse.getOutputs().forEach(o -> {
+            boolean converted = NativeConverter.OGRE_MESH.convert(params, o);
+            resWrapper.setObject(resWrapper.getObject() && converted);
+        });
+        return resWrapper.getObject() ? RET_CODE_OK : RET_CODE_ERROR;
     }
 
     private Integer exportCollisionData(HPMSParams params, List<SceneDataResponse.RoomInfo.ObjectInfo> objs) {
@@ -61,11 +76,13 @@ public class T02_ExportResources implements HPMSTask {
         args.put("OUTPUT_PATH", outputPath);
         args.put("ITEMS_TO_AGGREGATE", StringUtils.join(objs.stream().map(SceneDataResponse.RoomInfo.ObjectInfo::getName).collect(Collectors.toList()), ","));
         args.put("FILE_NAME", roomName + ".obj.walkmap");
+        args.put("COLLECTION_NAME", roomName);
         ExportResponse exportResponse = (ExportResponse) execCachedCommand(params, HPMSCommands.EXPORT_AGGR_OBJ, args);
         if (exportResponse.getReturnCode() != RET_CODE_OK) {
             return RET_CODE_ERROR;
         }
         FinalObjectWrapper<Boolean> resWrapper = new FinalObjectWrapper<>();
+        resWrapper.setObject(true);
         exportResponse.getOutputs().forEach(o -> {
             boolean converted = NativeConverter.WALKMAP.convert(params, o);
             resWrapper.setObject(resWrapper.getObject() && converted);
@@ -79,11 +96,13 @@ public class T02_ExportResources implements HPMSTask {
         args.put("OUTPUT_PATH", outputPath);
         args.put("OBJECTS", StringUtils.join(objs.stream().map(SceneDataResponse.RoomInfo.ObjectInfo::getName).collect(Collectors.toList()), ","));
         args.put("EXPORT_ANIMATIONS", true);
+        args.put("EXPORT_MATERIALS", true);
         ExportResponse exportResponse = (ExportResponse) execCachedCommand(params, HPMSCommands.EXPORT_OGRE, args);
         if (exportResponse.getReturnCode() != RET_CODE_OK) {
             return RET_CODE_ERROR;
         }
         FinalObjectWrapper<Boolean> resWrapper = new FinalObjectWrapper<>();
+        resWrapper.setObject(true);
         exportResponse.getOutputs().forEach(o -> {
             boolean converted = NativeConverter.OGRE_MESH.convert(params, o);
             resWrapper.setObject(resWrapper.getObject() && converted);
@@ -93,6 +112,6 @@ public class T02_ExportResources implements HPMSTask {
 
     @Override
     public boolean enabled() {
-        return false;
+        return true;
     }
 }

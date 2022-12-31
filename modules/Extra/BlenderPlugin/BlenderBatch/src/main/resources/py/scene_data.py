@@ -1,7 +1,7 @@
 # Retrieve all scene logical structure
 
 def process():
-    data = {'rooms': []}
+    data = {'rooms': [], 'returnCode': 0}
     for room in bpy.data.collections:
         room_info = {'name': room.name, 'objects': []}
         objects = get_hpms_objects(room.name)

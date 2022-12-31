@@ -74,6 +74,7 @@ public abstract class CommandRequest {
         if (MapUtils.isNotEmpty(params)) {
             params.forEach((k, v) -> retWrapper.setObject(addUserParam(k, v, retWrapper.getObject())));
         }
+        retWrapper.setObject(removeUnresolvedVariables(retWrapper.getObject()));
     }
 
     private String addUserParam(String k, Object v, String script) {
@@ -92,10 +93,12 @@ public abstract class CommandRequest {
         script = script.replace("$" + k, val);
         script = script.replace("${" + k + "}", val);
 
-        // Put as Null optional parameters base def
-        script = script.replaceAll("\\$(.*?) or", "None or");
         return script;
 
+    }
+
+    private String removeUnresolvedVariables(String script) {
+        return script.replaceAll("\\$(.*?) or", "None or");
     }
 
 
