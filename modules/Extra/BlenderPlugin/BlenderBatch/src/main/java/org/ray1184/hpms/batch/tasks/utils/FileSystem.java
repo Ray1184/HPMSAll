@@ -65,10 +65,15 @@ public class FileSystem {
 		WALKMAPS("walkmaps"),
 		SOUNDS("sounds");
 		// @formatter:on
-        private final String dir;
+        private String dir;
 
         Asset(String dir) {
             this.dir = dir;
+        }
+
+        public Asset appendFolder(String folder) {
+            dir = dir + File.separator + folder;
+            return this;
         }
     }
 
